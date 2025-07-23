@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-        <style>
+    <style>
         :root {
             --primary-color: #1e3a8a; 
             --secondary-color: #3b82f6; 
@@ -23,7 +23,6 @@
             --container-background: #ffffff;
             
             --header-gradient: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #4338ca 100%);
-            --header-overlay: rgba(255, 255, 255, 0.1);
             
             --card-background: #ffffff;
             --card-header-background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
@@ -37,583 +36,198 @@
             --text-primary: #1e293b;
             --text-secondary: #475569;
             --text-muted: #64748b;
-            --text-light: #94a3b8;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             font-family: 'Sarabun', sans-serif;
             background: var(--background-gradient);
-            min-height: 100vh;
-            color: var(--text-primary);
-            line-height: 1.6;
         }
-
         .app-container {
             max-width: 450px;
             margin: 0 auto;
             background: var(--container-background);
             min-height: 100vh;
-            position: relative;
             box-shadow: var(--shadow-xl);
-            overflow: hidden;
         }
-
         .app-header {
             background: var(--header-gradient);
             padding: 3rem 2rem 2rem; 
             text-align: center;
-            position: relative;
-            overflow: hidden;
         }
-
-        .app-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23dots)"/></svg>');
-            opacity: 0.7;
-        }
-
-        .app-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 30px;
-            background: linear-gradient(135deg, var(--container-background) 0%, rgba(255, 255, 255, 0.9) 100%);
-            border-radius: 20px 20px 0 0;
-        }
-
-        .header-content {
-            position: relative;
-            z-index: 2;
-        }
-
         .header-icon {
             font-size: 3.5rem;
             color: #ffffff;
             margin-bottom: 1rem;
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
         .header-title {
             font-size: 2rem;
             font-weight: 550;
             color: #ffffff;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-
         .header-subtitle {
             font-size: 0.95rem;
             color: rgba(255, 255, 255, 0.9);
-            font-weight: 400;
-            line-height: 1.4;
-            opacity: 0.95;
         }
-
         .form-section {
             padding: 2rem;
-            background: var(--container-background);
-            margin-top: -15px;
-            border-radius: 20px 20px 0 0;
-            position: relative;
-            z-index: 1;
         }
-
         .form-label {
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
         }
-
         .required::after {
             content: ' *';
             color: #ef4444;
-            font-weight: 700;
         }
-
         .form-control {
             border: 2px solid var(--card-border);
             border-radius: 12px;
-            padding: 0.875rem 1rem;
-            font-size: 1rem;
-            font-family: 'Sarabun', sans-serif;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: var(--card-background);
-            box-shadow: var(--shadow-soft);
-            color: var(--text-primary);
+            transition: all 0.3s;
         }
-
         .form-control:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-            transform: translateY(-1px);
-            outline: none;
         }
-
-        .form-control:hover {
-            border-color: var(--secondary-color);
-            box-shadow: var(--shadow-medium);
-        }
-
         .radio-card {
-            background: var(--card-background);
             border: 2px solid var(--card-border);
             border-radius: 12px;
             padding: 1rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-align: center;
-            font-weight: 500;
-            box-shadow: var(--shadow-soft);
-            color: var(--text-primary);
+            transition: all 0.3s;
         }
-
-        .radio-card:hover {
-            border-color: var(--secondary-color);
-            box-shadow: var(--shadow-medium);
-            transform: translateY(-2px);
-        }
-
         .radio-card.active {
             border-color: var(--primary-color);
             background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
-            box-shadow: var(--shadow-medium);
-            transform: translateY(-2px);
         }
-
-        .radio-card input[type="radio"] {
-            display: none;
-        }
-
-        .radio-card .radio-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
+        .radio-card input[type="radio"] { display: none; }
         .btn-primary-custom {
             background: var(--header-gradient);
             border: none;
             border-radius: 12px;
-            padding: 1rem 2rem;
+            padding: 1rem;
             font-size: 1.1rem;
             font-weight: 600;
-            color: #ffffff;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-strong);
-            position: relative;
-            overflow: hidden;
         }
-
-        .btn-primary-custom::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-primary-custom:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .btn-primary-custom:active {
-            transform: translateY(-1px);
-        }
-
-        .btn-primary-custom:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         .loading-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.9);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            backdrop-filter: blur(10px);
         }
-
-        .loading-overlay.show {
-            display: flex;
-        }
-
-        .loading-content {
-            text-align: center;
-            padding: 2.5rem;
-            background: var(--card-background);
-            border-radius: 20px;
-            box-shadow: var(--shadow-xl);
-        }
-
+        .loading-overlay.show { display: flex; }
         .loading-spinner {
-            width: 60px;
-            height: 60px;
+            width: 60px; height: 60px;
             border: 4px solid #f1f5f9;
             border-top: 4px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .loading-text {
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .alert-custom {
-            border: none;
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .alert-success-custom {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            color: #166534;
-            border-left: 4px solid #22c55e;
-        }
-
-        .alert-danger-custom {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-            color: #991b1b;
-            border-left: 4px solid #ef4444;
-        }
-
-        .form-card {
-            background: var(--card-background);
-            border-radius: 16px;
-            box-shadow: var(--shadow-medium);
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--card-border);
-        }
-
-        .form-card-header {
-            background: var(--card-header-background);
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid rgba(30, 58, 138, 0.1);
-        }
-
-        .form-card-title {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-        }
-
-        .form-card-body {
-            padding: 1.5rem;
-        }
-
-        .date-range-container {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--card-border);
-        }
-
-        .progress-bar-custom {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            border-radius: 10px;
-            height: 8px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            width: 0%;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3);
-        }
-
-        @media (max-width: 576px) {
-            .app-container {
-                max-width: 100%;
-                box-shadow: none;
-            }
-            
-            .app-header {
-                padding: 2rem 1rem 1.5rem;
-            }
-            
-            .header-title {
-                font-size: 1.75rem;
-            }
-            
-            .form-section {
-                padding: 1.5rem;
-            }
-            
-            .form-card-body {
-                padding: 1rem;
-            }
-        }
-
         .swal2-popup {
             font-family: 'Sarabun', sans-serif !important;
-            border-radius: 20px !important;
-        }
-
-        .swal2-confirm {
-            background: var(--header-gradient) !important;
-            border: none !important;
-            border-radius: 12px !important;
-            font-family: 'Sarabun', sans-serif !important;
-            font-weight: 600 !important;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .bounce-in {
-            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0.3) translateY(20px); opacity: 0; }
-            50% { transform: scale(1.05) translateY(-10px); }
-            70% { transform: scale(0.9) translateY(5px); }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
-        .form-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-strong);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .form-control::placeholder {
-            color: var(--text-light);
-            opacity: 0.7;
-        }
-
-        .form-control:focus::placeholder {
-            opacity: 0.5;
         }
     </style>
-
 </head>
 <body>
     <div class="app-container">
-        
         <div class="app-header">
-            <div class="header-content">
-                <div class="header-icon">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
-   
-                <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
-                <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
-                <br>
-            </div>
+            <div class="header-icon"><i class="fas fa-calendar-alt"></i></div>
+            <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
+            <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง</p>
         </div>
 
-        
-        <div id="mainContent" class="fade-in">
+        <div id="mainContent">
             <div class="form-section">
-               
-                
-                <div class="progress-bar-custom">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-
                 <form id="bookingForm">
-                    
-                    <div class="form-card bounce-in">
-                        <div class="form-card-header">
-                            <h3 class="form-card-title">
-                        
-                                <i class="fas fa-user me-2"></i>ข้อมูลผู้จอง
-                            </h3>
-                        </div>
-                        <div class="form-card-body">
-            
+                    <div class="mb-4">
+                        <h3 class="form-label required">ข้อมูลผู้จอง</h3>
+                        <div class="p-3 border rounded-3">
                             <div class="mb-3">
-                                <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
-                                <input type="text" class="form-control" id="fullName" name="fullName" required>
-           
+                                <label for="fullName">ชื่อ-นามสกุล</label>
+                                <input type="text" class="form-control" id="fullName" required>
                             </div>
                             <div class="mb-3">
-                                <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
-                   
-                                <input type="text" class="form-control" id="department" name="department" required>
+                                <label for="department">สังกัด/ชื่อหน่วยงาน</label>
+                                <input type="text" class="form-control" id="department" required>
                             </div>
-                            <div class="mb-3">
-                         
-                                <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            <div>
+                                <label for="phone">เบอร์โทรศัพท์</label>
+                                <input type="tel" class="form-control" id="phone" required>
                             </div>
                         </div>
- 
                     </div>
 
-                    
-                    <div class="form-card bounce-in">
-                        <div class="form-card-header">
-                            <h3 class="form-card-title">
-                                <i class="fas fa-book me-2"></i>ข้อมูลการจองห้องประชุม
-                            </h3>
-                        </div>
-                        <div class="form-card-body">
+                    <div class="mb-4">
+                        <h3 class="form-label required">ข้อมูลการจอง</h3>
+                        <div class="p-3 border rounded-3">
                             <div class="mb-3">
-                                <label for="courseName" class="form-label required">ชื่อหลักสูตร/หัวข้อประชุม</label>
-                                <input type="text" class="form-control" id="courseName" name="courseName" required>
+                                <label for="courseName">ชื่อหลักสูตร/หัวข้อประชุม</label>
+                                <input type="text" class="form-control" id="courseName" required>
                             </div>
-                            
-                            <div class="mb-3">
-                                <div class="row g-3">
-                                    <div class="col-6">
-                                        <label for="startDate" class="form-label required">วันที่เริ่มต้น</label>
-                                        <input type="date" class="form-control" id="startDate" name="startDate" required>
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="endDate" class="form-label required">วันที่สิ้นสุด</label>
-                                        <input type="date" class="form-control" id="endDate" name="endDate" required>
-                                    </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <label for="startDate">วันที่เริ่มต้น</label>
+                                    <input type="date" class="form-control" id="startDate" required>
+                                </div>
+                                <div class="col-6">
+                                    <label for="endDate">วันที่สิ้นสุด</label>
+                                    <input type="date" class="form-control" id="endDate" required>
                                 </div>
                             </div>
-                            
                             <div class="mb-3">
-                                <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
-                                <input type="tel" class="form-control" id="attendees" name="attendees" required>
+                                <label for="attendees">จำนวนผู้เข้าร่วม</label>
+                                <input type="number" class="form-control" id="attendees" required>
                             </div>
-                            
-                            <div class="mb-3">
+                             <div class="mb-3">
                                 <label class="form-label required">ต้องการที่พัก</label>
-                           
                                 <div class="row g-3 mt-2">
                                     <div class="col-6">
                                         <div class="radio-card" data-value="ต้องการ">
-             
                                             <input type="radio" name="accommodation" value="ต้องการ" required>
-                                            <div class="radio-icon">
-                    
-                                                <i class="fas fa-bed"></i>
-                                            </div>
-                          
-                                            <div>ต้องการ</div>
+                                            <i class="fas fa-bed me-2"></i>ต้องการ
                                         </div>
                                     </div>
-      
                                     <div class="col-6">
                                         <div class="radio-card" data-value="ไม่ต้องการ">
-                           
                                             <input type="radio" name="accommodation" value="ไม่ต้องการ">
-                                            <div class="radio-icon">
-                                   
-                                                <i class="fas fa-home"></i>
-                                            </div>
-                                         
-                                            <div>ไม่ต้องการ</div>
+                                            <i class="fas fa-home me-2"></i>ไม่ต้องการ
                                         </div>
                                     </div>
-                     
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
-                            <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
-             
+                        <button type="submit" class="btn btn-primary-custom" id="submitBtn">
+                            <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูล
                         </button>
                     </div>
                 </form>
-
-                
-                <div id="messageContainer" class="mt-3"></div>
             </div>
-    
         </div>
 
-        
         <div id="loading" class="loading-overlay">
-            <div class="loading-content">
-                <div class="loading-spinner"></div>
-                <div class="loading-text">กำลังส่งข้อมูลการจอง...</div>
-            </div>
+            <div class="loading-spinner"></div>
         </div>
     </div>
-
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        
-        const LIFF_ID = "2007138631-Ono58j50";
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyPZZm-J2xI-W32iBQ3oIqe1_SuIY3zzGuIwjcL3lKRk_7AlYCujX99ceE3IzP8bEhGqA/exec";
-        
-        
-        const mainContent = document.getElementById('mainContent');
+        const LIFF_ID = "2007138631-Ono58j50"; 
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyPZZm-J2xI-W32iBQ3oIqe1_SuIY3zzGuIwjcL3lKRk_7AlYCujX99ceE3IzP8bEhGqA/exec"; 
+
         const bookingForm = document.getElementById('bookingForm');
         const submitBtn = document.getElementById('submitBtn');
-        const messageContainer = document.getElementById('messageContainer');
         const loadingDiv = document.getElementById('loading');
-        const progressFill = document.getElementById('progressFill');
         let userId = '';
         let displayName = '';
 
-        
         async function initializeLiff() {
             try {
                 await liff.init({ liffId: LIFF_ID });
@@ -624,198 +238,119 @@
                 const profile = await liff.getProfile();
                 userId = profile.userId;
                 displayName = profile.displayName;
-                
-                await autofillUserData(); 
-                
-                updateProgress();
+                autofillUserData();
             } catch (err) {
-                console.error('LIFF initialization error:', err);
-                showMessage('เกิดข้อผิดพลาดในการโหลดข้อมูล LINE', 'danger');
+                console.error('LIFF Error:', err);
+                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อกับ LINE ได้', 'error');
             }
         }
 
         async function autofillUserData() {
             if (!userId) return;
-
-            const autofillUrl = `${GAS_WEB_APP_URL}?userId=${userId}`;
-
             try {
-                const response = await fetch(autofillUrl);
-                const userData = await response.json();
-
-                if (userData && userData.fullName) {
-                    document.getElementById('fullName').value = userData.fullName;
-                    document.getElementById('department').value = userData.department;
-                    document.getElementById('phone').value = userData.phone;
-
-                    updateProgress(); 
-                }
+                // เปลี่ยนไปใช้ google.script.run เพื่อเลี่ยงปัญหา CORS
+                google.script.run.withSuccessHandler(userData => {
+                    if (userData && userData.fullName) {
+                        document.getElementById('fullName').value = userData.fullName;
+                        document.getElementById('department').value = userData.department;
+                        document.getElementById('phone').value = userData.phone;
+                    }
+                }).doGet({ parameter: { userId: userId } });
             } catch (error) {
                 console.error('Autofill error:', error);
             }
         }
-
         
-        function showMessage(text, type = 'success') {
-            const alertClass = type === 'success' ?
-                'alert-success-custom' : 'alert-danger-custom';
-            const icon = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
-            const messageHtml = `
-                <div class="alert alert-custom ${alertClass} fade-in" role="alert">
-                    <i class="${icon} me-2"></i>${text}
-                </div>
-            `;
-            messageContainer.innerHTML = messageHtml;
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    messageContainer.innerHTML = '';
-                }, 5000);
-            }
-        }
-
-        
-        function updateProgress() {
-            const formInputs = document.querySelectorAll('input[required]');
-            const filledInputs = Array.from(formInputs).filter(input => {
-                if (input.type === 'radio') {
-                    return document.querySelector(`input[name="${input.name}"]:checked`) !== null;
-                }
-                return input.value.trim() !== '';
-            });
-            const progress = (filledInputs.length / formInputs.length) * 100;
-            progressFill.style.width = `${progress}%`;
-        }
-
-        
-        document.querySelectorAll('.radio-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const value = this.getAttribute('data-value');
-                const radio = this.querySelector('input[type="radio"]');
-                
-           
-                
-                document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
-                
-                
-                this.classList.add('active');
-                
- 
-                
-                radio.checked = true;
-                
-                updateProgress();
-            });
-        });
-        
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', updateProgress);
-            input.addEventListener('change', updateProgress);
-        });
-        
-        bookingForm.addEventListener('submit', async function(event) {
+        bookingForm.addEventListener('submit', function(event) {
             event.preventDefault();
-
             
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
-            mainContent.style.display = 'none';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังส่ง...';
             loadingDiv.classList.add('show');
 
-   
-            const formData = new FormData(event.target);
-            const data = {
+            const formData = {
                 userId: userId,
                 displayName: displayName,
-                fullName: formData.get('fullName'),
-                department: formData.get('department'),
-                phone: formData.get('phone'),
-                courseName: formData.get('courseName'),
-                startDate: formData.get('startDate'),
-                endDate: formData.get('endDate'),
-                accommodation: formData.get('accommodation'),
-                attendees: formData.get('attendees'),
-                timestamp: new Date().toISOString()
+                fullName: document.getElementById('fullName').value,
+                department: document.getElementById('department').value,
+                phone: document.getElementById('phone').value,
+                courseName: document.getElementById('courseName').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                accommodation: document.querySelector('input[name="accommodation"]:checked').value,
+                attendees: document.getElementById('attendees').value,
             };
-            try {
-                const response = await fetch(GAS_WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                    redirect: 'follow'
+            
+            google.script.run.withSuccessHandler(handleServerResponse).withFailureHandler(handleServerError).doPost({postData: {contents: JSON.stringify(formData)}});
+        });
+
+        function handleServerError(error){
+            loadingDiv.classList.remove('show');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูล';
+
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้: ' + error.message,
+            });
+        }
+        
+        function handleServerResponse(response) {
+            loadingDiv.classList.remove('show');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูล';
+            
+            if (response.message === "Rooms are full") {
+                const fullDate = new Date(response.fullDate).toLocaleDateString('th-TH', {
+                    year: 'numeric', month: 'long', day: 'numeric'
                 });
-                
-                loadingDiv.classList.remove('show');
-                mainContent.style.display = 'block';
 
                 Swal.fire({
-                    title: 'บันทึกข้อมูลสำเร็จ 🎉',
-                    html: `
-                        <div class="text-start mt-3">
-                            <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
-                            <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
-                            <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
-                            <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
-                            <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
-                            <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
-                        </div>
-                        <div class="alert alert-success mt-3" role="alert">
-                            <i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว
-                        </div>
-                    `,
+                    icon: 'warning',
+                    title: 'ห้องพักเต็ม!',
+                    html: `ขออภัย ห้องพักเต็มใน<b>วันที่ ${fullDate}</b><br>กรุณาเลือกช่วงวันที่อื่น`,
+                    confirmButtonText: 'แก้ไขข้อมูล',
+                    confirmButtonColor: '#3085d6'
+                });
+                
+            } else if (response.status === "success") {
+                Swal.fire({
                     icon: 'success',
-                    showConfirmButton: true,
-                    confirmButtonText: 'ตกลง',
-                    allowOutsideClick: false, // ไม่ให้ปิดเมื่อคลิกข้างนอก
-                    customClass: {
-                        popup: 'bounce-in'
-                    }
+                    title: 'บันทึกข้อมูลสำเร็จ!',
+                    text: 'ระบบได้บันทึกข้อมูลการจองของท่านแล้ว โปรดรอการติดต่อกลับเพื่อยืนยัน',
+                    confirmButtonText: 'ตกลง'
                 }).then((result) => {
-                    // เมื่อผู้ใช้กดปุ่ม "ตกลง"
                     if (result.isConfirmed) {
-                        // ตรวจสอบว่าเปิดใน LINE หรือไม่
-                        if (liff.isInClient()) {
-                            liff.closeWindow(); // สั่งปิดหน้าต่าง LIFF
-                        } else {
-                            window.close(); // สั่งปิดหน้าต่างเบราว์เซอร์
-                        }
+                        liff.closeWindow();
                     }
                 });
-
-            } catch (error) {
-                console.error('Submit error:', error);
-                loadingDiv.classList.remove('show');
-                mainContent.style.display = 'block';
                 
-                await Swal.fire({
-                    title: 'เกิดข้อผิดพลาด!',
-                    text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+            } else {
+                Swal.fire({
                     icon: 'error',
-             
-                    confirmButtonText: 'ลองอีกครั้ง',
-                    confirmButtonColor: '#dc3545'
+                    title: 'เกิดข้อผิดพลาด',
+                    text: response.message || 'ไม่สามารถทำรายการได้ กรุณาลองใหม่อีกครั้ง',
                 });
-                
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
             }
+        }
+
+        document.querySelectorAll('.radio-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                this.querySelector('input[type="radio"]').checked = true;
+            });
         });
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('startDate').setAttribute('min', today);
-
-            // ทำการตรวจสอบวันที่เริ่มต้นเมื่อมีการเปลี่ยนแปลง
             document.getElementById('startDate').addEventListener('change', function() {
-                const startDateValue = this.value;
-                document.getElementById('endDate').setAttribute('min', startDateValue);
+                document.getElementById('endDate').setAttribute('min', this.value);
             });
-            
-            updateProgress();
         });
-        
+
         initializeLiff();
     </script>
 </body>
