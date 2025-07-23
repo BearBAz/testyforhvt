@@ -764,39 +764,37 @@
                 mainContent.style.display = 'block';
 		
 		if (result.status === 'success') {
-                Swal.fire({
-                    title: บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว',
-                    html: `
-                        <div class="text-start mt-3">
-                            <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
-                            <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
-                            <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
-                            <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
-                            <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
-                            <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
-                        </div>
-                        <div class="alert alert-success mt-3" role="alert">
-                            <i class="fas fa-check-circle me-2"></i>โปรดรอ ศฝฟ. ติดต่อกลับไปเพื่อแจ้งรายละเอียดเพิ่มเติมอีกครั้ง
-                        </div>
-                    `,
-                    icon: 'success',
-                    showConfirmButton: true,
-                    confirmButtonText: 'ตกลง',
-                    allowOutsideClick: false, // ไม่ให้ปิดเมื่อคลิกข้างนอก
-                    customClass: {
-                        popup: 'bounce-in'
-                    }
-                }).then((result) => {
-                    // เมื่อผู้ใช้กดปุ่ม "ตกลง"
-                    if (result.isConfirmed) {
-                        // ตรวจสอบว่าเปิดใน LINE หรือไม่
-                        if (liff.isInClient()) {
-                            liff.closeWindow(); // สั่งปิดหน้าต่าง LIFF
-                        } else {
-                            window.close(); // สั่งปิดหน้าต่างเบราว์เซอร์
-                        }
-                    }
-                });
+    Swal.fire({
+        title: 'บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว', // <-- Corrected line
+        html: `
+            <div class="text-start mt-3">
+                <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
+                <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
+                <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
+                <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
+                <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
+                <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
+            </div>
+            <div class="alert alert-success mt-3" role="alert">
+                <i class="fas fa-check-circle me-2"></i>โปรดรอ ศฝฟ. ติดต่อกลับไปเพื่อแจ้งรายละเอียดเพิ่มเติมอีกครั้ง
+            </div>
+        `,
+        icon: 'success',
+        showConfirmButton: true,
+        confirmButtonText: 'ตกลง',
+        allowOutsideClick: false, 
+        customClass: {
+            popup: 'bounce-in'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            if (liff.isInClient()) {
+                liff.closeWindow(); 
+            } else {
+                window.close();
+            }
+        }
+    });
 
             } else if (result.status === 'error' && result.message === 'Rooms are full') {
             
