@@ -755,11 +755,11 @@
     });
         
         document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('startDate').setAttribute('min', today);
+            //const today = new Date().toISOString().split('T')[0];
+            //document.getElementById('startDate').setAttribute('min', today);
             document.getElementById('startDate').addEventListener('change', function() {
-                const startDateValue = this.value;
-                document.getElementById('endDate').setAttribute('min', startDateValue);
+            const startDateValue = this.value;
+            document.getElementById('endDate').setAttribute('min', startDateValue);
             });
             
             updateProgress();
