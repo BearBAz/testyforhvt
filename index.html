@@ -451,59 +451,44 @@
 
 </head>
 <body>
-    <div class="app-container">
-        
+    <div class="app-container">  
         <div class="app-header">
             <div class="header-content">
                 <div class="header-icon">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
-   
                 <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
                 <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
                 <br>
             </div>
-        </div>
-
-        
+        </div>     
         <div id="mainContent" class="fade-in">
-            <div class="form-section">
-               
-                
+            <div class="form-section">                   
                 <div class="progress-bar-custom">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
-
-                <form id="bookingForm">
-                    
+                <form id="bookingForm">       
                     <div class="form-card bounce-in">
                         <div class="form-card-header">
-                            <h3 class="form-card-title">
-                        
+                            <h3 class="form-card-title">  
                                 <i class="fas fa-user me-2"></i>ข้อมูลผู้จอง
                             </h3>
                         </div>
                         <div class="form-card-body">
-            
                             <div class="mb-3">
                                 <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
                                 <input type="text" class="form-control" id="fullName" name="fullName" required>
-           
                             </div>
                             <div class="mb-3">
                                 <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
-                   
                                 <input type="text" class="form-control" id="department" name="department" required>
                             </div>
                             <div class="mb-3">
-                         
                                 <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
                                 <input type="tel" class="form-control" id="phone" name="phone" required>
                             </div>
                         </div>
- 
                     </div>
-
                     
                     <div class="form-card bounce-in">
                         <div class="form-card-header">
@@ -515,8 +500,7 @@
                             <div class="mb-3">
                                 <label for="courseName" class="form-label required">ชื่อหลักสูตร/หัวข้อประชุม</label>
                                 <input type="text" class="form-control" id="courseName" name="courseName" required>
-                            </div>
-                            
+                            </div> 
                             <div class="mb-3">
                                 <div class="row g-3">
                                     <div class="col-6">
@@ -528,64 +512,45 @@
                                         <input type="date" class="form-control" id="endDate" name="endDate" required>
                                     </div>
                                 </div>
-                            </div>
-                            
+                            </div>       
                             <div class="mb-3">
                                 <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
                                 <input type="tel" class="form-control" id="attendees" name="attendees" required>
-                            </div>
-                            
+                            </div>                  
                             <div class="mb-3">
                                 <label class="form-label required">ต้องการที่พัก</label>
-                           
                                 <div class="row g-3 mt-2">
                                     <div class="col-6">
                                         <div class="radio-card" data-value="ต้องการ">
-             
                                             <input type="radio" name="accommodation" value="ต้องการ" required>
                                             <div class="radio-icon">
-                    
                                                 <i class="fas fa-bed"></i>
-                                            </div>
-                          
+                                            </div>                  
                                             <div>ต้องการ</div>
                                         </div>
                                     </div>
-      
                                     <div class="col-6">
                                         <div class="radio-card" data-value="ไม่ต้องการ">
-                           
                                             <input type="radio" name="accommodation" value="ไม่ต้องการ">
-                                            <div class="radio-icon">
-                                   
+                                            <div class="radio-icon">         
                                                 <i class="fas fa-home"></i>
                                             </div>
-                                         
                                             <div>ไม่ต้องการ</div>
                                         </div>
                                     </div>
-                     
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    
+                    </div>           
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
                             <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
-             
                         </button>
                     </div>
-                </form>
-
-                
+                </form>                
                 <div id="messageContainer" class="mt-3"></div>
-            </div>
-    
+            </div>    
         </div>
-
-        
         <div id="loading" class="loading-overlay">
             <div class="loading-content">
                 <div class="loading-spinner"></div>
@@ -594,16 +559,11 @@
         </div>
     </div>
 
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        
-         const LIFF_ID = "2007138631-Ono58j50"; 
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyPZZm-J2xI-W32iBQ3oIqe1_SuIY3zzGuIwjcL3lKRk_7AlYCujX99ceE3IzP8bEhGqA/exec"; 
-        
-        
+     
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    
+    <script>        
+        const LIFF_ID = "2007138631-Ono58j50";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyPZZm-J2xI-W32iBQ3oIqe1_SuIY3zzGuIwjcL3lKRk_7AlYCujX99ceE3IzP8bEhGqA/exec";    
         const mainContent = document.getElementById('mainContent');
         const bookingForm = document.getElementById('bookingForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -647,15 +607,13 @@
                     document.getElementById('fullName').value = userData.fullName;
                     document.getElementById('department').value = userData.department;
                     document.getElementById('phone').value = userData.phone;
-
                     updateProgress(); 
                 }
             } catch (error) {
                 console.error('Autofill error:', error);
             }
         }
-
-        
+       
         function showMessage(text, type = 'success') {
             const alertClass = type === 'success' ?
                 'alert-success-custom' : 'alert-danger-custom';
@@ -673,8 +631,7 @@
                 }, 5000);
             }
         }
-
-        
+ 
         function updateProgress() {
             const formInputs = document.querySelectorAll('input[required]');
             const filledInputs = Array.from(formInputs).filter(input => {
@@ -691,19 +648,10 @@
         document.querySelectorAll('.radio-card').forEach(card => {
             card.addEventListener('click', function() {
                 const value = this.getAttribute('data-value');
-                const radio = this.querySelector('input[type="radio"]');
-                
-           
-                
-                document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
-                
-                
-                this.classList.add('active');
-                
- 
-                
+                const radio = this.querySelector('input[type="radio"]');                
+                document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));                                
+                this.classList.add('active');                
                 radio.checked = true;
-                
                 updateProgress();
             });
         });
@@ -713,131 +661,102 @@
             input.addEventListener('change', updateProgress);
         });
         
-        bookingForm.addEventListener('submit', async function(event) {
-            event.preventDefault();
+         bookingForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังตรวจสอบข้อมูล...';
+        loadingDiv.classList.add('show');
+        mainContent.style.display = 'none';
 
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
-            mainContent.style.display = 'none';
-            loadingDiv.classList.add('show');
+        const formData = new FormData(event.target);
+        const data = {
+            userId: userId,
+            displayName: displayName,
+            fullName: formData.get('fullName'),
+            department: formData.get('department'),
+            phone: formData.get('phone'),
+            courseName: formData.get('courseName'),
+            startDate: formData.get('startDate'),
+            endDate: formData.get('endDate'),
+            accommodation: formData.get('accommodation'),
+            attendees: formData.get('attendees'),
+            timestamp: new Date().toISOString()
+        };
 
-   
-            const formData = new FormData(event.target);
-            const accommodation = formData.get('accommodation');
-            const attendees = formData.get('attendees');
-            let numRooms = 0; // กำหนดค่าเริ่มต้นเป็น 0
-
-            if (accommodation === 'ต้องการ') {
-                const numAttendees = parseInt(attendees, 10);
-                if (!isNaN(numAttendees) && numAttendees > 0) {
-                    numRooms = Math.ceil(numAttendees / 2) + 1;
-                }
-            }
-
-            const data = {
-                userId: userId,
-                displayName: displayName,
-                fullName: formData.get('fullName'),
-                department: formData.get('department'),
-                phone: formData.get('phone'),
-                courseName: formData.get('courseName'),
-                startDate: formData.get('startDate'),
-                endDate: formData.get('endDate'),
-                accommodation: formData.get('accommodation'),
-                attendees: formData.get('attendees'),
-		numRooms: numRooms,
-                timestamp: new Date().toISOString()
-            };
             try {
-                const response = await fetch(GAS_WEB_APP_URL, {
-                    method: 'POST',
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                    redirect: 'follow'
-                });
-                
-		const result = await response.json();
+            const response = await fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+                redirect: 'follow'
+            });
 
-                loadingDiv.classList.remove('show');
-                mainContent.style.display = 'block';
-		
-		if (result.status === 'success') {
-    Swal.fire({
-        title: 'บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว', // <-- Corrected line
-        html: `
-            <div class="text-start mt-3">
-                <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
-                <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
-                <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
-                <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
-                <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
-                <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
-            </div>
-            <div class="alert alert-success mt-3" role="alert">
-                <i class="fas fa-check-circle me-2"></i>โปรดรอ ศฝฟ. ติดต่อกลับไปเพื่อแจ้งรายละเอียดเพิ่มเติมอีกครั้ง
-            </div>
-        `,
-        icon: 'success',
-        showConfirmButton: true,
-        confirmButtonText: 'ตกลง',
-        allowOutsideClick: false, 
-        customClass: {
-            popup: 'bounce-in'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            if (liff.isInClient()) {
-                liff.closeWindow(); 
+            const result = await response.json();
+            loadingDiv.classList.remove('show');
+            mainContent.style.display = 'block';
+            if (result.status === 'success') {
+                Swal.fire({
+                    title: 'บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว',
+                    html: `
+                        <div class="text-start mt-3">
+                            <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
+                            <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
+                            <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
+                            <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
+                            <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
+                            <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
+                        </div>
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>โปรดรอ ศฝฟ. ติดต่อกลับไปเพื่อแจ้งรายละเอียดเพิ่มเติมอีกครั้ง
+                        </div>
+                    `,
+                    icon: 'success',
+                    confirmButtonText: 'ตกลง',
+                    allowOutsideClick: false,
+                    customClass: { popup: 'bounce-in' }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (liff.isInClient()) {
+                            liff.closeWindow();
+                        } else {
+                            window.close();
+                        }
+                    }
+                });
             } else {
-                window.close();
-            }
-        }
-    });
 
-            } else if (result.status === 'error' && result.message === 'Rooms are full') {
-            
-                    const fullDate = new Date(result.fullDate);
-                    const formattedDate = fullDate.toLocaleDateString('th-TH', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-
-                    await Swal.fire({
-        title: 'ห้องพักเต็ม',
-        text: `ขออภัย, ห้องพักในวันที่ ${formattedDate} ไม่ว่าง กรุณาเลือกช่วงวันที่อื่น`,
-        icon: 'warning', // ปรับไอคอนให้เหมาะสมขึ้น
-        confirmButtonText: 'กลับไปแก้ไข', // เปลี่ยนข้อความในปุ่ม
-        confirmButtonColor: '#3b82f6' // อาจเปลี่ยนสีปุ่มให้ดูเป็นมิตรขึ้น
-    });
-                    
-                } else {
-                    throw new Error(result.message || 'ไม่สามารถส่งข้อมูลได้');
-                }
-
-            } catch (error) {
-                console.error('Submit error:', error);
-                loadingDiv.classList.remove('show');
-                mainContent.style.display = 'block';
-                
                 await Swal.fire({
-                    title: 'เกิดข้อผิดพลาด!',
-                    text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง หรือติดต่อผู้ดูแล',
+                    title: 'ห้องพักเต็ม',
+                    text: result.message,
                     icon: 'error',
-                    confirmButtonText: 'ลองอีกครั้ง',
-                    confirmButtonColor: '#dc3545'
+                    confirmButtonText: 'กลับไปแก้ไข'
                 });
- 	   } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
             }
+
+            } catch (error) {
+            console.error('Submit error:', error);
+            loadingDiv.classList.remove('show');
+            mainContent.style.display = 'block';
+            
+            await Swal.fire({
+                title: 'เกิดข้อผิดพลาด!',
+                text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง',
+                icon: 'error',
+                confirmButtonText: 'ลองอีกครั้ง',
+                confirmButtonColor: '#dc3545'
+            });
+            
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
+        }
+    });
         
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('startDate').setAttribute('min', today);
-
             document.getElementById('startDate').addEventListener('change', function() {
                 const startDateValue = this.value;
                 document.getElementById('endDate').setAttribute('min', startDateValue);
