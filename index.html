@@ -693,8 +693,8 @@
             event.preventDefault();
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
-            loadingDiv.classList.add('show');
             mainContent.style.display = 'none';
+            loadingDiv.classList.add('show');
 
             const formData = new FormData(event.target);
             const data = {
@@ -710,19 +710,26 @@
                 attendees: formData.get('attendees'),
                 timestamp: new Date().toISOString()
             };
-
             try {
                 const response = await fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
-                    // mode: 'no-cors', // <-- REMOVED for reading the response
+                    // mode: 'no-cors', // THIS LINE MUST BE REMOVED to read the server response.
                     cache: 'no-cache',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data),
                     redirect: 'follow'
                 });
-
-                const result = await response.json(); // <-- Parse the JSON response from the server
-
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                    redirect: 'follow'
+                });
+                
+		const result = await response.json(); // Parse the JSON response from the server.
+                
                 loadingDiv.classList.remove('show');
                 mainContent.style.display = 'block';
 
@@ -743,12 +750,9 @@
                             </div>
                         `,
                         icon: 'success',
-                        showConfirmButton: true,
                         confirmButtonText: 'ตกลง',
                         allowOutsideClick: false,
-                        customClass: {
-                            popup: 'bounce-in'
-                        }
+                        customClass: { popup: 'bounce-in' }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             if (liff.isInClient()) {
@@ -759,14 +763,29 @@
                         }
                     });
                 } else {
-                    // Handle error response from server
+                  
+                    let errorTitle = 'เกิดข้อผิดพลาด!';
+                    let errorText = result.message || 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง';
+
+                    if (result.message === 'accommodation_full' && result.fullDate) {
+                        const fullDate = new Date(result.fullDate);
+                        const formattedDate = fullDate.toLocaleDateString('th-TH', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        errorTitle = 'ห้องพักเต็ม';
+                        errorText = `ขออภัย, ห้องพักสำหรับวันที่ ${formattedDate} เต็มแล้ว กรุณาเลือกช่วงวันที่อื่น`;
+                    }
+                    
                     await Swal.fire({
-                        title: 'ไม่สามารถจองได้!',
-                        text: result.message || 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                        title: errorTitle,
+                        text: errorText,
                         icon: 'error',
                         confirmButtonText: 'แก้ไขข้อมูล',
                         confirmButtonColor: '#dc3545'
                     });
+                    
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
                 }
@@ -778,7 +797,7 @@
                 
                 await Swal.fire({
                     title: 'เกิดข้อผิดพลาด!',
-                    text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่อและลองใหม่อีกครั้ง',
+                    text: 'ไม่สามารถส่งข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่อและลองใหม่อีกครั้ง',
                     icon: 'error',
                     confirmButtonText: 'ลองอีกครั้ง',
                     confirmButtonColor: '#dc3545'
