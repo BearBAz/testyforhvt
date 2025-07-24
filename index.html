@@ -667,6 +667,7 @@
             const progress = (filledInputs.length / formInputs.length) * 100;
             progressFill.style.width = `${progress}%`;
         }
+
         
         document.querySelectorAll('.radio-card').forEach(card => {
             card.addEventListener('click', function() {
@@ -709,76 +710,52 @@
                 attendees: formData.get('attendees'),
                 timestamp: new Date().toISOString()
             };
-
             try {
                 const response = await fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
                     cache: 'no-cache',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data),
+                    redirect: 'follow'
                 });
                 
                 loadingDiv.classList.remove('show');
                 mainContent.style.display = 'block';
 
-                const result = await response.json();
-
-                if (result.status === "success") {
-                    Swal.fire({
-                        title: 'บันทึกข้อมูลสำเร็จ 🎉',
-                        html: `
-                            <div class="text-start mt-3">
-                                <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
-                                <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
-                                <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
-                                <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
-                                <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
-                                <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
-                            </div>
-                            <div class="alert alert-success mt-3" role="alert">
-                                <i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว
-                            </div>
-                        `,
-                        icon: 'success',
-                        showConfirmButton: true,
-                        confirmButtonText: 'ตกลง',
-                        allowOutsideClick: false,
-                        customClass: {
-                            popup: 'bounce-in'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            if (liff.isInClient()) {
-                                liff.closeWindow();
-                            } else {
-                                window.close();
-                            }
-                        }
-                    });
-                } else {
-                    await Swal.fire({
-                        title: 'จองไม่สำเร็จ!',
-                        text: result.message || 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
-                        icon: 'error',
-                        confirmButtonText: 'แก้ไขวันที่จอง',
-                        confirmButtonColor: '#dc3545'
-                    });
-
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
-
-                    const startDateInput = document.getElementById('startDate');
-                    const dateCard = startDateInput.closest('.form-card');
-
-                    if (dateCard) {
-                        dateCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        dateCard.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.6)';
-                        setTimeout(() => {
-                            dateCard.style.boxShadow = '';
-                        }, 2500);
+                Swal.fire({
+                    title: 'บันทึกข้อมูลสำเร็จ 🎉',
+                    html: `
+                        <div class="text-start mt-3">
+                            <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
+                            <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
+                            <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
+                            <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
+                            <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
+                            <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
+                        </div>
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว
+                        </div>
+                    `,
+                    icon: 'success',
+                    showConfirmButton: true,
+                    confirmButtonText: 'ตกลง',
+                    allowOutsideClick: false, // ไม่ให้ปิดเมื่อคลิกข้างนอก
+                    customClass: {
+                        popup: 'bounce-in'
                     }
-                    startDateInput.focus();
-                }
+                }).then((result) => {
+                    // เมื่อผู้ใช้กดปุ่ม "ตกลง"
+                    if (result.isConfirmed) {
+                        // ตรวจสอบว่าเปิดใน LINE หรือไม่
+                        if (liff.isInClient()) {
+                            liff.closeWindow(); // สั่งปิดหน้าต่าง LIFF
+                        } else {
+                            window.close(); // สั่งปิดหน้าต่างเบราว์เซอร์
+                        }
+                    }
+                });
 
             } catch (error) {
                 console.error('Submit error:', error);
@@ -787,8 +764,9 @@
                 
                 await Swal.fire({
                     title: 'เกิดข้อผิดพลาด!',
-                    text: 'การเชื่อมต่อขัดข้อง ไม่สามารถส่งข้อมูลได้ กรุณาตรวจสอบการตั้งค่า Deploy และลองใหม่อีกครั้ง',
+                    text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
                     icon: 'error',
+             
                     confirmButtonText: 'ลองอีกครั้ง',
                     confirmButtonColor: '#dc3545'
                 });
