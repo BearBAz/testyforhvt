@@ -329,6 +329,7 @@
             overflow: hidden;
             margin-bottom: 1.5rem;
             border: 1px solid var(--card-border);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .form-card-header {
@@ -435,7 +436,6 @@
         .form-card:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-strong);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-control::placeholder {
@@ -688,7 +688,7 @@
             input.addEventListener('change', updateProgress);
         });
         
-        // --- Start of Modified Submit Logic ---
+        // --- Start of Corrected Submit Logic ---
         bookingForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             submitBtn.disabled = true;
@@ -717,14 +717,16 @@
                     cache: 'no-cache',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
+                    // REMOVED mode: 'no-cors' to allow reading the response
                 });
                 
                 loadingDiv.classList.remove('show');
                 mainContent.style.display = 'block';
 
-                const result = await response.json();
+                const result = await response.json(); // Parse the JSON response from the server
 
                 if (result.status === "success") {
+                    // This block runs ONLY when the server confirms the booking was saved.
                     Swal.fire({
                         title: 'บันทึกข้อมูลสำเร็จ 🎉',
                         html: `
@@ -757,24 +759,39 @@
                         }
                     });
                 } else {
-                    // Handle specific error from the server
+                    // This block runs when the server returns an error (e.g., rooms are full).
                     await Swal.fire({
                         title: 'จองไม่สำเร็จ!',
-                        text: result.message || 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                        text: result.message || 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง', // Display the specific error message
                         icon: 'error',
-                        confirmButtonText: 'ลองอีกครั้ง',
+                        confirmButtonText: 'แก้ไขวันที่จอง',
                         confirmButtonColor: '#dc3545'
                     });
+
+                    // Re-enable the submit button so the user can try again
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
+
+                    // Guide user to the date fields
+                    const startDateInput = document.getElementById('startDate');
+                    const dateCard = startDateInput.closest('.form-card');
+
+                    if (dateCard) {
+                        dateCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        dateCard.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.6)'; // Highlight with a red shadow
+                        setTimeout(() => {
+                            dateCard.style.boxShadow = ''; // Remove the highlight
+                        }, 2500);
+                    }
+                    startDateInput.focus(); // Focus on the start date input
                 }
 
             } catch (error) {
+                // This block handles network errors
                 console.error('Submit error:', error);
                 loadingDiv.classList.remove('show');
                 mainContent.style.display = 'block';
                 
-                // Handle network errors or JSON parsing errors
                 await Swal.fire({
                     title: 'เกิดข้อผิดพลาด!',
                     text: 'การเชื่อมต่อขัดข้อง ไม่สามารถส่งข้อมูลได้ กรุณาตรวจสอบอินเทอร์เน็ตและลองใหม่อีกครั้ง',
@@ -787,7 +804,7 @@
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
             }
         });
-        // --- End of Modified Submit Logic ---
+        // --- End of Corrected Submit Logic ---
         
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('startDate').addEventListener('change', function() {
