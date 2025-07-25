@@ -586,7 +586,7 @@
     <script>
         
         const LIFF_ID = "2007138631-Ono58j50";
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyPZZm-J2xI-W32iBQ3oIqe1_SuIY3zzGuIwjcL3lKRk_7AlYCujX99ceE3IzP8bEhGqA/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwgLNYtjCQRlwMAn-6zF28CBWAHd5wkXwHtkOjr6Ytl44ADVh-NkqPqWncdUpo_QCp3/exec";
                 
         const mainContent = document.getElementById('mainContent');
         const bookingForm = document.getElementById('bookingForm');
@@ -710,16 +710,8 @@
                 attendees: formData.get('attendees'),
                 timestamp: new Date().toISOString()
             };
-            try {
-                const response = await fetch(GAS_WEB_APP_URL, {
-                    method: 'POST',
-                    // mode: 'no-cors', // THIS LINE MUST BE REMOVED to read the server response.
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                    redirect: 'follow'
-                });
-            try {
+            
+	    try {
                 const response = await fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
                     cache: 'no-cache',
@@ -728,8 +720,8 @@
                     redirect: 'follow'
                 });
                 
-		const result = await response.json(); // Parse the JSON response from the server.
-                
+		const result = await response.json();
+
                 loadingDiv.classList.remove('show');
                 mainContent.style.display = 'block';
 
@@ -752,7 +744,6 @@
                         icon: 'success',
                         confirmButtonText: 'ตกลง',
                         allowOutsideClick: false,
-                        customClass: { popup: 'bounce-in' }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             if (liff.isInClient()) {
@@ -763,29 +754,14 @@
                         }
                     });
                 } else {
-                  
-                    let errorTitle = 'เกิดข้อผิดพลาด!';
-                    let errorText = result.message || 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง';
-
-                    if (result.message === 'accommodation_full' && result.fullDate) {
-                        const fullDate = new Date(result.fullDate);
-                        const formattedDate = fullDate.toLocaleDateString('th-TH', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        });
-                        errorTitle = 'ห้องพักเต็ม';
-                        errorText = `ขออภัย, ห้องพักสำหรับวันที่ ${formattedDate} เต็มแล้ว กรุณาเลือกช่วงวันที่อื่น`;
-                    }
-                    
+                    // --- ADDED: กรณีเกิดข้อผิดพลาดที่ Server (เช่น ห้องเต็ม) ---
                     await Swal.fire({
-                        title: errorTitle,
-                        text: errorText,
+                        title: 'เกิดข้อผิดพลาด!',
+                        html: `ไม่สามารถบันทึกข้อมูลได้ เนื่องจากห้องพักไม่เพียงพอ<br><b>ห้องพักที่ว่างในช่วงเวลาที่เลือก: ${result.available || 0} ห้อง</b>`,
                         icon: 'error',
-                        confirmButtonText: 'แก้ไขข้อมูล',
-                        confirmButtonColor: '#dc3545'
+                        confirmButtonText: 'รับทราบ',
                     });
-                    
+
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
                 }
@@ -797,10 +773,9 @@
                 
                 await Swal.fire({
                     title: 'เกิดข้อผิดพลาด!',
-                    text: 'ไม่สามารถส่งข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่อและลองใหม่อีกครั้ง',
+                    text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
                     icon: 'error',
                     confirmButtonText: 'ลองอีกครั้ง',
-                    confirmButtonColor: '#dc3545'
                 });
                 
                 submitBtn.disabled = false;
