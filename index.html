@@ -813,17 +813,16 @@
         });
         
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('startDate').addEventListener('change', function() {
-                const startDateValue = this.value;
-                const endDateInput = document.getElementById('endDate');
-                endDateInput.setAttribute('min', startDateValue);
-                // ถ้าวันที่สิ้นสุดน้อยกว่าวันที่เริ่ม ให้ตั้งค่าเป็นวันเดียวกับวันที่เริ่ม
-                if (endDateInput.value < startDateValue) {
-                    endDateInput.value = startDateValue;
-                }
-            });
-            updateProgress();
-        });
+        document.getElementById('startDate').addEventListener('change', function() {
+        const startDateValue = this.value;
+        const endDateInput = document.getElementById('endDate');
+        endDateInput.setAttribute('min', startDateValue);
+        if (endDateInput.value && endDateInput.value < startDateValue) {
+            endDateInput.value = ''; // ล้างค่าวันที่สิ้นสุด
+        }
+    });
+    updateProgress();
+});
         
         initializeLiff();
     </script>
