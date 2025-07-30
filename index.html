@@ -591,7 +591,6 @@
         let userId = '';
         let displayName = '';
         
-        // ===== ADDED: Element references for availability check =====
         const startDateInput = document.getElementById('startDate');
         const endDateInput = document.getElementById('endDate');
         const attendeesInput = document.getElementById('attendees');
@@ -706,7 +705,7 @@
                 this.classList.add('active');
                 radio.checked = true;
                 updateProgress();
-                checkAvailability(); // <-- ADDED: Call check on change
+                checkAvailability();
             });
         });
         
@@ -726,7 +725,6 @@
             loadingDiv.classList.add('show');
 
             const formData = new FormData(event.target);
-            // คำนวณจำนวนห้องพักเพื่อส่งไปกับข้อมูล
             const attendees = parseInt(formData.get('attendees'), 10);
             const numRooms = Math.ceil(attendees / 2);
 
@@ -741,7 +739,7 @@
                 endDate: formData.get('endDate'),
                 accommodation: formData.get('accommodation'),
                 attendees: attendees,
-                numRooms: (formData.get('accommodation') === 'ต้องการ') ? numRooms : 0, // ส่ง numRooms ถ้าต้องการที่พัก
+                numRooms: (formData.get('accommodation') === 'ต้องการ') ? numRooms : 0, 
                 timestamp: new Date().toISOString()
             };
             
@@ -813,7 +811,7 @@
         });
         
         document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('startDate').addEventListener('change', function() {
+    document.getElementById('startDate').addEventListener('change', function() {
         const startDateValue = this.value;
         const endDateInput = document.getElementById('endDate');
         endDateInput.setAttribute('min', startDateValue);
