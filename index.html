@@ -600,7 +600,7 @@
     
     <script>
         
-         const LIFF_ID = "2007138631-Ono58j50";
+        const LIFF_ID = "2007138631-Ono58j50";
          const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwgLNYtjCQRlwMAn-6zF28CBWAHd5wkXwHtkOjr6Ytl44ADVh-NkqPqWncdUpo_QCp3/exec"; 
         
         
@@ -612,60 +612,6 @@
         const progressFill = document.getElementById('progressFill');
         let userId = '';
         let displayName = '';
-
-async function checkAvailability() {
-            const wantsAccommodation = document.querySelector('input[name="accommodation"]:checked')?.value === 'ต้องการ';
-            const startDate = startDateInput.value;
-            const endDate = endDateInput.value;
-            const attendees = parseInt(attendeesInput.value, 10);
-
-            // จะตรวจสอบก็ต่อเมื่อเลือก "ต้องการที่พัก" และกรอกข้อมูลครบถ้วน
-            if (!wantsAccommodation || !startDate || !endDate || !attendees || attendees <= 0) {
-                availabilityStatusDiv.innerHTML = '';
-                submitBtn.disabled = false;
-                return;
-            }
-
-            // 1 ห้องพัก พักได้ 2 คน
-            const numRooms = Math.ceil(attendees / 2);
-            availabilityStatusDiv.innerHTML = `<div class="d-flex align-items-center justify-content-center text-muted"><i class="fas fa-spinner fa-spin me-2"></i>กำลังตรวจสอบห้องว่าง...</div>`;
-            submitBtn.disabled = true;
-
-            // ส่งข้อมูลไปให้ doGet บนเซิร์ฟเวอร์เพื่อตรวจสอบ
-            const params = new URLSearchParams({ startDate, endDate, numRooms });
-            const requestUrl = `${GAS_WEB_APP_URL}?${params.toString()}`;
-
-            try {
-                const response = await fetch(requestUrl);
-                const data = await response.json();
-
-                if (data.status === 'success' && data.available) {
-                    availabilityStatusDiv.innerHTML = `<div class="alert-success-custom p-2 text-center fade-in"><i class="fas fa-check-circle me-2"></i>ห้องพักว่างในช่วงวันที่เลือก</div>`;
-                    submitBtn.disabled = false;
-                } else {
-                    availabilityStatusDiv.innerHTML = `<div class="alert-danger-custom p-2 text-center fade-in"><i class="fas fa-times-circle me-2"></i>ขออภัย ห้องพักไม่เพียงพอ</div>`;
-                    submitBtn.disabled = true;
-                }
-            } catch (error) {
-                console.error('Availability check error:', error);
-                availabilityStatusDiv.innerHTML = `<div class="alert-danger-custom p-2 text-center fade-in">เกิดข้อผิดพลาดในการตรวจสอบ</div>`;
-                submitBtn.disabled = true;
-            }
-        }
-
-        // --- Event Listeners ---
-        document.querySelectorAll('.radio-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                this.querySelector('input[type="radio"]').checked = true;
-                checkAvailability(); // ตรวจสอบห้องว่างเมื่อเลือก
-            });
-        });
-        startDateInput.addEventListener('change', checkAvailability);
-        endDateInput.addEventListener('change', checkAvailability);
-        attendeesInput.addEventListener('input', checkAvailability);
-        
 
         
         async function initializeLiff() {
@@ -767,14 +713,17 @@ async function checkAvailability() {
             input.addEventListener('change', updateProgress);
         });
         
-
         bookingForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            loadingDiv.classList.add('show');
-            const formData = new FormData(event.target);
-            const attendees = parseInt(formData.get('attendees'), 10);
-            const numRooms = Math.ceil(attendees / 2);
 
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
+            mainContent.style.display = 'none';
+            loadingDiv.classList.add('show');
+
+   
+            const formData = new FormData(event.target);
             const data = {
                 userId: userId,
                 displayName: displayName,
@@ -785,14 +734,13 @@ async function checkAvailability() {
                 startDate: formData.get('startDate'),
                 endDate: formData.get('endDate'),
                 accommodation: formData.get('accommodation'),
-                attendees: attendees,
-                numRooms: (formData.get('accommodation') === 'ต้องการ') ? numRooms : 0,
+                attendees: formData.get('attendees'),
                 timestamp: new Date().toISOString()
             };
-
             try {
                 const response = await fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
                     cache: 'no-cache',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data),
@@ -825,7 +773,9 @@ async function checkAvailability() {
                         popup: 'bounce-in'
                     }
                 }).then((result) => {
+                    // เมื่อผู้ใช้กดปุ่ม "ตกลง"
                     if (result.isConfirmed) {
+                        // ตรวจสอบว่าเปิดใน LINE หรือไม่
                         if (liff.isInClient()) {
                             liff.closeWindow(); // สั่งปิดหน้าต่าง LIFF
                         } else {
