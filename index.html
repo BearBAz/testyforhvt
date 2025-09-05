@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ระบบจองห้องประชุม ศฝฟ.</title>
+    <title>ระบบจองห้องประชุม ศศฟ.</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -13,11 +13,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-        <style>
+    <style>
         :root {
             --primary-color: #1e3a8a; 
             --secondary-color: #3b82f6; 
             --accent-color: #60a5fa; 
+            --success-color: #22c55e;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
             
             --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             --container-background: #ffffff;
@@ -151,7 +154,7 @@
             font-weight: 700;
         }
 
-        .form-control {
+        .form-control, .form-select {
             border: 2px solid var(--card-border);
             border-radius: 12px;
             padding: 0.875rem 1rem;
@@ -163,14 +166,14 @@
             color: var(--text-primary);
         }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
             transform: translateY(-1px);
             outline: none;
         }
 
-        .form-control:hover {
+        .form-control:hover, .form-select:hover {
             border-color: var(--secondary-color);
             box-shadow: var(--shadow-medium);
         }
@@ -323,6 +326,18 @@
             border-left: 4px solid #ef4444;
         }
 
+        .alert-warning-custom {
+            background: linear-gradient(135deg, #fefbeb 0%, #fef3c7 100%);
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .alert-info-custom {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+
         .form-card {
             background: var(--card-background);
             border-radius: 16px;
@@ -376,13 +391,114 @@
             border-radius: 10px;
             box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3);
         }
-        /* --- Added style for accommodation status message --- */
-        #accommodationStatus {
+
+        /* Meeting Room Status Styles */
+        .room-status-container {
+            margin-top: 1rem;
+        }
+
+        .room-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .room-group-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .room-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .room-item {
+            padding: 0.75rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            border: 1px solid;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .room-available {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            border-color: var(--success-color);
+            color: #166534;
+        }
+
+        .room-occupied {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border-color: var(--danger-color);
+            color: #991b1b;
+        }
+
+        .room-item i {
+            font-size: 0.8rem;
+            margin-right: 0.25rem;
+        }
+
+        .room-capacity {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+
+        /* Enhanced status display styles */
+        #accommodationStatus, #meetingRoomStatus {
             padding: 0.75rem 1.25rem;
             border-radius: 12px;
             font-weight: 500;
-            text-align: center;
+            text-align: left;
             transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .select-disabled {
+            opacity: 0.6;
+            pointer-events: none;
+            background-color: #f8f9fa;
+        }
+
+        /* Accommodation info styles */
+        .accommodation-info {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #0284c7;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .accommodation-info h6 {
+            color: #0c4a6e;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .accommodation-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .accommodation-detail:last-child {
+            margin-bottom: 0;
+        }
+
+        .accommodation-label {
+            color: #374151;
+        }
+
+        .accommodation-value {
+            font-weight: 600;
+            color: #0c4a6e;
         }
 
         @media (max-width: 576px) {
@@ -405,6 +521,10 @@
             
             .form-card-body {
                 padding: 1rem;
+            }
+
+            .room-list {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -455,19 +575,22 @@
         .form-control:focus::placeholder {
             opacity: 0.5;
         }
-    </style>
 
+        /* Form select option disabled style */
+        .form-select option:disabled {
+            color: #991b1b;
+            background-color: #fee2e2;
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
-        
         <div class="app-header">
             <div class="header-content">
                 <div class="header-icon">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
-   
-                <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
+ <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
                 <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
                 <br>
             </div>
@@ -542,59 +665,80 @@
                                 <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
                                 <input type="number" class="form-control" id="attendees" name="attendees" required min="1">
                             </div>
+
+                            <!-- Meeting Room Selection -->
+                            <div class="mb-3">
+                                <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
+                                <select class="form-select" id="meetingRoom" name="meetingRoom" required>
+                                    <option value="">-- เลือกห้องประชุม --</option>
+                                    <optgroup label="ห้องประชุม 120 ที่นั่ง">
+                                        <option value="Auditorium">Auditorium (120 ที่นั่ง)</option>
+                                        <option value="A201/1-2">A201 รวม (120 ที่นั่ง)</option>
+                                        <option value="A201/1">A201/1 (60 ที่นั่ง)</option>
+                                        <option value="A201/2">A201/2 (60 ที่นั่ง)</option>
+                                    </optgroup>
+                                    <optgroup label="ห้องประชุม 60 ที่นั่ง">
+                                        <option value="A202">A202 (60 ที่นั่ง)</option>
+                                        <option value="A203">A203 (60 ที่นั่ง)</option>
+                                    </optgroup>
+                                    <optgroup label="ห้องประชุม 40 ที่นั่ง">
+                                        <option value="A204">A204 (40 ที่นั่ง)</option>
+                                        <option value="A205">A205 (40 ที่นั่ง)</option>
+                                        <option value="A206">A206 (40 ที่นั่ง)</option>
+                                    </optgroup>
+                                    <optgroup label="ห้อง Computer 50 ที่นั่ง">
+                                        <option value="Computor1">Computer1 (50 ที่นั่ง)</option>
+                                        <option value="Computor2">Computer2 (50 ที่นั่ง)</option>
+                                    </optgroup>
+                                    <optgroup label="สนามฝึก">
+                                        <option value="สนามฝึก">สนามฝึก (100 คน)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <!-- Meeting Room Status Display -->
+                            <div id="meetingRoomStatus" style="display: none;"></div>
                             
                             <div class="mb-3">
                                 <label class="form-label required">ต้องการที่พัก</label>
-                           
                                 <div class="row g-3 mt-2">
                                     <div class="col-6">
                                         <div class="radio-card" data-value="ต้องการ">
-             
                                             <input type="radio" name="accommodation" value="ต้องการ" required>
                                             <div class="radio-icon">
-                    
                                                 <i class="fas fa-bed"></i>
                                             </div>
-                          
                                             <div>ต้องการ</div>
                                         </div>
                                     </div>
-      
                                     <div class="col-6">
                                         <div class="radio-card" data-value="ไม่ต้องการ">
-                           
                                             <input type="radio" name="accommodation" value="ไม่ต้องการ">
                                             <div class="radio-icon">
-                                   
                                                 <i class="fas fa-home"></i>
                                             </div>
-                                         
                                             <div>ไม่ต้องการ</div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- --- Added div for displaying accommodation status --- -->
-                                <div id="accommodationStatus" class="mt-3"></div>
+                                
+                                <!-- Accommodation Status Display -->
+                                <div id="accommodationStatus" style="display: none;"></div>
                             </div>
                         </div>
                     </div>
 
-                    
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
                             <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
-             
                         </button>
                     </div>
                 </form>
 
-                
                 <div id="messageContainer" class="mt-3"></div>
             </div>
-    
         </div>
 
-        
         <div id="loading" class="loading-overlay">
             <div class="loading-content">
                 <div class="loading-spinner"></div>
@@ -603,16 +747,29 @@
         </div>
     </div>
 
-    
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        
+   
         const LIFF_ID = "2007138631-Ono58j50";
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec";
+
+        const MEETING_ROOMS_CONFIG = {
+            'Auditorium': { capacity: 120, category: '120 ที่นั่ง' },
+            'A201/1-2': { capacity: 120, category: '120 ที่นั่ง' },
+            'A201/1': { capacity: 60, category: '60 ที่นั่ง' },
+            'A201/2': { capacity: 60, category: '60 ที่นั่ง' },
+            'A202': { capacity: 60, category: '60 ที่นั่ง' },
+            'A203': { capacity: 60, category: '60 ที่นั่ง' },
+            'A204': { capacity: 40, category: '40 ที่นั่ง' },
+            'A205': { capacity: 40, category: '40 ที่นั่ง' },
+            'A206': { capacity: 40, category: '40 ที่นั่ง' },
+            'Computor1': { capacity: 50, category: 'Computer' },
+            'Computor2': { capacity: 50, category: 'Computer' },
+            'สนามฝึก': { capacity: 100, category: 'สนาม' }
+        };
         
-        
+        // DOM Elements
         const mainContent = document.getElementById('mainContent');
         const bookingForm = document.getElementById('bookingForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -620,12 +777,15 @@
         const loadingDiv = document.getElementById('loading');
         const progressFill = document.getElementById('progressFill');
         const accommodationStatusDiv = document.getElementById('accommodationStatus');
+        const meetingRoomStatusDiv = document.getElementById('meetingRoomStatus');
+        const meetingRoomSelect = document.getElementById('meetingRoom');
 
         let userId = '';
         let displayName = '';
         let checkTimeout;
+        let roomAvailabilityData = {};
 
-        
+        // Initialize LIFF
         async function initializeLiff() {
             try {
                 await liff.init({ liffId: LIFF_ID });
@@ -638,7 +798,6 @@
                 displayName = profile.displayName;
                 
                 await autofillUserData(); 
-                
                 updateProgress();
             } catch (err) {
                 console.error('LIFF initialization error:', err);
@@ -646,6 +805,7 @@
             }
         }
 
+        // Autofill user data
         async function autofillUserData() {
             if (!userId) return;
 
@@ -659,7 +819,6 @@
                     document.getElementById('fullName').value = userData.fullName;
                     document.getElementById('department').value = userData.department;
                     document.getElementById('phone').value = userData.phone;
-
                     updateProgress(); 
                 }
             } catch (error) {
@@ -667,11 +826,14 @@
             }
         }
 
-        
+        // Show message function
         function showMessage(text, type = 'success') {
-            const alertClass = type === 'success' ?
-                'alert-success-custom' : 'alert-danger-custom';
-            const icon = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            const alertClass = type === 'success' ? 'alert-success-custom' : 
+                             type === 'danger' ? 'alert-danger-custom' :
+                             type === 'warning' ? 'alert-warning-custom' : 'alert-info-custom';
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'danger' ? 'fas fa-exclamation-circle' :
+                        type === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle';
             const messageHtml = `
                 <div class="alert alert-custom ${alertClass} fade-in" role="alert">
                     <i class="${icon} me-2"></i>${text}
@@ -686,9 +848,9 @@
             }
         }
 
-        
+        // Update progress bar
         function updateProgress() {
-            const formInputs = document.querySelectorAll('input[required]');
+            const formInputs = document.querySelectorAll('input[required], select[required]');
             const filledInputs = Array.from(formInputs).filter(input => {
                 if (input.type === 'radio') {
                     return document.querySelector(`input[name="${input.name}"]:checked`) !== null;
@@ -699,7 +861,132 @@
             progressFill.style.width = `${progress}%`;
         }
 
-        // --- New function to check room availability ---
+        // Check meeting room availability
+        async function checkMeetingRoomAvailability() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!startDate || !endDate) {
+                meetingRoomStatusDiv.innerHTML = '';
+                meetingRoomStatusDiv.style.display = 'none';
+                return;
+            }
+
+            meetingRoomStatusDiv.style.display = 'block';
+            meetingRoomStatusDiv.innerHTML = `
+                <div class="alert alert-info-custom">
+                    <i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบความพร้อมของห้องประชุม...
+                </div>
+            `;
+
+            try {
+                const checkUrl = `${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${startDate}&endDate=${endDate}`;
+                const response = await fetch(checkUrl);
+                const result = await response.json();
+
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+
+                roomAvailabilityData = result.roomStatus || {};
+                displayMeetingRoomStatus(roomAvailabilityData);
+                updateMeetingRoomSelect(roomAvailabilityData);
+
+            } catch (error) {
+                console.error('Meeting room availability check error:', error);
+                meetingRoomStatusDiv.innerHTML = `
+                    <div class="alert alert-warning-custom">
+                        <i class="fas fa-exclamation-circle"></i> ไม่สามารถตรวจสอบความพร้อมของห้องประชุมได้
+                    </div>
+                `;
+            }
+        }
+
+        // Display meeting room status
+        function displayMeetingRoomStatus(roomStatus) {
+            const categories = {
+                '120 ที่นั่ง': [
+                    { name: 'Auditorium', capacity: '120 ที่นั่ง' },
+                    { name: 'A201/1-2', capacity: '120 ที่นั่ง รวม' },
+                    { name: 'A201/1', capacity: '60 ที่นั่ง' },
+                    { name: 'A201/2', capacity: '60 ที่นั่ง' }
+                ],
+                '60 ที่นั่ง': [
+                    { name: 'A202', capacity: '60 ที่นั่ง' },
+                    { name: 'A203', capacity: '60 ที่นั่ง' }
+                ],
+                '40 ที่นั่ง': [
+                    { name: 'A204', capacity: '40 ที่นั่ง' },
+                    { name: 'A205', capacity: '40 ที่นั่ง' },
+                    { name: 'A206', capacity: '40 ที่นั่ง' }
+                ],
+                'Computer': [
+                    { name: 'Computor1', capacity: '50 ที่นั่ง' },
+                    { name: 'Computor2', capacity: '50 ที่นั่ง' }
+                ],
+                'สนาม': [
+                    { name: 'สนามฝึก', capacity: '100 คน' }
+                ]
+            };
+
+            let statusHtml = '<div class="room-status-container">';
+            statusHtml += '<h6><i class="fas fa-door-open me-2"></i>สถานะห้องประชุม</h6>';
+
+            for (const [category, rooms] of Object.entries(categories)) {
+                statusHtml += `<div class="room-group">`;
+                statusHtml += `<div class="room-group-title"><i class="fas fa-users me-2"></i>${category}</div>`;
+                statusHtml += `<div class="room-list">`;
+
+                rooms.forEach(room => {
+                    const isAvailable = roomStatus[room.name] !== false;
+                    const statusClass = isAvailable ? 'room-available' : 'room-occupied';
+                    const icon = isAvailable ? 'fas fa-check' : 'fas fa-times';
+                    const statusText = isAvailable ? 'ว่าง' : 'ไม่ว่าง';
+
+                    statusHtml += `
+                        <div class="room-item ${statusClass}">
+                            <div><i class="${icon}"></i> ${room.name}</div>
+                            <div class="room-capacity">${room.capacity}</div>
+                            <div style="font-size: 0.75rem; font-weight: 600;">${statusText}</div>
+                        </div>
+                    `;
+                });
+
+                statusHtml += `</div></div>`;
+            }
+
+            statusHtml += '</div>';
+            meetingRoomStatusDiv.innerHTML = statusHtml;
+        }
+
+        // Update meeting room select options
+        function updateMeetingRoomSelect(roomStatus) {
+            const options = meetingRoomSelect.querySelectorAll('option[value]');
+            
+            options.forEach(option => {
+                const roomName = option.value;
+                const isAvailable = roomStatus[roomName] !== false;
+                
+                if (!isAvailable) {
+                    option.disabled = true;
+                    option.text = option.text.replace(' (ไม่ว่าง)', '') + ' (ไม่ว่าง)';
+                    option.style.color = '#991b1b';
+                } else {
+                    option.disabled = false;
+                    option.text = option.text.replace(' (ไม่ว่าง)', '');
+                    option.style.color = '';
+                }
+            });
+
+            // Clear selection if selected room becomes unavailable
+            const selectedRoom = meetingRoomSelect.value;
+            if (selectedRoom && roomStatus[selectedRoom] === false) {
+                meetingRoomSelect.value = '';
+                updateProgress();
+            }
+        }
+
+        // Check accommodation availability
         async function checkAccommodation() {
             clearTimeout(checkTimeout);
             
@@ -709,7 +996,13 @@
                 const endDate = document.getElementById('endDate').value;
                 const attendees = parseInt(document.getElementById('attendees').value) || 0;
 
-                if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
+                if (!accommodationChoice) {
+                    accommodationStatusDiv.innerHTML = '';
+                    accommodationStatusDiv.style.display = 'none';
+                    return;
+                }
+
+                if (accommodationChoice.value !== 'ต้องการ') {
                     accommodationStatusDiv.innerHTML = '';
                     accommodationStatusDiv.style.display = 'none';
                     return;
@@ -720,11 +1013,27 @@
                 }
 
                 accommodationStatusDiv.style.display = 'block';
-                accommodationStatusDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...`;
-                accommodationStatusDiv.className = 'mt-3 alert alert-info';
+                accommodationStatusDiv.innerHTML = `
+                    <div class="alert alert-info-custom">
+                        <i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...
+                    </div>
+                `;
 
                 try {
-                    const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${startDate}&endDate=${endDate}`;
+                    // Calculate checkin/checkout dates
+                    const startDateObj = new Date(startDate);
+                    const endDateObj = new Date(endDate);
+                    
+                    const checkin = new Date(startDateObj);
+                    checkin.setDate(startDateObj.getDate() - 1);
+                    
+                    const checkout = new Date(endDateObj);
+                    checkout.setDate(endDateObj.getDate() - 1);
+
+                    const checkinStr = checkin.toISOString().split('T')[0];
+                    const checkoutStr = checkout.toISOString().split('T')[0];
+
+                    const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${checkoutStr}`;
                     const response = await fetch(checkUrl);
                     const result = await response.json();
 
@@ -733,31 +1042,64 @@
                     }
 
                     const available = result.availableRooms;
-                    let statusHtml = '';
+                    
                     if (available > 0) {
-                        statusHtml = `<i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong style="font-size: 1.1em;">${available}</strong> ห้อง ในช่วงวันที่คุณเลือก`;
-                        accommodationStatusDiv.className = 'mt-3 alert alert-success-custom';
+                        let statusHtml = `
+                            <div class="alert alert-success-custom">
+                                <i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก
+                        `;
                         
                         const requiredRooms = Math.ceil(attendees / 2);
-                        if (attendees > 0 && requiredRooms > available) {
-                            statusHtml += `<br><small class="text-danger fw-bold"><i class="fas fa-exclamation-triangle"></i> แต่จำนวนห้องพักอาจไม่เพียงพอสำหรับ ${attendees} คน (ต้องการ ${requiredRooms} ห้อง)</small>`;
+                        if (attendees > 0) {
+                            statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`;
+                            
+                            if (requiredRooms > available) {
+                                statusHtml += `<br><small class="text-danger fw-bold"><i class="fas fa-exclamation-triangle"></i> แต่จำนวนห้องพักอาจไม่เพียงพอ</small>`;
+                            }
                         }
 
+                        // Add accommodation period info
+                        statusHtml += `</div>`;
+                        statusHtml += `
+                            <div class="accommodation-info">
+                                <h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6>
+                                <div class="accommodation-detail">
+                                    <span class="accommodation-label">วันเข้าพัก:</span>
+                                    <span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span>
+                                </div>
+                                <div class="accommodation-detail">
+                                    <span class="accommodation-label">วันออกจากที่พัก:</span>
+                                    <span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}</span>
+                                </div>
+                                <div class="accommodation-detail">
+                                    <span class="accommodation-label">จำนวนคืน:</span>
+                                    <span class="accommodation-value">${Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24))} คืน</span>
+                                </div>
+                            </div>
+                        `;
+                        
+                        accommodationStatusDiv.innerHTML = statusHtml;
+
                     } else {
-                        statusHtml = `<i class="fas fa-times-circle"></i> ไม่มีห้องว่างในช่วงวันที่คุณเลือก กรุณาเปลี่ยนช่วงเวลา`;
-                        accommodationStatusDiv.className = 'mt-3 alert alert-danger-custom';
+                        accommodationStatusDiv.innerHTML = `
+                            <div class="alert alert-danger-custom">
+                                <i class="fas fa-times-circle"></i> ไม่มีห้องว่างในช่วงวันที่คุณเลือก กรุณาเปลี่ยนช่วงเวลา
+                            </div>
+                        `;
                     }
-                    accommodationStatusDiv.innerHTML = statusHtml;
 
                 } catch (error) {
-                    console.error('Availability check error:', error);
-                    accommodationStatusDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ไม่สามารถตรวจสอบห้องว่างได้`;
-                    accommodationStatusDiv.className = 'mt-3 alert alert-warning';
+                    console.error('Accommodation availability check error:', error);
+                    accommodationStatusDiv.innerHTML = `
+                        <div class="alert alert-warning-custom">
+                            <i class="fas fa-exclamation-circle"></i> ไม่สามารถตรวจสอบห้องว่างได้
+                        </div>
+                    `;
                 }
-            }, 500); // Debounce for 500ms
+            }, 500);
         }
 
-        
+        // Radio card event handlers
         document.querySelectorAll('.radio-card').forEach(card => {
             card.addEventListener('click', function() {
                 document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
@@ -765,38 +1107,99 @@
                 const radio = this.querySelector('input[type="radio"]');
                 radio.checked = true;
                 
-                // Trigger change event for listeners
                 const event = new Event('change');
                 radio.dispatchEvent(event);
-
                 updateProgress();
             });
         });
         
-        document.querySelectorAll('input').forEach(input => {
+        // Form input event listeners
+        document.querySelectorAll('input, select').forEach(input => {
             input.addEventListener('input', updateProgress);
             input.addEventListener('change', updateProgress);
         });
 
-        // --- Add event listeners for availability check ---
-        document.getElementById('startDate').addEventListener('change', checkAccommodation);
-        document.getElementById('endDate').addEventListener('change', checkAccommodation);
+        // Date and accommodation change event listeners
+        document.getElementById('startDate').addEventListener('change', () => {
+            checkMeetingRoomAvailability();
+            checkAccommodation();
+        });
+        
+        document.getElementById('endDate').addEventListener('change', () => {
+            checkMeetingRoomAvailability();
+            checkAccommodation();
+        });
+        
         document.getElementById('attendees').addEventListener('input', checkAccommodation);
+        
         document.querySelectorAll('input[name="accommodation"]').forEach(radio => {
             radio.addEventListener('change', checkAccommodation);
         });
 
-        
+        // Meeting room selection validation
+        document.getElementById('meetingRoom').addEventListener('change', function() {
+            const selectedRoom = this.value;
+            const attendees = parseInt(document.getElementById('attendees').value) || 0;
+            
+            if (selectedRoom && attendees > 0) {
+                const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
+                if (roomConfig && attendees > roomConfig.capacity) {
+                    showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
+                }
+            }
+            updateProgress();
+        });
+
+        // Attendees validation
+        document.getElementById('attendees').addEventListener('input', function() {
+            const attendees = parseInt(this.value) || 0;
+            const selectedRoom = document.getElementById('meetingRoom').value;
+            
+            if (selectedRoom && attendees > 0) {
+                const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
+                if (roomConfig && attendees > roomConfig.capacity) {
+                    showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
+                }
+            }
+        });
+
+        // Form submission
         bookingForm.addEventListener('submit', async function(event) {
             event.preventDefault();
 
+            // Validate meeting room capacity
+            const selectedRoom = document.getElementById('meetingRoom').value;
+            const attendees = parseInt(document.getElementById('attendees').value) || 0;
             
+            if (selectedRoom && attendees > 0) {
+                const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
+                if (roomConfig && attendees > roomConfig.capacity) {
+                    await Swal.fire({
+                        title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!',
+                        text: `ห้อง ${selectedRoom} รองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่นที่มีความจุเพียงพอ`,
+                        icon: 'error',
+                        confirmButtonText: 'ตกลง'
+                    });
+                    return;
+                }
+            }
+
+            // Check if selected room is available
+            if (selectedRoom && roomAvailabilityData[selectedRoom] === false) {
+                await Swal.fire({
+                    title: 'ห้องประชุมไม่ว่าง!',
+                    text: 'ห้องประชุมที่คุณเลือกไม่ว่างในช่วงเวลาที่กำหนด กรุณาเลือกห้องอื่น',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง'
+                });
+                return;
+            }
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
             mainContent.style.display = 'none';
             loadingDiv.classList.add('show');
 
-   
             const formData = new FormData(event.target);
             const data = {
                 userId: userId,
@@ -807,10 +1210,12 @@
                 courseName: formData.get('courseName'),
                 startDate: formData.get('startDate'),
                 endDate: formData.get('endDate'),
+                meetingRoom: formData.get('meetingRoom'),
                 accommodation: formData.get('accommodation'),
                 attendees: formData.get('attendees'),
                 timestamp: new Date().toISOString()
             };
+
             try {
                 const response = await fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
@@ -824,14 +1229,15 @@
                 loadingDiv.classList.remove('show');
                 mainContent.style.display = 'block';
 
-                Swal.fire({
-                    title: 'บันทึกข้อมูลสำเร็จ 🎉',
+                await Swal.fire({
+                    title: 'บันทึกข้อมูลสำเร็จ!',
                     html: `
                         <div class="text-start mt-3">
                             <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
                             <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
                             <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
                             <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
+                            <p><i class="fas fa-door-open me-2"></i><strong>ห้องประชุม:</strong> ${data.meetingRoom}</p>
                             <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
                             <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
                         </div>
@@ -842,21 +1248,20 @@
                     icon: 'success',
                     showConfirmButton: true,
                     confirmButtonText: 'ตกลง',
-                    allowOutsideClick: false, 
+                    allowOutsideClick: false,
                     customClass: {
                         popup: 'bounce-in'
                     }
                 }).then((result) => {
-                    
                     if (result.isConfirmed) {
-                        
                         if (liff.isInClient()) {
-                            liff.closeWindow(); 
+                            liff.closeWindow();
                         } else {
-                            window.close(); 
+                            window.close();
                         }
                     }
                 });
+                            
 
             } catch (error) {
                 console.error('Submit error:', error);
@@ -867,7 +1272,6 @@
                     title: 'เกิดข้อผิดพลาด!',
                     text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
                     icon: 'error',
-             
                     confirmButtonText: 'ลองอีกครั้ง',
                     confirmButtonColor: '#dc3545'
                 });
@@ -881,7 +1285,6 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('startDate').setAttribute('min', today);
 
-            
             document.getElementById('startDate').addEventListener('change', function() {
                 const startDateValue = this.value;
                 document.getElementById('endDate').setAttribute('min', startDateValue);
