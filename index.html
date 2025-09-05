@@ -15,7 +15,7 @@
     
     <style>
         :root {
-            --primary-color: #1e3a8a; 
+            --primary-color: #1e3a8a;
             --secondary-color: #3b82f6; 
             --accent-color: #60a5fa; 
             --success-color: #22c55e;
@@ -24,7 +24,6 @@
             
             --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             --container-background: #ffffff;
-            
             --header-gradient: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #4338ca 100%);
             --header-overlay: rgba(255, 255, 255, 0.1);
             
@@ -576,10 +575,20 @@
             opacity: 0.5;
         }
 
-        /* Form select option disabled style */
-        .form-select option:disabled {
-            color: #991b1b;
-            background-color: #fee2e2;
+        /* === NEW & EDITED STYLES FOR DROPDOWN === */
+        .form-select option {
+            padding: 8px; /* For better readability on mobile */
+        }
+        
+        .form-select option.available-option {
+            font-weight: 500;
+            color: #166534; /* Dark green */
+        }
+
+        .form-select option.occupied-option {
+            font-weight: 500;
+            color: #991b1b; /* Dark red */
+            background-color: #fee2e2; /* Light red background */
         }
     </style>
 </head>
@@ -590,7 +599,7 @@
                 <div class="header-icon">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
- <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
+                <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
                 <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
                 <br>
             </div>
@@ -600,7 +609,7 @@
         <div id="mainContent" class="fade-in">
             <div class="form-section">
                
-                
+          
                 <div class="progress-bar-custom">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
@@ -610,7 +619,6 @@
                     <div class="form-card bounce-in">
                         <div class="form-card-header">
                             <h3 class="form-card-title">
-                        
                                 <i class="fas fa-user me-2"></i>ข้อมูลผู้จอง
                             </h3>
                         </div>
@@ -619,20 +627,16 @@
                             <div class="mb-3">
                                 <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
                                 <input type="text" class="form-control" id="fullName" name="fullName" required>
-           
                             </div>
                             <div class="mb-3">
                                 <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
-                   
                                 <input type="text" class="form-control" id="department" name="department" required>
                             </div>
                             <div class="mb-3">
-                         
                                 <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
                                 <input type="tel" class="form-control" id="phone" name="phone" required>
                             </div>
                         </div>
- 
                     </div>
 
                     
@@ -666,38 +670,36 @@
                                 <input type="number" class="form-control" id="attendees" name="attendees" required min="1">
                             </div>
 
-                            <!-- Meeting Room Selection -->
                             <div class="mb-3">
                                 <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
                                 <select class="form-select" id="meetingRoom" name="meetingRoom" required>
                                     <option value="">-- เลือกห้องประชุม --</option>
                                     <optgroup label="ห้องประชุม 120 ที่นั่ง">
-                                        <option value="Auditorium">Auditorium (120 ที่นั่ง)</option>
-                                        <option value="A201/1-2">A201 รวม (120 ที่นั่ง)</option>
-                                        <option value="A201/1">A201/1 (60 ที่นั่ง)</option>
-                                        <option value="A201/2">A201/2 (60 ที่นั่ง)</option>
+                                        <option value="Auditorium" data-original-text="Auditorium (120 ที่นั่ง)">Auditorium (120 ที่นั่ง)</option>
+                                        <option value="A201/1-2" data-original-text="A201 รวม (120 ที่นั่ง)">A201 รวม (120 ที่นั่ง)</option>
+                                        <option value="A201/1" data-original-text="A201/1 (60 ที่นั่ง)">A201/1 (60 ที่นั่ง)</option>
+                                        <option value="A201/2" data-original-text="A201/2 (60 ที่นั่ง)">A201/2 (60 ที่นั่ง)</option>
                                     </optgroup>
                                     <optgroup label="ห้องประชุม 60 ที่นั่ง">
-                                        <option value="A202">A202 (60 ที่นั่ง)</option>
-                                        <option value="A203">A203 (60 ที่นั่ง)</option>
+                                        <option value="A202" data-original-text="A202 (60 ที่นั่ง)">A202 (60 ที่นั่ง)</option>
+                                        <option value="A203" data-original-text="A203 (60 ที่นั่ง)">A203 (60 ที่นั่ง)</option>
                                     </optgroup>
                                     <optgroup label="ห้องประชุม 40 ที่นั่ง">
-                                        <option value="A204">A204 (40 ที่นั่ง)</option>
-                                        <option value="A205">A205 (40 ที่นั่ง)</option>
-                                        <option value="A206">A206 (40 ที่นั่ง)</option>
+                                        <option value="A204" data-original-text="A204 (40 ที่นั่ง)">A204 (40 ที่นั่ง)</option>
+                                        <option value="A205" data-original-text="A205 (40 ที่นั่ง)">A205 (40 ที่นั่ง)</option>
+                                        <option value="A206" data-original-text="A206 (40 ที่นั่ง)">A206 (40 ที่นั่ง)</option>
                                     </optgroup>
                                     <optgroup label="ห้อง Computer 50 ที่นั่ง">
-                                        <option value="Computor1">Computer1 (50 ที่นั่ง)</option>
-                                        <option value="Computor2">Computer2 (50 ที่นั่ง)</option>
+                                        <option value="Computor1" data-original-text="Computer1 (50 ที่นั่ง)">Computer1 (50 ที่นั่ง)</option>
+                                        <option value="Computor2" data-original-text="Computer2 (50 ที่นั่ง)">Computer2 (50 ที่นั่ง)</option>
                                     </optgroup>
                                     <optgroup label="สนามฝึก">
-                                        <option value="สนามฝึก">สนามฝึก (100 คน)</option>
+                                        <option value="สนามฝึก" data-original-text="สนามฝึก (100 คน)">สนามฝึก (100 คน)</option>
                                     </optgroup>
                                 </select>
                             </div>
 
-                            <!-- Meeting Room Status Display -->
-                            <div id="meetingRoomStatus" style="display: none;"></div>
+                             <div id="meetingRoomStatus" style="display: none;"></div>
                             
                             <div class="mb-3">
                                 <label class="form-label required">ต้องการที่พัก</label>
@@ -722,7 +724,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Accommodation Status Display -->
                                 <div id="accommodationStatus" style="display: none;"></div>
                             </div>
                         </div>
@@ -750,10 +751,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-   
         const LIFF_ID = "2007138631-Ono58j50";
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec";
 
+        
+        // Meeting room configurations
         const MEETING_ROOMS_CONFIG = {
             'Auditorium': { capacity: 120, category: '120 ที่นั่ง' },
             'A201/1-2': { capacity: 120, category: '120 ที่นั่ง' },
@@ -768,7 +770,7 @@
             'Computor2': { capacity: 50, category: 'Computer' },
             'สนามฝึก': { capacity: 100, category: 'สนาม' }
         };
-        
+
         // DOM Elements
         const mainContent = document.getElementById('mainContent');
         const bookingForm = document.getElementById('bookingForm');
@@ -808,7 +810,6 @@
         // Autofill user data
         async function autofillUserData() {
             if (!userId) return;
-
             const autofillUrl = `${GAS_WEB_APP_URL}?userId=${userId}`;
 
             try {
@@ -878,17 +879,27 @@
                     <i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบความพร้อมของห้องประชุม...
                 </div>
             `;
-
             try {
                 const checkUrl = `${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${startDate}&endDate=${endDate}`;
                 const response = await fetch(checkUrl);
                 const result = await response.json();
-
                 if (result.error) {
                     throw new Error(result.error);
                 }
 
                 roomAvailabilityData = result.roomStatus || {};
+
+                // === NEW LOGIC FOR A201 ===
+                // If A201/1-2 (combined) is occupied, then both A201/1 and A201/2 are also occupied.
+                if (roomAvailabilityData['A201/1-2'] === false) {
+                    roomAvailabilityData['A201/1'] = false;
+                    roomAvailabilityData['A201/2'] = false;
+                }
+                // If either A201/1 or A201/2 is occupied, then the combined room A201/1-2 cannot be booked.
+                if (roomAvailabilityData['A201/1'] === false || roomAvailabilityData['A201/2'] === false) {
+                    roomAvailabilityData['A201/1-2'] = false;
+                }
+                
                 displayMeetingRoomStatus(roomAvailabilityData);
                 updateMeetingRoomSelect(roomAvailabilityData);
 
@@ -931,12 +942,10 @@
 
             let statusHtml = '<div class="room-status-container">';
             statusHtml += '<h6><i class="fas fa-door-open me-2"></i>สถานะห้องประชุม</h6>';
-
             for (const [category, rooms] of Object.entries(categories)) {
                 statusHtml += `<div class="room-group">`;
                 statusHtml += `<div class="room-group-title"><i class="fas fa-users me-2"></i>${category}</div>`;
                 statusHtml += `<div class="room-list">`;
-
                 rooms.forEach(room => {
                     const isAvailable = roomStatus[room.name] !== false;
                     const statusClass = isAvailable ? 'room-available' : 'room-occupied';
@@ -959,22 +968,26 @@
             meetingRoomStatusDiv.innerHTML = statusHtml;
         }
 
-        // Update meeting room select options
+        // === EDITED FUNCTION: Update meeting room select options ===
         function updateMeetingRoomSelect(roomStatus) {
             const options = meetingRoomSelect.querySelectorAll('option[value]');
-            
             options.forEach(option => {
+                if (!option.value) return; // Skip the placeholder option
+
                 const roomName = option.value;
+                const originalText = option.dataset.originalText;
                 const isAvailable = roomStatus[roomName] !== false;
+                
+                option.classList.remove('available-option', 'occupied-option');
                 
                 if (!isAvailable) {
                     option.disabled = true;
-                    option.text = option.text.replace(' (ไม่ว่าง)', '') + ' (ไม่ว่าง)';
-                    option.style.color = '#991b1b';
+                    option.text = `${originalText} (ไม่ว่าง)`;
+                    option.classList.add('occupied-option');
                 } else {
                     option.disabled = false;
-                    option.text = option.text.replace(' (ไม่ว่าง)', '');
-                    option.style.color = '';
+                    option.text = `${originalText} (ว่าง)`;
+                    option.classList.add('available-option');
                 }
             });
 
@@ -986,41 +999,29 @@
             }
         }
 
-        // Check accommodation availability
+
+        // === EDITED FUNCTION: Check accommodation availability ===
         async function checkAccommodation() {
             clearTimeout(checkTimeout);
-            
             checkTimeout = setTimeout(async () => {
                 const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
                 const startDate = document.getElementById('startDate').value;
                 const endDate = document.getElementById('endDate').value;
                 const attendees = parseInt(document.getElementById('attendees').value) || 0;
 
-                if (!accommodationChoice) {
-                    accommodationStatusDiv.innerHTML = '';
-                    accommodationStatusDiv.style.display = 'none';
-                    return;
-                }
-
-                if (accommodationChoice.value !== 'ต้องการ') {
+                if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ' || !startDate || !endDate) {
                     accommodationStatusDiv.innerHTML = '';
                     accommodationStatusDiv.style.display = 'none';
                     return;
                 }
                 
-                if (!startDate || !endDate) {
-                    return;
-                }
-
                 accommodationStatusDiv.style.display = 'block';
                 accommodationStatusDiv.innerHTML = `
                     <div class="alert alert-info-custom">
                         <i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...
                     </div>
                 `;
-
                 try {
-                    // Calculate checkin/checkout dates
                     const startDateObj = new Date(startDate);
                     const endDateObj = new Date(endDate);
                     
@@ -1028,10 +1029,14 @@
                     checkin.setDate(startDateObj.getDate() - 1);
                     
                     const checkout = new Date(endDateObj);
-                    checkout.setDate(endDateObj.getDate() - 1);
+                    // For calculation, we use the end date directly
+                    // checkout.setDate(endDateObj.getDate() - 1); 
 
                     const checkinStr = checkin.toISOString().split('T')[0];
-                    const checkoutStr = checkout.toISOString().split('T')[0];
+                    // The checkout date for the API query should be the day before the end date.
+                    const apiCheckoutDate = new Date(endDateObj);
+                    apiCheckoutDate.setDate(endDateObj.getDate() - 1);
+                    const checkoutStr = apiCheckoutDate.toISOString().split('T')[0];
 
                     const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${checkoutStr}`;
                     const response = await fetch(checkUrl);
@@ -1042,42 +1047,43 @@
                     }
 
                     const available = result.availableRooms;
-                    
                     if (available > 0) {
+                        // === NEW NIGHT CALCULATION LOGIC ===
+                        // The number of nights is the difference in days between checkout and check-in date + 1
+                        // Example: Check-in on the 4th, check-out on the 5th. `checkout` is 5, `checkin` is 4. (5-4) + 1 = 2 nights.
+                        const timeDiff = checkout.getTime() - checkin.getTime();
+                        const nightCount = Math.round(timeDiff / (1000 * 3600 * 24)) + 1;
+
                         let statusHtml = `
                             <div class="alert alert-success-custom">
                                 <i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก
-                        `;
-                        
+                            `;
                         const requiredRooms = Math.ceil(attendees / 2);
                         if (attendees > 0) {
                             statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`;
-                            
                             if (requiredRooms > available) {
                                 statusHtml += `<br><small class="text-danger fw-bold"><i class="fas fa-exclamation-triangle"></i> แต่จำนวนห้องพักอาจไม่เพียงพอ</small>`;
                             }
                         }
 
-                        // Add accommodation period info
                         statusHtml += `</div>`;
                         statusHtml += `
                             <div class="accommodation-info">
                                 <h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6>
                                 <div class="accommodation-detail">
                                     <span class="accommodation-label">วันเข้าพัก:</span>
-                                    <span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span>
+                                    <span class="accommodation-value">${checkin.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                 </div>
                                 <div class="accommodation-detail">
                                     <span class="accommodation-label">วันออกจากที่พัก:</span>
-                                    <span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}</span>
+                                    <span class="accommodation-value">${checkout.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                 </div>
                                 <div class="accommodation-detail">
                                     <span class="accommodation-label">จำนวนคืน:</span>
-                                    <span class="accommodation-value">${Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24))} คืน</span>
+                                    <span class="accommodation-value">${nightCount} คืน</span>
                                 </div>
                             </div>
                         `;
-                        
                         accommodationStatusDiv.innerHTML = statusHtml;
 
                     } else {
@@ -1112,7 +1118,7 @@
                 updateProgress();
             });
         });
-        
+
         // Form input event listeners
         document.querySelectorAll('input, select').forEach(input => {
             input.addEventListener('input', updateProgress);
@@ -1124,12 +1130,10 @@
             checkMeetingRoomAvailability();
             checkAccommodation();
         });
-        
         document.getElementById('endDate').addEventListener('change', () => {
             checkMeetingRoomAvailability();
             checkAccommodation();
         });
-        
         document.getElementById('attendees').addEventListener('input', checkAccommodation);
         
         document.querySelectorAll('input[name="accommodation"]').forEach(radio => {
@@ -1225,7 +1229,7 @@
                     body: JSON.stringify(data),
                     redirect: 'follow'
                 });
-                
+
                 loadingDiv.classList.remove('show');
                 mainContent.style.display = 'block';
 
@@ -1261,8 +1265,6 @@
                         }
                     }
                 });
-                            
-
             } catch (error) {
                 console.error('Submit error:', error);
                 loadingDiv.classList.remove('show');
@@ -1275,12 +1277,11 @@
                     confirmButtonText: 'ลองอีกครั้ง',
                     confirmButtonColor: '#dc3545'
                 });
-                
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
             }
         });
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('startDate').setAttribute('min', today);
@@ -1292,7 +1293,7 @@
             
             updateProgress();
         });
-        
+
         initializeLiff();
     </script>
 </body>
