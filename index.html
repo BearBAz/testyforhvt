@@ -14,7 +14,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-```
 <style>
     :root {
         --primary-color: #1e3a8a; 
@@ -540,7 +539,6 @@
         margin-top: 1rem;
     }
 </style>
-```
 
 </head>
 <body>
@@ -556,7 +554,6 @@
             </div>
         </div>
 
-```
     <div id="mainContent" class="fade-in">
         <div class="form-section">
             <div class="progress-bar-custom">
@@ -700,6 +697,22 @@
     // Configuration
     const LIFF_ID = "2007138631-Ono58j50";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec";
+
+    // Meeting room configurations
+    const MEETING_ROOMS_CONFIG = {
+        'Auditorium': { capacity: 120, category: '120 ที่นั่ง' },
+        'A201/1-2': { capacity: 120, category: '120 ที่นั่ง' },
+        'A201/1': { capacity: 60, category: '60 ที่นั่ง' },
+        'A201/2': { capacity: 60, category: '60 ที่นั่ง' },
+        'A202': { capacity: 60, category: '60 ที่นั่ง' },
+        'A203': { capacity: 60, category: '60 ที่นั่ง' },
+        'A204': { capacity: 40, category: '40 ที่นั่ง' },
+        'A205': { capacity: 40, category: '40 ที่นั่ง' },
+        'A206': { capacity: 50, category: '40 ที่นั่ง' },
+        'Computor1': { capacity: 50, category: 'Computer' },
+        'Computor2': { capacity: 50, category: 'Computer' },
+        'สนามฝึก': { capacity: 100, category: 'สนาม' }
+    };
 
     // Room dependency mapping for A201 combined/separate rooms
     const ROOM_DEPENDENCIES = {
