@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ระบบจองห้องประชุม ศศฟ.</title>
+    <title>ระบบจองห้องประชุม ศฝฟ.</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -622,26 +622,26 @@
                             <select class="form-select" id="meetingRoom" name="meetingRoom" required>
                                 <option value="">-- เลือกห้องประชุม --</option>
                                 <optgroup label="ห้องประชุม 120 ที่นั่ง">
-                                    <option value="Auditorium">Auditorium (120 ที่นั่ง)</option>
-                                    <option value="A201/1-2">A201 รวม (120 ที่นั่ง)</option>
-                                    <option value="A201/1">A201/1 (60 ที่นั่ง)</option>
-                                    <option value="A201/2">A201/2 (60 ที่นั่ง)</option>
+                                    <option value="Auditorium">Auditorium </option>
+                                    <option value="A201/1-2">A201 </option>
                                 </optgroup>
                                 <optgroup label="ห้องประชุม 60 ที่นั่ง">
-                                    <option value="A202">A202 (60 ที่นั่ง)</option>
-                                    <option value="A203">A203 (60 ที่นั่ง)</option>
+                                    <option value="A201/1">A201/1 </option>
+                                    <option value="A201/2">A201/2 </option>
+                                    <option value="A202">A202 </option>
+                                    <option value="A203">A203 </option>
                                 </optgroup>
                                 <optgroup label="ห้องประชุม 40 ที่นั่ง">
-                                    <option value="A204">A204 (40 ที่นั่ง)</option>
-                                    <option value="A205">A205 (40 ที่นั่ง)</option>
-                                    <option value="A206">A206 (40 ที่นั่ง)</option>
+                                    <option value="A204">A204 </option>
+                                    <option value="A205">A205 </option>
+                                    <option value="A206">A206 </option>
                                 </optgroup>
                                 <optgroup label="ห้อง Computer 50 ที่นั่ง">
-                                    <option value="Computor1">Computer1 (50 ที่นั่ง)</option>
-                                    <option value="Computor2">Computer2 (50 ที่นั่ง)</option>
+                                    <option value="Computor 1">Computer 1 </option>
+                                    <option value="Computor 2">Computer 2 </option>
                                 </optgroup>
                                 <optgroup label="สนามฝึก">
-                                    <option value="สนามฝึก">สนามฝึก (100 คน)</option>
+                                    <option value="สนามฝึก">สนามฝึก </option>
                                 </optgroup>
                             </select>
                         </div>
@@ -700,22 +700,6 @@
     // Configuration
     const LIFF_ID = "2007138631-Ono58j50";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec";
-
-    // Meeting room configurations
-    const MEETING_ROOMS_CONFIG = {
-        'Auditorium': { capacity: 120, category: '120 ที่นั่ง' },
-        'A201/1-2': { capacity: 120, category: '120 ที่นั่ง' },
-        'A201/1': { capacity: 60, category: '60 ที่นั่ง' },
-        'A201/2': { capacity: 60, category: '60 ที่นั่ง' },
-        'A202': { capacity: 60, category: '60 ที่นั่ง' },
-        'A203': { capacity: 60, category: '60 ที่นั่ง' },
-        'A204': { capacity: 40, category: '40 ที่นั่ง' },
-        'A205': { capacity: 40, category: '40 ที่นั่ง' },
-        'A206': { capacity: 40, category: '40 ที่นั่ง' },
-        'Computor1': { capacity: 50, category: 'Computer' },
-        'Computor2': { capacity: 50, category: 'Computer' },
-        'สนามฝึก': { capacity: 100, category: 'สนาม' }
-    };
 
     // Room dependency mapping for A201 combined/separate rooms
     const ROOM_DEPENDENCIES = {
