@@ -180,32 +180,6 @@
         box-shadow: var(--shadow-medium);
     }
 
-    /* Status indicator styles */
-    .form-select.available {
-        border-color: var(--success-color);
-    }
-
-    .form-select.unavailable {
-        border-color: var(--danger-color);
-    }
-
-    .option-status {
-        font-size: 0.85rem;
-        padding: 2px 6px;
-        border-radius: 4px;
-        margin-left: 8px;
-    }
-
-    .status-available {
-        background-color: #dcfce7;
-        color: #166534;
-    }
-
-    .status-unavailable {
-        background-color: #fef2f2;
-        color: #991b1b;
-    }
-
     .radio-card {
         background: var(--card-background);
         border: 2px solid var(--card-border);
@@ -420,6 +394,16 @@
         box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3);
     }
 
+    /* Enhanced status display styles */
+    #accommodationStatus {
+        padding: 0.75rem 1.25rem;
+        border-radius: 12px;
+        font-weight: 500;
+        text-align: left;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
     .select-disabled {
         opacity: 0.6;
         pointer-events: none;
@@ -461,25 +445,14 @@
         color: #0c4a6e;
     }
 
-    /* Meeting room dropdown status style */
-    .meeting-room-status {
-        font-size: 0.85rem;
-        padding: 1rem;
-        border-radius: 8px;
-        margin-top: 0.5rem;
-        display: none;
+    .form-select option.occupied {
+        color: #991b1b !important;
+        background-color: #fee2e2 !important;
     }
 
-    .meeting-room-status.available {
-        background-color: #dcfce7;
-        border: 1px solid var(--success-color);
-        color: #166534;
-    }
-
-    .meeting-room-status.unavailable {
-        background-color: #fef2f2;
-        border: 1px solid var(--danger-color);
-        color: #991b1b;
+    .form-select option.available {
+        color: #166534 !important;
+        background-color: #dcfce7 !important;
     }
 
     @media (max-width: 576px) {
@@ -557,6 +530,14 @@
     .form-select option:disabled {
         color: #991b1b;
         background-color: #fee2e2;
+    }
+
+    .unavailable-message {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border: 1px solid #ef4444;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
     }
 </style>
 ```
@@ -663,9 +644,6 @@
                                     <option value="สนามฝึก">สนามฝึก (100 คน)</option>
                                 </optgroup>
                             </select>
-                            
-                            <!-- Meeting Room Status Display -->
-                            <div id="meetingRoomStatus" class="meeting-room-status"></div>
                         </div>
                         
                         <div class="mb-3">
@@ -721,13 +699,14 @@
 <script>
     // Configuration
     const LIFF_ID = "2007138631-Ono58j50";
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec";    
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec";
+
     // Meeting room configurations
     const MEETING_ROOMS_CONFIG = {
         'Auditorium': { capacity: 120, category: '120 ที่นั่ง' },
-        'A201/1-2': { capacity: 120, category: '120 ที่นั่ง', conflicts: ['A201/1', 'A201/2'] },
-        'A201/1': { capacity: 60, category: '60 ที่นั่ง', conflicts: ['A201/1-2'] },
-        'A201/2': { capacity: 60, category: '60 ที่นั่ง', conflicts: ['A201/1-2'] },
+        'A201/1-2': { capacity: 120, category: '120 ที่นั่ง' },
+        'A201/1': { capacity: 60, category: '60 ที่นั่ง' },
+        'A201/2': { capacity: 60, category: '60 ที่นั่ง' },
         'A202': { capacity: 60, category: '60 ที่นั่ง' },
         'A203': { capacity: 60, category: '60 ที่นั่ง' },
         'A204': { capacity: 40, category: '40 ที่นั่ง' },
@@ -736,6 +715,13 @@
         'Computor1': { capacity: 50, category: 'Computer' },
         'Computor2': { capacity: 50, category: 'Computer' },
         'สนามฝึก': { capacity: 100, category: 'สนาม' }
+    };
+
+    // Room dependency mapping for A201 combined/separate rooms
+    const ROOM_DEPENDENCIES = {
+        'A201/1-2': ['A201/1', 'A201/2'],  // If A201 combined is booked, these cannot be booked
+        'A201/1': ['A201/1-2'],             // If A201/1 is booked, A201 combined cannot be booked
+        'A201/2': ['A201/1-2']              // If A201/2 is booked, A201 combined cannot be booked
     };
     
     // DOM Elements
@@ -746,13 +732,13 @@
     const loadingDiv = document.getElementById('loading');
     const progressFill = document.getElementById('progressFill');
     const accommodationStatusDiv = document.getElementById('accommodationStatus');
-    const meetingRoomStatusDiv = document.getElementById('meetingRoomStatus');
     const meetingRoomSelect = document.getElementById('meetingRoom');
 
     let userId = '';
     let displayName = '';
     let checkTimeout;
     let roomAvailabilityData = {};
+    let accommodationAvailable = true;
 
     // Initialize LIFF
     async function initializeLiff() {
@@ -830,21 +816,15 @@
         progressFill.style.width = `${progress}%`;
     }
 
-    // Check if room conflicts with other rooms
-    function hasRoomConflict(roomName, roomStatus) {
-        const roomConfig = MEETING_ROOMS_CONFIG[roomName];
-        
-        // If this room is directly unavailable
-        if (roomStatus[roomName] === false) {
-            return true;
+    // Check if room conflicts with dependencies
+    function checkRoomConflicts(roomName, roomStatus) {
+        // Check if this room is blocked by any dependent rooms
+        for (const [bookedRoom, blockedRooms] of Object.entries(ROOM_DEPENDENCIES)) {
+            if (blockedRooms.includes(roomName) && roomStatus[bookedRoom] === false) {
+                return false; // Room is blocked
+            }
         }
-        
-        // Check if any conflicting rooms are booked
-        if (roomConfig && roomConfig.conflicts) {
-            return roomConfig.conflicts.some(conflictRoom => roomStatus[conflictRoom] === false);
-        }
-        
-        return false;
+        return roomStatus[roomName] !== false; // Original availability
     }
 
     // Check meeting room availability
@@ -853,8 +833,6 @@
         const endDate = document.getElementById('endDate').value;
         
         if (!startDate || !endDate) {
-            meetingRoomStatusDiv.innerHTML = '';
-            meetingRoomStatusDiv.style.display = 'none';
             updateMeetingRoomSelect({});
             return;
         }
@@ -877,61 +855,39 @@
         }
     }
 
-    // Update meeting room select options
+    // Update meeting room select options with dependency logic and status display
     function updateMeetingRoomSelect(roomStatus) {
         const options = meetingRoomSelect.querySelectorAll('option[value]');
         
         options.forEach(option => {
             const roomName = option.value;
-            const isUnavailable = hasRoomConflict(roomName, roomStatus);
+            const isAvailable = checkRoomConflicts(roomName, roomStatus);
             
-            if (isUnavailable) {
+            // Get original option text without status
+            let originalText = option.getAttribute('data-original-text');
+            if (!originalText) {
+                originalText = option.text.replace(/ \(ว่าง\)/g, '').replace(/ \(ไม่ว่าง\)/g, '');
+                option.setAttribute('data-original-text', originalText);
+            }
+            
+            if (!isAvailable) {
                 option.disabled = true;
-                option.text = option.text.replace(' (ไม่ว่าง)', '') + ' (ไม่ว่าง)';
+                option.text = originalText + ' (ไม่ว่าง)';
+                option.classList.remove('available');
+                option.classList.add('occupied');
             } else {
                 option.disabled = false;
-                option.text = option.text.replace(' (ไม่ว่าง)', '');
+                option.text = originalText + ' (ว่าง)';
+                option.classList.remove('occupied');
+                option.classList.add('available');
             }
         });
 
         // Clear selection if selected room becomes unavailable
         const selectedRoom = meetingRoomSelect.value;
-        if (selectedRoom && hasRoomConflict(selectedRoom, roomStatus)) {
+        if (selectedRoom && !checkRoomConflicts(selectedRoom, roomStatus)) {
             meetingRoomSelect.value = '';
             updateProgress();
-        }
-    }
-
-    // Show room status when selected
-    function showSelectedRoomStatus() {
-        const selectedRoom = meetingRoomSelect.value;
-        
-        if (!selectedRoom) {
-            meetingRoomStatusDiv.style.display = 'none';
-            return;
-        }
-
-        const isUnavailable = hasRoomConflict(selectedRoom, roomAvailabilityData);
-        const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
-        
-        meetingRoomStatusDiv.style.display = 'block';
-        
-        if (isUnavailable) {
-            meetingRoomStatusDiv.className = 'meeting-room-status unavailable';
-            let conflictMessage = `ห้อง ${selectedRoom} ไม่ว่างในช่วงเวลาที่เลือก`;
-            
-            // Check if conflict is due to related room booking
-            if (roomConfig && roomConfig.conflicts) {
-                const conflictingRooms = roomConfig.conflicts.filter(room => roomAvailabilityData[room] === false);
-                if (conflictingRooms.length > 0) {
-                    conflictMessage += ` (เนื่องจากมีการจอง ${conflictingRooms.join(', ')})`;
-                }
-            }
-            
-            meetingRoomStatusDiv.innerHTML = `<i class="fas fa-times-circle me-2"></i>${conflictMessage}`;
-        } else {
-            meetingRoomStatusDiv.className = 'meeting-room-status available';
-            meetingRoomStatusDiv.innerHTML = `<i class="fas fa-check-circle me-2"></i>ห้อง ${selectedRoom} ว่างในช่วงเวลาที่เลือก (ความจุ ${roomConfig.capacity} คน)`;
         }
     }
 
@@ -948,16 +904,19 @@
             if (!accommodationChoice) {
                 accommodationStatusDiv.innerHTML = '';
                 accommodationStatusDiv.style.display = 'none';
+                accommodationAvailable = true;
                 return;
             }
 
             if (accommodationChoice.value !== 'ต้องการ') {
                 accommodationStatusDiv.innerHTML = '';
                 accommodationStatusDiv.style.display = 'none';
+                accommodationAvailable = true;
                 return;
             }
             
             if (!startDate || !endDate) {
+                accommodationAvailable = true;
                 return;
             }
 
@@ -969,7 +928,7 @@
             `;
 
             try {
-                // Calculate checkin/checkout dates
+                // Calculate checkin/checkout dates - Fixed calculation
                 const startDateObj = new Date(startDate);
                 const endDateObj = new Date(endDate);
                 
@@ -991,27 +950,23 @@
                 }
 
                 const available = result.availableRooms;
+                const requiredRooms = Math.ceil(attendees / 2);
                 
-                if (available > 0) {
+                // Calculate nights correctly: from checkin to checkout
+                const nights = Math.max(1, Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24)) + 1);
+                
+                if (available > 0 && (attendees === 0 || available >= requiredRooms)) {
+                    accommodationAvailable = true;
                     let statusHtml = `
                         <div class="alert alert-success-custom">
                             <i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก
                     `;
                     
-                    const requiredRooms = Math.ceil(attendees / 2);
                     if (attendees > 0) {
                         statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`;
-                        
-                        if (requiredRooms > available) {
-                            statusHtml += `<br><small class="text-danger fw-bold"><i class="fas fa-exclamation-triangle"></i> แต่จำนวนห้องพักอาจไม่เพียงพอ</small>`;
-                        }
                     }
 
                     statusHtml += `</div>`;
-                    
-                    // Calculate nights correctly: from checkin to checkout
-                    const nights = Math.floor((checkout - checkin) / (1000 * 60 * 60 * 24)) + 1;
-                    
                     statusHtml += `
                         <div class="accommodation-info">
                             <h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6>
@@ -1033,15 +988,22 @@
                     accommodationStatusDiv.innerHTML = statusHtml;
 
                 } else {
+                    accommodationAvailable = false;
                     accommodationStatusDiv.innerHTML = `
                         <div class="alert alert-danger-custom">
-                            <i class="fas fa-times-circle"></i> ไม่มีห้องว่างในช่วงวันที่คุณเลือก กรุณาเปลี่ยนช่วงเวลา
+                            <i class="fas fa-times-circle"></i> ห้องพักไม่เพียงพอสำหรับการจอง
+                            <br><small>มีห้องว่าง ${available} ห้อง แต่ต้องการ ${requiredRooms} ห้อง</small>
+                        </div>
+                        <div class="unavailable-message">
+                            <h6><i class="fas fa-exclamation-triangle me-2"></i>ไม่สามารถจองได้</h6>
+                            <p class="mb-0">กรุณาเปลี่ยนช่วงเวลา หรือลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก</p>
                         </div>
                     `;
                 }
 
             } catch (error) {
                 console.error('Accommodation availability check error:', error);
+                accommodationAvailable = true;
                 accommodationStatusDiv.innerHTML = `
                     <div class="alert alert-warning-custom">
                         <i class="fas fa-exclamation-circle"></i> ไม่สามารถตรวจสอบห้องว่างได้
@@ -1088,12 +1050,10 @@
         radio.addEventListener('change', checkAccommodation);
     });
 
-    // Meeting room selection event
-    meetingRoomSelect.addEventListener('change', function() {
+    // Meeting room selection validation
+    document.getElementById('meetingRoom').addEventListener('change', function() {
         const selectedRoom = this.value;
         const attendees = parseInt(document.getElementById('attendees').value) || 0;
-        
-        showSelectedRoomStatus();
         
         if (selectedRoom && attendees > 0) {
             const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
@@ -1121,6 +1081,18 @@
     bookingForm.addEventListener('submit', async function(event) {
         event.preventDefault();
 
+        // Check accommodation availability first
+        const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
+        if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
+            await Swal.fire({
+                title: 'ที่พักไม่เพียงพอ!',
+                text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา หรือลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก',
+                icon: 'error',
+                confirmButtonText: 'ตกลง'
+            });
+            return;
+        }
+
         // Validate meeting room capacity
         const selectedRoom = document.getElementById('meetingRoom').value;
         const attendees = parseInt(document.getElementById('attendees').value) || 0;
@@ -1139,7 +1111,7 @@
         }
 
         // Check if selected room is available
-        if (selectedRoom && hasRoomConflict(selectedRoom, roomAvailabilityData)) {
+        if (selectedRoom && !checkRoomConflicts(selectedRoom, roomAvailabilityData)) {
             await Swal.fire({
                 title: 'ห้องประชุมไม่ว่าง!',
                 text: 'ห้องประชุมที่คุณเลือกไม่ว่างในช่วงเวลาที่กำหนด กรุณาเลือกห้องอื่น',
@@ -1215,6 +1187,7 @@
                     }
                 }
             });
+                        
 
         } catch (error) {
             console.error('Submit error:', error);
@@ -1248,6 +1221,5 @@
     
     initializeLiff();
 </script>
-
 </body>
 </html>
