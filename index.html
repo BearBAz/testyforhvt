@@ -536,7 +536,7 @@
         left: 0;
         right: 0;
         background: var(--card-background);
-        border: 2px solid var(--border-color);
+        border: 2px solid var(--card-border);
         border-radius: 12px;
         box-shadow: var(--shadow-medium);
         z-index: 1000;
@@ -560,7 +560,7 @@
         justify-content: flex-end;
         align-items: center;
         padding: 0.5rem 0.75rem;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--card-border);
     }
 
     .clear-all-btn {
@@ -588,7 +588,7 @@
     }
 
     .dropdown-section:not(:last-child) {
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--card-border);
     }
 
     .dropdown-section-title {
@@ -694,30 +694,6 @@
     .dropdown-menu-inner::-webkit-scrollbar-thumb:hover {
         background: var(--text-secondary);
     }
-
-    .dropdown-search {
-        padding: 0.75rem;
-        border-bottom: 1px solid var(--border-color);
-        position: sticky;
-        top: 0;
-        background: var(--card-background);
-        z-index: 1;
-    }
-
-    .dropdown-search input {
-        width: 100%;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 0.5rem 0.75rem;
-        font-size: 0.9rem;
-        font-family: 'Sarabun', sans-serif;
-    }
-
-    .dropdown-search input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.1);
-    }
     
     .swal2-popup {
         font-family: 'Sarabun', sans-serif !important;
@@ -749,7 +725,7 @@
                 <div class="header-icon"><i class="fas fa-calendar-alt"></i></div>
                 <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
                 <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
-                <br>
+                 <br>
             </div>
         </div>
 
@@ -760,6 +736,7 @@
             </div>
 
             <form id="bookingForm">
+        
                 <div class="form-card bounce-in">
                     <div class="form-card-header">
                         <h3 class="form-card-title"><i class="fas fa-user me-2"></i>ข้อมูลผู้จอง</h3>
@@ -768,7 +745,7 @@
                         <div class="mb-3">
                             <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
                             <input type="text" class="form-control" id="fullName" name="fullName" required>
-                        </div>
+                         </div>
                          <div class="mb-3">
                             <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
                             <input type="text" class="form-control" id="department" name="department" required>
@@ -781,116 +758,157 @@
                 </div>
 
                 <div class="form-card bounce-in">
-                    <div class="form-card-header">
+     
+                   <div class="form-card-header">
                          <h3 class="form-card-title"><i class="fas fa-book me-2"></i>ข้อมูลการจองห้องประชุม</h3>
                     </div>
                      <div class="form-card-body">
+             
                         <div class="mb-3">
                             <label for="courseName" class="form-label required">ชื่อหลักสูตร/หัวข้อประชุม</label>
                             <input type="text" class="form-control" id="courseName" name="courseName" required>
+                        
                         </div>
                         
                         <div class="mb-3">
                              <div class="row g-3">
+                    
                                 <div class="col-6">
                                     <label for="startDate" class="form-label required">วันที่เริ่มต้น</label>
                                     <input type="date" class="form-control" id="startDate" name="startDate" required>
-                                </div>
+       
+                                 </div>
                                 <div class="col-6">
                                      <label for="endDate" class="form-label required">วันที่สิ้นสุด</label>
-                                    <input type="date" class="form-control" id="endDate" name="endDate" required>
+  
+                                   <input type="date" class="form-control" id="endDate" name="endDate" required>
                                  </div>
+                            
                             </div>
                         </div>
                         
                          <div class="mb-3">
+                          
                             <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
                             <input type="number" class="form-control" id="attendees" name="attendees" required min="1">
                         </div>
 
                         <div class="mb-3">
-                            <div class="custom-dropdown" id="meetingRoomDropdown">
+            
+                                <div class="custom-dropdown" id="meetingRoomDropdown">
                                 <label class="dropdown-label required">เลือกห้องประชุม</label>
                                 <input type="hidden" id="meetingRoom" name="meetingRoom" required>
-                                <div class="dropdown-toggle" id="dropdownToggle" tabindex="0">
+            
+                                    <div class="dropdown-toggle" id="dropdownToggle" tabindex="0">
                                     <div class="dropdown-content" id="dropdownContent">
+                                       
                                         <span class="dropdown-placeholder">-- เลือกห้องประชุม --</span>
                                     </div>
                                     <i class="fas fa-chevron-down dropdown-arrow"></i>
-                                </div>
+                     
+                                   </div>
                                 <div class="dropdown-menu" id="dropdownMenu">
-                                    <div class="dropdown-search">
-                                        <input type="text" placeholder="ค้นหาห้องประชุม..." id="searchInput">
-                                    </div>
                                     <div class="dropdown-header">
-                                        <button type="button" class="clear-all-btn" id="clearAllBtn">
+  
+                                       <button type="button" class="clear-all-btn" id="clearAllBtn">
                                             <i class="fas fa-times me-1"></i>ล้างค่า
-                                        </button>
+            
+                                     </button>
                                     </div>
-                                    <div class="dropdown-menu-inner">
+                                    
+                                <div class="dropdown-menu-inner">
                                         <div class="dropdown-section">
                                             <div class="dropdown-section-title">ห้องประชุม Theater</div>
-                                            <div class="dropdown-item" data-value="Auditorium" data-capacity="120">
+            
+                                 <div class="dropdown-item" data-value="Auditorium" data-capacity="120">
                                                 <span>Auditorium (120 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+               
+                                                 <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
-                                        </div>
+                   
+                                     </div>
                                         <div class="dropdown-section">
-                                            <div class="dropdown-section-title">ห้องประชุม</div>
+                                      
+                                           <div class="dropdown-section-title">ห้องประชุม</div>
                                             <div class="dropdown-item" data-value="A201/1-2" data-capacity="120">
-                                                <span>A201 รวม (120 ที่นั่ง)</span>
+                                              
+                                               <span>A201 รวม (120 ที่นั่ง)</span>
                                                 <i class="fas fa-check-circle status-icon status-available"></i>
-                                            </div>
+                                           
+                                             </div>
                                             <div class="dropdown-item" data-value="A201/1" data-capacity="60">
                                                 <span>A201/1 (60 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+  
+                                               <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
-                                            <div class="dropdown-item" data-value="A201/2" data-capacity="60">
+      
+                                              <div class="dropdown-item" data-value="A201/2" data-capacity="60">
                                                 <span>A201/2 (60 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+         
+                                                 <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
-                                            <div class="dropdown-item" data-value="A202" data-capacity="60">
+             
+                                 <div class="dropdown-item" data-value="A202" data-capacity="60">
                                                 <span>A202 (60 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                
+                                                 <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
-                                            <div class="dropdown-item" data-value="A203" data-capacity="60">
+                    
+                                         <div class="dropdown-item" data-value="A203" data-capacity="60">
                                                 <span>A203 (60 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                       
+                                          <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
-                                            <div class="dropdown-item" data-value="A204" data-capacity="40">
+                           
+                                                 <div class="dropdown-item" data-value="A204" data-capacity="40">
                                                 <span>A204 (40 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                              
+                                                   <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
-                                            <div class="dropdown-item" data-value="A205" data-capacity="40">
+                                  
+                                           <div class="dropdown-item" data-value="A205" data-capacity="40">
                                                 <span>A205 (40 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                     
+                                            <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
-                                            <div class="dropdown-item" data-value="A206" data-capacity="50">
+                                         
+                                           <div class="dropdown-item" data-value="A206" data-capacity="50">
                                                 <span>A206 (50 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            
+                                             <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
                                         </div>
+        
                                         <div class="dropdown-section">
                                             <div class="dropdown-section-title">ห้อง Computer</div>
-                                            <div class="dropdown-item" data-value="Computer1" data-capacity="50">
+                     
+                                             <div class="dropdown-item" data-value="Computer1" data-capacity="50">
                                                 <span>Computer 1 (50 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                       
+                                          <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
-                                            <div class="dropdown-item" data-value="Computer2" data-capacity="50">
+                           
+                                                 <div class="dropdown-item" data-value="Computer2" data-capacity="50">
                                                 <span>Computer 2 (50 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                             
+                                                    <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
+                                 
                                         </div>
                                         <div class="dropdown-section">
                                             <div class="dropdown-section-title">สนามหญ้า</div>
-                                            <div class="dropdown-item" data-value="สนามหญ้า" data-capacity="100">
+       
+                                              <div class="dropdown-item" data-value="สนามหญ้า" data-capacity="100">
                                                 <span>สนามหญ้า (100 ที่นั่ง)</span>
-                                                <i class="fas fa-check-circle status-icon status-available"></i>
+          
+                                                       <i class="fas fa-check-circle status-icon status-available"></i>
                                             </div>
-                                        </div>
+              
+                                           </div>
                                     </div>
                                 </div>
-                            </div>
+      
+                               </div>
                         </div>
 
                         <div class="demo-card" style="margin-top: 1rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
@@ -901,52 +919,64 @@
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                                     <i class="fas fa-check-circle status-available"></i>
                                     <span>ว่าง</span>
-                                </div>
+                      
+                                   </div>
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                                     <i class="fas fa-times-circle status-occupied"></i>
                                     <span>ไม่ว่าง</span>
-                                </div>
+                      
+                                   </div>
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                                     <i class="fas fa-exclamation-circle status-limited"></i>
                                     <span>จำกัด</span>
-                                </div>
+                      
+                                   </div>
                             </div>
                         </div>
                         
-                         <div class="mb-3 mt-3">
+              
+                           <div class="mb-3 mt-3">
                             <label class="form-label required">ต้องการที่พัก</label>
                             <div class="row g-3 mt-2">
-                                <div class="col-6">
+                          
+                               <div class="col-6">
                                      <div class="radio-card" data-value="ต้องการ">
                                         <input type="radio" name="accommodation" value="ต้องการ" required>
-                                         <div class="radio-icon"><i class="fas fa-bed"></i></div>
+          
+                                        <div class="radio-icon"><i class="fas fa-bed"></i></div>
                                         <div>ต้องการ</div>
-                                    </div>
+                          
+                                   </div>
                                  </div>
                                 <div class="col-6">
+                        
                                     <div class="radio-card" data-value="ไม่ต้องการ">
                                         <input type="radio" name="accommodation" value="ไม่ต้องการ">
                                         <div class="radio-icon"><i class="fas fa-home"></i></div>
                                         <div>ไม่ต้องการ</div>
                                      </div>
-                                </div>
+                       
+                                 </div>
                             </div>
                             
                             <div id="accommodationStatus" style="display: none;"></div>
-                         </div>
+    
+                                     </div>
                     </div>
                 </div>
 
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
-                         <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
+ 
+                                          <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
                     </button>
                 </div>
             </form>
 
             <div id="messageContainer" class="mt-3"></div>
         </div>
-    </div>
+   
+     </div>
 
     <div id="loading" class="loading-overlay">
         <div class="loading-content">
@@ -983,7 +1013,6 @@
         'A201/1': ['A201/1-2'],
         'A201/2': ['A201/1-2']
     };
-    
     // DOM Elements
     const mainContent = document.getElementById('mainContent');
     const bookingForm = document.getElementById('bookingForm');
@@ -993,13 +1022,12 @@
     const progressFill = document.getElementById('progressFill');
     const accommodationStatusDiv = document.getElementById('accommodationStatus');
     const meetingRoomHiddenInput = document.getElementById('meetingRoom');
-
     let userId = '';
     let displayName = '';
     let checkTimeout;
     let roomAvailabilityData = {};
     let accommodationAvailable = true;
-
+    
     // --- IMPROVED DROPDOWN CLASS ---
     class CustomDropdown {
         constructor(element, options = {}) {
@@ -1008,7 +1036,6 @@
             this.toggle = this.dropdown.querySelector('#dropdownToggle');
             this.menu = this.dropdown.querySelector('#dropdownMenu');
             this.content = this.dropdown.querySelector('#dropdownContent');
-            this.searchInput = this.dropdown.querySelector('#searchInput');
             this.clearAllBtn = this.dropdown.querySelector('#clearAllBtn');
             this.hiddenInput = document.getElementById('meetingRoom');
             this.selectedValues = [];
@@ -1018,12 +1045,10 @@
 
         init() {
             this.toggle.addEventListener('click', () => this.toggleMenu());
-            this.searchInput.addEventListener('input', (e) => this.filterItems(e.target.value));
             this.clearAllBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.clearAll();
             });
-
             this.allItems.forEach(item => {
                 item.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1034,7 +1059,7 @@
                     }
                     this.selectItem(item);
                 });
-            });
+             });
 
             document.addEventListener('click', (e) => {
                 if (!this.dropdown.contains(e.target)) this.closeMenu();
@@ -1044,21 +1069,17 @@
         toggleMenu() {
             this.menu.classList.toggle('show');
             this.toggle.classList.toggle('active');
-            if (this.menu.classList.contains('show')) this.searchInput.focus();
         }
 
         closeMenu() {
             this.menu.classList.remove('show');
             this.toggle.classList.remove('active');
-            this.searchInput.value = '';
-            this.filterItems('');
         }
 
         selectItem(item) {
             const value = item.dataset.value;
             const text = item.querySelector('span').textContent;
             const itemIndex = this.selectedValues.findIndex(v => v.value === value);
-
             if (this.options.multiSelect) {
                 if (itemIndex > -1) {
                     this.selectedValues.splice(itemIndex, 1);
@@ -1088,13 +1109,12 @@
                     <span class="tag">
                         ${item.text}
                         <i class="fas fa-times tag-remove" data-value="${item.value}"></i>
-                    </span>`).join('');
-                
+                     </span>`).join('');
                 this.content.querySelectorAll('.tag-remove').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const itemToRemove = this.allItems.find(i => i.dataset.value === e.target.dataset.value);
-                        if (itemToRemove) this.selectItem(itemToRemove);
+                         if (itemToRemove) this.selectItem(itemToRemove);
                     });
                 });
             }
@@ -1111,18 +1131,6 @@
             this.dropdown.dispatchEvent(new CustomEvent('dropdown:change', {
                 detail: { selectedValues: this.selectedValues }
             }));
-        }
-
-        filterItems(term) {
-            const lowerTerm = term.toLowerCase();
-            this.allItems.forEach(item => {
-                const text = item.querySelector('span').textContent.toLowerCase();
-                item.style.display = text.includes(lowerTerm) ? 'flex' : 'none';
-            });
-            this.menu.querySelectorAll('.dropdown-section').forEach(section => {
-                const visibleItems = section.querySelectorAll('.dropdown-item[style*="display: flex"]');
-                section.style.display = visibleItems.length > 0 ? 'block' : 'none';
-            });
         }
         
         clearAll() {
@@ -1243,10 +1251,10 @@
                 }
             } else {
                 item.classList.remove('disabled');
-                if (icon) icon.className = 'fas fa-check-circle status-icon status-available';
+             
+                   if (icon) icon.className = 'fas fa-check-circle status-icon status-available';
             }
         });
-        
         if (hasUnavailableSelection) {
             const currentValues = meetingRoomDropdown.selectedValues;
             const stillAvailable = currentValues.filter(v => checkRoomConflicts(v.value, roomStatus));
@@ -1270,14 +1278,16 @@
             const attendees = parseInt(document.getElementById('attendees').value) || 0;
 
             if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
-                accommodationStatusDiv.innerHTML = '';
+               
+                 accommodationStatusDiv.innerHTML = '';
                 accommodationStatusDiv.style.display = 'none';
                 accommodationAvailable = true;
                 return;
             }
             
             if (!startDate || !endDate) {
-                 accommodationAvailable = true;
+     
+                          accommodationAvailable = true;
                 return;
             }
 
@@ -1301,7 +1311,6 @@
                 const available = result.availableRooms;
                 const requiredRooms = Math.ceil(attendees / 2);
                 const nights = Math.max(1, Math.ceil((new Date(checkoutStr) - new Date(checkinStr)) / (1000 * 60 * 60 * 24)));
-                
                 if (available > 0 && (attendees === 0 || available >= requiredRooms)) {
                     accommodationAvailable = true;
                     let statusHtml = `<div class="alert alert-success-custom"><i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก`;
@@ -1330,32 +1339,29 @@
             radio.checked = true;
             radio.dispatchEvent(new Event('change'));
             updateProgress();
-        });
+    
+         });
     });
     
     document.querySelectorAll('input, select').forEach(input => {
         input.addEventListener('input', updateProgress);
         input.addEventListener('change', updateProgress);
     });
-    
     ['startDate', 'endDate'].forEach(id => {
         document.getElementById(id).addEventListener('change', () => {
             checkMeetingRoomAvailability();
             checkAccommodation();
         });
     });
-    
     document.getElementById('attendees').addEventListener('input', checkAccommodation);
     
     document.querySelectorAll('input[name="accommodation"]').forEach(radio => {
         radio.addEventListener('change', checkAccommodation);
     });
-
     meetingRoomDropdown.dropdown.addEventListener('dropdown:change', (e) => {
         validateRoomCapacity();
         updateProgress();
     });
-
     document.getElementById('attendees').addEventListener('input', validateRoomCapacity);
 
     function validateRoomCapacity() {
@@ -1368,7 +1374,8 @@
                 const roomConfig = MEETING_ROOMS_CONFIG[room.value];
                 if(roomConfig && attendees > roomConfig.capacity && !warningShown) {
                     showMessage(`ห้อง ${room.value} รองรับได้ ${roomConfig.capacity} คน แต่มีผู้เข้าร่วม ${attendees} คน`, 'warning');
-                    warningShown = true;
+  
+                                     warningShown = true;
                 }
             });
         }
@@ -1391,7 +1398,8 @@
             const roomConfig = MEETING_ROOMS_CONFIG[room.value];
             if (roomConfig && attendees > roomConfig.capacity) {
                 capacityExceeded = true;
-                exceededRoom = room.value;
+    
+                             exceededRoom = room.value;
             }
         });
 
@@ -1419,20 +1427,19 @@
             phone: formData.get('phone'),
             courseName: formData.get('courseName'),
             startDate: formData.get('startDate'),
-            endDate: formData.get('endDate'),
+          
+             endDate: formData.get('endDate'),
             meetingRoom: formData.get('meetingRoom'),
             accommodation: formData.get('accommodation'),
             attendees: formData.get('attendees'),
             timestamp: new Date().toISOString()
         };
-        
         try {
             await fetch(GAS_WEB_APP_URL, {
                 method: 'POST', mode: 'no-cors', cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data), redirect: 'follow'
             });
-            
             loadingDiv.classList.remove('show');
             mainContent.style.display = 'block';
 
@@ -1441,20 +1448,24 @@
                 html: `
                     <div class="text-start mt-3">
                         <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
-                        <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
+           
+                         <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
                         <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
                         <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
                         <p><i class="fas fa-door-open me-2"></i><strong>ห้องประชุม:</strong> ${data.meetingRoom}</p>
                         <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
                         <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
                     </div>
+                    
                     <div class="alert alert-success mt-3" role="alert"><i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว</div>
                 `,
                 icon: 'success', confirmButtonText: 'ตกลง', allowOutsideClick: false,
                 customClass: { popup: 'bounce-in' }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    if (liff.isInClient()) liff.closeWindow(); else window.close();
+    
+                                     if (liff.isInClient()) liff.closeWindow();
+                                     else window.close();
                 }
             });
         } catch (error) {
@@ -1469,7 +1480,6 @@
             submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
         }
     });
-
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('startDate').setAttribute('min', today);
@@ -1478,6 +1488,7 @@
             if (document.getElementById('endDate').value < this.value) {
                 document.getElementById('endDate').value = this.value;
             }
+        
         });
         updateProgress();
     });
