@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -16,23 +15,22 @@
 
 <style>
     :root {
-        --primary-color: #1e3a8a; 
-        --secondary-color: #3b82f6; 
-        --accent-color: #60a5fa; 
+        --primary-color: #1e3a8a;
+        --secondary-color: #3b82f6;
+        --accent-color: #60a5fa;
         --success-color: #22c55e;
         --danger-color: #ef4444;
         --warning-color: #f59e0b;
-        
+
         --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         --container-background: #ffffff;
-        
         --header-gradient: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #4338ca 100%);
         --header-overlay: rgba(255, 255, 255, 0.1);
-        
+
         --card-background: #ffffff;
         --card-header-background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
         --card-border: #e2e8f0;
-        
+
         --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
         --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.06);
         --shadow-strong: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -70,7 +68,7 @@
 
     .app-header {
         background: var(--header-gradient);
-        padding: 3rem 2rem 2rem; 
+        padding: 3rem 2rem 2rem;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -178,7 +176,7 @@
         border-color: var(--secondary-color);
         box-shadow: var(--shadow-medium);
     }
-
+    
     .radio-card {
         background: var(--card-background);
         border: 2px solid var(--card-border);
@@ -272,7 +270,7 @@
         z-index: 9999;
         backdrop-filter: blur(10px);
     }
-
+    
     .loading-overlay.show {
         display: flex;
     }
@@ -299,13 +297,13 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
-
+    
     .loading-text {
         font-size: 1.1rem;
         color: var(--text-primary);
         font-weight: 500;
     }
-
+    
     .alert-custom {
         border: none;
         border-radius: 12px;
@@ -314,25 +312,25 @@
         font-weight: 500;
         box-shadow: var(--shadow-soft);
     }
-
+    
     .alert-success-custom {
         background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
         color: #166534;
         border-left: 4px solid #22c55e;
     }
-
+    
     .alert-danger-custom {
         background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
         color: #991b1b;
         border-left: 4px solid #ef4444;
     }
-
+    
     .alert-warning-custom {
         background: linear-gradient(135deg, #fefbeb 0%, #fef3c7 100%);
         color: #92400e;
         border-left: 4px solid #f59e0b;
     }
-
+    
     .alert-info-custom {
         background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
         color: #1e40af;
@@ -346,6 +344,12 @@
         overflow: hidden;
         margin-bottom: 1.5rem;
         border: 1px solid var(--card-border);
+    }
+    
+    .form-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-strong);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .form-card-header {
@@ -366,15 +370,7 @@
     .form-card-body {
         padding: 1.5rem;
     }
-
-    .date-range-container {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border-radius: 12px;
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-        border: 1px solid var(--card-border);
-    }
-
+    
     .progress-bar-custom {
         background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
         border-radius: 10px;
@@ -393,7 +389,6 @@
         box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3);
     }
 
-    /* Enhanced status display styles */
     #accommodationStatus {
         padding: 0.75rem 1.25rem;
         border-radius: 12px;
@@ -402,14 +397,7 @@
         transition: all 0.3s ease;
         margin-top: 1rem;
     }
-
-    .select-disabled {
-        opacity: 0.6;
-        pointer-events: none;
-        background-color: #f8f9fa;
-    }
-
-    /* Accommodation info styles */
+    
     .accommodation-info {
         background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         border: 1px solid #0284c7;
@@ -417,7 +405,7 @@
         padding: 1rem;
         margin-top: 1rem;
     }
-
+    
     .accommodation-info h6 {
         color: #0c4a6e;
         margin-bottom: 0.75rem;
@@ -444,14 +432,293 @@
         color: #0c4a6e;
     }
 
-    .form-select option.occupied {
-        color: #991b1b !important;
-        background-color: #fee2e2 !important;
+    .unavailable-message {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border: 1px solid #ef4444;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .fade-in {
+        animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .form-select option.available {
-        color: #166534 !important;
-        background-color: #dcfce7 !important;
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bounce-in {
+        animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes bounceIn {
+        0% { transform: scale(0.3) translateY(20px); opacity: 0; }
+        50% { transform: scale(1.05) translateY(-10px); }
+        70% { transform: scale(0.9) translateY(5px); }
+        100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .form-control::placeholder {
+        color: var(--text-light);
+        opacity: 0.7;
+    }
+
+    .form-control:focus::placeholder {
+        opacity: 0.5;
+    }
+
+    /* Custom Dropdown Styles */
+    .custom-dropdown {
+        position: relative;
+    }
+
+    .dropdown-label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        display: block;
+    }
+
+    .dropdown-toggle {
+        width: 100%;
+        background: var(--card-background);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        font-family: 'Sarabun', sans-serif;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 50px;
+    }
+
+    .dropdown-toggle:hover {
+        border-color: var(--secondary-color);
+        box-shadow: var(--shadow-medium);
+    }
+
+    .dropdown-toggle.active {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    }
+
+    .dropdown-content {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        flex: 1;
+    }
+
+    .dropdown-placeholder {
+        color: var(--text-muted);
+    }
+
+    .dropdown-arrow {
+        margin-left: 0.5rem;
+        transition: transform 0.3s ease;
+        color: var(--text-secondary);
+    }
+
+    .dropdown-toggle.active .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--card-background);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: var(--shadow-medium);
+        z-index: 1000;
+        max-height: 300px;
+        overflow-y: auto;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dropdown-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dropdown-section {
+        padding: 0.5rem 0;
+    }
+
+    .dropdown-section:not(:last-child) {
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .dropdown-section-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        padding: 0.5rem 1rem;
+        letter-spacing: 0.5px;
+    }
+
+    .dropdown-item {
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.95rem;
+    }
+
+    .dropdown-item:hover {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+
+    .dropdown-item.selected {
+        background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+    .dropdown-item.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #fef2f2;
+        color: var(--danger-color);
+    }
+
+    .dropdown-item.disabled:hover {
+        background: #fef2f2;
+    }
+
+    .tag {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        gap: 0.5rem;
+        animation: fadeInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tag.success {
+        background: linear-gradient(135deg, var(--success-color) 0%, #16a34a 100%);
+    }
+
+    .tag.warning {
+        background: linear-gradient(135deg, var(--warning-color) 0%, #d97706 100%);
+    }
+
+    .tag.danger {
+        background: linear-gradient(135deg, var(--danger-color) 0%, #dc2626 100%);
+    }
+
+    .tag-remove {
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.2s ease;
+        font-size: 0.7rem;
+    }
+
+    .tag-remove:hover {
+        opacity: 1;
+    }
+
+    .status-icon {
+        font-size: 0.8rem;
+        margin-left: 0.5rem;
+    }
+
+    .status-available {
+        color: var(--success-color);
+    }
+
+    .status-occupied {
+        color: var(--danger-color);
+    }
+
+    .status-limited {
+        color: var(--warning-color);
+    }
+
+    @keyframes fadeInScale {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .dropdown-menu::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .dropdown-menu::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .dropdown-menu::-webkit-scrollbar-thumb {
+        background: var(--text-muted);
+        border-radius: 3px;
+    }
+
+    .dropdown-menu::-webkit-scrollbar-thumb:hover {
+        background: var(--text-secondary);
+    }
+
+    .dropdown-search {
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        background: var(--card-background);
+        z-index: 1;
+    }
+
+    .dropdown-search input {
+        width: 100%;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+        font-family: 'Sarabun', sans-serif;
+    }
+
+    .dropdown-search input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.1);
+    }
+    
+    .swal2-popup {
+        font-family: 'Sarabun', sans-serif !important;
+        border-radius: 20px !important;
+    }
+
+    .swal2-confirm {
+        background: var(--header-gradient) !important;
+        border: none !important;
+        border-radius: 12px !important;
+        font-family: 'Sarabun', sans-serif !important;
+        font-weight: 600 !important;
     }
 
     @media (max-width: 576px) {
@@ -475,68 +742,6 @@
         .form-card-body {
             padding: 1rem;
         }
-    }
-
-    .swal2-popup {
-        font-family: 'Sarabun', sans-serif !important;
-        border-radius: 20px !important;
-    }
-
-    .swal2-confirm {
-        background: var(--header-gradient) !important;
-        border: none !important;
-        border-radius: 12px !important;
-        font-family: 'Sarabun', sans-serif !important;
-        font-weight: 600 !important;
-    }
-
-    .fade-in {
-        animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .bounce-in {
-        animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    @keyframes bounceIn {
-        0% { transform: scale(0.3) translateY(20px); opacity: 0; }
-        50% { transform: scale(1.05) translateY(-10px); }
-        70% { transform: scale(0.9) translateY(5px); }
-        100% { transform: scale(1) translateY(0); opacity: 1; }
-    }
-
-    .form-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-strong);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .form-control::placeholder {
-        color: var(--text-light);
-        opacity: 0.7;
-    }
-
-    .form-control:focus::placeholder {
-        opacity: 0.5;
-    }
-
-    /* Form select option disabled style */
-    .form-select option:disabled {
-        color: #991b1b;
-        background-color: #fee2e2;
-    }
-
-    .unavailable-message {
-        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-        border: 1px solid #ef4444;
-        border-radius: 12px;
-        padding: 1rem;
-        margin-top: 1rem;
     }
 </style>
 
@@ -572,10 +777,10 @@
                             <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
                             <input type="text" class="form-control" id="fullName" name="fullName" required>
                         </div>
-                        <div class="mb-3">
+                         <div class="mb-3">
                             <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
                             <input type="text" class="form-control" id="department" name="department" required>
-                        </div>
+                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
                             <input type="tel" class="form-control" id="phone" name="phone" required>
@@ -585,76 +790,142 @@
 
                 <div class="form-card bounce-in">
                     <div class="form-card-header">
-                        <h3 class="form-card-title">
+                         <h3 class="form-card-title">
                             <i class="fas fa-book me-2"></i>ข้อมูลการจองห้องประชุม
                         </h3>
                     </div>
-                    <div class="form-card-body">
+                     <div class="form-card-body">
                         <div class="mb-3">
                             <label for="courseName" class="form-label required">ชื่อหลักสูตร/หัวข้อประชุม</label>
                             <input type="text" class="form-control" id="courseName" name="courseName" required>
                         </div>
                         
                         <div class="mb-3">
-                            <div class="row g-3">
+                             <div class="row g-3">
                                 <div class="col-6">
                                     <label for="startDate" class="form-label required">วันที่เริ่มต้น</label>
                                     <input type="date" class="form-control" id="startDate" name="startDate" required>
                                 </div>
                                 <div class="col-6">
-                                    <label for="endDate" class="form-label required">วันที่สิ้นสุด</label>
+                                     <label for="endDate" class="form-label required">วันที่สิ้นสุด</label>
                                     <input type="date" class="form-control" id="endDate" name="endDate" required>
-                                </div>
+                                 </div>
                             </div>
                         </div>
                         
-                        <div class="mb-3">
+                         <div class="mb-3">
                             <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
                             <input type="number" class="form-control" id="attendees" name="attendees" required min="1">
                         </div>
 
-                        <!-- Meeting Room Selection -->
-                        <div class="mb-3">
-                            <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
-                            <select class="form-select" id="meetingRoom" name="meetingRoom" required>
-                                <option value="">-- เลือกห้องประชุม --</option>
-                                <optgroup label="ห้องประชุม 120 ที่นั่ง">
-                                    <option value="Auditorium">Auditorium </option>
-                                    <option value="A201/1-2">A201 </option>
-                                </optgroup>
-                                <optgroup label="ห้องประชุม 60 ที่นั่ง">
-                                    <option value="A201/1">A201/1 </option>
-                                    <option value="A201/2">A201/2 </option>
-                                    <option value="A202">A202 </option>
-                                    <option value="A203">A203 </option>
-                                </optgroup>
-                                <optgroup label="ห้องประชุม 40 ที่นั่ง">
-                                    <option value="A204">A204 </option>
-                                    <option value="A205">A205 </option>
-                                    <option value="A206">A206 </option>
-                                </optgroup>
-                                <optgroup label="ห้อง Computer 50 ที่นั่ง">
-                                    <option value="Computor 1">Computer 1 </option>
-                                    <option value="Computor 2">Computer 2 </option>
-                                </optgroup>
-                                <optgroup label="สนามฝึก">
-                                    <option value="สนามฝึก">สนามฝึก </option>
-                                </optgroup>
-                            </select>
+                        <div class="custom-dropdown" id="meetingRoomDropdown">
+                            <label class="dropdown-label required">เลือกห้องประชุม</label>
+                            <input type="hidden" id="meetingRoom" name="meetingRoom" required>
+                            <div class="dropdown-toggle" id="dropdownToggle">
+                                <div class="dropdown-content" id="dropdownContent">
+                                    <span class="dropdown-placeholder">-- เลือกห้องประชุม --</span>
+                                </div>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </div>
+                            <div class="dropdown-menu" id="dropdownMenu">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="ค้นหาห้องประชุม..." id="searchInput">
+                                </div>
+                                <div class="dropdown-section">
+                                    <div class="dropdown-section-title">ห้องประชุม Theater</div>
+                                    <div class="dropdown-item" data-value="Auditorium" data-capacity="120" data-status="available">
+                                        <span>Auditorium (120 ที่นั่ง)</span>
+                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    </div>
+                                </div>
+                                <div class="dropdown-section">
+                                    <div class="dropdown-section-title">ห้องประชุม</div>
+                                    <div class="dropdown-item" data-value="A201/1-2" data-capacity="120" data-status="available">
+                                        <span>A201 รวม (120 ที่นั่ง)</span>
+                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    </div>
+                                    <div class="dropdown-item" data-value="A201/1" data-capacity="60" data-status="occupied">
+                                        <span>A201/1 (60 ที่นั่ง)</span>
+                                        <i class="fas fa-times-circle status-icon status-occupied"></i>
+                                    </div>
+                                    <div class="dropdown-item" data-value="A201/2" data-capacity="60" data-status="available">
+                                        <span>A201/2 (60 ที่นั่ง)</span>
+                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    </div>
+                                    <div class="dropdown-item" data-value="A202" data-capacity="60" data-status="limited">
+                                        <span>A202 (60 ที่นั่ง)</span>
+                                        <i class="fas fa-exclamation-circle status-icon status-limited"></i>
+                                    </div>
+                                    <div class="dropdown-item" data-value="A203" data-capacity="60" data-status="available">
+                                        <span>A203 (60 ที่นั่ง)</span>
+                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    </div>
+                                    <div class="dropdown-item" data-value="A204" data-capacity="40" data-status="available">
+                                        <span>A204 (40 ที่นั่ง)</span>
+                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    </div>
+                                    <div class="dropdown-item" data-value="A205" data-capacity="40" data-status="occupied">
+                                        <span>A205 (40 ที่นั่ง)</span>
+                                        <i class="fas fa-times-circle status-icon status-occupied"></i>
+                                    </div>
+                                    <div class="dropdown-item" data-value="A206" data-capacity="50" data-status="available">
+                                        <span>A206 (50 ที่นั่ง)</span>
+                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    </div>
+                                </div>
+                                <div class="dropdown-section">
+                                    <div class="dropdown-section-title">ห้อง Computer</div>
+                                    <div class="dropdown-item" data-value="Computer1" data-capacity="50" data-status="available">
+                                        <span>Computer 1 (50 ที่นั่ง)</span>
+                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    </div>
+                                    <div class="dropdown-item" data-value="Computer2" data-capacity="50" data-status="limited">
+                                        <span>Computer 2 (50 ที่นั่ง)</span>
+                                        <i class="fas fa-exclamation-circle status-icon status-limited"></i>
+                                    </div>
+                                </div>
+                                <div class="dropdown-section">
+                                    <div class="dropdown-section-title">สนามหญ้า</div>
+                                    <div class="dropdown-item" data-value="สนามหญ้า" data-capacity="100" data-status="available">
+                                        <span>สนามหญ้า (100 ที่นั่ง)</span>
+                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="demo-card" style="margin-top: 1rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
+                            <h6 style="color: #0c4a6e; margin-bottom: 1rem;">
+                                <i class="fas fa-info-circle me-2"></i>คำอธิบายสถานะ
+                            </h6>
+                            <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.9rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-check-circle status-available"></i>
+                                    <span>ว่าง</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-times-circle status-occupied"></i>
+                                    <span>ไม่ว่าง</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-exclamation-circle status-limited"></i>
+                                    <span>จำกัด</span>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="mb-3">
+                         <div class="mb-3 mt-3">
                             <label class="form-label required">ต้องการที่พัก</label>
                             <div class="row g-3 mt-2">
                                 <div class="col-6">
-                                    <div class="radio-card" data-value="ต้องการ">
+                                     <div class="radio-card" data-value="ต้องการ">
                                         <input type="radio" name="accommodation" value="ต้องการ" required>
-                                        <div class="radio-icon">
+                                         <div class="radio-icon">
                                             <i class="fas fa-bed"></i>
-                                        </div>
+                                         </div>
                                         <div>ต้องการ</div>
                                     </div>
-                                </div>
+                                 </div>
                                 <div class="col-6">
                                     <div class="radio-card" data-value="ไม่ต้องการ">
                                         <input type="radio" name="accommodation" value="ไม่ต้องการ">
@@ -662,19 +933,18 @@
                                             <i class="fas fa-home"></i>
                                         </div>
                                         <div>ไม่ต้องการ</div>
-                                    </div>
+                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Accommodation Status Display -->
                             <div id="accommodationStatus" style="display: none;"></div>
-                        </div>
+                         </div>
                     </div>
                 </div>
 
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
-                        <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
+                         <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
                     </button>
                 </div>
             </form>
@@ -685,7 +955,7 @@
 
     <div id="loading" class="loading-overlay">
         <div class="loading-content">
-            <div class="loading-spinner"></div>
+             <div class="loading-spinner"></div>
             <div class="loading-text">กำลังส่งข้อมูลการจอง...</div>
         </div>
     </div>
@@ -709,16 +979,14 @@
         'A204': { capacity: 40, category: '40 ที่นั่ง' },
         'A205': { capacity: 40, category: '40 ที่นั่ง' },
         'A206': { capacity: 50, category: '40 ที่นั่ง' },
-        'Computor1': { capacity: 50, category: 'Computer' },
-        'Computor2': { capacity: 50, category: 'Computer' },
-        'สนามฝึก': { capacity: 100, category: 'สนาม' }
+        'Computer1': { capacity: 50, category: 'Computer' },
+        'Computer2': { capacity: 50, category: 'Computer' },
+        'สนามหญ้า': { capacity: 100, category: 'สนาม' }
     };
-
-    // Room dependency mapping for A201 combined/separate rooms
     const ROOM_DEPENDENCIES = {
-        'A201/1-2': ['A201/1', 'A201/2'],  // If A201 combined is booked, these cannot be booked
-        'A201/1': ['A201/1-2'],             // If A201/1 is booked, A201 combined cannot be booked
-        'A201/2': ['A201/1-2']              // If A201/2 is booked, A201 combined cannot be booked
+        'A201/1-2': ['A201/1', 'A201/2'],
+        'A201/1': ['A201/1-2'],
+        'A201/2': ['A201/1-2']
     };
     
     // DOM Elements
@@ -729,7 +997,7 @@
     const loadingDiv = document.getElementById('loading');
     const progressFill = document.getElementById('progressFill');
     const accommodationStatusDiv = document.getElementById('accommodationStatus');
-    const meetingRoomSelect = document.getElementById('meetingRoom');
+    const meetingRoomHiddenInput = document.getElementById('meetingRoom');
 
     let userId = '';
     let displayName = '';
@@ -737,6 +1005,172 @@
     let roomAvailabilityData = {};
     let accommodationAvailable = true;
 
+    // Custom Dropdown Class
+    class CustomDropdown {
+        constructor(element) {
+            this.dropdown = element;
+            this.toggle = element.querySelector('#dropdownToggle');
+            this.menu = element.querySelector('#dropdownMenu');
+            this.content = element.querySelector('#dropdownContent');
+            this.searchInput = element.querySelector('#searchInput');
+            this.hiddenInput = document.getElementById('meetingRoom');
+            this.selectedValues = [];
+            this.allItems = [];
+            this.init();
+        }
+
+        init() {
+            this.allItems = Array.from(this.menu.querySelectorAll('.dropdown-item'));
+            this.toggle.addEventListener('click', (e) => {
+                 e.preventDefault();
+                e.stopPropagation();
+                this.toggleMenu();
+            });
+            this.searchInput.addEventListener('input', (e) => this.filterItems(e.target.value));
+            this.allItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!item.classList.contains('disabled')) {
+                         this.selectItem(item);
+                    }
+                });
+            });
+            document.addEventListener('click', (e) => {
+                if (!this.dropdown.contains(e.target)) {
+                    this.closeMenu();
+                }
+            });
+            this.updateItemStates();
+        }
+
+        toggleMenu() {
+            if (this.menu.classList.contains('show')) {
+                this.closeMenu();
+            } else {
+                this.openMenu();
+            }
+        }
+
+        openMenu() {
+            this.menu.classList.add('show');
+            this.toggle.classList.add('active');
+            this.searchInput.focus();
+        }
+
+        closeMenu() {
+            this.menu.classList.remove('show');
+            this.toggle.classList.remove('active');
+            this.searchInput.value = '';
+            this.filterItems('');
+        }
+
+        selectItem(item) {
+            const value = item.dataset.value;
+            const text = item.querySelector('span').textContent;
+            const status = item.dataset.status;
+            this.selectedValues = [];
+            this.allItems.forEach(i => i.classList.remove('selected'));
+            this.selectedValues.push({ value, text, status });
+            item.classList.add('selected');
+            this.updateContent();
+            this.closeMenu();
+            this.hiddenInput.value = value;
+            this.hiddenInput.dispatchEvent(new Event('change'));
+            this.dropdown.dispatchEvent(new CustomEvent('dropdown:change', {
+                detail: {
+                    selectedValues: this.selectedValues,
+                    lastSelected: { value, text, status }
+                }
+            }));
+        }
+
+        removeItem(value) {
+            this.selectedValues = this.selectedValues.filter(item => item.value !== value);
+            const item = this.menu.querySelector(`[data-value="${value}"]`);
+            if (item) {
+                item.classList.remove('selected');
+            }
+            this.updateContent();
+            this.hiddenInput.value = '';
+            this.hiddenInput.dispatchEvent(new Event('change'));
+            this.dropdown.dispatchEvent(new CustomEvent('dropdown:change', {
+                detail: {
+                    selectedValues: this.selectedValues,
+                    removed: value
+                }
+            }));
+        }
+
+        updateContent() {
+            if (this.selectedValues.length === 0) {
+                this.content.innerHTML = '<span class="dropdown-placeholder">-- เลือกห้องประชุม --</span>';
+            } else {
+                const tagsHTML = this.selectedValues.map(item => {
+                    const statusClass = item.status === 'available' ? 'success' : 
+                                        item.status === 'limited' ? 'warning' : 'danger';
+                    return `
+                        <span class="tag ${statusClass}">
+                             ${item.text}
+                            <i class="fas fa-times tag-remove" data-value="${item.value}"></i>
+                        </span>
+                    `;
+                }).join('');
+                this.content.innerHTML = tagsHTML;
+                this.content.querySelectorAll('.tag-remove').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.removeItem(e.target.dataset.value);
+                    });
+                });
+            }
+        }
+
+        filterItems(searchTerm) {
+            const term = searchTerm.toLowerCase();
+            this.allItems.forEach(item => {
+                const text = item.querySelector('span').textContent.toLowerCase();
+                if (text.includes(term)) {
+                     item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            this.menu.querySelectorAll('.dropdown-section').forEach(section => {
+                const visibleItems = section.querySelectorAll('.dropdown-item[style="display: flex;"]');
+                section.style.display = visibleItems.length > 0 ? 'block' : 'none';
+            });
+        }
+        
+        updateItemStates() {
+            this.allItems.forEach(item => {
+                const status = item.dataset.status;
+                const icon = item.querySelector('.status-icon');
+                if (status === 'occupied') {
+                     item.classList.add('disabled');
+                    icon.className = 'fas fa-times-circle status-icon status-occupied';
+                } else {
+                    item.classList.remove('disabled');
+                    if(status === 'available') {
+                        icon.className = 'fas fa-check-circle status-icon status-available';
+                    } else if (status === 'limited') {
+                        icon.className = 'fas fa-exclamation-circle status-icon status-limited';
+                    }
+                }
+            });
+        }
+        
+        clearSelection() {
+            this.selectedValues = [];
+            this.allItems.forEach(item => item.classList.remove('selected'));
+            this.updateContent();
+            this.hiddenInput.value = '';
+            this.hiddenInput.dispatchEvent(new Event('change'));
+        }
+    }
+
+    // Initialize dropdown
+    const meetingRoomDropdown = new CustomDropdown(document.getElementById('meetingRoomDropdown'));
+    
     // Initialize LIFF
     async function initializeLiff() {
         try {
@@ -748,7 +1182,6 @@
             const profile = await liff.getProfile();
             userId = profile.userId;
             displayName = profile.displayName;
-            
             await autofillUserData(); 
             updateProgress();
         } catch (err) {
@@ -757,50 +1190,39 @@
         }
     }
 
-    // Autofill user data
     async function autofillUserData() {
         if (!userId) return;
-
         const autofillUrl = `${GAS_WEB_APP_URL}?userId=${userId}`;
-
         try {
             const response = await fetch(autofillUrl);
             const userData = await response.json();
-
             if (userData && userData.fullName) {
                 document.getElementById('fullName').value = userData.fullName;
                 document.getElementById('department').value = userData.department;
                 document.getElementById('phone').value = userData.phone;
-                updateProgress(); 
+                updateProgress();
             }
         } catch (error) {
             console.error('Autofill error:', error);
         }
     }
 
-    // Show message function
     function showMessage(text, type = 'success') {
-        const alertClass = type === 'success' ? 'alert-success-custom' : 
+        const alertClass = type === 'success' ? 'alert-success-custom' :
                          type === 'danger' ? 'alert-danger-custom' :
                          type === 'warning' ? 'alert-warning-custom' : 'alert-info-custom';
-        const icon = type === 'success' ? 'fas fa-check-circle' : 
+        const icon = type === 'success' ? 'fas fa-check-circle' :
                     type === 'danger' ? 'fas fa-exclamation-circle' :
                     type === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle';
-        const messageHtml = `
+        messageContainer.innerHTML = `
             <div class="alert alert-custom ${alertClass} fade-in" role="alert">
                 <i class="${icon} me-2"></i>${text}
-            </div>
-        `;
-        messageContainer.innerHTML = messageHtml;
-        
+            </div>`;
         if (type === 'success') {
-            setTimeout(() => {
-                messageContainer.innerHTML = '';
-            }, 5000);
+            setTimeout(() => { messageContainer.innerHTML = ''; }, 5000);
         }
     }
 
-    // Update progress bar
     function updateProgress() {
         const formInputs = document.querySelectorAll('input[required], select[required]');
         const filledInputs = Array.from(formInputs).filter(input => {
@@ -813,99 +1235,68 @@
         progressFill.style.width = `${progress}%`;
     }
 
-    // Check if room conflicts with dependencies
     function checkRoomConflicts(roomName, roomStatus) {
-        // Check if this room is blocked by any dependent rooms
         for (const [bookedRoom, blockedRooms] of Object.entries(ROOM_DEPENDENCIES)) {
             if (blockedRooms.includes(roomName) && roomStatus[bookedRoom] === false) {
-                return false; // Room is blocked
+                return false;
             }
         }
-        return roomStatus[roomName] !== false; // Original availability
+        return roomStatus[roomName] !== false;
     }
 
-    // Check meeting room availability
     async function checkMeetingRoomAvailability() {
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
-        
         if (!startDate || !endDate) {
             updateMeetingRoomSelect({});
             return;
         }
-
         try {
             const checkUrl = `${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${startDate}&endDate=${endDate}`;
             const response = await fetch(checkUrl);
             const result = await response.json();
-
-            if (result.error) {
-                throw new Error(result.error);
-            }
-
+            if (result.error) { throw new Error(result.error); }
             roomAvailabilityData = result.roomStatus || {};
             updateMeetingRoomSelect(roomAvailabilityData);
-
         } catch (error) {
             console.error('Meeting room availability check error:', error);
             updateMeetingRoomSelect({});
         }
     }
 
-    // Update meeting room select options with dependency logic and status display
     function updateMeetingRoomSelect(roomStatus) {
-        const options = meetingRoomSelect.querySelectorAll('option[value]');
-        
-        options.forEach(option => {
-            const roomName = option.value;
+        meetingRoomDropdown.allItems.forEach(item => {
+            const roomName = item.dataset.value;
             const isAvailable = checkRoomConflicts(roomName, roomStatus);
-            
-            // Get original option text without status
-            let originalText = option.getAttribute('data-original-text');
-            if (!originalText) {
-                originalText = option.text.replace(/ \(ว่าง\)/g, '').replace(/ \(ไม่ว่าง\)/g, '');
-                option.setAttribute('data-original-text', originalText);
-            }
-            
+            const icon = item.querySelector('.status-icon');
+
             if (!isAvailable) {
-                option.disabled = true;
-                option.text = originalText + ' (ไม่ว่าง)';
-                option.classList.remove('available');
-                option.classList.add('occupied');
+                item.classList.add('disabled');
+                item.dataset.status = 'occupied';
+                if(icon) icon.className = 'fas fa-times-circle status-icon status-occupied';
             } else {
-                option.disabled = false;
-                option.text = originalText + ' (ว่าง)';
-                option.classList.remove('occupied');
-                option.classList.add('available');
+                item.classList.remove('disabled');
+                item.dataset.status = 'available'; // Assuming available if not occupied
+                if(icon) icon.className = 'fas fa-check-circle status-icon status-available';
             }
         });
-
-        // Clear selection if selected room becomes unavailable
-        const selectedRoom = meetingRoomSelect.value;
+        
+        const selectedRoom = meetingRoomHiddenInput.value;
         if (selectedRoom && !checkRoomConflicts(selectedRoom, roomStatus)) {
-            meetingRoomSelect.value = '';
+            meetingRoomDropdown.clearSelection();
             updateProgress();
         }
     }
 
-    // Check accommodation availability
     async function checkAccommodation() {
         clearTimeout(checkTimeout);
-        
         checkTimeout = setTimeout(async () => {
             const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             const attendees = parseInt(document.getElementById('attendees').value) || 0;
 
-            if (!accommodationChoice) {
-                accommodationStatusDiv.innerHTML = '';
-                accommodationStatusDiv.style.display = 'none';
-                accommodationAvailable = true;
-                return;
-            }
-
-            if (accommodationChoice.value !== 'ต้องการ') {
+            if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
                 accommodationStatusDiv.innerHTML = '';
                 accommodationStatusDiv.style.display = 'none';
                 accommodationAvailable = true;
@@ -913,124 +1304,67 @@
             }
             
             if (!startDate || !endDate) {
-                accommodationAvailable = true;
+                 accommodationAvailable = true;
                 return;
             }
 
             accommodationStatusDiv.style.display = 'block';
-            accommodationStatusDiv.innerHTML = `
-                <div class="alert alert-info-custom">
-                    <i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...
-                </div>
-            `;
-
+            accommodationStatusDiv.innerHTML = `<div class="alert alert-info-custom"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...</div>`;
             try {
-                // Calculate checkin/checkout dates - Fixed calculation
                 const startDateObj = new Date(startDate);
                 const endDateObj = new Date(endDate);
-                
                 const checkin = new Date(startDateObj);
                 checkin.setDate(startDateObj.getDate() - 1);
-                
                 const checkout = new Date(endDateObj);
                 checkout.setDate(endDateObj.getDate() - 1);
-
                 const checkinStr = checkin.toISOString().split('T')[0];
                 const checkoutStr = checkout.toISOString().split('T')[0];
 
                 const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${checkoutStr}`;
                 const response = await fetch(checkUrl);
                 const result = await response.json();
-
-                if (result.error) {
-                    throw new Error(result.error);
-                }
+                if (result.error) { throw new Error(result.error); }
 
                 const available = result.availableRooms;
                 const requiredRooms = Math.ceil(attendees / 2);
-                
-                // Calculate nights correctly: from checkin to checkout
                 const nights = Math.max(1, Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24)) + 1);
                 
                 if (available > 0 && (attendees === 0 || available >= requiredRooms)) {
                     accommodationAvailable = true;
-                    let statusHtml = `
-                        <div class="alert alert-success-custom">
-                            <i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก
-                    `;
-                    
+                    let statusHtml = `<div class="alert alert-success-custom"><i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก`;
                     if (attendees > 0) {
                         statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`;
                     }
-
-                    statusHtml += `</div>`;
-                    statusHtml += `
-                        <div class="accommodation-info">
-                            <h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6>
-                            <div class="accommodation-detail">
-                                <span class="accommodation-label">วันเข้าพัก:</span>
-                                <span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span>
-                            </div>
-                            <div class="accommodation-detail">
-                                <span class="accommodation-label">วันออกจากที่พัก:</span>
-                                <span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}</span>
-                            </div>
-                            <div class="accommodation-detail">
-                                <span class="accommodation-label">จำนวนคืน:</span>
-                                <span class="accommodation-value">${nights} คืน</span>
-                            </div>
-                        </div>
-                    `;
-                    
+                    statusHtml += `</div><div class="accommodation-info"><h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6><div class="accommodation-detail"><span class="accommodation-label">วันเข้าพัก:</span><span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span></div><div class="accommodation-detail"><span class="accommodation-label">วันออกจากที่พัก:</span><span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}</span></div><div class="accommodation-detail"><span class="accommodation-label">จำนวนคืน:</span><span class="accommodation-value">${nights} คืน</span></div></div>`;
                     accommodationStatusDiv.innerHTML = statusHtml;
-
                 } else {
                     accommodationAvailable = false;
-                    accommodationStatusDiv.innerHTML = `
-                        <div class="alert alert-danger-custom">
-                            <i class="fas fa-times-circle"></i> ห้องพักไม่เพียงพอสำหรับการจอง
-                            <br><small>มีห้องว่าง ${available} ห้อง แต่ต้องการ ${requiredRooms} ห้อง</small>
-                        </div>
-                        <div class="unavailable-message">
-                            <h6><i class="fas fa-exclamation-triangle me-2"></i>ไม่สามารถจองได้</h6>
-                            <p class="mb-0">กรุณาเปลี่ยนช่วงเวลา หรือลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก</p>
-                        </div>
-                    `;
+                    accommodationStatusDiv.innerHTML = `<div class="alert alert-danger-custom"><i class="fas fa-times-circle"></i> ห้องพักไม่เพียงพอสำหรับการจอง<br><small>มีห้องว่าง ${available} ห้อง แต่ต้องการ ${requiredRooms} ห้อง</small></div><div class="unavailable-message"><h6><i class="fas fa-exclamation-triangle me-2"></i>ไม่สามารถจองได้</h6><p class="mb-0">กรุณาเปลี่ยนช่วงเวลา หรือลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก</p></div>`;
                 }
-
             } catch (error) {
                 console.error('Accommodation availability check error:', error);
                 accommodationAvailable = true;
-                accommodationStatusDiv.innerHTML = `
-                    <div class="alert alert-warning-custom">
-                        <i class="fas fa-exclamation-circle"></i> ไม่สามารถตรวจสอบห้องว่างได้
-                    </div>
-                `;
+                accommodationStatusDiv.innerHTML = `<div class="alert alert-warning-custom"><i class="fas fa-exclamation-circle"></i> ไม่สามารถตรวจสอบห้องว่างได้</div>`;
             }
         }, 500);
     }
 
-    // Radio card event handlers
     document.querySelectorAll('.radio-card').forEach(card => {
         card.addEventListener('click', function() {
             document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
             this.classList.add('active');
             const radio = this.querySelector('input[type="radio"]');
             radio.checked = true;
-            
-            const event = new Event('change');
-            radio.dispatchEvent(event);
+            radio.dispatchEvent(new Event('change'));
             updateProgress();
         });
     });
     
-    // Form input event listeners
     document.querySelectorAll('input, select').forEach(input => {
         input.addEventListener('input', updateProgress);
         input.addEventListener('change', updateProgress);
     });
-
-    // Date and accommodation change event listeners
+    
     document.getElementById('startDate').addEventListener('change', () => {
         checkMeetingRoomAvailability();
         checkAccommodation();
@@ -1047,38 +1381,32 @@
         radio.addEventListener('change', checkAccommodation);
     });
 
-    // Meeting room selection validation
-    document.getElementById('meetingRoom').addEventListener('change', function() {
-        const selectedRoom = this.value;
+    meetingRoomDropdown.dropdown.addEventListener('dropdown:change', (e) => {
+        const selectedRoom = e.detail.lastSelected ? e.detail.lastSelected.value : null;
         const attendees = parseInt(document.getElementById('attendees').value) || 0;
         
         if (selectedRoom && attendees > 0) {
             const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
             if (roomConfig && attendees > roomConfig.capacity) {
-                showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
+                 showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน`, 'warning');
             }
         }
         updateProgress();
     });
 
-    // Attendees validation
     document.getElementById('attendees').addEventListener('input', function() {
         const attendees = parseInt(this.value) || 0;
-        const selectedRoom = document.getElementById('meetingRoom').value;
-        
+        const selectedRoom = meetingRoomHiddenInput.value;
         if (selectedRoom && attendees > 0) {
             const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
             if (roomConfig && attendees > roomConfig.capacity) {
-                showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
+                 showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน`, 'warning');
             }
         }
     });
 
-    // Form submission
     bookingForm.addEventListener('submit', async function(event) {
         event.preventDefault();
-
-        // Check accommodation availability first
         const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
         if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
             await Swal.fire({
@@ -1090,16 +1418,14 @@
             return;
         }
 
-        // Validate meeting room capacity
-        const selectedRoom = document.getElementById('meetingRoom').value;
+        const selectedRoom = meetingRoomHiddenInput.value;
         const attendees = parseInt(document.getElementById('attendees').value) || 0;
-        
         if (selectedRoom && attendees > 0) {
             const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
             if (roomConfig && attendees > roomConfig.capacity) {
                 await Swal.fire({
                     title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!',
-                    text: `ห้อง ${selectedRoom} รองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่นที่มีความจุเพียงพอ`,
+                    text: `ห้อง ${selectedRoom} รองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน`,
                     icon: 'error',
                     confirmButtonText: 'ตกลง'
                 });
@@ -1107,7 +1433,6 @@
             }
         }
 
-        // Check if selected room is available
         if (selectedRoom && !checkRoomConflicts(selectedRoom, roomAvailabilityData)) {
             await Swal.fire({
                 title: 'ห้องประชุมไม่ว่าง!',
@@ -1125,8 +1450,7 @@
 
         const formData = new FormData(event.target);
         const data = {
-            userId: userId,
-            displayName: displayName,
+            userId, displayName,
             fullName: formData.get('fullName'),
             department: formData.get('department'),
             phone: formData.get('phone'),
@@ -1138,9 +1462,9 @@
             attendees: formData.get('attendees'),
             timestamp: new Date().toISOString()
         };
-
+        
         try {
-            const response = await fetch(GAS_WEB_APP_URL, {
+            await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 cache: 'no-cache',
@@ -1164,17 +1488,13 @@
                         <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
                         <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
                     </div>
-                    <div class="alert alert-success mt-3" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว
-                    </div>
+                    <div class="alert alert-success mt-3" role="alert"><i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว</div>
                 `,
                 icon: 'success',
                 showConfirmButton: true,
                 confirmButtonText: 'ตกลง',
                 allowOutsideClick: false,
-                customClass: {
-                    popup: 'bounce-in'
-                }
+                customClass: { popup: 'bounce-in' }
             }).then((result) => {
                 if (result.isConfirmed) {
                     if (liff.isInClient()) {
@@ -1184,13 +1504,10 @@
                     }
                 }
             });
-                        
-
         } catch (error) {
             console.error('Submit error:', error);
             loadingDiv.classList.remove('show');
             mainContent.style.display = 'block';
-            
             await Swal.fire({
                 title: 'เกิดข้อผิดพลาด!',
                 text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
@@ -1198,21 +1515,17 @@
                 confirmButtonText: 'ลองอีกครั้ง',
                 confirmButtonColor: '#dc3545'
             });
-            
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
         }
     });
-    
+
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('startDate').setAttribute('min', today);
-
         document.getElementById('startDate').addEventListener('change', function() {
-            const startDateValue = this.value;
-            document.getElementById('endDate').setAttribute('min', startDateValue);
+            document.getElementById('endDate').setAttribute('min', this.value);
         });
-        
         updateProgress();
     });
     
