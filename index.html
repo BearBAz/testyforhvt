@@ -469,7 +469,7 @@
         opacity: 0.5;
     }
 
-    /* Custom Dropdown Styles */
+    /* --- IMPROVED DROPDOWN STYLES --- */
     .custom-dropdown {
         position: relative;
     }
@@ -485,7 +485,7 @@
     .dropdown-toggle {
         width: 100%;
         background: var(--card-background);
-        border: 2px solid var(--border-color);
+        border: 2px solid var(--card-border);
         border-radius: 12px;
         padding: 0.875rem 1rem;
         font-size: 1rem;
@@ -532,7 +532,7 @@
 
     .dropdown-menu {
         position: absolute;
-        top: 100%;
+        top: calc(100% + 5px);
         left: 0;
         right: 0;
         background: var(--card-background);
@@ -541,7 +541,8 @@
         box-shadow: var(--shadow-medium);
         z-index: 1000;
         max-height: 300px;
-        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
         opacity: 0;
         visibility: hidden;
         transform: translateY(-10px);
@@ -552,6 +553,34 @@
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
+    }
+    
+    .dropdown-header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .clear-all-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .clear-all-btn:hover {
+        background: #fee2e2;
+        color: var(--danger-color);
+    }
+    
+    .dropdown-menu-inner {
+        overflow-y: auto;
     }
 
     .dropdown-section {
@@ -579,6 +608,7 @@
         align-items: center;
         justify-content: space-between;
         font-size: 0.95rem;
+        position: relative;
     }
 
     .dropdown-item:hover {
@@ -592,14 +622,24 @@
     }
 
     .dropdown-item.disabled {
-        opacity: 0.5;
+        opacity: 0.6;
         cursor: not-allowed;
         background: #fef2f2;
         color: var(--danger-color);
     }
-
+    
     .dropdown-item.disabled:hover {
         background: #fef2f2;
+    }
+
+    .dropdown-item.shake {
+        animation: shake 0.5s;
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
     }
 
     .tag {
@@ -613,18 +653,6 @@
         border-radius: 20px;
         gap: 0.5rem;
         animation: fadeInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .tag.success {
-        background: linear-gradient(135deg, var(--success-color) 0%, #16a34a 100%);
-    }
-
-    .tag.warning {
-        background: linear-gradient(135deg, var(--warning-color) 0%, #d97706 100%);
-    }
-
-    .tag.danger {
-        background: linear-gradient(135deg, var(--danger-color) 0%, #dc2626 100%);
     }
 
     .tag-remove {
@@ -643,44 +671,27 @@
         margin-left: 0.5rem;
     }
 
-    .status-available {
-        color: var(--success-color);
-    }
-
-    .status-occupied {
-        color: var(--danger-color);
-    }
-
-    .status-limited {
-        color: var(--warning-color);
-    }
+    .status-available { color: var(--success-color); }
+    .status-occupied { color: var(--danger-color); }
+    .status-limited { color: var(--warning-color); }
 
     @keyframes fadeInScale {
-        from {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
+        from { opacity: 0; transform: scale(0.8); }
+        to { opacity: 1; transform: scale(1); }
     }
 
-    .dropdown-menu::-webkit-scrollbar {
+    .dropdown-menu-inner::-webkit-scrollbar {
         width: 6px;
     }
-
-    .dropdown-menu::-webkit-scrollbar-track {
+    .dropdown-menu-inner::-webkit-scrollbar-track {
         background: #f1f1f1;
         border-radius: 3px;
     }
-
-    .dropdown-menu::-webkit-scrollbar-thumb {
+    .dropdown-menu-inner::-webkit-scrollbar-thumb {
         background: var(--text-muted);
         border-radius: 3px;
     }
-
-    .dropdown-menu::-webkit-scrollbar-thumb:hover {
+    .dropdown-menu-inner::-webkit-scrollbar-thumb:hover {
         background: var(--text-secondary);
     }
 
@@ -722,26 +733,11 @@
     }
 
     @media (max-width: 576px) {
-        .app-container {
-            max-width: 100%;
-            box-shadow: none;
-        }
-        
-        .app-header {
-            padding: 2rem 1rem 1.5rem;
-        }
-        
-        .header-title {
-            font-size: 1.75rem;
-        }
-        
-        .form-section {
-            padding: 1.5rem;
-        }
-        
-        .form-card-body {
-            padding: 1rem;
-        }
+        .app-container { max-width: 100%; box-shadow: none; }
+        .app-header { padding: 2rem 1rem 1.5rem; }
+        .header-title { font-size: 1.75rem; }
+        .form-section { padding: 1.5rem; }
+        .form-card-body { padding: 1rem; }
     }
 </style>
 
@@ -750,9 +746,7 @@
     <div class="app-container">
         <div class="app-header">
             <div class="header-content">
-                <div class="header-icon">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
+                <div class="header-icon"><i class="fas fa-calendar-alt"></i></div>
                 <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
                 <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
                 <br>
@@ -768,9 +762,7 @@
             <form id="bookingForm">
                 <div class="form-card bounce-in">
                     <div class="form-card-header">
-                        <h3 class="form-card-title">
-                            <i class="fas fa-user me-2"></i>ข้อมูลผู้จอง
-                        </h3>
+                        <h3 class="form-card-title"><i class="fas fa-user me-2"></i>ข้อมูลผู้จอง</h3>
                     </div>
                     <div class="form-card-body">
                         <div class="mb-3">
@@ -790,9 +782,7 @@
 
                 <div class="form-card bounce-in">
                     <div class="form-card-header">
-                         <h3 class="form-card-title">
-                            <i class="fas fa-book me-2"></i>ข้อมูลการจองห้องประชุม
-                        </h3>
+                         <h3 class="form-card-title"><i class="fas fa-book me-2"></i>ข้อมูลการจองห้องประชุม</h3>
                     </div>
                      <div class="form-card-body">
                         <div class="mb-3">
@@ -818,77 +808,86 @@
                             <input type="number" class="form-control" id="attendees" name="attendees" required min="1">
                         </div>
 
-                        <div class="custom-dropdown" id="meetingRoomDropdown">
-                            <label class="dropdown-label required">เลือกห้องประชุม</label>
-                            <input type="hidden" id="meetingRoom" name="meetingRoom" required>
-                            <div class="dropdown-toggle" id="dropdownToggle">
-                                <div class="dropdown-content" id="dropdownContent">
-                                    <span class="dropdown-placeholder">-- เลือกห้องประชุม --</span>
+                        <div class="mb-3">
+                            <div class="custom-dropdown" id="meetingRoomDropdown">
+                                <label class="dropdown-label required">เลือกห้องประชุม</label>
+                                <input type="hidden" id="meetingRoom" name="meetingRoom" required>
+                                <div class="dropdown-toggle" id="dropdownToggle" tabindex="0">
+                                    <div class="dropdown-content" id="dropdownContent">
+                                        <span class="dropdown-placeholder">-- เลือกห้องประชุม --</span>
+                                    </div>
+                                    <i class="fas fa-chevron-down dropdown-arrow"></i>
                                 </div>
-                                <i class="fas fa-chevron-down dropdown-arrow"></i>
-                            </div>
-                            <div class="dropdown-menu" id="dropdownMenu">
-                                <div class="dropdown-search">
-                                    <input type="text" placeholder="ค้นหาห้องประชุม..." id="searchInput">
-                                </div>
-                                <div class="dropdown-section">
-                                    <div class="dropdown-section-title">ห้องประชุม Theater</div>
-                                    <div class="dropdown-item" data-value="Auditorium" data-capacity="120" data-status="available">
-                                        <span>Auditorium (120 ที่นั่ง)</span>
-                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                <div class="dropdown-menu" id="dropdownMenu">
+                                    <div class="dropdown-search">
+                                        <input type="text" placeholder="ค้นหาห้องประชุม..." id="searchInput">
                                     </div>
-                                </div>
-                                <div class="dropdown-section">
-                                    <div class="dropdown-section-title">ห้องประชุม</div>
-                                    <div class="dropdown-item" data-value="A201/1-2" data-capacity="120" data-status="available">
-                                        <span>A201 รวม (120 ที่นั่ง)</span>
-                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    <div class="dropdown-header">
+                                        <button type="button" class="clear-all-btn" id="clearAllBtn">
+                                            <i class="fas fa-times me-1"></i>ล้างค่า
+                                        </button>
                                     </div>
-                                    <div class="dropdown-item" data-value="A201/1" data-capacity="60" data-status="occupied">
-                                        <span>A201/1 (60 ที่นั่ง)</span>
-                                        <i class="fas fa-times-circle status-icon status-occupied"></i>
-                                    </div>
-                                    <div class="dropdown-item" data-value="A201/2" data-capacity="60" data-status="available">
-                                        <span>A201/2 (60 ที่นั่ง)</span>
-                                        <i class="fas fa-check-circle status-icon status-available"></i>
-                                    </div>
-                                    <div class="dropdown-item" data-value="A202" data-capacity="60" data-status="limited">
-                                        <span>A202 (60 ที่นั่ง)</span>
-                                        <i class="fas fa-exclamation-circle status-icon status-limited"></i>
-                                    </div>
-                                    <div class="dropdown-item" data-value="A203" data-capacity="60" data-status="available">
-                                        <span>A203 (60 ที่นั่ง)</span>
-                                        <i class="fas fa-check-circle status-icon status-available"></i>
-                                    </div>
-                                    <div class="dropdown-item" data-value="A204" data-capacity="40" data-status="available">
-                                        <span>A204 (40 ที่นั่ง)</span>
-                                        <i class="fas fa-check-circle status-icon status-available"></i>
-                                    </div>
-                                    <div class="dropdown-item" data-value="A205" data-capacity="40" data-status="occupied">
-                                        <span>A205 (40 ที่นั่ง)</span>
-                                        <i class="fas fa-times-circle status-icon status-occupied"></i>
-                                    </div>
-                                    <div class="dropdown-item" data-value="A206" data-capacity="50" data-status="available">
-                                        <span>A206 (50 ที่นั่ง)</span>
-                                        <i class="fas fa-check-circle status-icon status-available"></i>
-                                    </div>
-                                </div>
-                                <div class="dropdown-section">
-                                    <div class="dropdown-section-title">ห้อง Computer</div>
-                                    <div class="dropdown-item" data-value="Computer1" data-capacity="50" data-status="available">
-                                        <span>Computer 1 (50 ที่นั่ง)</span>
-                                        <i class="fas fa-check-circle status-icon status-available"></i>
-                                    </div>
-                                    <div class="dropdown-item" data-value="Computer2" data-capacity="50" data-status="limited">
-                                        <span>Computer 2 (50 ที่นั่ง)</span>
-                                        <i class="fas fa-exclamation-circle status-icon status-limited"></i>
-                                    </div>
-                                </div>
-                                <div class="dropdown-section">
-                                    <div class="dropdown-section-title">สนามหญ้า</div>
-                                    <div class="dropdown-item" data-value="สนามหญ้า" data-capacity="100" data-status="available">
-                                        <span>สนามหญ้า (100 ที่นั่ง)</span>
-                                        <i class="fas fa-check-circle status-icon status-available"></i>
+                                    <div class="dropdown-menu-inner">
+                                        <div class="dropdown-section">
+                                            <div class="dropdown-section-title">ห้องประชุม Theater</div>
+                                            <div class="dropdown-item" data-value="Auditorium" data-capacity="120">
+                                                <span>Auditorium (120 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-section">
+                                            <div class="dropdown-section-title">ห้องประชุม</div>
+                                            <div class="dropdown-item" data-value="A201/1-2" data-capacity="120">
+                                                <span>A201 รวม (120 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                            <div class="dropdown-item" data-value="A201/1" data-capacity="60">
+                                                <span>A201/1 (60 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                            <div class="dropdown-item" data-value="A201/2" data-capacity="60">
+                                                <span>A201/2 (60 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                            <div class="dropdown-item" data-value="A202" data-capacity="60">
+                                                <span>A202 (60 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                            <div class="dropdown-item" data-value="A203" data-capacity="60">
+                                                <span>A203 (60 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                            <div class="dropdown-item" data-value="A204" data-capacity="40">
+                                                <span>A204 (40 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                            <div class="dropdown-item" data-value="A205" data-capacity="40">
+                                                <span>A205 (40 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                            <div class="dropdown-item" data-value="A206" data-capacity="50">
+                                                <span>A206 (50 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-section">
+                                            <div class="dropdown-section-title">ห้อง Computer</div>
+                                            <div class="dropdown-item" data-value="Computer1" data-capacity="50">
+                                                <span>Computer 1 (50 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                            <div class="dropdown-item" data-value="Computer2" data-capacity="50">
+                                                <span>Computer 2 (50 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-section">
+                                            <div class="dropdown-section-title">สนามหญ้า</div>
+                                            <div class="dropdown-item" data-value="สนามหญ้า" data-capacity="100">
+                                                <span>สนามหญ้า (100 ที่นั่ง)</span>
+                                                <i class="fas fa-check-circle status-icon status-available"></i>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -920,18 +919,14 @@
                                 <div class="col-6">
                                      <div class="radio-card" data-value="ต้องการ">
                                         <input type="radio" name="accommodation" value="ต้องการ" required>
-                                         <div class="radio-icon">
-                                            <i class="fas fa-bed"></i>
-                                         </div>
+                                         <div class="radio-icon"><i class="fas fa-bed"></i></div>
                                         <div>ต้องการ</div>
                                     </div>
                                  </div>
                                 <div class="col-6">
                                     <div class="radio-card" data-value="ไม่ต้องการ">
                                         <input type="radio" name="accommodation" value="ไม่ต้องการ">
-                                        <div class="radio-icon">
-                                            <i class="fas fa-home"></i>
-                                        </div>
+                                        <div class="radio-icon"><i class="fas fa-home"></i></div>
                                         <div>ไม่ต้องการ</div>
                                      </div>
                                 </div>
@@ -1005,56 +1000,51 @@
     let roomAvailabilityData = {};
     let accommodationAvailable = true;
 
-    // Custom Dropdown Class
+    // --- IMPROVED DROPDOWN CLASS ---
     class CustomDropdown {
-        constructor(element) {
+        constructor(element, options = {}) {
             this.dropdown = element;
-            this.toggle = element.querySelector('#dropdownToggle');
-            this.menu = element.querySelector('#dropdownMenu');
-            this.content = element.querySelector('#dropdownContent');
-            this.searchInput = element.querySelector('#searchInput');
+            this.options = { multiSelect: false, ...options };
+            this.toggle = this.dropdown.querySelector('#dropdownToggle');
+            this.menu = this.dropdown.querySelector('#dropdownMenu');
+            this.content = this.dropdown.querySelector('#dropdownContent');
+            this.searchInput = this.dropdown.querySelector('#searchInput');
+            this.clearAllBtn = this.dropdown.querySelector('#clearAllBtn');
             this.hiddenInput = document.getElementById('meetingRoom');
             this.selectedValues = [];
-            this.allItems = [];
+            this.allItems = Array.from(this.menu.querySelectorAll('.dropdown-item'));
             this.init();
         }
 
         init() {
-            this.allItems = Array.from(this.menu.querySelectorAll('.dropdown-item'));
-            this.toggle.addEventListener('click', (e) => {
-                 e.preventDefault();
-                e.stopPropagation();
-                this.toggleMenu();
-            });
+            this.toggle.addEventListener('click', () => this.toggleMenu());
             this.searchInput.addEventListener('input', (e) => this.filterItems(e.target.value));
+            this.clearAllBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.clearAll();
+            });
+
             this.allItems.forEach(item => {
                 item.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    if (!item.classList.contains('disabled')) {
-                         this.selectItem(item);
+                    if (item.classList.contains('disabled')) {
+                        item.classList.add('shake');
+                        setTimeout(() => item.classList.remove('shake'), 500);
+                        return;
                     }
+                    this.selectItem(item);
                 });
             });
+
             document.addEventListener('click', (e) => {
-                if (!this.dropdown.contains(e.target)) {
-                    this.closeMenu();
-                }
+                if (!this.dropdown.contains(e.target)) this.closeMenu();
             });
-            this.updateItemStates();
         }
 
         toggleMenu() {
-            if (this.menu.classList.contains('show')) {
-                this.closeMenu();
-            } else {
-                this.openMenu();
-            }
-        }
-
-        openMenu() {
-            this.menu.classList.add('show');
-            this.toggle.classList.add('active');
-            this.searchInput.focus();
+            this.menu.classList.toggle('show');
+            this.toggle.classList.toggle('active');
+            if (this.menu.classList.contains('show')) this.searchInput.focus();
         }
 
         closeMenu() {
@@ -1067,109 +1057,83 @@
         selectItem(item) {
             const value = item.dataset.value;
             const text = item.querySelector('span').textContent;
-            const status = item.dataset.status;
-            this.selectedValues = [];
-            this.allItems.forEach(i => i.classList.remove('selected'));
-            this.selectedValues.push({ value, text, status });
-            item.classList.add('selected');
-            this.updateContent();
-            this.closeMenu();
-            this.hiddenInput.value = value;
-            this.hiddenInput.dispatchEvent(new Event('change'));
-            this.dropdown.dispatchEvent(new CustomEvent('dropdown:change', {
-                detail: {
-                    selectedValues: this.selectedValues,
-                    lastSelected: { value, text, status }
-                }
-            }));
-        }
+            const itemIndex = this.selectedValues.findIndex(v => v.value === value);
 
-        removeItem(value) {
-            this.selectedValues = this.selectedValues.filter(item => item.value !== value);
-            const item = this.menu.querySelector(`[data-value="${value}"]`);
-            if (item) {
-                item.classList.remove('selected');
-            }
-            this.updateContent();
-            this.hiddenInput.value = '';
-            this.hiddenInput.dispatchEvent(new Event('change'));
-            this.dropdown.dispatchEvent(new CustomEvent('dropdown:change', {
-                detail: {
-                    selectedValues: this.selectedValues,
-                    removed: value
+            if (this.options.multiSelect) {
+                if (itemIndex > -1) {
+                    this.selectedValues.splice(itemIndex, 1);
+                    item.classList.remove('selected');
+                } else {
+                    this.selectedValues.push({ value, text });
+                    item.classList.add('selected');
                 }
-            }));
+            } else {
+                this.allItems.forEach(i => i.classList.remove('selected'));
+                if (itemIndex > -1) {
+                    this.selectedValues = [];
+                } else {
+                    this.selectedValues = [{ value, text }];
+                    item.classList.add('selected');
+                    this.closeMenu();
+                }
+            }
+            this.updateState();
         }
 
         updateContent() {
             if (this.selectedValues.length === 0) {
                 this.content.innerHTML = '<span class="dropdown-placeholder">-- เลือกห้องประชุม --</span>';
             } else {
-                const tagsHTML = this.selectedValues.map(item => {
-                    const statusClass = item.status === 'available' ? 'success' : 
-                                        item.status === 'limited' ? 'warning' : 'danger';
-                    return `
-                        <span class="tag ${statusClass}">
-                             ${item.text}
-                            <i class="fas fa-times tag-remove" data-value="${item.value}"></i>
-                        </span>
-                    `;
-                }).join('');
-                this.content.innerHTML = tagsHTML;
+                this.content.innerHTML = this.selectedValues.map(item => `
+                    <span class="tag">
+                        ${item.text}
+                        <i class="fas fa-times tag-remove" data-value="${item.value}"></i>
+                    </span>`).join('');
+                
                 this.content.querySelectorAll('.tag-remove').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        this.removeItem(e.target.dataset.value);
+                        const itemToRemove = this.allItems.find(i => i.dataset.value === e.target.dataset.value);
+                        if (itemToRemove) this.selectItem(itemToRemove);
                     });
                 });
             }
         }
+        
+        updateHiddenInput() {
+            this.hiddenInput.value = this.selectedValues.map(v => v.value).join(', ');
+            this.hiddenInput.dispatchEvent(new Event('change'));
+        }
 
-        filterItems(searchTerm) {
-            const term = searchTerm.toLowerCase();
+        updateState() {
+            this.updateContent();
+            this.updateHiddenInput();
+            this.dropdown.dispatchEvent(new CustomEvent('dropdown:change', {
+                detail: { selectedValues: this.selectedValues }
+            }));
+        }
+
+        filterItems(term) {
+            const lowerTerm = term.toLowerCase();
             this.allItems.forEach(item => {
                 const text = item.querySelector('span').textContent.toLowerCase();
-                if (text.includes(term)) {
-                     item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
+                item.style.display = text.includes(lowerTerm) ? 'flex' : 'none';
             });
             this.menu.querySelectorAll('.dropdown-section').forEach(section => {
-                const visibleItems = section.querySelectorAll('.dropdown-item[style="display: flex;"]');
+                const visibleItems = section.querySelectorAll('.dropdown-item[style*="display: flex"]');
                 section.style.display = visibleItems.length > 0 ? 'block' : 'none';
             });
         }
         
-        updateItemStates() {
-            this.allItems.forEach(item => {
-                const status = item.dataset.status;
-                const icon = item.querySelector('.status-icon');
-                if (status === 'occupied') {
-                     item.classList.add('disabled');
-                    icon.className = 'fas fa-times-circle status-icon status-occupied';
-                } else {
-                    item.classList.remove('disabled');
-                    if(status === 'available') {
-                        icon.className = 'fas fa-check-circle status-icon status-available';
-                    } else if (status === 'limited') {
-                        icon.className = 'fas fa-exclamation-circle status-icon status-limited';
-                    }
-                }
-            });
-        }
-        
-        clearSelection() {
+        clearAll() {
             this.selectedValues = [];
             this.allItems.forEach(item => item.classList.remove('selected'));
-            this.updateContent();
-            this.hiddenInput.value = '';
-            this.hiddenInput.dispatchEvent(new Event('change'));
+            this.updateState();
         }
     }
 
-    // Initialize dropdown
-    const meetingRoomDropdown = new CustomDropdown(document.getElementById('meetingRoomDropdown'));
+    // Initialize dropdown with multi-select enabled
+    const meetingRoomDropdown = new CustomDropdown(document.getElementById('meetingRoomDropdown'), { multiSelect: true });
     
     // Initialize LIFF
     async function initializeLiff() {
@@ -1218,20 +1182,20 @@
             <div class="alert alert-custom ${alertClass} fade-in" role="alert">
                 <i class="${icon} me-2"></i>${text}
             </div>`;
-        if (type === 'success') {
+        if (type !== 'danger' && type !== 'warning') {
             setTimeout(() => { messageContainer.innerHTML = ''; }, 5000);
         }
     }
 
     function updateProgress() {
-        const formInputs = document.querySelectorAll('input[required], select[required]');
-        const filledInputs = Array.from(formInputs).filter(input => {
+        const formInputs = [...document.querySelectorAll('input[required], select[required]')];
+        const filledInputs = formInputs.filter(input => {
             if (input.type === 'radio') {
                 return document.querySelector(`input[name="${input.name}"]:checked`) !== null;
             }
             return input.value.trim() !== '';
         });
-        const progress = (filledInputs.length / formInputs.length) * 100;
+        const progress = formInputs.length > 0 ? (filledInputs.length / formInputs.length) * 100 : 0;
         progressFill.style.width = `${progress}%`;
     }
 
@@ -1265,6 +1229,7 @@
     }
 
     function updateMeetingRoomSelect(roomStatus) {
+        let hasUnavailableSelection = false;
         meetingRoomDropdown.allItems.forEach(item => {
             const roomName = item.dataset.value;
             const isAvailable = checkRoomConflicts(roomName, roomStatus);
@@ -1272,19 +1237,27 @@
 
             if (!isAvailable) {
                 item.classList.add('disabled');
-                item.dataset.status = 'occupied';
-                if(icon) icon.className = 'fas fa-times-circle status-icon status-occupied';
+                if (icon) icon.className = 'fas fa-times-circle status-icon status-occupied';
+                if (item.classList.contains('selected')) {
+                    hasUnavailableSelection = true;
+                }
             } else {
                 item.classList.remove('disabled');
-                item.dataset.status = 'available'; // Assuming available if not occupied
-                if(icon) icon.className = 'fas fa-check-circle status-icon status-available';
+                if (icon) icon.className = 'fas fa-check-circle status-icon status-available';
             }
         });
         
-        const selectedRoom = meetingRoomHiddenInput.value;
-        if (selectedRoom && !checkRoomConflicts(selectedRoom, roomStatus)) {
-            meetingRoomDropdown.clearSelection();
-            updateProgress();
+        if (hasUnavailableSelection) {
+            const currentValues = meetingRoomDropdown.selectedValues;
+            const stillAvailable = currentValues.filter(v => checkRoomConflicts(v.value, roomStatus));
+            if(stillAvailable.length < currentValues.length) {
+                meetingRoomDropdown.clearAll();
+                stillAvailable.forEach(v => {
+                    const item = meetingRoomDropdown.allItems.find(i => i.dataset.value === v.value);
+                    if(item) meetingRoomDropdown.selectItem(item);
+                });
+                showMessage('ห้องที่ท่านเลือกบางห้องไม่ว่างแล้ว', 'warning');
+            }
         }
     }
 
@@ -1327,7 +1300,7 @@
 
                 const available = result.availableRooms;
                 const requiredRooms = Math.ceil(attendees / 2);
-                const nights = Math.max(1, Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24)) + 1);
+                const nights = Math.max(1, Math.ceil((new Date(checkoutStr) - new Date(checkinStr)) / (1000 * 60 * 60 * 24)));
                 
                 if (available > 0 && (attendees === 0 || available >= requiredRooms)) {
                     accommodationAvailable = true;
@@ -1335,7 +1308,7 @@
                     if (attendees > 0) {
                         statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`;
                     }
-                    statusHtml += `</div><div class="accommodation-info"><h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6><div class="accommodation-detail"><span class="accommodation-label">วันเข้าพัก:</span><span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span></div><div class="accommodation-detail"><span class="accommodation-label">วันออกจากที่พัก:</span><span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}</span></div><div class="accommodation-detail"><span class="accommodation-label">จำนวนคืน:</span><span class="accommodation-value">${nights} คืน</span></div></div>`;
+                    statusHtml += `</div><div class="accommodation-info"><h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6><div class="accommodation-detail"><span class="accommodation-label">วันเข้าพัก:</span><span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span></div><div class="accommodation-detail"><span class="accommodation-label">วันออกจากที่พัก:</span><span class="accommodation-value">${new Date(checkout).toLocaleDateString('th-TH')}</span></div><div class="accommodation-detail"><span class="accommodation-label">จำนวนคืน:</span><span class="accommodation-value">${nights} คืน</span></div></div>`;
                     accommodationStatusDiv.innerHTML = statusHtml;
                 } else {
                     accommodationAvailable = false;
@@ -1365,14 +1338,11 @@
         input.addEventListener('change', updateProgress);
     });
     
-    document.getElementById('startDate').addEventListener('change', () => {
-        checkMeetingRoomAvailability();
-        checkAccommodation();
-    });
-    
-    document.getElementById('endDate').addEventListener('change', () => {
-        checkMeetingRoomAvailability();
-        checkAccommodation();
+    ['startDate', 'endDate'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+            checkMeetingRoomAvailability();
+            checkAccommodation();
+        });
     });
     
     document.getElementById('attendees').addEventListener('input', checkAccommodation);
@@ -1382,64 +1352,57 @@
     });
 
     meetingRoomDropdown.dropdown.addEventListener('dropdown:change', (e) => {
-        const selectedRoom = e.detail.lastSelected ? e.detail.lastSelected.value : null;
-        const attendees = parseInt(document.getElementById('attendees').value) || 0;
-        
-        if (selectedRoom && attendees > 0) {
-            const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
-            if (roomConfig && attendees > roomConfig.capacity) {
-                 showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน`, 'warning');
-            }
-        }
+        validateRoomCapacity();
         updateProgress();
     });
 
-    document.getElementById('attendees').addEventListener('input', function() {
-        const attendees = parseInt(this.value) || 0;
-        const selectedRoom = meetingRoomHiddenInput.value;
-        if (selectedRoom && attendees > 0) {
-            const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
-            if (roomConfig && attendees > roomConfig.capacity) {
-                 showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน`, 'warning');
-            }
+    document.getElementById('attendees').addEventListener('input', validateRoomCapacity);
+
+    function validateRoomCapacity() {
+        const attendees = parseInt(document.getElementById('attendees').value) || 0;
+        const selectedRooms = meetingRoomDropdown.selectedValues;
+        let warningShown = false;
+
+        if(attendees > 0 && selectedRooms.length > 0){
+            selectedRooms.forEach(room => {
+                const roomConfig = MEETING_ROOMS_CONFIG[room.value];
+                if(roomConfig && attendees > roomConfig.capacity && !warningShown) {
+                    showMessage(`ห้อง ${room.value} รองรับได้ ${roomConfig.capacity} คน แต่มีผู้เข้าร่วม ${attendees} คน`, 'warning');
+                    warningShown = true;
+                }
+            });
         }
-    });
+    }
 
     bookingForm.addEventListener('submit', async function(event) {
         event.preventDefault();
         const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
         if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
-            await Swal.fire({
-                title: 'ที่พักไม่เพียงพอ!',
-                text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา หรือลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก',
-                icon: 'error',
-                confirmButtonText: 'ตกลง'
-            });
+            Swal.fire({ title: 'ที่พักไม่เพียงพอ!', text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา หรือเลือกไม่ต้องการที่พัก', icon: 'error', confirmButtonText: 'ตกลง' });
             return;
         }
 
-        const selectedRoom = meetingRoomHiddenInput.value;
+        const selectedRooms = meetingRoomDropdown.selectedValues;
         const attendees = parseInt(document.getElementById('attendees').value) || 0;
-        if (selectedRoom && attendees > 0) {
-            const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
+        let capacityExceeded = false;
+        let exceededRoom = '';
+
+        selectedRooms.forEach(room => {
+            const roomConfig = MEETING_ROOMS_CONFIG[room.value];
             if (roomConfig && attendees > roomConfig.capacity) {
-                await Swal.fire({
-                    title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!',
-                    text: `ห้อง ${selectedRoom} รองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน`,
-                    icon: 'error',
-                    confirmButtonText: 'ตกลง'
-                });
-                return;
+                capacityExceeded = true;
+                exceededRoom = room.value;
             }
+        });
+
+        if (capacityExceeded) {
+            Swal.fire({ title: 'จำนวนผู้เข้าร่วมเกินความจุ!', text: `ห้อง ${exceededRoom} รองรับได้ไม่เกิน ${MEETING_ROOMS_CONFIG[exceededRoom].capacity} คน`, icon: 'error', confirmButtonText: 'ตกลง' });
+            return;
         }
 
-        if (selectedRoom && !checkRoomConflicts(selectedRoom, roomAvailabilityData)) {
-            await Swal.fire({
-                title: 'ห้องประชุมไม่ว่าง!',
-                text: 'ห้องประชุมที่คุณเลือกไม่ว่างในช่วงเวลาที่กำหนด กรุณาเลือกห้องอื่น',
-                icon: 'error',
-                confirmButtonText: 'ตกลง'
-            });
+        const unavailableRooms = selectedRooms.filter(room => !checkRoomConflicts(room.value, roomAvailabilityData));
+        if (unavailableRooms.length > 0) {
+            Swal.fire({ title: 'ห้องประชุมไม่ว่าง!', text: `ห้อง ${unavailableRooms.map(r => r.value).join(', ')} ไม่ว่างในช่วงเวลาที่กำหนด`, icon: 'error', confirmButtonText: 'ตกลง' });
             return;
         }
 
@@ -1465,12 +1428,9 @@
         
         try {
             await fetch(GAS_WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                cache: 'no-cache',
+                method: 'POST', mode: 'no-cors', cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-                redirect: 'follow'
+                body: JSON.stringify(data), redirect: 'follow'
             });
             
             loadingDiv.classList.remove('show');
@@ -1490,18 +1450,11 @@
                     </div>
                     <div class="alert alert-success mt-3" role="alert"><i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว</div>
                 `,
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonText: 'ตกลง',
-                allowOutsideClick: false,
+                icon: 'success', confirmButtonText: 'ตกลง', allowOutsideClick: false,
                 customClass: { popup: 'bounce-in' }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    if (liff.isInClient()) {
-                        liff.closeWindow();
-                    } else {
-                        window.close();
-                    }
+                    if (liff.isInClient()) liff.closeWindow(); else window.close();
                 }
             });
         } catch (error) {
@@ -1509,11 +1462,8 @@
             loadingDiv.classList.remove('show');
             mainContent.style.display = 'block';
             await Swal.fire({
-                title: 'เกิดข้อผิดพลาด!',
-                text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
-                icon: 'error',
-                confirmButtonText: 'ลองอีกครั้ง',
-                confirmButtonColor: '#dc3545'
+                title: 'เกิดข้อผิดพลาด!', text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                icon: 'error', confirmButtonText: 'ลองอีกครั้ง'
             });
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
@@ -1525,6 +1475,9 @@
         document.getElementById('startDate').setAttribute('min', today);
         document.getElementById('startDate').addEventListener('change', function() {
             document.getElementById('endDate').setAttribute('min', this.value);
+            if (document.getElementById('endDate').value < this.value) {
+                document.getElementById('endDate').value = this.value;
+            }
         });
         updateProgress();
     });
