@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ระบบจองห้องประชุม ศกฟ.</title>
+    <title>ระบบจองห้องประชุม ศฝฟ.</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -177,183 +177,6 @@
     .form-control:hover, .form-select:hover {
         border-color: var(--secondary-color);
         box-shadow: var(--shadow-medium);
-    }
-
-    /* Custom Dropdown Styles */
-    .custom-dropdown {
-        position: relative;
-        margin-bottom: 1rem;
-    }
-
-    .dropdown-toggle {
-        width: 100%;
-        background: var(--card-background);
-        border: 2px solid var(--card-border);
-        border-radius: 12px;
-        padding: 0.875rem 1rem;
-        font-size: 1rem;
-        font-family: 'Sarabun', sans-serif;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        min-height: 54px;
-        box-shadow: var(--shadow-soft);
-    }
-
-    .dropdown-toggle:hover {
-        border-color: var(--secondary-color);
-        box-shadow: var(--shadow-medium);
-        transform: translateY(-1px);
-    }
-
-    .dropdown-toggle.active {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-        transform: translateY(-1px);
-    }
-
-    .dropdown-content {
-        display: flex;
-        align-items: center;
-        flex: 1;
-    }
-
-    .dropdown-placeholder {
-        color: var(--text-muted);
-    }
-
-    .dropdown-selected {
-        color: var(--text-primary);
-        font-weight: 500;
-    }
-
-    .dropdown-arrow {
-        margin-left: 0.5rem;
-        transition: transform 0.3s ease;
-        color: var(--text-secondary);
-    }
-
-    .dropdown-toggle.active .dropdown-arrow {
-        transform: rotate(180deg);
-    }
-
-    .dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--card-background);
-        border: 2px solid var(--card-border);
-        border-radius: 12px;
-        box-shadow: var(--shadow-strong);
-        z-index: 1000;
-        max-height: 300px;
-        overflow-y: auto;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-10px);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-top: 4px;
-    }
-
-    .dropdown-menu.show {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
-
-    .dropdown-search {
-        padding: 0.75rem;
-        border-bottom: 1px solid var(--card-border);
-        position: sticky;
-        top: 0;
-        background: var(--card-background);
-        z-index: 1;
-    }
-
-    .dropdown-search input {
-        width: 100%;
-        border: 1px solid var(--card-border);
-        border-radius: 8px;
-        padding: 0.5rem 0.75rem;
-        font-size: 0.9rem;
-        font-family: 'Sarabun', sans-serif;
-        transition: all 0.2s ease;
-    }
-
-    .dropdown-search input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.1);
-    }
-
-    .dropdown-section {
-        padding: 0.5rem 0;
-    }
-
-    .dropdown-section:not(:last-child) {
-        border-bottom: 1px solid var(--card-border);
-    }
-
-    .dropdown-section-title {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        padding: 0.5rem 1rem;
-        letter-spacing: 0.5px;
-    }
-
-    .dropdown-item {
-        padding: 0.75rem 1rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 0.95rem;
-        color: var(--text-primary);
-    }
-
-    .dropdown-item:hover {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    }
-
-    .dropdown-item.selected {
-        background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
-        color: var(--primary-color);
-        font-weight: 500;
-    }
-
-    .dropdown-item.disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        color: var(--danger-color);
-    }
-
-    .dropdown-item.disabled:hover {
-        background: transparent;
-    }
-
-    /* Scrollbar Styles */
-    .dropdown-menu::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .dropdown-menu::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 3px;
-    }
-
-    .dropdown-menu::-webkit-scrollbar-thumb {
-        background: var(--text-muted);
-        border-radius: 3px;
-    }
-
-    .dropdown-menu::-webkit-scrollbar-thumb:hover {
-        background: var(--text-secondary);
     }
 
     .radio-card {
@@ -570,6 +393,7 @@
         box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3);
     }
 
+    /* Enhanced status display styles */
     #accommodationStatus {
         padding: 0.75rem 1.25rem;
         border-radius: 12px;
@@ -585,6 +409,7 @@
         background-color: #f8f9fa;
     }
 
+    /* Accommodation info styles */
     .accommodation-info {
         background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         border: 1px solid #0284c7;
@@ -619,12 +444,14 @@
         color: #0c4a6e;
     }
 
-    .unavailable-message {
-        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-        border: 1px solid #ef4444;
-        border-radius: 12px;
-        padding: 1rem;
-        margin-top: 1rem;
+    .form-select option.occupied {
+        color: #991b1b !important;
+        background-color: #fee2e2 !important;
+    }
+
+    .form-select option.available {
+        color: #166534 !important;
+        background-color: #dcfce7 !important;
     }
 
     @media (max-width: 576px) {
@@ -697,6 +524,115 @@
     .form-control:focus::placeholder {
         opacity: 0.5;
     }
+
+    /* Form select option disabled style */
+    .form-select option:disabled {
+        color: #991b1b;
+        background-color: #fee2e2;
+    }
+
+    .unavailable-message {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border: 1px solid #ef4444;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+	.custom-select-wrapper {
+    position: relative;
+}
+
+.custom-select {
+    position: relative;
+    font-family: 'Sarabun', sans-serif;
+}
+
+.custom-select-trigger {
+    border: 2px solid var(--card-border);
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    background: var(--card-background);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.custom-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-medium);
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none; /* Hidden by default */
+}
+
+.custom-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.custom-option:hover {
+    background-color: #f1f5f9;
+}
+
+.room-details {
+    display: flex;
+    align-items: center;
+}
+
+.room-details i {
+    margin-right: 8px;
+    color: var(--text-muted);
+}
+
+.room-capacity {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+.room-status {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-available {
+    color: #16a34a; /* Green */
+}
+
+.status-available .status-indicator {
+    background-color: #16a34a;
+}
+
+.status-unavailable {
+    color: #dc2626; /* Red */
+}
+
+.status-unavailable .status-indicator {
+    background-color: #dc2626;
+}
+
 </style>
 
 </head>
@@ -708,7 +644,7 @@
                     <i class="fas fa-calendar-alt"></i>
                 </div>
                 <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
-                <p class="header-subtitle">ศูนย์เคือปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
+                <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
                 <br>
             </div>
         </div>
@@ -772,73 +708,20 @@
                             <input type="number" class="form-control" id="attendees" name="attendees" required min="1">
                         </div>
 
-                        <!-- Custom Dropdown for Meeting Room -->
                         <div class="mb-3">
-                            <label class="form-label required">เลือกห้องประชุม</label>
-                            <div class="custom-dropdown" id="meetingRoomDropdown">
-                                <div class="dropdown-toggle" id="dropdownToggle">
-                                    <div class="dropdown-content" id="dropdownContent">
-                                        <span class="dropdown-placeholder">-- เลือกห้องประชุม --</span>
-                                    </div>
-                                    <i class="fas fa-chevron-down dropdown-arrow"></i>
-                                </div>
-                                    
-                                    <div class="dropdown-section">
-                                        <div class="dropdown-section-title">ห้องประชุม Theater</div>
-                                        <div class="dropdown-item" data-value="Auditorium" data-capacity="120">
-                                            <span>Auditorium (120 ที่นั่ง)</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="dropdown-section">
-                                        <div class="dropdown-section-title">ห้องประชุม</div>
-                                        <div class="dropdown-item" data-value="A201/1-2" data-capacity="120">
-                                            <span>A201 รวม (120 ที่นั่ง)</span>
-                                        </div>
-                                        <div class="dropdown-item" data-value="A201/1" data-capacity="60">
-                                            <span>A201/1 (60 ที่นั่ง)</span>
-                                        </div>
-                                        <div class="dropdown-item" data-value="A201/2" data-capacity="60">
-                                            <span>A201/2 (60 ที่นั่ง)</span>
-                                        </div>
-                                        <div class="dropdown-item" data-value="A202" data-capacity="60">
-                                            <span>A202 (60 ที่นั่ง)</span>
-                                        </div>
-                                        <div class="dropdown-item" data-value="A203" data-capacity="60">
-                                            <span>A203 (60 ที่นั่ง)</span>
-                                        </div>
-                                        <div class="dropdown-item" data-value="A204" data-capacity="40">
-                                            <span>A204 (40 ที่นั่ง)</span>
-                                        </div>
-                                        <div class="dropdown-item" data-value="A205" data-capacity="40">
-                                            <span>A205 (40 ที่นั่ง)</span>
-                                        </div>
-                                        <div class="dropdown-item" data-value="A206" data-capacity="50">
-                                            <span>A206 (50 ที่นั่ง)</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="dropdown-section">
-                                        <div class="dropdown-section-title">ห้อง Computer</div>
-                                        <div class="dropdown-item" data-value="Computer1" data-capacity="50">
-                                            <span>Computer 1 (50 ที่นั่ง)</span>
-                                        </div>
-                                        <div class="dropdown-item" data-value="Computer2" data-capacity="50">
-                                            <span>Computer 2 (50 ที่นั่ง)</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="dropdown-section">
-                                        <div class="dropdown-section-title">สนามหญ้า</div>
-                                        <div class="dropdown-item" data-value="สนามหญ้า" data-capacity="100">
-                                            <span>สนามหญ้า (100 ที่นั่ง)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Hidden input to store selected value -->
-                            <input type="hidden" id="meetingRoom" name="meetingRoom" required>
-                        </div>
+    <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
+    <div class="custom-select-wrapper">
+        <div class="custom-select">
+            <div class="custom-select-trigger">
+                <span>-- เลือกห้องประชุม --</span>
+                <div class="arrow"></div>
+            </div>
+            <div class="custom-options">
+                </div>
+        </div>
+    </div>
+    <input type="hidden" id="meetingRoom" name="meetingRoom" required>
+</div>
                         
                         <div class="mb-3">
                             <label class="form-label required">ต้องการที่พัก</label>
@@ -905,10 +788,10 @@
         'A203': { capacity: 60, category: '60 ที่นั่ง' },
         'A204': { capacity: 40, category: '40 ที่นั่ง' },
         'A205': { capacity: 40, category: '40 ที่นั่ง' },
-        'A206': { capacity: 50, category: '50 ที่นั่ง' },
-        'Computer1': { capacity: 50, category: 'Computer' },
-        'Computer2': { capacity: 50, category: 'Computer' },
-        'สนามหญ้า': { capacity: 100, category: 'สนาม' }
+        'A206': { capacity: 50, category: '40 ที่นั่ง' },
+        'Computor1': { capacity: 50, category: 'Computer' },
+        'Computor2': { capacity: 50, category: 'Computer' },
+        'สนามฝึก': { capacity: 100, category: 'สนาม' }
     };
 
     // Room dependency mapping for A201 combined/separate rooms
@@ -926,184 +809,13 @@
     const loadingDiv = document.getElementById('loading');
     const progressFill = document.getElementById('progressFill');
     const accommodationStatusDiv = document.getElementById('accommodationStatus');
-    const meetingRoomInput = document.getElementById('meetingRoom');
+    const meetingRoomSelect = document.getElementById('meetingRoom');
 
     let userId = '';
     let displayName = '';
     let checkTimeout;
     let roomAvailabilityData = {};
     let accommodationAvailable = true;
-
-    // Custom Dropdown Class
-    class CustomDropdown {
-        constructor(element) {
-            this.dropdown = element;
-            this.toggle = element.querySelector('#dropdownToggle');
-            this.menu = element.querySelector('#dropdownMenu');
-            this.content = element.querySelector('#dropdownContent');
-            this.searchInput = element.querySelector('#searchInput');
-            this.selectedValue = '';
-            this.allItems = [];
-
-            this.init();
-        }
-
-        init() {
-            // Store all items for search functionality
-            this.allItems = Array.from(this.menu.querySelectorAll('.dropdown-item'));
-
-            // Event listeners
-            this.toggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.toggleMenu();
-            });
-
-            // Search functionality
-            this.searchInput.addEventListener('input', (e) => {
-                this.filterItems(e.target.value);
-            });
-
-            // Item selection
-            this.allItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    if (!item.classList.contains('disabled')) {
-                        this.selectItem(item);
-                    }
-                });
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!this.dropdown.contains(e.target)) {
-                    this.closeMenu();
-                }
-            });
-        }
-
-        toggleMenu() {
-            if (this.menu.classList.contains('show')) {
-                this.closeMenu();
-            } else {
-                this.openMenu();
-            }
-        }
-
-        openMenu() {
-            this.menu.classList.add('show');
-            this.toggle.classList.add('active');
-            this.searchInput.focus();
-        }
-
-        closeMenu() {
-            this.menu.classList.remove('show');
-            this.toggle.classList.remove('active');
-            this.searchInput.value = '';
-            this.filterItems('');
-        }
-
-        selectItem(item) {
-            const value = item.dataset.value;
-            const text = item.querySelector('span').textContent;
-
-            // Remove previous selections
-            this.allItems.forEach(i => i.classList.remove('selected'));
-
-            // Add new selection
-            this.selectedValue = value;
-            item.classList.add('selected');
-            meetingRoomInput.value = value;
-
-            this.updateContent(text);
-            this.closeMenu();
-
-            // Trigger change event and update progress
-            updateProgress();
-            
-            // Validate room capacity
-            validateRoomCapacity();
-
-            // Emit custom event
-            this.dropdown.dispatchEvent(new CustomEvent('dropdown:change', {
-                detail: {
-                    value: value,
-                    text: text
-                }
-            }));
-        }
-
-        updateContent(selectedText = null) {
-            if (!selectedText || this.selectedValue === '') {
-                this.content.innerHTML = '<span class="dropdown-placeholder">-- เลือกห้องประชุม --</span>';
-            } else {
-                this.content.innerHTML = `<span class="dropdown-selected">${selectedText}</span>`;
-            }
-        }
-
-        filterItems(searchTerm) {
-            const term = searchTerm.toLowerCase();
-            
-            this.allItems.forEach(item => {
-                const text = item.querySelector('span').textContent.toLowerCase();
-                
-                if (text.includes(term)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-
-            // Show/hide sections based on visible items
-            this.menu.querySelectorAll('.dropdown-section').forEach(section => {
-                const visibleItems = section.querySelectorAll('.dropdown-item[style*="flex"], .dropdown-item:not([style*="none"])');
-                section.style.display = visibleItems.length > 0 ? 'block' : 'none';
-            });
-        }
-
-        updateItemStates(roomStatus) {
-            this.allItems.forEach(item => {
-                const roomName = item.dataset.value;
-                const isAvailable = checkRoomConflicts(roomName, roomStatus);
-                
-                if (!isAvailable) {
-                    item.classList.add('disabled');
-                } else {
-                    item.classList.remove('disabled');
-                }
-            });
-
-            // Clear selection if selected room becomes unavailable
-            if (this.selectedValue && !checkRoomConflicts(this.selectedValue, roomStatus)) {
-                this.selectedValue = '';
-                meetingRoomInput.value = '';
-                this.allItems.forEach(i => i.classList.remove('selected'));
-                this.updateContent();
-                updateProgress();
-            }
-        }
-
-        getValue() {
-            return this.selectedValue;
-        }
-
-        setValue(value) {
-            const item = this.menu.querySelector(`[data-value="${value}"]`);
-            if (item && !item.classList.contains('disabled')) {
-                this.selectItem(item);
-            }
-        }
-
-        clearSelection() {
-            this.selectedValue = '';
-            meetingRoomInput.value = '';
-            this.allItems.forEach(item => item.classList.remove('selected'));
-            this.updateContent();
-        }
-    }
-
-    // Initialize dropdown
-    const meetingRoomDropdown = new CustomDropdown(document.getElementById('meetingRoomDropdown'));
 
     // Initialize LIFF
     async function initializeLiff() {
@@ -1170,7 +882,7 @@
 
     // Update progress bar
     function updateProgress() {
-        const formInputs = document.querySelectorAll('input[required]');
+        const formInputs = document.querySelectorAll('input[required], select[required]');
         const filledInputs = Array.from(formInputs).filter(input => {
             if (input.type === 'radio') {
                 return document.querySelector(`input[name="${input.name}"]:checked`) !== null;
@@ -1198,8 +910,7 @@
         const endDate = document.getElementById('endDate').value;
         
         if (!startDate || !endDate) {
-            roomAvailabilityData = {};
-            meetingRoomDropdown.updateItemStates({});
+            updateMeetingRoomSelect({});
             return;
         }
 
@@ -1213,25 +924,47 @@
             }
 
             roomAvailabilityData = result.roomStatus || {};
-            meetingRoomDropdown.updateItemStates(roomAvailabilityData);
+            updateMeetingRoomSelect(roomAvailabilityData);
 
         } catch (error) {
             console.error('Meeting room availability check error:', error);
-            roomAvailabilityData = {};
-            meetingRoomDropdown.updateItemStates({});
+            updateMeetingRoomSelect({});
         }
     }
 
-    // Validate room capacity
-    function validateRoomCapacity() {
-        const selectedRoom = meetingRoomDropdown.getValue();
-        const attendees = parseInt(document.getElementById('attendees').value) || 0;
+    // Update meeting room select options with dependency logic and status display
+    function updateMeetingRoomSelect(roomStatus) {
+        const options = meetingRoomSelect.querySelectorAll('option[value]');
         
-        if (selectedRoom && attendees > 0) {
-            const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
-            if (roomConfig && attendees > roomConfig.capacity) {
-                showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่นที่มีความจุเพียงพอ`, 'warning');
+        options.forEach(option => {
+            const roomName = option.value;
+            const isAvailable = checkRoomConflicts(roomName, roomStatus);
+            
+            // Get original option text without status
+            let originalText = option.getAttribute('data-original-text');
+            if (!originalText) {
+                originalText = option.text.replace(/ \(ว่าง\)/g, '').replace(/ \(ไม่ว่าง\)/g, '');
+                option.setAttribute('data-original-text', originalText);
             }
+            
+            if (!isAvailable) {
+                option.disabled = true;
+                option.text = originalText + ' (ไม่ว่าง)';
+                option.classList.remove('available');
+                option.classList.add('occupied');
+            } else {
+                option.disabled = false;
+                option.text = originalText + ' (ว่าง)';
+                option.classList.remove('occupied');
+                option.classList.add('available');
+            }
+        });
+
+        // Clear selection if selected room becomes unavailable
+        const selectedRoom = meetingRoomSelect.value;
+        if (selectedRoom && !checkRoomConflicts(selectedRoom, roomStatus)) {
+            meetingRoomSelect.value = '';
+            updateProgress();
         }
     }
 
@@ -1372,7 +1105,7 @@
     });
     
     // Form input event listeners
-    document.querySelectorAll('input').forEach(input => {
+    document.querySelectorAll('input, select').forEach(input => {
         input.addEventListener('input', updateProgress);
         input.addEventListener('change', updateProgress);
     });
@@ -1388,18 +1121,37 @@
         checkAccommodation();
     });
     
-    document.getElementById('attendees').addEventListener('input', () => {
-        checkAccommodation();
-        validateRoomCapacity();
-    });
+    document.getElementById('attendees').addEventListener('input', checkAccommodation);
     
     document.querySelectorAll('input[name="accommodation"]').forEach(radio => {
         radio.addEventListener('change', checkAccommodation);
     });
 
-    // Listen for dropdown changes
-    document.getElementById('meetingRoomDropdown').addEventListener('dropdown:change', (e) => {
-        console.log('Room selected:', e.detail);
+    // Meeting room selection validation
+    document.getElementById('meetingRoom').addEventListener('change', function() {
+        const selectedRoom = this.value;
+        const attendees = parseInt(document.getElementById('attendees').value) || 0;
+        
+        if (selectedRoom && attendees > 0) {
+            const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
+            if (roomConfig && attendees > roomConfig.capacity) {
+                showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
+            }
+        }
+        updateProgress();
+    });
+
+    // Attendees validation
+    document.getElementById('attendees').addEventListener('input', function() {
+        const attendees = parseInt(this.value) || 0;
+        const selectedRoom = document.getElementById('meetingRoom').value;
+        
+        if (selectedRoom && attendees > 0) {
+            const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
+            if (roomConfig && attendees > roomConfig.capacity) {
+                showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
+            }
+        }
     });
 
     // Form submission
@@ -1419,7 +1171,7 @@
         }
 
         // Validate meeting room capacity
-        const selectedRoom = meetingRoomDropdown.getValue();
+        const selectedRoom = document.getElementById('meetingRoom').value;
         const attendees = parseInt(document.getElementById('attendees').value) || 0;
         
         if (selectedRoom && attendees > 0) {
@@ -1461,7 +1213,7 @@
             courseName: formData.get('courseName'),
             startDate: formData.get('startDate'),
             endDate: formData.get('endDate'),
-            meetingRoom: selectedRoom,
+            meetingRoom: formData.get('meetingRoom'),
             accommodation: formData.get('accommodation'),
             attendees: formData.get('attendees'),
             timestamp: new Date().toISOString()
