@@ -133,14 +133,49 @@
         opacity: 0.95;
     }
 
-    .form-section {
-        padding: 2rem;
-        background: var(--container-background);
-        margin-top: -15px;
-        border-radius: 20px 20px 0 0;
-        position: relative;
-        z-index: 1;
-    }
+    /* Enhanced Dropdown (Form Select) Styling */
+    .form-select {
+    /* Remove default browser appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* Custom background arrow */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%233b82f6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+    
+    /* Adjust padding to make space for the icon */
+    padding-left: 1rem;
+    padding-right: 2.5rem; /* Ensure text doesn't overlap with the arrow */
+    
+    /* Ensure consistent styling with other inputs */
+    border: 2px solid var(--card-border);
+    border-radius: 12px;
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
+    font-size: 1rem;
+    font-family: 'Sarabun', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--card-background); /* Explicitly set background color */
+    box-shadow: var(--shadow-soft);
+    color: var(--text-primary);
+}
+
+/* Style for the focused state */
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+/* Style for the hover state */
+.form-select:hover {
+    border-color: var(--secondary-color);
+    box-shadow: var(--shadow-medium);
+}
 
     .form-label {
         font-weight: 600;
@@ -538,101 +573,6 @@
         padding: 1rem;
         margin-top: 1rem;
     }
-	.custom-select-wrapper {
-    position: relative;
-}
-
-.custom-select {
-    position: relative;
-    font-family: 'Sarabun', sans-serif;
-}
-
-.custom-select-trigger {
-    border: 2px solid var(--card-border);
-    border-radius: 12px;
-    padding: 0.875rem 1rem;
-    font-size: 1rem;
-    background: var(--card-background);
-    box-shadow: var(--shadow-soft);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.custom-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--card-background);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    box-shadow: var(--shadow-medium);
-    z-index: 10;
-    max-height: 200px;
-    overflow-y: auto;
-    display: none; /* Hidden by default */
-}
-
-.custom-option {
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.2s;
-}
-
-.custom-option:hover {
-    background-color: #f1f5f9;
-}
-
-.room-details {
-    display: flex;
-    align-items: center;
-}
-
-.room-details i {
-    margin-right: 8px;
-    color: var(--text-muted);
-}
-
-.room-capacity {
-    font-size: 0.9em;
-    color: var(--text-secondary);
-}
-
-.room-status {
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-}
-
-.status-indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
-
-.status-available {
-    color: #16a34a; /* Green */
-}
-
-.status-available .status-indicator {
-    background-color: #16a34a;
-}
-
-.status-unavailable {
-    color: #dc2626; /* Red */
-}
-
-.status-unavailable .status-indicator {
-    background-color: #dc2626;
-}
-
 </style>
 
 </head>
@@ -708,20 +648,33 @@
                             <input type="number" class="form-control" id="attendees" name="attendees" required min="1">
                         </div>
 
+                        <!-- Meeting Room Selection -->
                         <div class="mb-3">
-    <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
-    <div class="custom-select-wrapper">
-        <div class="custom-select">
-            <div class="custom-select-trigger">
-                <span>-- เลือกห้องประชุม --</span>
-                <div class="arrow"></div>
-            </div>
-            <div class="custom-options">
-                </div>
-        </div>
-    </div>
-    <input type="hidden" id="meetingRoom" name="meetingRoom" required>
-</div>
+                            <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
+                            <select class="form-select" id="meetingRoom" name="meetingRoom" required>
+                                <option value="">-- เลือกห้องประชุม --</option>
+                                <optgroup label="ห้องประชุม Theater">
+                                    <option value="Auditorium">Auditorium </option> 
+                                </optgroup>
+                                <optgroup label="ห้องประชุม">
+				    <option value="A201/1-2">A201 </option>
+                                    <option value="A201/1">A201/1 </option>
+                                    <option value="A201/2">A201/2 </option>
+                                    <option value="A202">A202 </option>
+                                    <option value="A203">A203 </option>
+				    <option value="A204">A204 </option>
+                                    <option value="A205">A205 </option>
+                                    <option value="A206">A206 </option>
+                                </optgroup>
+                                <optgroup label="ห้อง Computer">
+                                    <option value="Computor 1">Computer 1 </option>
+                                    <option value="Computor 2">Computer 2 </option>
+                                </optgroup>
+                                <optgroup label="สนามฝึก">
+                                    <option value="สนามฝึก">สนามฝึก </option>
+                                </optgroup>
+                            </select>
+                        </div>
                         
                         <div class="mb-3">
                             <label class="form-label required">ต้องการที่พัก</label>
@@ -788,10 +741,10 @@
         'A203': { capacity: 60, category: '60 ที่นั่ง' },
         'A204': { capacity: 40, category: '40 ที่นั่ง' },
         'A205': { capacity: 40, category: '40 ที่นั่ง' },
-        'A206': { capacity: 50, category: '40 ที่นั่ง' },
+        'A206': { capacity: 40, category: '40 ที่นั่ง' },
         'Computor1': { capacity: 50, category: 'Computer' },
         'Computor2': { capacity: 50, category: 'Computer' },
-        'สนามฝึก': { capacity: 100, category: 'สนาม' }
+        'สนามฝึก': { capacity: 200, category: 'สนามฝึก' }
     };
 
     // Room dependency mapping for A201 combined/separate rooms
