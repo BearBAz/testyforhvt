@@ -737,6 +737,182 @@
         .form-control:focus::placeholder {
             opacity: 0.5;
         }
+/* --- Custom Dropdown Component Styles --- */
+.custom-dropdown {
+    position: relative;
+}
+
+.dropdown-selected {
+    border: 2px solid var(--card-border);
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    font-family: 'Sarabun', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--card-background);
+    box-shadow: var(--shadow-soft);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-selected:focus, .custom-dropdown.open .dropdown-selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    outline: none;
+}
+
+.dropdown-selected.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    background-color: #f8f9fa;
+}
+
+.dropdown-caret {
+    transition: transform 0.3s ease;
+}
+
+.custom-dropdown.open .dropdown-caret {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-strong);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(10px);
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    max-height: 300px;
+    overflow-y: hidden; /* Hide scrollbar until needed */
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-dropdown.open .dropdown-options {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    overflow-y: auto; /* Show scrollbar when open */
+}
+
+.dropdown-search {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #f8fafc;
+}
+
+.dropdown-search input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.95rem;
+    background: transparent;
+    font-family: 'Sarabun', sans-serif;
+}
+
+.dropdown-search .fa-search {
+    color: var(--text-light);
+}
+
+.options-list {
+    list-style: none;
+    padding: 0.5rem;
+    margin: 0;
+}
+
+.options-list .option-item {
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.options-list .option-item:hover {
+    background-color: #f1f5f9;
+}
+
+.options-list .option-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: transparent;
+}
+
+.options-list .option-item.disabled:hover {
+    background-color: #fef2f2; /* Light red on hover for disabled */
+}
+
+.options-list .option-category {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+    opacity: 0.9;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 0.25rem;
+}
+
+.option-icon {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    width: 20px;
+    text-align: center;
+}
+
+.option-details {
+    flex-grow: 1;
+}
+
+.option-details .room-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.option-details .room-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.option-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.status-dot.available { background-color: var(--success-color); }
+.status-dot.occupied { background-color: var(--danger-color); }
+
+.option-status.available { color: var(--success-color); }
+.option-status.occupied { color: var(--danger-color); }
+
+.no-results {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--text-muted);
+}
 
 /* Enhanced Meeting Room Select Option Styles */
 .form-select.meeting-room-select option {
@@ -748,17 +924,6 @@
     background-size: 1.2em 1.2em;
 }
 
-/* Icons for each category */
-option[data-icon="fa-users"], 
-option[data-icon="fa-user-friends"] {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512'%3E%3Cpath fill='%231e3a8a' d='M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.7 0-32 14.3-32 32v160h-320V288c0-17.7-14.3-32-32-32H32c-17.7 0-32 14.3-32 32v192c0 17.7 14.3 32 32 32h64v32c0 17.7 14.3 32 32 32h448c17.7 0 32-14.3 32-32v-32h64c17.7 0 32-14.3 32-32V288c0-17.7-14.3-32-32-32zM320 256c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80zM320 320c-17.7 0-32 14.3-32 32v32h64v-32c0-17.7-14.3-32-32-32z'/%3E%3C/svg%3E");
-}
-option[data-icon="fa-desktop"] {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='%231e3a8a' d='M528 0H48C21.5 0 0 21.5 0 48v320c0 26.5 21.5 48 48 48h192l-24 64H144c-17.7 0-32 14.3-32 32s14.3 32 32 32h288c17.7 0 32-14.3 32-32s-14.3-32-32-32h-72l-24-64h192c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zm-16 352H64V64h448v288z'/%3E%3C/svg%3E");
-}
-option[data-icon="fa-running"] {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%231e3a8a' d='M259.7 19.33C271.2 7.732 289.1 7.584 300.9 18.91l128 123.1C441 153.2 448 169.3 448 185.7v256.6c0 17.67-14.33 32-32 32H32c-17.67 0-32-14.33-32-32V185.7c0-16.42 7-32.53 19.12-43.68l128-123.1c11.77-11.32 29.67-11.18 41.48 .4219zM224 128c-35.35 0-64 28.65-64 64s28.65 64 64 64s64-28.65 64-64S259.3 128 224 128z'/%3E%3C/svg%3E");
-}
 
     </style>
 </head>
@@ -836,30 +1001,26 @@ option[data-icon="fa-running"] {
 
                             <!-- Enhanced Meeting Room Selection -->
                             <div class="mb-3">
-                                <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
-                                <div class="meeting-room-select-container">
-                                    <select class="form-select meeting-room-select" id="meetingRoom" name="meetingRoom" required>
-                                        <option value="">-- กรุณาเลือกวันที่ก่อน --</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Real-time Meeting Room Status Display -->
-                            <div id="meetingRoomStatus" style="display: none;">
-                                <div class="room-status-container">
-                                    <div class="room-status-header">
-                                        <h6 class="room-status-title">
-                                            <i class="fas fa-door-open me-2"></i>สถานะห้องประชุมแบบ Real-time
-                                        </h6>
-                                        <button type="button" class="room-status-refresh" onclick="checkMeetingRoomAvailability()" title="รีเฟรชสถานะ">
-                                            <i class="fas fa-sync-alt"></i>
-                                        </button>
-                                    </div>
-                                    <div id="roomStatusGrid" class="room-status-grid">
-                                        <!-- Room status items will be populated here -->
-                                    </div>
-                                </div>
-                            </div>
+    <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
+    
+    <div class="custom-dropdown" id="customMeetingRoomDropdown">
+        <div class="dropdown-selected" tabindex="0">
+            <span>-- กรุณาเลือกวันที่ก่อน --</span>
+            <i class="fas fa-chevron-down dropdown-caret"></i>
+        </div>
+        
+        <div class="dropdown-options">
+            <div class="dropdown-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="ค้นหาห้องประชุม..." id="meetingRoomSearch">
+            </div>
+            <ul class="options-list" id="meetingRoomOptionsList">
+                </ul>
+        </div>
+    </div>
+    
+    <input type="hidden" id="meetingRoom" name="meetingRoom" required>
+</div>
                             
                             <div class="mb-3">
                                 <label class="form-label required">ต้องการที่พัก</label>
@@ -917,16 +1078,24 @@ option[data-icon="fa-running"] {
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec";
         
         // DOM Elements
-        const mainContent = document.getElementById('mainContent');
-        const bookingForm = document.getElementById('bookingForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const messageContainer = document.getElementById('messageContainer');
-        const loadingDiv = document.getElementById('loading');
-        const progressFill = document.getElementById('progressFill');
-        const accommodationStatusDiv = document.getElementById('accommodationStatus');
-        const meetingRoomStatusDiv = document.getElementById('meetingRoomStatus');
-        const meetingRoomSelect = document.getElementById('meetingRoom');
-        const roomStatusGrid = document.getElementById('roomStatusGrid');
+        // DOM Elements (Updated)
+const mainContent = document.getElementById('mainContent');
+const bookingForm = document.getElementById('bookingForm');
+const submitBtn = document.getElementById('submitBtn');
+const messageContainer = document.getElementById('messageContainer');
+const loadingDiv = document.getElementById('loading');
+const progressFill = document.getElementById('progressFill');
+const accommodationStatusDiv = document.getElementById('accommodationStatus');
+const meetingRoomStatusDiv = document.getElementById('meetingRoomStatus');
+const roomStatusGrid = document.getElementById('roomStatusGrid');
+
+// Custom Dropdown Elements
+const customDropdown = document.getElementById('customMeetingRoomDropdown');
+const dropdownSelected = customDropdown.querySelector('.dropdown-selected');
+const dropdownOptions = customDropdown.querySelector('.dropdown-options');
+const optionsList = customDropdown.querySelector('.options-list');
+const searchInput = customDropdown.querySelector('#meetingRoomSearch');
+const hiddenMeetingRoomInput = document.getElementById('meetingRoom'); // The hidden input
 
         let userId = '';
         let displayName = '';
@@ -1108,50 +1277,142 @@ option[data-icon="fa-running"] {
     roomStatusGrid.innerHTML = summaryHtml + statusHtml;
 }
 
-        // Enhanced Update Meeting Room Select
-        function updateEnhancedMeetingRoomSelect(roomsData) {
+// Enhanced Update Meeting Room Select (Rewritten for Custom Dropdown)
+function updateEnhancedMeetingRoomSelect(roomsData) {
+    optionsList.innerHTML = ''; // Clear previous options
+    
     if (!roomsData) {
-        meetingRoomSelect.innerHTML = '<option value="">-- กรุณาเลือกวันที่ก่อน --</option>';
+        dropdownSelected.querySelector('span').textContent = '-- กรุณาเลือกวันที่ก่อน --';
+        dropdownSelected.classList.add('disabled');
         return;
     }
 
-    // จัดกลุ่มห้องตาม category
+    dropdownSelected.classList.remove('disabled');
+    
+    // Group rooms by category
     const categories = roomsData.reduce((acc, room) => {
         (acc[room.category] = acc[room.category] || []).push(room);
         return acc;
     }, {});
-    
-    let optionsHtml = '<option value="">-- เลือกห้องประชุม --</option>';
 
+    let hasRooms = false;
     Object.entries(categories).forEach(([category, rooms]) => {
-        optionsHtml += `<optgroup label="${category}">`;
+        hasRooms = true;
+        
+        // Add category header
+        const categoryLi = document.createElement('li');
+        categoryLi.className = 'option-category';
+        categoryLi.textContent = category;
+        optionsList.appendChild(categoryLi);
         
         rooms.forEach(room => {
-            const statusText = room.isAvailable ? '✅ ว่าง' : '❌ ไม่ว่าง';
-            const disabledAttr = room.isAvailable ? '' : 'disabled';
-            const optionClass = room.isAvailable ? 'available' : 'occupied';
-            const iconClass = room.icon.split(' ')[1]; // ดึงเฉพาะชื่อไอคอน เช่น fa-users
+            const isAvailable = room.isAvailable;
+            const statusText = isAvailable ? 'ว่าง' : 'ไม่ว่าง';
+            const statusClass = isAvailable ? 'available' : 'occupied';
+            
+            const optionLi = document.createElement('li');
+            optionLi.className = 'option-item';
+            if (!isAvailable) {
+                optionLi.classList.add('disabled');
+            }
+            optionLi.dataset.value = room.name;
 
-            optionsHtml += `
-                <option value="${room.name}" class="${optionClass}" ${disabledAttr} data-icon="${iconClass}">
-                    ${room.name} (${room.capacity} ที่นั่ง) - ${statusText}
-                </option>
+            optionLi.innerHTML = `
+                <i class="option-icon ${room.icon}"></i>
+                <div class="option-details">
+                    <div class="room-name">${room.name}</div>
+                    <div class="room-meta">ความจุ: ${room.capacity} ที่นั่ง</div>
+                </div>
+                <div class="option-status ${statusClass}">
+                    <div class="status-dot ${statusClass}"></div>
+                    <span>${statusText}</span>
+                </div>
             `;
+            optionsList.appendChild(optionLi);
         });
-        
-        optionsHtml += '</optgroup>';
     });
 
-    meetingRoomSelect.innerHTML = optionsHtml;
+    if (!hasRooms) {
+        optionsList.innerHTML = '<li class="no-results">ไม่พบห้องประชุม</li>';
+    }
 
-    // ตรวจสอบห้องที่เลือกไว้
-    const selectedRoom = meetingRoomSelect.value;
-    if (selectedRoom && !roomAvailabilityData[selectedRoom]) {
-        meetingRoomSelect.value = '';
+    // Check if the previously selected room is now unavailable
+    const selectedRoomValue = hiddenMeetingRoomInput.value;
+    if (selectedRoomValue && !roomAvailabilityData[selectedRoomValue]) {
+        hiddenMeetingRoomInput.value = ''; // Clear hidden input
+        dropdownSelected.querySelector('span').textContent = '-- เลือกห้องประชุม --';
         updateProgress();
         showMessage('ห้องประชุมที่เลือกไว้ไม่ว่างในช่วงเวลานี้ กรุณาเลือกห้องอื่น', 'warning');
+    } else if (!selectedRoomValue) {
+        dropdownSelected.querySelector('span').textContent = '-- เลือกห้องประชุม --';
     }
 }
+
+// --- Custom Dropdown Logic ---
+
+// Toggle dropdown
+dropdownSelected.addEventListener('click', () => {
+    if (!dropdownSelected.classList.contains('disabled')) {
+        customDropdown.classList.toggle('open');
+    }
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (!customDropdown.contains(e.target)) {
+        customDropdown.classList.remove('open');
+    }
+});
+
+// Handle option selection
+optionsList.addEventListener('click', (e) => {
+    const option = e.target.closest('.option-item');
+    if (option && !option.classList.contains('disabled')) {
+        const selectedValue = option.dataset.value;
+        hiddenMeetingRoomInput.value = selectedValue; // Set hidden input value
+        dropdownSelected.querySelector('span').textContent = selectedValue;
+        
+        customDropdown.classList.remove('open');
+        hiddenMeetingRoomInput.dispatchEvent(new Event('change')); // Trigger change for progress update
+    }
+});
+
+// Handle search/filter
+searchInput.addEventListener('input', () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    const items = optionsList.querySelectorAll('.option-item');
+    const categories = optionsList.querySelectorAll('.option-category');
+    let visibleItems = 0;
+
+    items.forEach(item => {
+        const roomName = item.dataset.value.toLowerCase();
+        const isVisible = roomName.includes(searchTerm);
+        item.style.display = isVisible ? '' : 'none';
+        if (isVisible) visibleItems++;
+    });
+
+    // Hide category headers if all items within it are hidden
+    categories.forEach(category => {
+        let nextElement = category.nextElementSibling;
+        let hasVisibleChild = false;
+        while(nextElement && nextElement.classList.contains('option-item')) {
+            if (nextElement.style.display !== 'none') {
+                hasVisibleChild = true;
+                break;
+            }
+            nextElement = nextElement.nextElementSibling;
+        }
+        category.style.display = hasVisibleChild ? '' : 'none';
+    });
+    
+    // Show/hide 'no results' message
+    const noResults = optionsList.querySelector('.no-results');
+    if (visibleItems === 0 && !noResults) {
+        optionsList.insertAdjacentHTML('beforeend', '<li class="no-results">ไม่พบห้องประชุมที่ตรงกัน</li>');
+    } else if (visibleItems > 0 && noResults) {
+        noResults.remove();
+    }
+});
 
         // Check accommodation availability
         async function checkAccommodation() {
@@ -1320,7 +1581,7 @@ option[data-icon="fa-running"] {
         // Enhanced attendees validation
         document.getElementById('attendees').addEventListener('input', function() {
             const attendees = parseInt(this.value) || 0;
-            const selectedRoom = document.getElementById('meetingRoom').value;
+            const selectedRoom = hiddenMeetingRoomInput.value;
             
             if (selectedRoom && attendees > 0) {
                 const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
@@ -1334,7 +1595,7 @@ option[data-icon="fa-running"] {
         bookingForm.addEventListener('submit', async function(event) {
     event.preventDefault();
 
-    const selectedRoom = document.getElementById('meetingRoom').value;
+    const selectedRoom = hiddenMeetingRoomInput.value;
     const attendees = parseInt(document.getElementById('attendees').value) || 0;
     
     // ดึงข้อมูล room config จาก dropdown ที่ถูกเลือก (ถ้ามี)
