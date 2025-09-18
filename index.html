@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ระบบจองห้องประชุม ศศฟ.</title>
+    <title>ระบบจองห้องประชุม ศฝฟ.</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -12,920 +13,607 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-color: #1e3a8a; 
-            --secondary-color: #3b82f6; 
-            --accent-color: #60a5fa; 
-            --success-color: #22c55e;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-            
-            --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            --container-background: #ffffff;
-            
-            --header-gradient: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #4338ca 100%);
-            --header-overlay: rgba(255, 255, 255, 0.1);
-            
-            --card-background: #ffffff;
-            --card-header-background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            --card-border: #e2e8f0;
-            
-            --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-            --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.06);
-            --shadow-strong: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
 
-            --text-primary: #1e293b;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --text-light: #94a3b8;
-        }
+<style>
+    :root {
+        --primary-color: #1e3a8a;
+--secondary-color: #3b82f6;
+        --accent-color: #60a5fa;
+        --success-color: #22c55e;
+        --danger-color: #ef4444;
+        --warning-color: #f59e0b;
+        
+        --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        --container-background: #ffffff;
+--header-gradient: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #4338ca 100%);
+        --header-overlay: rgba(255, 255, 255, 0.1);
+        
+        --card-background: #ffffff;
+--card-header-background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        --card-border: #e2e8f0;
+        
+        --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+--shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.06);
+--shadow-strong: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+--shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        --text-primary: #1e293b;
+        --text-secondary: #475569;
+--text-muted: #64748b;
+        --text-light: #94a3b8;
+    }
 
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background: var(--background-gradient);
-            min-height: 100vh;
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
+    * {
+        margin: 0;
+padding: 0;
+        box-sizing: border-box;
+    }
 
+    body {
+        font-family: 'Sarabun', sans-serif;
+background: var(--background-gradient);
+        min-height: 100vh;
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    .app-container {
+        max-width: 450px;
+margin: 0 auto;
+        background: var(--container-background);
+        min-height: 100vh;
+        position: relative;
+        box-shadow: var(--shadow-xl);
+        overflow: hidden;
+}
+
+    .app-header {
+        background: var(--header-gradient);
+        padding: 3rem 2rem 2rem;
+text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .app-header::before {
+        content: '';
+position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23dots)"/></svg>');
+opacity: 0.7;
+    }
+
+    .app-header::after {
+        content: '';
+        position: absolute;
+bottom: 0;
+        left: 0;
+        right: 0;
+        height: 30px;
+        background: linear-gradient(135deg, var(--container-background) 0%, rgba(255, 255, 255, 0.9) 100%);
+border-radius: 20px 20px 0 0;
+    }
+
+    .header-content {
+        position: relative;
+z-index: 2;
+    }
+
+    .header-icon {
+        font-size: 3.5rem;
+        color: #ffffff;
+margin-bottom: 1rem;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        animation: float 3s ease-in-out infinite;
+filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px);
+}
+        50% { transform: translateY(-8px);
+}
+    }
+
+    .header-title {
+        font-size: 2rem;
+font-weight: 550;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+    .header-subtitle {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.9);
+font-weight: 400;
+        line-height: 1.4;
+        opacity: 0.95;
+    }
+
+    .form-section {
+        padding: 2rem;
+background: var(--container-background);
+        margin-top: -15px;
+        border-radius: 20px 20px 0 0;
+        position: relative;
+        z-index: 1;
+}
+
+    .form-label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+font-size: 0.95rem;
+    }
+
+    .required::after {
+        content: ' *';
+        color: #ef4444;
+font-weight: 700;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid var(--card-border);
+border-radius: 12px;
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        font-family: 'Sarabun', sans-serif;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: var(--card-background);
+box-shadow: var(--shadow-soft);
+        color: var(--text-primary);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        transform: translateY(-1px);
+        outline: none;
+}
+
+    .form-control:hover, .form-select:hover {
+        border-color: var(--secondary-color);
+        box-shadow: var(--shadow-medium);
+}
+
+    .radio-card {
+        background: var(--card-background);
+        border: 2px solid var(--card-border);
+border-radius: 12px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+        font-weight: 500;
+        box-shadow: var(--shadow-soft);
+color: var(--text-primary);
+    }
+
+    .radio-card:hover {
+        border-color: var(--secondary-color);
+        box-shadow: var(--shadow-medium);
+transform: translateY(-2px);
+    }
+
+    .radio-card.active {
+        border-color: var(--primary-color);
+background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+        box-shadow: var(--shadow-medium);
+        transform: translateY(-2px);
+}
+
+    .radio-card input[type="radio"] {
+        display: none;
+}
+
+    .radio-card .radio-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+}
+
+    .btn-primary-custom {
+        background: var(--header-gradient);
+        border: none;
+        border-radius: 12px;
+padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-strong);
+        position: relative;
+overflow: hidden;
+    }
+
+    .btn-primary-custom::before {
+        content: '';
+        position: absolute;
+top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+}
+
+    .btn-primary-custom:hover::before {
+        left: 100%;
+}
+
+    .btn-primary-custom:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-xl);
+}
+
+    .btn-primary-custom:active {
+        transform: translateY(-1px);
+}
+
+    .btn-primary-custom:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+}
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        backdrop-filter: blur(10px);
+}
+
+    .loading-overlay.show {
+        display: flex;
+}
+
+    .loading-content {
+        text-align: center;
+        padding: 2.5rem;
+        background: var(--card-background);
+border-radius: 20px;
+        box-shadow: var(--shadow-xl);
+    }
+
+    .loading-spinner {
+        width: 60px;
+height: 60px;
+        border: 4px solid #f1f5f9;
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg);
+}
+        100% { transform: rotate(360deg);
+}
+    }
+
+    .loading-text {
+        font-size: 1.1rem;
+color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .alert-custom {
+        border: none;
+border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+        box-shadow: var(--shadow-soft);
+}
+
+    .alert-success-custom {
+        background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+color: #166534;
+        border-left: 4px solid #22c55e;
+    }
+
+    .alert-danger-custom {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+color: #991b1b;
+        border-left: 4px solid #ef4444;
+    }
+
+    .alert-warning-custom {
+        background: linear-gradient(135deg, #fefbeb 0%, #fef3c7 100%);
+color: #92400e;
+        border-left: 4px solid #f59e0b;
+    }
+
+    .alert-info-custom {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+color: #1e40af;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .form-card {
+        background: var(--card-background);
+border-radius: 16px;
+        box-shadow: var(--shadow-medium);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--card-border);
+}
+
+    .form-card-header {
+        background: var(--card-header-background);
+        padding: 1.25rem 1.5rem;
+border-bottom: 1px solid rgba(30, 58, 138, 0.1);
+    }
+
+    .form-card-title {
+        margin: 0;
+font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+}
+
+    .form-card-body {
+        padding: 1.5rem;
+}
+
+    .date-range-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--card-border);
+}
+
+    .progress-bar-custom {
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+border-radius: 10px;
+        height: 8px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+    .progress-fill {
+        height: 100%;
+background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        width: 0%;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 10px;
+box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3);
+    }
+
+    #accommodationStatus {
+        padding: 0.75rem 1.25rem;
+border-radius: 12px;
+        font-weight: 500;
+        text-align: left;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+}
+
+    .accommodation-info {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+border: 1px solid #0284c7;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+}
+
+    .accommodation-info h6 {
+        color: #0c4a6e;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+}
+
+    .accommodation-detail {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+font-size: 0.9rem;
+    }
+
+    .accommodation-detail:last-child {
+        margin-bottom: 0;
+}
+
+    .accommodation-label {
+        color: #374151;
+}
+
+    .accommodation-value {
+        font-weight: 600;
+        color: #0c4a6e;
+}
+
+    @media (max-width: 576px) {
         .app-container {
-            max-width: 450px;
-            margin: 0 auto;
-            background: var(--container-background);
-            min-height: 100vh;
-            position: relative;
-            box-shadow: var(--shadow-xl);
-            overflow: hidden;
+            max-width: 100%;
+box-shadow: none;
         }
-
         .app-header {
-            background: var(--header-gradient);
-            padding: 3rem 2rem 2rem; 
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .app-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23dots)"/></svg>');
-            opacity: 0.7;
-        }
-
-        .app-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 30px;
-            background: linear-gradient(135deg, var(--container-background) 0%, rgba(255, 255, 255, 0.9) 100%);
-            border-radius: 20px 20px 0 0;
-        }
-
-        .header-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .header-icon {
-            font-size: 3.5rem;
-            color: #ffffff;
-            margin-bottom: 1rem;
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
+            padding: 2rem 1rem 1.5rem;
+}
         .header-title {
-            font-size: 2rem;
-            font-weight: 550;
-            color: #ffffff;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .header-subtitle {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 400;
-            line-height: 1.4;
-            opacity: 0.95;
-        }
-
+            font-size: 1.75rem;
+}
         .form-section {
-            padding: 2rem;
-            background: var(--container-background);
-            margin-top: -15px;
-            border-radius: 20px 20px 0 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .required::after {
-            content: ' *';
-            color: #ef4444;
-            font-weight: 700;
-        }
-
-        .form-control, .form-select {
-            border: 2px solid var(--card-border);
-            border-radius: 12px;
-            padding: 0.875rem 1rem;
-            font-size: 1rem;
-            font-family: 'Sarabun', sans-serif;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: var(--card-background);
-            box-shadow: var(--shadow-soft);
-            color: var(--text-primary);
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-            transform: translateY(-1px);
-            outline: none;
-        }
-
-        .form-control:hover, .form-select:hover {
-            border-color: var(--secondary-color);
-            box-shadow: var(--shadow-medium);
-        }
-
-        /* Enhanced Meeting Room Select Styles */
-        .meeting-room-select-container {
-            position: relative;
-        }
-
-        .form-select.meeting-room-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.75rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
-            padding-right: 2.5rem;
-            min-height: 3.5rem;
-        }
-
-        .form-select.meeting-room-select option {
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .form-select.meeting-room-select optgroup {
-            font-weight: 600;
-            color: var(--primary-color);
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-        }
-
-        .form-select.meeting-room-select option.available {
-            color: #166534;
-            background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%);
-        }
-
-        .form-select.meeting-room-select option.occupied {
-            color: #991b1b;
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-        }
-
-        .form-select.meeting-room-select option:disabled {
-            color: #991b1b !important;
-            background: #fef2f2 !important;
-            opacity: 0.7;
-        }
-
-        .room-select-status {
-            position: absolute;
-            right: 3rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.8rem;
-            font-weight: 500;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        .room-select-status.available {
-            color: #166534;
-        }
-
-        .room-select-status.occupied {
-            color: #991b1b;
-        }
-
-        .radio-card {
-            background: var(--card-background);
-            border: 2px solid var(--card-border);
-            border-radius: 12px;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-align: center;
-            font-weight: 500;
-            box-shadow: var(--shadow-soft);
-            color: var(--text-primary);
-        }
-
-        .radio-card:hover {
-            border-color: var(--secondary-color);
-            box-shadow: var(--shadow-medium);
-            transform: translateY(-2px);
-        }
-
-        .radio-card.active {
-            border-color: var(--primary-color);
-            background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
-            box-shadow: var(--shadow-medium);
-            transform: translateY(-2px);
-        }
-
-        .radio-card input[type="radio"] {
-            display: none;
-        }
-
-        .radio-card .radio-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .btn-primary-custom {
-            background: var(--header-gradient);
-            border: none;
-            border-radius: 12px;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #ffffff;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-strong);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary-custom::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-primary-custom:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .btn-primary-custom:active {
-            transform: translateY(-1px);
-        }
-
-        .btn-primary-custom:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            backdrop-filter: blur(10px);
-        }
-
-        .loading-overlay.show {
-            display: flex;
-        }
-
-        .loading-content {
-            text-align: center;
-            padding: 2.5rem;
-            background: var(--card-background);
-            border-radius: 20px;
-            box-shadow: var(--shadow-xl);
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid #f1f5f9;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .alert-custom {
-            border: none;
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .alert-success-custom {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            color: #166534;
-            border-left: 4px solid #22c55e;
-        }
-
-        .alert-danger-custom {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-            color: #991b1b;
-            border-left: 4px solid #ef4444;
-        }
-
-        .alert-warning-custom {
-            background: linear-gradient(135deg, #fefbeb 0%, #fef3c7 100%);
-            color: #92400e;
-            border-left: 4px solid #f59e0b;
-        }
-
-        .alert-info-custom {
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            color: #1e40af;
-            border-left: 4px solid #3b82f6;
-        }
-
-        .form-card {
-            background: var(--card-background);
-            border-radius: 16px;
-            box-shadow: var(--shadow-medium);
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--card-border);
-        }
-
-        .form-card-header {
-            background: var(--card-header-background);
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid rgba(30, 58, 138, 0.1);
-        }
-
-        .form-card-title {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-        }
-
+            padding: 1.5rem;
+}
         .form-card-body {
-            padding: 1.5rem;
-        }
-
-        .date-range-container {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--card-border);
-        }
-
-        .progress-bar-custom {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            border-radius: 10px;
-            height: 8px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            width: 0%;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3);
-        }
-
-        /* Enhanced Meeting Room Status Display */
-        .room-status-container {
-            margin-top: 1.5rem;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid var(--card-border);
-            box-shadow: var(--shadow-soft);
-        }
-
-        .room-status-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--card-border);
-        }
-
-        .room-status-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin: 0;
-        }
-
-        .room-status-refresh {
-            margin-left: auto;
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .room-status-refresh:hover {
-            background: rgba(30, 58, 138, 0.1);
-            transform: rotate(180deg);
-        }
-
-        .room-status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 1rem;
-        }
-
-        .room-status-item {
-            background: white;
-            border-radius: 12px;
             padding: 1rem;
-            text-align: center;
-            border: 2px solid;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
+}
+    }
 
-        .room-status-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
+    .swal2-popup {
+        font-family: 'Sarabun', sans-serif !important;
+border-radius: 20px !important;
+    }
 
-        .room-status-item:hover::before {
-            left: 100%;
-        }
-
-        .room-status-item.available {
-            border-color: var(--success-color);
-            background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%);
-            color: #166534;
-            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
-        }
-
-        .room-status-item.occupied {
-            border-color: var(--danger-color);
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-            color: #991b1b;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
-        }
-
-        .room-status-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .room-status-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .room-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .room-capacity {
-            font-size: 0.8rem;
-            opacity: 0.8;
-            margin-bottom: 0.5rem;
-        }
-
-        .room-status-badge {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
-            display: inline-block;
-        }
-
-        .status-available {
-            background: rgba(34, 197, 94, 0.2);
-            color: #166534;
-        }
-
-        .status-occupied {
-            background: rgba(239, 68, 68, 0.2);
-            color: #991b1b;
-        }
-
-        /* Real-time status indicator */
-        .status-indicator {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .status-dot.available {
-            background: var(--success-color);
-        }
-
-        .status-dot.occupied {
-            background: var(--danger-color);
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* Enhanced status display styles */
-        #accommodationStatus, #meetingRoomStatus {
-            padding: 0.75rem 1.25rem;
-            border-radius: 12px;
-            font-weight: 500;
-            text-align: left;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-        }
-
-        .select-disabled {
-            opacity: 0.6;
-            pointer-events: none;
-            background-color: #f8f9fa;
-        }
-
-        /* Accommodation info styles */
-        .accommodation-info {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border: 1px solid #0284c7;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-
-        .accommodation-info h6 {
-            color: #0c4a6e;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-        }
-
-        .accommodation-detail {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .accommodation-detail:last-child {
-            margin-bottom: 0;
-        }
-
-        .accommodation-label {
-            color: #374151;
-        }
-
-        .accommodation-value {
-            font-weight: 600;
-            color: #0c4a6e;
-        }
-
-        @media (max-width: 576px) {
-            .app-container {
-                max-width: 100%;
-                box-shadow: none;
-            }
-            
-            .app-header {
-                padding: 2rem 1rem 1.5rem;
-            }
-            
-            .header-title {
-                font-size: 1.75rem;
-            }
-            
-            .form-section {
-                padding: 1.5rem;
-            }
-            
-            .form-card-body {
-                padding: 1rem;
-            }
-
-            .room-status-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .swal2-popup {
-            font-family: 'Sarabun', sans-serif !important;
-            border-radius: 20px !important;
-        }
-
-        .swal2-confirm {
-            background: var(--header-gradient) !important;
-            border: none !important;
-            border-radius: 12px !important;
-            font-family: 'Sarabun', sans-serif !important;
-            font-weight: 600 !important;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .bounce-in {
-            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0.3) translateY(20px); opacity: 0; }
-            50% { transform: scale(1.05) translateY(-10px); }
-            70% { transform: scale(0.9) translateY(5px); }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
-        .form-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-strong);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .form-control::placeholder {
-            color: var(--text-light);
-            opacity: 0.7;
-        }
-
-        .form-control:focus::placeholder {
-            opacity: 0.5;
-        }
-/* --- Custom Dropdown Component Styles --- */
-.custom-dropdown {
-    position: relative;
+    .swal2-confirm {
+        background: var(--header-gradient) !important;
+border: none !important;
+        border-radius: 12px !important;
+        font-family: 'Sarabun', sans-serif !important;
+        font-weight: 600 !important;
 }
 
-.dropdown-selected {
-    border: 2px solid var(--card-border);
-    border-radius: 12px;
-    padding: 0.875rem 1rem;
-    font-size: 1rem;
-    font-family: 'Sarabun', sans-serif;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: var(--card-background);
-    box-shadow: var(--shadow-soft);
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    .fade-in {
+        animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dropdown-selected:focus, .custom-dropdown.open .dropdown-selected {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-    outline: none;
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px);
+}
+        to { opacity: 1; transform: translateY(0);
+}
+    }
+
+    .bounce-in {
+        animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-.dropdown-selected.disabled {
-    opacity: 0.6;
-    pointer-events: none;
-    background-color: #f8f9fa;
+    @keyframes bounceIn {
+        0% { transform: scale(0.3) translateY(20px);
+opacity: 0; }
+        50% { transform: scale(1.05) translateY(-10px);
+}
+        70% { transform: scale(0.9) translateY(5px);
+}
+        100% { transform: scale(1) translateY(0); opacity: 1;
+}
+    }
+
+    .form-card:hover {
+        transform: translateY(-2px);
+box-shadow: var(--shadow-strong);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .form-control::placeholder {
+        color: var(--text-light);
+opacity: 0.7;
+    }
+
+    .form-control:focus::placeholder {
+        opacity: 0.5;
 }
 
-.dropdown-caret {
-    transition: transform 0.3s ease;
+    .unavailable-message {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+border: 1px solid #ef4444;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
 }
+    
+    /* ADDED: New Custom Dropdown Styles */
+    .custom-select-container {
+        position: relative;
+    }
+    .custom-select-selected {
+        background: var(--card-background);
+        border: 2px solid var(--card-border);
+        border-radius: 12px;
+        padding: 0.875rem 1rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-soft);
+    }
+    .custom-select-selected.open {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    }
+    .custom-select-selected::after {
+        content: '\f078';
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        transition: transform 0.3s ease;
+    }
+    .custom-select-selected.open::after {
+        transform: rotate(180deg);
+    }
+    .custom-select-options {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        background: var(--card-background);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        box-shadow: var(--shadow-strong);
+        z-index: 100;
+        max-height: 250px;
+        overflow-y: auto;
+        padding: 0.5rem;
+        list-style: none;
+    }
+    .custom-select-options.show {
+        display: block;
+    }
+    .custom-select-option {
+        padding: 0.8rem 1rem;
+        cursor: pointer;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.2s ease;
+    }
+    .custom-select-option:hover {
+        background-color: #f1f5f9;
+    }
+    .custom-select-option.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f8fafc;
+        color: var(--text-muted);
+    }
+    .option-details {
+        display: flex;
+        flex-direction: column;
+    }
+    .option-name {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    .option-capacity {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+    .status-badge {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.25rem 0.6rem;
+        border-radius: 20px;
+    }
+    .status-available {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+    .status-unavailable {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+</style>
 
-.custom-dropdown.open .dropdown-caret {
-    transform: rotate(180deg);
-}
-
-.dropdown-options {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    width: 100%;
-    background: var(--card-background);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    box-shadow: var(--shadow-strong);
-    z-index: 1000;
-    opacity: 0;
-    transform: translateY(10px);
-    visibility: hidden;
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-    max-height: 300px;
-    overflow-y: hidden; /* Hide scrollbar until needed */
-    display: flex;
-    flex-direction: column;
-}
-
-.custom-dropdown.open .dropdown-options {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
-    overflow-y: auto; /* Show scrollbar when open */
-}
-
-.dropdown-search {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--card-border);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    background: #f8fafc;
-}
-
-.dropdown-search input {
-    border: none;
-    outline: none;
-    width: 100%;
-    font-size: 0.95rem;
-    background: transparent;
-    font-family: 'Sarabun', sans-serif;
-}
-
-.dropdown-search .fa-search {
-    color: var(--text-light);
-}
-
-.options-list {
-    list-style: none;
-    padding: 0.5rem;
-    margin: 0;
-}
-
-.options-list .option-item {
-    padding: 0.85rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.options-list .option-item:hover {
-    background-color: #f1f5f9;
-}
-
-.options-list .option-item.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background-color: transparent;
-}
-
-.options-list .option-item.disabled:hover {
-    background-color: #fef2f2; /* Light red on hover for disabled */
-}
-
-.options-list .option-category {
-    font-weight: 600;
-    color: var(--primary-color);
-    font-size: 0.85rem;
-    padding: 0.75rem 1rem;
-    opacity: 0.9;
-    border-bottom: 1px solid #e2e8f0;
-    margin-bottom: 0.25rem;
-}
-
-.option-icon {
-    font-size: 1.2rem;
-    color: var(--primary-color);
-    width: 20px;
-    text-align: center;
-}
-
-.option-details {
-    flex-grow: 1;
-}
-
-.option-details .room-name {
-    font-weight: 500;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-}
-
-.option-details .room-meta {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-.option-status {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-.status-dot.available { background-color: var(--success-color); }
-.status-dot.occupied { background-color: var(--danger-color); }
-
-.option-status.available { color: var(--success-color); }
-.option-status.occupied { color: var(--danger-color); }
-
-.no-results {
-    text-align: center;
-    padding: 1.5rem;
-    color: var(--text-muted);
-}
-
-/* Enhanced Meeting Room Select Option Styles */
-.form-select.meeting-room-select option {
-    padding: 0.75rem 1rem 0.75rem 2.5rem; /* เพิ่ม padding ซ้ายสำหรับไอคอน */
-    font-size: 0.95rem;
-    line-height: 1.4;
-    background-repeat: no-repeat;
-    background-position: left 0.75rem center;
-    background-size: 1.2em 1.2em;
-}
-
-
-    </style>
 </head>
 <body>
     <div class="app-container">
@@ -935,796 +623,500 @@
                     <i class="fas fa-calendar-alt"></i>
                 </div>
                 <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
-                <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
+<p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
                 <br>
             </div>
         </div>
 
-        <div id="mainContent" class="fade-in">
-            <div class="form-section">
-                <div class="progress-bar-custom">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
+    <div id="mainContent" class="fade-in">
+        <div class="form-section">
+            <div class="progress-bar-custom">
+                <div class="progress-fill" id="progressFill"></div>
+</div>
 
-                <form id="bookingForm">
+            <form id="bookingForm">
                 <div class="form-card bounce-in">
                     <div class="form-card-header">
                         <h3 class="form-card-title">
-                            <i class="fas fa-user me-2"></i>ข้อมูลผู้จอง
+<i class="fas fa-user me-2"></i>ข้อมูลผู้จอง
                         </h3>
                     </div>
                     <div class="form-card-body">
-                        <div class="mb-3">
+<div class="mb-3">
                             <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
                             <input type="text" class="form-control" id="fullName" name="fullName" required>
                         </div>
-                        <div class="mb-3">
+<div class="mb-3">
                             <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
                             <input type="text" class="form-control" id="department" name="department" required>
-                        </div>
+</div>
                         <div class="mb-3">
                             <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
                             <input type="tel" class="form-control" id="phone" name="phone" required>
-                        </div>
+</div>
                     </div>
                 </div>
 
                 <div class="form-card bounce-in">
                     <div class="form-card-header">
-                        <h3 class="form-card-title">
+<h3 class="form-card-title">
                             <i class="fas fa-book me-2"></i>ข้อมูลการจองห้องประชุม
                         </h3>
                     </div>
-                    <div class="form-card-body">
+<div class="form-card-body">
                         <div class="mb-3">
                             <label for="courseName" class="form-label required">ชื่อหลักสูตร/หัวข้อประชุม</label>
-                            <input type="text" class="form-control" id="courseName" name="courseName" required>
+<input type="text" class="form-control" id="courseName" name="courseName" required>
                         </div>
                         
                         <div class="mb-3">
-                            <div class="row g-3">
+<div class="row g-3">
                                 <div class="col-6">
                                     <label for="startDate" class="form-label required">วันที่เริ่มต้น</label>
-                                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+<input type="date" class="form-control" id="startDate" name="startDate" required>
                                 </div>
                                 <div class="col-6">
-                                    <label for="endDate" class="form-label required">วันที่สิ้นสุด</label>
+<label for="endDate" class="form-label required">วันที่สิ้นสุด</label>
                                     <input type="date" class="form-control" id="endDate" name="endDate" required>
-                                </div>
+</div>
                             </div>
                         </div>
                         
-                        <div class="mb-3">
+<div class="mb-3">
                             <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
                             <input type="number" class="form-control" id="attendees" name="attendees" required min="1">
                         </div>
-
-                            <!-- Enhanced Meeting Room Selection -->
-                            <div class="mb-3">
-    <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
-    
-    <div class="custom-dropdown" id="customMeetingRoomDropdown">
-        <div class="dropdown-selected" tabindex="0">
-            <span>-- กรุณาเลือกวันที่ก่อน --</span>
-            <i class="fas fa-chevron-down dropdown-caret"></i>
-        </div>
         
-        <div class="dropdown-options">
-            <div class="dropdown-search">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="ค้นหาห้องประชุม..." id="meetingRoomSearch">
-            </div>
-            <ul class="options-list" id="meetingRoomOptionsList">
-                </ul>
-        </div>
-    </div>
-    
-    <input type="hidden" id="meetingRoom" name="meetingRoom" required>
+                        <div class="mb-3">
+                            <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
+                            <div class="custom-select-container">
+                                <div class="custom-select-selected" id="customMeetingRoomSelect">
+                                    <span>-- เลือกห้องประชุม --</span>
+                                </div>
+                                <ul class="custom-select-options" id="meetingRoomOptions">
+                                    </ul>
+                                <input type="hidden" id="meetingRoom" name="meetingRoom" required>
+                            </div>
+                        </div>
+                        
+<div class="mb-3">
+                            <label class="form-label required">ต้องการที่พัก</label>
+                            <div class="row g-3 mt-2">
+                                <div class="col-6">
+<div class="radio-card" data-value="ต้องการ">
+                                        <input type="radio" name="accommodation" value="ต้องการ" required>
+<div class="radio-icon">
+                                            <i class="fas fa-bed"></i>
 </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label required">ต้องการที่พัก</label>
-                                <div class="row g-3 mt-2">
-                                    <div class="col-6">
-                                        <div class="radio-card" data-value="ต้องการ">
-                                            <input type="radio" name="accommodation" value="ต้องการ" required>
-                                            <div class="radio-icon">
-                                                <i class="fas fa-bed"></i>
-                                            </div>
-                                            <div>ต้องการ</div>
-                                        </div>
+                                        <div>ต้องการ</div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="radio-card" data-value="ไม่ต้องการ">
-                                            <input type="radio" name="accommodation" value="ไม่ต้องการ">
-                                            <div class="radio-icon">
-                                                <i class="fas fa-home"></i>
-                                            </div>
-                                            <div>ไม่ต้องการ</div>
+</div>
+                                <div class="col-6">
+                                    <div class="radio-card" data-value="ไม่ต้องการ">
+<input type="radio" name="accommodation" value="ไม่ต้องการ">
+                                        <div class="radio-icon">
+<i class="fas fa-home"></i>
                                         </div>
-                                    </div>
+                                        <div>ไม่ต้องการ</div>
+</div>
                                 </div>
-                                
-                                <!-- Accommodation Status Display -->
-                                <div id="accommodationStatus" style="display: none;"></div>
                             </div>
-                        </div>
+<div id="accommodationStatus" style="display: none;"></div>
+</div>
                     </div>
+                </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
-                            <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
-                        </button>
-                    </div>
-                </form>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
+<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
+                    </button>
+                </div>
+            </form>
 
-                <div id="messageContainer" class="mt-3"></div>
-            </div>
-        </div>
-
-        <div id="loading" class="loading-overlay">
-            <div class="loading-content">
-                <div class="loading-spinner"></div>
-                <div class="loading-text">กำลังส่งข้อมูลการจอง...</div>
-            </div>
+            <div id="messageContainer" class="mt-3"></div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Configuration
-        const LIFF_ID = "2007138631-Ono58j50";
+    <div id="loading" class="loading-overlay">
+        <div class="loading-content">
+<div class="loading-spinner"></div>
+            <div class="loading-text">กำลังส่งข้อมูลการจอง...</div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Configuration
+    const LIFF_ID = "2007138631-Ono58j50";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec";
-        
-        // DOM Elements
-        // DOM Elements (Updated)
-const mainContent = document.getElementById('mainContent');
-const bookingForm = document.getElementById('bookingForm');
+
+    // REMOVED: Meeting room configs are now in the backend.
+
+    // DOM Elements
+    const mainContent = document.getElementById('mainContent');
+    const bookingForm = document.getElementById('bookingForm');
 const submitBtn = document.getElementById('submitBtn');
-const messageContainer = document.getElementById('messageContainer');
-const loadingDiv = document.getElementById('loading');
-const progressFill = document.getElementById('progressFill');
-const accommodationStatusDiv = document.getElementById('accommodationStatus');
-const meetingRoomStatusDiv = document.getElementById('meetingRoomStatus');
-const roomStatusGrid = document.getElementById('roomStatusGrid');
+    const messageContainer = document.getElementById('messageContainer');
+    const loadingDiv = document.getElementById('loading');
+    const progressFill = document.getElementById('progressFill');
+    const accommodationStatusDiv = document.getElementById('accommodationStatus');
+    // ADDED: Custom select elements
+    const customMeetingRoomSelect = document.getElementById('customMeetingRoomSelect');
+    const meetingRoomOptions = document.getElementById('meetingRoomOptions');
+    const hiddenMeetingRoomInput = document.getElementById('meetingRoom');
 
-// Custom Dropdown Elements
-const customDropdown = document.getElementById('customMeetingRoomDropdown');
-const dropdownSelected = customDropdown.querySelector('.dropdown-selected');
-const dropdownOptions = customDropdown.querySelector('.dropdown-options');
-const optionsList = customDropdown.querySelector('.options-list');
-const searchInput = customDropdown.querySelector('#meetingRoomSearch');
-const hiddenMeetingRoomInput = document.getElementById('meetingRoom'); // The hidden input
+    let userId = '';
+    let displayName = '';
+    let checkTimeout;
+    let roomData = []; // Store room data from backend
+    let accommodationAvailable = true;
 
-        let userId = '';
-        let displayName = '';
-        let checkTimeout;
-        let roomAvailabilityData = {};
-        let isCheckingRooms = false;
-
-        // Initialize LIFF
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: LIFF_ID });
-                if (!liff.isLoggedIn()) {
-                    liff.login();
-                    return;
-                }
-                const profile = await liff.getProfile();
-                userId = profile.userId;
-                displayName = profile.displayName;
-                
-                await autofillUserData(); 
-                updateProgress();
-            } catch (err) {
-                console.error('LIFF initialization error:', err);
-                showMessage('เกิดข้อผิดพลาดในการโหลดข้อมูล LINE', 'danger');
-            }
-        }
-
-        // Autofill user data
-        async function autofillUserData() {
-            if (!userId) return;
-
-            const autofillUrl = `${GAS_WEB_APP_URL}?userId=${userId}`;
-
-            try {
-                const response = await fetch(autofillUrl);
-                const userData = await response.json();
-
-                if (userData && userData.fullName) {
-                    document.getElementById('fullName').value = userData.fullName;
-                    document.getElementById('department').value = userData.department;
-                    document.getElementById('phone').value = userData.phone;
-                    updateProgress(); 
-                }
-            } catch (error) {
-                console.error('Autofill error:', error);
-            }
-        }
-
-        // Show message function
-        function showMessage(text, type = 'success') {
-            const alertClass = type === 'success' ? 'alert-success-custom' : 
-                             type === 'danger' ? 'alert-danger-custom' :
-                             type === 'warning' ? 'alert-warning-custom' : 'alert-info-custom';
-            const icon = type === 'success' ? 'fas fa-check-circle' : 
-                        type === 'danger' ? 'fas fa-exclamation-circle' :
-                        type === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle';
-            const messageHtml = `
-                <div class="alert alert-custom ${alertClass} fade-in" role="alert">
-                    <i class="${icon} me-2"></i>${text}
-                </div>
-            `;
-            messageContainer.innerHTML = messageHtml;
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    messageContainer.innerHTML = '';
-                }, 5000);
-            }
-        }
-
-        // Update progress bar
-        function updateProgress() {
-            const formInputs = document.querySelectorAll('input[required], select[required]');
-            const filledInputs = Array.from(formInputs).filter(input => {
-                if (input.type === 'radio') {
-                    return document.querySelector(`input[name="${input.name}"]:checked`) !== null;
-                }
-                return input.value.trim() !== '';
-            });
-            const progress = (filledInputs.length / formInputs.length) * 100;
-            progressFill.style.width = `${progress}%`;
-        }
-
-        // Enhanced Meeting Room Availability Check
-        async function checkMeetingRoomAvailability() {
-    if (isCheckingRooms) return; 
-    
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-    
-    if (!startDate || !endDate) {
-        meetingRoomStatusDiv.style.display = 'none';
-        updateEnhancedMeetingRoomSelect(null); // ส่ง null เมื่อไม่มีข้อมูล
-        return;
-    }
-
-    isCheckingRooms = true;
-    meetingRoomStatusDiv.style.display = 'block';
-    roomStatusGrid.innerHTML = `
-        <div class="col-12 text-center py-4">
-            <div class="loading-spinner mx-auto mb-3" style="width: 40px; height: 40px;"></div>
-            <div class="text-muted">กำลังตรวจสอบความพร้อมห้องประชุม...</div>
-        </div>
-    `;
-    
-    try {
-        const checkUrl = `${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${startDate}&endDate=${endDate}`;
-        const response = await fetch(checkUrl);
-        const result = await response.json();
-        
-        if (result.error) {
-            throw new Error(result.error);
-        }
-
-        roomAvailabilityData = result.rooms.reduce((acc, room) => {
-            acc[room.name] = room.isAvailable;
-            return acc;
-        }, {});
-        
-        displayEnhancedMeetingRoomStatus(result.rooms);
-        updateEnhancedMeetingRoomSelect(result.rooms);
-
-    } catch (error) {
-        console.error('Meeting room availability check error:', error);
-        roomStatusGrid.innerHTML = `
-            <div class="col-12">
-                <div class="alert alert-warning-custom text-center">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    ไม่สามารถตรวจสอบความพร้อมของห้องประชุมได้ กรุณาลองใหม่อีกครั้ง
-                </div>
-            </div>
-        `;
-    } finally {
-        isCheckingRooms = false;
-    }
-}
-
-        // Enhanced Display Meeting Room Status
-        function displayEnhancedMeetingRoomStatus(roomsData) {
-    if (!roomsData) {
-        roomStatusGrid.innerHTML = '';
-        return;
-    }
-    
-    let statusHtml = '';
-    let availableCount = 0;
-    
-    roomsData.forEach(room => {
-        const isAvailable = room.isAvailable;
-        const statusClass = isAvailable ? 'available' : 'occupied';
-        const statusText = isAvailable ? 'ว่าง' : 'ไม่ว่าง';
-        
-        if (isAvailable) availableCount++;
-
-        statusHtml += `
-            <div class="room-status-item ${statusClass}">
-                <div class="room-status-icon">
-                    <i class="${room.icon}"></i>
-                </div>
-                <div class="room-name">${room.name}</div>
-                <div class="room-capacity">${room.capacity} ที่นั่ง</div>
-                <div class="status-indicator">
-                    <div class="status-dot ${statusClass}"></div>
-                    <span class="room-status-badge status-${statusClass}">${statusText}</span>
-                </div>
-            </div>
-        `;
-    });
-
-    const summaryHtml = `
-        <div class="col-12 mb-3">
-            <div class="alert alert-info-custom text-center">
-                <i class="fas fa-info-circle me-2"></i>
-                ห้องว่าง <strong>${availableCount}</strong> จาก ${roomsData.length} ห้อง 
-                ในช่วงวันที่ที่เลือก
-            </div>
-        </div>
-    `;
-    roomStatusGrid.innerHTML = summaryHtml + statusHtml;
-}
-
-// Enhanced Update Meeting Room Select (Rewritten for Custom Dropdown)
-function updateEnhancedMeetingRoomSelect(roomsData) {
-    optionsList.innerHTML = ''; // Clear previous options
-    
-    if (!roomsData) {
-        dropdownSelected.querySelector('span').textContent = '-- กรุณาเลือกวันที่ก่อน --';
-        dropdownSelected.classList.add('disabled');
-        return;
-    }
-
-    dropdownSelected.classList.remove('disabled');
-    
-    // Group rooms by category
-    const categories = roomsData.reduce((acc, room) => {
-        (acc[room.category] = acc[room.category] || []).push(room);
-        return acc;
-    }, {});
-
-    let hasRooms = false;
-    Object.entries(categories).forEach(([category, rooms]) => {
-        hasRooms = true;
-        
-        // Add category header
-        const categoryLi = document.createElement('li');
-        categoryLi.className = 'option-category';
-        categoryLi.textContent = category;
-        optionsList.appendChild(categoryLi);
-        
-        rooms.forEach(room => {
-            const isAvailable = room.isAvailable;
-            const statusText = isAvailable ? 'ว่าง' : 'ไม่ว่าง';
-            const statusClass = isAvailable ? 'available' : 'occupied';
-            
-            const optionLi = document.createElement('li');
-            optionLi.className = 'option-item';
-            if (!isAvailable) {
-                optionLi.classList.add('disabled');
-            }
-            optionLi.dataset.value = room.name;
-
-            optionLi.innerHTML = `
-                <i class="option-icon ${room.icon}"></i>
-                <div class="option-details">
-                    <div class="room-name">${room.name}</div>
-                    <div class="room-meta">ความจุ: ${room.capacity} ที่นั่ง</div>
-                </div>
-                <div class="option-status ${statusClass}">
-                    <div class="status-dot ${statusClass}"></div>
-                    <span>${statusText}</span>
-                </div>
-            `;
-            optionsList.appendChild(optionLi);
-        });
-    });
-
-    if (!hasRooms) {
-        optionsList.innerHTML = '<li class="no-results">ไม่พบห้องประชุม</li>';
-    }
-
-    // Check if the previously selected room is now unavailable
-    const selectedRoomValue = hiddenMeetingRoomInput.value;
-    if (selectedRoomValue && !roomAvailabilityData[selectedRoomValue]) {
-        hiddenMeetingRoomInput.value = ''; // Clear hidden input
-        dropdownSelected.querySelector('span').textContent = '-- เลือกห้องประชุม --';
-        updateProgress();
-        showMessage('ห้องประชุมที่เลือกไว้ไม่ว่างในช่วงเวลานี้ กรุณาเลือกห้องอื่น', 'warning');
-    } else if (!selectedRoomValue) {
-        dropdownSelected.querySelector('span').textContent = '-- เลือกห้องประชุม --';
-    }
-}
-
-// --- Custom Dropdown Logic ---
-
-// Toggle dropdown
-dropdownSelected.addEventListener('click', () => {
-    if (!dropdownSelected.classList.contains('disabled')) {
-        customDropdown.classList.toggle('open');
-    }
-});
-
-// Close dropdown when clicking outside
-document.addEventListener('click', (e) => {
-    if (!customDropdown.contains(e.target)) {
-        customDropdown.classList.remove('open');
-    }
-});
-
-// Handle option selection
-optionsList.addEventListener('click', (e) => {
-    const option = e.target.closest('.option-item');
-    if (option && !option.classList.contains('disabled')) {
-        const selectedValue = option.dataset.value;
-        hiddenMeetingRoomInput.value = selectedValue; // Set hidden input value
-        dropdownSelected.querySelector('span').textContent = selectedValue;
-        
-        customDropdown.classList.remove('open');
-        hiddenMeetingRoomInput.dispatchEvent(new Event('change')); // Trigger change for progress update
-    }
-});
-
-// Handle search/filter
-searchInput.addEventListener('input', () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    const items = optionsList.querySelectorAll('.option-item');
-    const categories = optionsList.querySelectorAll('.option-category');
-    let visibleItems = 0;
-
-    items.forEach(item => {
-        const roomName = item.dataset.value.toLowerCase();
-        const isVisible = roomName.includes(searchTerm);
-        item.style.display = isVisible ? '' : 'none';
-        if (isVisible) visibleItems++;
-    });
-
-    // Hide category headers if all items within it are hidden
-    categories.forEach(category => {
-        let nextElement = category.nextElementSibling;
-        let hasVisibleChild = false;
-        while(nextElement && nextElement.classList.contains('option-item')) {
-            if (nextElement.style.display !== 'none') {
-                hasVisibleChild = true;
-                break;
-            }
-            nextElement = nextElement.nextElementSibling;
-        }
-        category.style.display = hasVisibleChild ? '' : 'none';
-    });
-    
-    // Show/hide 'no results' message
-    const noResults = optionsList.querySelector('.no-results');
-    if (visibleItems === 0 && !noResults) {
-        optionsList.insertAdjacentHTML('beforeend', '<li class="no-results">ไม่พบห้องประชุมที่ตรงกัน</li>');
-    } else if (visibleItems > 0 && noResults) {
-        noResults.remove();
-    }
-});
-
-        // Check accommodation availability
-        async function checkAccommodation() {
-            clearTimeout(checkTimeout);
-            
-            checkTimeout = setTimeout(async () => {
-                const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
-                const startDate = document.getElementById('startDate').value;
-                const endDate = document.getElementById('endDate').value;
-                const attendees = parseInt(document.getElementById('attendees').value) || 0;
-
-                if (!accommodationChoice) {
-                    accommodationStatusDiv.innerHTML = '';
-                    accommodationStatusDiv.style.display = 'none';
-                    return;
-                }
-
-                if (accommodationChoice.value !== 'ต้องการ') {
-                    accommodationStatusDiv.innerHTML = '';
-                    accommodationStatusDiv.style.display = 'none';
-                    return;
-                }
-                
-                if (!startDate || !endDate) {
-                    return;
-                }
-
-                accommodationStatusDiv.style.display = 'block';
-                accommodationStatusDiv.innerHTML = `
-                    <div class="alert alert-info-custom">
-                        <i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...
-                    </div>
-                `;
-
-                try {
-                    const startDateObj = new Date(startDate);
-                    const endDateObj = new Date(endDate);
-                    
-                    const checkin = new Date(startDateObj);
-                    checkin.setDate(startDateObj.getDate() - 1);
-                    
-                    const checkout = new Date(endDateObj);
-                    checkout.setDate(endDateObj.getDate() - 1);
-
-                    const checkinStr = checkin.toISOString().split('T')[0];
-                    const checkoutStr = checkout.toISOString().split('T')[0];
-
-                    const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${checkoutStr}`;
-                    const response = await fetch(checkUrl);
-                    const result = await response.json();
-
-                    if (result.error) {
-                        throw new Error(result.error);
-                    }
-
-                    const available = result.availableRooms;
-                    
-                    if (available > 0) {
-                        let statusHtml = `
-                            <div class="alert alert-success-custom">
-                                <i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก
-                        `;
-                        
-                        const requiredRooms = Math.ceil(attendees / 2);
-                        if (attendees > 0) {
-                            statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`;
-                            
-                            if (requiredRooms > available) {
-                                statusHtml += `<br><small class="text-danger fw-bold"><i class="fas fa-exclamation-triangle"></i> แต่จำนวนห้องพักอาจไม่เพียงพอ</small>`;
-                            }
-                        }
-
-                        statusHtml += `</div>`;
-                        statusHtml += `
-                            <div class="accommodation-info">
-                                <h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6>
-                                <div class="accommodation-detail">
-                                    <span class="accommodation-label">วันเข้าพัก:</span>
-                                    <span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span>
-                                </div>
-                                <div class="accommodation-detail">
-                                    <span class="accommodation-label">วันออกจากที่พัก:</span>
-                                    <span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}</span>
-                                </div>
-                                <div class="accommodation-detail">
-                                    <span class="accommodation-label">จำนวนคืน:</span>
-                                    <span class="accommodation-value">${Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24))} คืน</span>
-                                </div>
-                            </div>
-                        `;
-                        
-                        accommodationStatusDiv.innerHTML = statusHtml;
-
-                    } else {
-                        accommodationStatusDiv.innerHTML = `
-                            <div class="alert alert-danger-custom">
-                                <i class="fas fa-times-circle"></i> ไม่มีห้องว่างในช่วงวันที่คุณเลือก กรุณาเปลี่ยนช่วงเวลา
-                            </div>
-                        `;
-                    }
-
-                } catch (error) {
-                    console.error('Accommodation availability check error:', error);
-                    accommodationStatusDiv.innerHTML = `
-                        <div class="alert alert-warning-custom">
-                            <i class="fas fa-exclamation-circle"></i> ไม่สามารถตรวจสอบห้องว่างได้
-                        </div>
-                    `;
-                }
-            }, 500);
-        }
-
-        // Radio card event handlers
-        document.querySelectorAll('.radio-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                const radio = this.querySelector('input[type="radio"]');
-                radio.checked = true;
-                
-                const event = new Event('change');
-                radio.dispatchEvent(event);
-                updateProgress();
-            });
-        });
-        
-        // Form input event listeners
-        document.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('input', updateProgress);
-            input.addEventListener('change', updateProgress);
-        });
-
-        // Enhanced date change event listeners
-        document.getElementById('startDate').addEventListener('change', () => {
-            checkMeetingRoomAvailability();
-            checkAccommodation();
-        });
-        
-        document.getElementById('endDate').addEventListener('change', () => {
-            checkMeetingRoomAvailability();
-            checkAccommodation();
-        });
-        
-        document.getElementById('attendees').addEventListener('input', checkAccommodation);
-        
-        document.querySelectorAll('input[name="accommodation"]').forEach(radio => {
-            radio.addEventListener('change', checkAccommodation);
-        });
-
-        // Enhanced meeting room selection validation
-        document.getElementById('meetingRoom').addEventListener('change', function() {
-            const selectedRoom = this.value;
-            const attendees = parseInt(document.getElementById('attendees').value) || 0;
-            
-            if (selectedRoom && attendees > 0) {
-                const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
-                if (roomConfig && attendees > roomConfig.capacity) {
-                    showMessage(`ห้อง ${selectedRoom} รองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
-                } else if (selectedRoom && roomAvailabilityData[selectedRoom] !== false) {
-                    showMessage(`เลือกห้อง ${selectedRoom} สำเร็จ ความจุ ${roomConfig.capacity} ที่นั่ง`, 'success');
-                }
-            }
-            updateProgress();
-        });
-
-        // Enhanced attendees validation
-        document.getElementById('attendees').addEventListener('input', function() {
-            const attendees = parseInt(this.value) || 0;
-            const selectedRoom = hiddenMeetingRoomInput.value;
-            
-            if (selectedRoom && attendees > 0) {
-                const roomConfig = MEETING_ROOMS_CONFIG[selectedRoom];
-                if (roomConfig && attendees > roomConfig.capacity) {
-                    showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
-                }
-            }
-        });
-
-        // Enhanced form submission
-        bookingForm.addEventListener('submit', async function(event) {
-    event.preventDefault();
-
-    const selectedRoom = hiddenMeetingRoomInput.value;
-    const attendees = parseInt(document.getElementById('attendees').value) || 0;
-    
-    // ดึงข้อมูล room config จาก dropdown ที่ถูกเลือก (ถ้ามี)
-    const selectedOption = meetingRoomSelect.querySelector(`option[value="${selectedRoom}"]`);
-if (selectedOption && attendees > 0) {
-    const capacityMatch = selectedOption.textContent.match(/\((\d+)/); // ดึงตัวเลขความจุจากข้อความ
-    if (capacityMatch) {
-        const capacity = parseInt(capacityMatch[1], 10);
-        if (attendees > capacity) {
-            await Swal.fire({
-                title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!',
-                text: `ห้อง ${selectedRoom} รองรับได้เพียง ${capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน`,
-                icon: 'error',
-                confirmButtonText: 'ตกลง'
-            });
-            return; // หยุดการทำงาน
-        }
-    }
-}
-
-            // Check if selected room is available
-            if (selectedRoom && roomAvailabilityData[selectedRoom] === false) {
-                await Swal.fire({
-                    title: 'ห้องประชุมไม่ว่าง!',
-                    text: 'ห้องประชุมที่คุณเลือกไม่ว่างในช่วงเวลาที่กำหนด กรุณาเลือกห้องอื่น',
-                    icon: 'error',
-                    confirmButtonText: 'ตกลง'
-                });
+    // Initialize LIFF
+    async function initializeLiff() {
+        try {
+            await liff.init({ liffId: LIFF_ID });
+if (!liff.isLoggedIn()) {
+                liff.login();
                 return;
-            }
-
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
-            mainContent.style.display = 'none';
-            loadingDiv.classList.add('show');
-
-            const formData = new FormData(event.target);
-            const data = {
-                userId: userId,
-                displayName: displayName,
-                fullName: formData.get('fullName'),
-                department: formData.get('department'),
-                phone: formData.get('phone'),
-                courseName: formData.get('courseName'),
-                startDate: formData.get('startDate'),
-                endDate: formData.get('endDate'),
-                meetingRoom: formData.get('meetingRoom'),
-                accommodation: formData.get('accommodation'),
-                attendees: formData.get('attendees'),
-                timestamp: new Date().toISOString()
-            };
-
-            try {
-                const response = await fetch(GAS_WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                    redirect: 'follow'
-                });
-                
-                loadingDiv.classList.remove('show');
-                mainContent.style.display = 'block';
-
-                await Swal.fire({
-                    title: 'บันทึกข้อมูลสำเร็จ!',
-                    html: `
-                        <div class="text-start mt-3">
-                            <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
-                            <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
-                            <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
-                            <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
-                            <p><i class="fas fa-door-open me-2"></i><strong>ห้องประชุม:</strong> ${data.meetingRoom}</p>
-                            <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
-                            <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
-                        </div>
-                        <div class="alert alert-success mt-3" role="alert">
-                            <i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว
-                        </div>
-                    `,
-                    icon: 'success',
-                    showConfirmButton: true,
-                    confirmButtonText: 'ตกลง',
-                    allowOutsideClick: false,
-                    customClass: {
-                        popup: 'bounce-in'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        if (liff.isInClient()) {
-                            liff.closeWindow();
-                        } else {
-                            window.close();
-                        }
-                    }
-                });
-
-            } catch (error) {
-                console.error('Submit error:', error);
-                loadingDiv.classList.remove('show');
-                mainContent.style.display = 'block';
-                
-                await Swal.fire({
-                    title: 'เกิดข้อผิดพลาด!',
-                    text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
-                    icon: 'error',
-                    confirmButtonText: 'ลองอีกครั้ง',
-                    confirmButtonColor: '#dc3545'
-                });
-                
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
-            }
-        });
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('startDate').setAttribute('min', today);
-
-            document.getElementById('startDate').addEventListener('change', function() {
-                const startDateValue = this.value;
-                document.getElementById('endDate').setAttribute('min', startDateValue);
-            });
+}
+            const profile = await liff.getProfile();
+            userId = profile.userId;
+displayName = profile.displayName;
             
+            await autofillUserData(); 
+            updateProgress();
+        } catch (err) {
+            console.error('LIFF initialization error:', err);
+showMessage('เกิดข้อผิดพลาดในการโหลดข้อมูล LINE', 'danger');
+        }
+    }
+
+    // Autofill user data
+    async function autofillUserData() {
+        if (!userId) return;
+const autofillUrl = `${GAS_WEB_APP_URL}?userId=${userId}`;
+        try {
+            const response = await fetch(autofillUrl);
+const userData = await response.json();
+            if (userData && userData.fullName) {
+                document.getElementById('fullName').value = userData.fullName;
+document.getElementById('department').value = userData.department;
+                document.getElementById('phone').value = userData.phone;
+                updateProgress(); 
+            }
+        } catch (error) {
+            console.error('Autofill error:', error);
+}
+    }
+
+    // Show message function
+    function showMessage(text, type = 'success') {
+        const alertClass = type === 'success' ? 'alert-success-custom' :
+                         type === 'danger' ? 'alert-danger-custom' :
+                         type === 'warning' ? 'alert-warning-custom' : 'alert-info-custom';
+        const icon = type === 'success' ? 'fas fa-check-circle' :
+                    type === 'danger' ? 'fas fa-exclamation-circle' :
+                    type === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle';
+        const messageHtml = `<div class="alert alert-custom ${alertClass} fade-in" role="alert"><i class="${icon} me-2"></i>${text}</div>`;
+messageContainer.innerHTML = messageHtml;
+        if (type === 'success') {
+            setTimeout(() => { messageContainer.innerHTML = ''; }, 5000);
+}
+    }
+
+    // Update progress bar
+    function updateProgress() {
+        const formInputs = document.querySelectorAll('input[required]');
+const filledInputs = Array.from(formInputs).filter(input => {
+            if (input.type === 'radio') {
+                return document.querySelector(`input[name="${input.name}"]:checked`) !== null;
+            }
+            return input.value.trim() !== '';
+        });
+const progress = (filledInputs.length / formInputs.length) * 100;
+        progressFill.style.width = `${progress}%`;
+}
+
+    // Check meeting room availability
+    async function checkMeetingRoomAvailability() {
+        const startDate = document.getElementById('startDate').value;
+const endDate = document.getElementById('endDate').value;
+        if (!startDate || !endDate) {
+            updateCustomMeetingRoomSelect([]);
+return;
+        }
+        try {
+            const checkUrl = `${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${startDate}&endDate=${endDate}`;
+const response = await fetch(checkUrl);
+            const result = await response.json();
+if (result.error) { throw new Error(result.error); }
+            roomData = result.rooms || [];
+            updateCustomMeetingRoomSelect(roomData);
+} catch (error) {
+            console.error('Meeting room availability check error:', error);
+            updateCustomMeetingRoomSelect([]);
+}
+    }
+
+    // NEW: Update custom meeting room select
+    function updateCustomMeetingRoomSelect(rooms) {
+        meetingRoomOptions.innerHTML = '';
+        if (rooms.length === 0) {
+            customMeetingRoomSelect.querySelector('span').textContent = 'กรุณาเลือกวันที่';
+            return;
+        }
+
+        rooms.forEach(room => {
+            const optionEl = document.createElement('li');
+            optionEl.classList.add('custom-select-option');
+            optionEl.dataset.value = room.name;
+            
+            optionEl.innerHTML = `
+                <div class="option-details">
+                    <span class="option-name">${room.name}</span>
+                    <span class="option-capacity">ความจุ: ${room.capacity} คน</span>
+                </div>
+                <span class="status-badge ${room.isAvailable ? 'status-available' : 'status-unavailable'}">
+                    ${room.isAvailable ? 'ว่าง' : 'ไม่ว่าง'}
+                </span>
+            `;
+
+            if (!room.isAvailable) {
+                optionEl.classList.add('disabled');
+            } else {
+                optionEl.addEventListener('click', () => {
+                    customMeetingRoomSelect.querySelector('span').textContent = room.name;
+                    hiddenMeetingRoomInput.value = room.name;
+                    meetingRoomOptions.classList.remove('show');
+                    customMeetingRoomSelect.classList.remove('open');
+                    
+                    // Trigger change event for validation and progress update
+                    hiddenMeetingRoomInput.dispatchEvent(new Event('change'));
+                });
+            }
+            meetingRoomOptions.appendChild(optionEl);
+        });
+
+        // Clear selection if selected room becomes unavailable
+        const selectedRoomValue = hiddenMeetingRoomInput.value;
+        if (selectedRoomValue) {
+            const selectedRoomData = rooms.find(r => r.name === selectedRoomValue);
+            if (!selectedRoomData || !selectedRoomData.isAvailable) {
+                hiddenMeetingRoomInput.value = '';
+                customMeetingRoomSelect.querySelector('span').textContent = '-- เลือกห้องประชุม --';
+                updateProgress();
+            }
+        }
+    }
+
+    // Check accommodation availability
+        async function checkAccommodation() {
+        clearTimeout(checkTimeout);
+        checkTimeout = setTimeout(async () => {
+            const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const attendees = parseInt(document.getElementById('attendees').value) || 0;
+
+            if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
+                accommodationStatusDiv.innerHTML = '';
+                accommodationStatusDiv.style.display = 'none';
+                accommodationAvailable = true; return;
+            }
+            if (!startDate || !endDate) {
+            accommodationAvailable = true; return;
+            }
+
+            accommodationStatusDiv.style.display = 'block';
+            accommodationStatusDiv.innerHTML = `<div class="alert alert-info-custom"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...</div>`;
+            
+            try {
+                const startDateObj = new Date(startDate);
+                const endDateObj = new Date(endDate);
+                const checkin = new Date(startDateObj);
+                checkin.setDate(startDateObj.getDate() - 1);
+                const checkout = new Date(endDateObj);
+                checkout.setDate(endDateObj.getDate() - 1);
+                const checkinStr = checkin.toISOString().split('T')[0];
+                const checkoutStr = checkout.toISOString().split('T')[0];
+
+                const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${checkoutStr}`;
+                const response = await fetch(checkUrl);
+                const result = await response.json();
+                if (result.error) { throw new Error(result.error); }
+
+                const available = result.availableRooms;
+                const requiredRooms = Math.ceil(attendees / 2);
+                const nights = Math.max(1, Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24)) + 1);
+
+                if (available > 0 && (attendees === 0 || available >= requiredRooms)) {
+                    accommodationAvailable = true;
+                let statusHtml = `<div class="alert alert-success-custom"><i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก`;
+                if (attendees > 0) { statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`; }
+                    statusHtml += `</div>`;
+statusHtml += `
+                        <div class="accommodation-info">
+                            <h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6>
+                            <div class="accommodation-detail"><span class="accommodation-label">วันเข้าพัก:</span><span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span></div>
+<div class="accommodation-detail"><span class="accommodation-label">วันออกจากที่พัก:</span><span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}</span></div>
+                            <div class="accommodation-detail"><span class="accommodation-label">จำนวนคืน:</span><span class="accommodation-value">${nights} คืน</span></div>
+                        </div>`;
+accommodationStatusDiv.innerHTML = statusHtml;
+                } else {
+                    accommodationAvailable = false;
+accommodationStatusDiv.innerHTML = `
+                        <div class="alert alert-danger-custom"><i class="fas fa-times-circle"></i> ห้องพักไม่เพียงพอสำหรับการจอง<br><small>มีห้องว่าง ${available} ห้อง แต่ต้องการ ${requiredRooms} ห้อง</small></div>
+<div class="unavailable-message"><h6><i class="fas fa-exclamation-triangle me-2"></i>ไม่สามารถจองได้</h6><p class="mb-0">กรุณาเปลี่ยนช่วงเวลา หรือลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก</p></div>`;
+}
+            } catch (error) {
+                console.error('Accommodation availability check error:', error);
+accommodationAvailable = true;
+                accommodationStatusDiv.innerHTML = `<div class="alert alert-warning-custom"><i class="fas fa-exclamation-circle"></i> ไม่สามารถตรวจสอบห้องว่างได้</div>`;
+}
+        }, 500);
+}
+    
+    // --- EVENT LISTENERS ---
+    // Radio card event handlers
+    document.querySelectorAll('.radio-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+radio.dispatchEvent(new Event('change'));
             updateProgress();
         });
-        
-        initializeLiff();
-    </script>
+    });
+
+    // General form input event listeners
+    document.querySelectorAll('input, select').forEach(input => {
+        input.addEventListener('input', updateProgress);
+        input.addEventListener('change', updateProgress);
+    });
+
+    // Date and accommodation change event listeners
+    document.getElementById('startDate').addEventListener('change', () => { checkMeetingRoomAvailability(); checkAccommodation(); });
+    document.getElementById('endDate').addEventListener('change', () => { checkMeetingRoomAvailability(); checkAccommodation(); });
+    document.getElementById('attendees').addEventListener('input', checkAccommodation);
+    document.querySelectorAll('input[name="accommodation"]').forEach(radio => radio.addEventListener('change', checkAccommodation));
+
+    // NEW: Custom Dropdown Listeners
+    customMeetingRoomSelect.addEventListener('click', () => {
+        meetingRoomOptions.classList.toggle('show');
+        customMeetingRoomSelect.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!customMeetingRoomSelect.contains(e.target)) {
+            meetingRoomOptions.classList.remove('show');
+            customMeetingRoomSelect.classList.remove('open');
+        }
+    });
+
+    // Validation Listeners
+    function validateRoomCapacity() {
+        const selectedRoomName = hiddenMeetingRoomInput.value;
+        const attendees = parseInt(document.getElementById('attendees').value) || 0;
+        if (selectedRoomName && attendees > 0 && roomData.length > 0) {
+            const roomConfig = roomData.find(r => r.name === selectedRoomName);
+            if (roomConfig && attendees > roomConfig.capacity) {
+                showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
+            }
+        }
+    }
+    hiddenMeetingRoomInput.addEventListener('change', validateRoomCapacity);
+    document.getElementById('attendees').addEventListener('input', validateRoomCapacity);
+
+    // Form submission
+    bookingForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
+        if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
+            await Swal.fire({ title: 'ที่พักไม่เพียงพอ!', text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา ลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก', icon: 'error', confirmButtonText: 'ตกลง' });
+            return;
+        }
+
+        const selectedRoomName = hiddenMeetingRoomInput.value;
+        const attendees = parseInt(document.getElementById('attendees').value) || 0;
+        const roomConfig = roomData.find(r => r.name === selectedRoomName);
+
+        if (roomConfig && attendees > roomConfig.capacity) {
+            await Swal.fire({ title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!', text: `ห้อง ${selectedRoomName} รองรับได้ ${roomConfig.capacity} คน แต่มีผู้เข้าร่วม ${attendees} คน`, icon: 'error', confirmButtonText: 'ตกลง' });
+            return;
+        }
+        if (roomConfig && !roomConfig.isAvailable) {
+            await Swal.fire({ title: 'ห้องประชุมไม่ว่าง!', text: 'ห้องประชุมที่คุณเลือกไม่ว่างในช่วงเวลาที่กำหนด กรุณาเลือกห้องอื่น', icon: 'error', confirmButtonText: 'ตกลง' });
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
+        mainContent.style.display = 'none';
+        loadingDiv.classList.add('show');
+
+        const formData = new FormData(event.target);
+        const data = {
+            userId: userId, displayName: displayName,
+            fullName: formData.get('fullName'), department: formData.get('department'),
+            phone: formData.get('phone'), courseName: formData.get('courseName'),
+            startDate: formData.get('startDate'), endDate: formData.get('endDate'),
+            meetingRoom: formData.get('meetingRoom'), accommodation: formData.get('accommodation'),
+            attendees: formData.get('attendees'), timestamp: new Date().toISOString()
+        };
+        try {
+            await fetch(GAS_WEB_APP_URL, {
+                method: 'POST', mode: 'no-cors', cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data), redirect: 'follow'
+            });
+            loadingDiv.classList.remove('show');
+            mainContent.style.display = 'block';
+
+            await Swal.fire({
+                title: 'บันทึกข้อมูลสำเร็จ!',
+                html: `
+                    <div class="text-start mt-3">
+                        <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
+                        <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
+                        <p><i class="fas fa-book me-2"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
+                        <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
+                        <p><i class="fas fa-door-open me-2"></i><strong>ห้องประชุม:</strong> ${data.meetingRoom}</p>
+                        <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
+                        <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
+                    </div>
+                    <div class="alert alert-success mt-3" role="alert"><i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว</div>`,
+                icon: 'success',
+                showConfirmButton: true, confirmButtonText: 'ตกลง', allowOutsideClick: false,
+                customClass: { popup: 'bounce-in' }
+}).then((result) => {
+                if (result.isConfirmed) {
+                    if (liff.isInClient()) { liff.closeWindow(); } 
+                    else { window.close(); }
+                }
+            });
+} catch (error) {
+            console.error('Submit error:', error);
+            loadingDiv.classList.remove('show');
+            mainContent.style.display = 'block';
+            await Swal.fire({ title: 'เกิดข้อผิดพลาด!', text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง', icon: 'error', confirmButtonText: 'ลองอีกครั้ง', confirmButtonColor: '#dc3545' });
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
+        }
+    });
+    
+        document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').setAttribute('min', today);
+        document.getElementById('startDate').addEventListener('change', function() {
+            document.getElementById('endDate').setAttribute('min', this.value);
+        });
+        updateProgress();
+    });
+
+initializeLiff();
+</script>
 </body>
 </html>
