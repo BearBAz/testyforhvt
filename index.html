@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ระบบจองห้องประชุม ศฝฟ.</title>
+    <title>ระบบจองห้องประชุม ศกฟ.</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -16,35 +15,23 @@
 
 <style>
     :root {
-        --primary: #0066FF;
-        --primary-dark: #0052CC;
-        --primary-light: #4D94FF;
-        --success: #00C48C;
-        --danger: #FF3B30;
-        --warning: #FF9500;
-        --info: #5AC8FA;
-        
-        --gray-50: #F9FAFB;
-        --gray-100: #F3F4F6;
-        --gray-200: #E5E7EB;
-        --gray-300: #D1D5DB;
-        --gray-400: #9CA3AF;
-        --gray-500: #6B7280;
-        --gray-600: #4B5563;
-        --gray-700: #374151;
-        --gray-800: #1F2937;
-        --gray-900: #111827;
-        
-        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        
-        --radius-sm: 8px;
-        --radius: 12px;
-        --radius-lg: 16px;
-        --radius-xl: 20px;
+        --primary-color: #00B900;
+        --primary-dark: #009900;
+        --secondary-color: #06C755;
+        --accent-color: #FFB800;
+        --success-color: #22c55e;
+        --danger-color: #FF334B;
+        --warning-color: #FFB800;
+        --background: #F8F9FA;
+        --card-bg: #FFFFFF;
+        --text-primary: #1A1A1A;
+        --text-secondary: #6B7280;
+        --text-light: #9CA3AF;
+        --border-color: #E5E7EB;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     }
 
     * {
@@ -54,9 +41,9 @@
     }
 
     body {
-        font-family: 'Sarabun', sans-serif;
-        background: var(--gray-50);
-        color: var(--gray-900);
+        font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--background);
+        color: var(--text-primary);
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -65,226 +52,364 @@
     .app-container {
         max-width: 480px;
         margin: 0 auto;
-        background: #FFFFFF;
+        background: var(--background);
         min-height: 100vh;
-    }
-
-    /* Modern Header */
-    .app-header {
-        background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
-        padding: 2.5rem 1.5rem 2rem;
-        text-align: center;
         position: relative;
     }
 
+    /* Modern Header with Glassmorphism */
+    .app-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 2rem 1.5rem 4rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0 0 30px 30px;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .app-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .app-header::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        animation: float 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(30px, -30px) rotate(120deg); }
+        66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+    }
+
     .header-icon {
-        width: 64px;
-        height: 64px;
+        width: 70px;
+        height: 70px;
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px);
         border-radius: 20px;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 1rem;
+        margin-bottom: 1rem;
+        animation: bounce-subtle 2s ease-in-out infinite;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-icon i {
         font-size: 2rem;
-        color: #FFFFFF;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+    }
+
+    @keyframes bounce-subtle {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
     }
 
     .header-title {
         font-size: 1.75rem;
         font-weight: 700;
-        color: #FFFFFF;
+        color: #ffffff;
         margin-bottom: 0.5rem;
         letter-spacing: -0.5px;
     }
 
     .header-subtitle {
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.85);
-        font-weight: 400;
-        line-height: 1.5;
-    }
-
-    /* Progress Bar */
-    .progress-container {
-        padding: 1rem 1.5rem;
-        background: #FFFFFF;
-        border-bottom: 1px solid var(--gray-100);
-    }
-
-    .progress-bar-wrapper {
-        background: var(--gray-100);
-        height: 4px;
-        border-radius: 2px;
-        overflow: hidden;
-    }
-
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-        width: 0%;
-        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Form Section */
-    .form-section {
-        padding: 1.5rem;
-    }
-
-    .section-title {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--gray-500);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 1rem;
-    }
-
-    /* Input Groups */
-    .input-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-label {
-        font-weight: 600;
-        color: var(--gray-700);
-        margin-bottom: 0.5rem;
         font-size: 0.95rem;
-        display: block;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 400;
     }
 
-    .required::after {
-        content: ' *';
-        color: var(--danger);
+    /* Modern Form Section */
+    .form-section {
+        padding: 0 1rem 2rem;
+        margin-top: -2.5rem;
+        position: relative;
+        z-index: 3;
     }
 
-    .form-control, .form-select {
-        border: 1.5px solid var(--gray-200);
-        border-radius: var(--radius);
-        padding: 0.875rem 1rem;
-        font-size: 1rem;
-        font-family: 'Sarabun', sans-serif;
-        transition: all 0.2s ease;
-        background: #FFFFFF;
-        color: var(--gray-900);
-        width: 100%;
+    /* Progress Steps */
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        padding: 1.25rem;
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
     }
 
-    .form-control:focus, .form-select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);
-        outline: none;
-    }
-
-    .form-control::placeholder {
-        color: var(--gray-400);
-    }
-
-    /* Radio Cards - Modern Style */
-    .radio-options {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-    }
-
-    .radio-card {
-        background: #FFFFFF;
-        border: 2px solid var(--gray-200);
-        border-radius: var(--radius);
-        padding: 1.25rem 1rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
+    .step {
+        flex: 1;
         text-align: center;
         position: relative;
     }
 
-    .radio-card:active {
-        transform: scale(0.98);
+    .step::before {
+        content: '';
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        width: 100%;
+        height: 3px;
+        background: var(--border-color);
+        z-index: 0;
+    }
+
+    .step:first-child::before {
+        display: none;
+    }
+
+    .step.active::before {
+        background: var(--primary-color);
+    }
+
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--border-color);
+        color: var(--text-light);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.85rem;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .step.active .step-circle {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.1);
+        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.2);
+    }
+
+    .step.completed .step-circle {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .step-label {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .step.active .step-label {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    /* Modern Form Card */
+    .form-card {
+        background: var(--card-bg);
+        border-radius: 24px;
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+    }
+
+    .form-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-card-title i {
+        color: var(--primary-color);
+        font-size: 1.25rem;
+    }
+
+    /* Modern Form Controls */
+    .form-label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .required::after {
+        content: '*';
+        color: var(--danger-color);
+        margin-left: 0.25rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid var(--border-color);
+        border-radius: 14px;
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        font-family: 'Sarabun', sans-serif;
+        transition: all 0.2s ease;
+        background: var(--card-bg);
+        color: var(--text-primary);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
+        outline: none;
+    }
+
+    .form-control::placeholder {
+        color: var(--text-light);
+    }
+
+    /* Modern Radio Cards */
+    .radio-card {
+        background: var(--card-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.25rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .radio-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .radio-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
     }
 
     .radio-card.active {
-        border-color: var(--primary);
-        background: rgba(0, 102, 255, 0.04);
+        border-color: var(--primary-color);
+        background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.05));
+        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
     }
 
     .radio-card.active::before {
-        content: '\f00c';
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        width: 20px;
-        height: 20px;
-        background: var(--primary);
-        color: #FFFFFF;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.65rem;
+        opacity: 0.05;
     }
 
     .radio-card input[type="radio"] {
         display: none;
     }
 
-    .radio-icon {
-        font-size: 1.75rem;
+    .radio-card .radio-icon {
+        font-size: 2rem;
         margin-bottom: 0.5rem;
-        color: var(--gray-600);
-        transition: color 0.2s ease;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
     }
 
     .radio-card.active .radio-icon {
-        color: var(--primary);
+        color: var(--primary-color);
+        transform: scale(1.1);
     }
 
-    .radio-text {
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: var(--gray-700);
+    .radio-card-text {
+        font-weight: 600;
+        color: var(--text-primary);
+        position: relative;
+        z-index: 1;
     }
 
-    /* Custom Select */
+    /* Custom Select Dropdown */
     .custom-select-container {
         position: relative;
     }
 
     .custom-select-selected {
-        background: #FFFFFF;
-        border: 1.5px solid var(--gray-200);
-        border-radius: var(--radius);
+        background: var(--card-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 14px;
         padding: 0.875rem 1rem;
         cursor: pointer;
         display: flex;
         justify-content: space-between;
         align-items: center;
         transition: all 0.2s ease;
+        min-height: 52px;
     }
 
-    .custom-select-selected:active {
-        transform: scale(0.99);
+    .custom-select-selected:hover {
+        border-color: var(--primary-color);
     }
 
     .custom-select-selected.open {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
     }
 
     .custom-select-selected::after {
         content: '\f078';
         font-family: "Font Awesome 6 Free";
         font-weight: 900;
-        color: var(--gray-400);
-        font-size: 0.875rem;
-        transition: transform 0.2s ease;
+        color: var(--text-secondary);
+        transition: transform 0.3s ease;
     }
 
     .custom-select-selected.open::after {
         transform: rotate(180deg);
+        color: var(--primary-color);
     }
 
     .custom-select-options {
@@ -293,147 +418,19 @@
         top: calc(100% + 8px);
         left: 0;
         right: 0;
-        background: #FFFFFF;
-        border: 1px solid var(--gray-200);
-        border-radius: var(--radius);
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
         box-shadow: var(--shadow-xl);
         z-index: 100;
         max-height: 280px;
         overflow-y: auto;
         padding: 0.5rem;
         list-style: none;
+        animation: dropdownSlide 0.3s ease;
     }
 
-    .custom-select-options.show {
-        display: block;
-        animation: slideDown 0.2s ease;
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-8px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .custom-select-option {
-        padding: 1rem;
-        cursor: pointer;
-        border-radius: var(--radius-sm);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: background-color 0.15s ease;
-    }
-
-    .custom-select-option:active {
-        transform: scale(0.98);
-    }
-
-    .custom-select-option:hover {
-        background-color: var(--gray-50);
-    }
-
-    .custom-select-option.disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        background-color: transparent;
-    }
-
-    .custom-select-option.disabled:hover {
-        background-color: transparent;
-    }
-
-    .option-details {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .option-name {
-        font-weight: 600;
-        color: var(--gray-900);
-        font-size: 0.95rem;
-    }
-
-    .option-capacity {
-        font-size: 0.85rem;
-        color: var(--gray-500);
-    }
-
-    .status-badge {
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-    }
-
-    .status-available {
-        background-color: rgba(0, 196, 140, 0.1);
-        color: var(--success);
-    }
-
-    .status-unavailable {
-        background-color: rgba(255, 59, 48, 0.1);
-        color: var(--danger);
-    }
-
-    /* Info Cards */
-    .info-card {
-        background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
-        border: 1px solid rgba(0, 102, 255, 0.2);
-        border-radius: var(--radius);
-        padding: 1rem;
-        margin-top: 1rem;
-    }
-
-    .info-card-title {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: var(--primary-dark);
-        margin-bottom: 0.75rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-    }
-
-    .info-row:last-child {
-        margin-bottom: 0;
-    }
-
-    .info-label {
-        color: var(--gray-600);
-    }
-
-    .info-value {
-        font-weight: 600;
-        color: var(--primary-dark);
-    }
-
-    /* Alert Cards */
-    .alert-card {
-        border: none;
-        border-radius: var(--radius);
-        padding: 1rem;
-        margin-top: 1rem;
-        display: flex;
-        align-items: start;
-        gap: 0.75rem;
-        animation: slideIn 0.3s ease;
-    }
-
-    @keyframes slideIn {
+    @keyframes dropdownSlide {
         from {
             opacity: 0;
             transform: translateY(-10px);
@@ -444,74 +441,173 @@
         }
     }
 
-    .alert-icon {
-        font-size: 1.25rem;
-        flex-shrink: 0;
+    .custom-select-options.show {
+        display: block;
     }
 
-    .alert-content {
-        flex: 1;
-    }
-
-    .alert-success {
-        background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
-        color: #065F46;
-    }
-
-    .alert-success .alert-icon {
-        color: var(--success);
-    }
-
-    .alert-danger {
-        background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
-        color: #991B1B;
-    }
-
-    .alert-danger .alert-icon {
-        color: var(--danger);
-    }
-
-    .alert-warning {
-        background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
-        color: #92400E;
-    }
-
-    .alert-warning .alert-icon {
-        color: var(--warning);
-    }
-
-    .alert-info {
-        background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
-        color: #1E40AF;
-    }
-
-    .alert-info .alert-icon {
-        color: var(--info);
-    }
-
-    /* Submit Button */
-    .btn-submit {
-        background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
-        border: none;
-        border-radius: var(--radius);
+    .custom-select-option {
         padding: 1rem;
-        font-size: 1.05rem;
-        font-weight: 600;
-        color: #FFFFFF;
-        width: 100%;
+        cursor: pointer;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         transition: all 0.2s ease;
-        box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
-        margin-top: 2rem;
+        margin-bottom: 0.25rem;
     }
 
-    .btn-submit:active {
-        transform: scale(0.98);
+    .custom-select-option:hover {
+        background: rgba(0, 185, 0, 0.05);
     }
 
-    .btn-submit:disabled {
+    .custom-select-option.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: var(--background);
+    }
+
+    .option-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .option-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    .option-capacity {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .status-available {
+        background: rgba(34, 197, 94, 0.1);
+        color: var(--success-color);
+    }
+
+    .status-unavailable {
+        background: rgba(255, 51, 75, 0.1);
+        color: var(--danger-color);
+    }
+
+    /* Modern Submit Button */
+    .btn-primary-custom {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        border-radius: 16px;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 185, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary-custom::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-primary-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 185, 0, 0.4);
+    }
+
+    .btn-primary-custom:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary-custom:active {
+        transform: translateY(0);
+    }
+
+    .btn-primary-custom:disabled {
         opacity: 0.6;
         cursor: not-allowed;
         transform: none;
+    }
+
+    /* Accommodation Status */
+    .accommodation-info {
+        background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.05));
+        border: 2px solid rgba(0, 185, 0, 0.2);
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-top: 1rem;
+        animation: slideUp 0.5s ease;
+    }
+
+    .accommodation-info h6 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .accommodation-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        background: white;
+        border-radius: 12px;
+        font-size: 0.9rem;
+    }
+
+    .accommodation-detail:last-child {
+        margin-bottom: 0;
+    }
+
+    .accommodation-label {
+        color: var(--text-secondary);
+    }
+
+    .accommodation-value {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .unavailable-message {
+        background: linear-gradient(135deg, rgba(255, 51, 75, 0.05), rgba(255, 51, 75, 0.1));
+        border: 2px solid rgba(255, 51, 75, 0.2);
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-top: 1rem;
+    }
+
+    .unavailable-message h6 {
+        color: var(--danger-color);
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     /* Loading Overlay */
@@ -522,11 +618,11 @@
         width: 100%;
         height: 100%;
         background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(8px);
         display: none;
         align-items: center;
         justify-content: center;
         z-index: 9999;
+        backdrop-filter: blur(10px);
     }
 
     .loading-overlay.show {
@@ -538,13 +634,13 @@
     }
 
     .loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 3px solid var(--gray-200);
-        border-top: 3px solid var(--primary);
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(0, 185, 0, 0.1);
+        border-top: 4px solid var(--primary-color);
         border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        margin: 0 auto 1rem;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1.5rem;
     }
 
     @keyframes spin {
@@ -553,204 +649,262 @@
     }
 
     .loading-text {
-        font-size: 1rem;
-        color: var(--gray-700);
-        font-weight: 500;
+        font-size: 1.1rem;
+        color: var(--text-primary);
+        font-weight: 600;
     }
 
-    /* Date Range */
-    .date-range-grid {
+    /* Alert Messages */
+    .alert-custom {
+        border: none;
+        border-radius: 14px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+        border-left: 4px solid;
+        animation: slideUp 0.3s ease;
+    }
+
+    .alert-success-custom {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+        color: var(--success-color);
+        border-color: var(--success-color);
+    }
+
+    .alert-danger-custom {
+        background: linear-gradient(135deg, rgba(255, 51, 75, 0.1), rgba(255, 51, 75, 0.05));
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+    }
+
+    .alert-warning-custom {
+        background: linear-gradient(135deg, rgba(255, 184, 0, 0.1), rgba(255, 184, 0, 0.05));
+        color: var(--warning-color);
+        border-color: var(--warning-color);
+    }
+
+    .alert-info-custom {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+        color: #3B82F6;
+        border-color: #3B82F6;
+    }
+
+    /* Date Input Enhancement */
+    .date-range-wrapper {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
+        gap: 1rem;
     }
 
-    /* SweetAlert Customization */
+    /* Responsive Design */
+    @media (max-width: 576px) {
+        .app-container {
+            max-width: 100%;
+        }
+        
+        .app-header {
+            padding: 1.5rem 1rem 3rem;
+            border-radius: 0 0 24px 24px;
+        }
+        
+        .header-title {
+            font-size: 1.5rem;
+        }
+        
+        .form-section {
+            padding: 0 0.75rem 1.5rem;
+        }
+        
+        .form-card {
+            padding: 1.25rem;
+        }
+        
+        .progress-steps {
+            padding: 1rem;
+        }
+        
+        .step-label {
+            font-size: 0.7rem;
+        }
+    }
+
+    /* SweetAlert2 Customization */
     .swal2-popup {
         font-family: 'Sarabun', sans-serif !important;
-        border-radius: var(--radius-xl) !important;
+        border-radius: 24px !important;
         padding: 2rem !important;
     }
 
     .swal2-title {
         font-size: 1.5rem !important;
         font-weight: 700 !important;
-        color: var(--gray-900) !important;
-    }
-
-    .swal2-html-container {
-        font-size: 1rem !important;
-        color: var(--gray-600) !important;
-        line-height: 1.6 !important;
     }
 
     .swal2-confirm {
-        background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
         border: none !important;
-        border-radius: var(--radius) !important;
-        font-family: 'Sarabun', sans-serif !important;
-        font-weight: 600 !important;
+        border-radius: 12px !important;
         padding: 0.75rem 2rem !important;
-        font-size: 1rem !important;
-        box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3) !important;
-    }
-
-    .swal2-cancel {
-        background: var(--gray-100) !important;
-        color: var(--gray-700) !important;
-        border: none !important;
-        border-radius: var(--radius) !important;
-        font-family: 'Sarabun', sans-serif !important;
         font-weight: 600 !important;
-        padding: 0.75rem 2rem !important;
-        font-size: 1rem !important;
     }
 
-    .swal2-icon {
-        border: none !important;
+    /* Smooth Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
     }
 
-    /* Divider */
-    .divider {
-        height: 1px;
-        background: var(--gray-100);
-        margin: 1.5rem 0;
+    ::-webkit-scrollbar-track {
+        background: var(--background);
     }
 
-    /* Responsive */
-    @media (max-width: 576px) {
-        .app-header {
-            padding: 2rem 1.25rem 1.5rem;
-        }
-
-        .header-title {
-            font-size: 1.5rem;
-        }
-
-        .form-section {
-            padding: 1.25rem;
-        }
+    ::-webkit-scrollbar-thumb {
+        background: var(--text-light);
+        border-radius: 10px;
     }
 
-    /* Smooth Transitions */
-    * {
-        -webkit-tap-highlight-color: transparent;
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-secondary);
     }
 </style>
-
 </head>
 <body>
     <div class="app-container">
         <div class="app-header">
-            <div class="header-icon">
-                <i class="fas fa-calendar-check"></i>
+            <div class="header-content">
+                <div class="header-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h1 class="header-title">จองห้องประชุม</h1>
+                <p class="header-subtitle">ศูนย์ศึกปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
             </div>
-            <h1 class="header-title">จองห้องประชุม</h1>
-            <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
         </div>
 
-```
-    <div class="progress-container">
-        <div class="progress-bar-wrapper">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-    </div>
-
-    <div id="mainContent">
-        <div class="form-section">
-            <form id="bookingForm">
-                <div class="section-title">ข้อมูลผู้จอง</div>
-
-                <div class="input-group">
-                    <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
-                    <input type="text" class="form-control" id="fullName" name="fullName" placeholder="กรอกชื่อ-นามสกุล" required>
-                </div>
-
-                <div class="input-group">
-                    <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
-                    <input type="text" class="form-control" id="department" name="department" placeholder="กรอกชื่อหน่วยงาน" required>
-                </div>
-
-                <div class="input-group">
-                    <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="08X-XXX-XXXX" required>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="section-title">รายละเอียดการจอง</div>
-
-                <div class="input-group">
-                    <label for="courseName" class="form-label required">ชื่อหลักสูตร/หัวข้อประชุม</label>
-                    <input type="text" class="form-control" id="courseName" name="courseName" placeholder="กรอกชื่อหลักสูตรหรือหัวข้อประชุม" required>
-                </div>
-
-                <div class="input-group">
-                    <label class="form-label required">ระยะเวลา</label>
-                    <div class="date-range-grid">
-                        <div>
-                            <input type="date" class="form-control" id="startDate" name="startDate" required>
-                        </div>
-                        <div>
-                            <input type="date" class="form-control" id="endDate" name="endDate" required>
-                        </div>
+        <div id="mainContent">
+            <div class="form-section">
+                <div class="progress-steps">
+                    <div class="step active" id="step1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">ข้อมูลผู้จอง</div>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">รายละเอียด</div>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">ยืนยัน</div>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
-                    <div class="custom-select-container">
-                        <div class="custom-select-selected" id="customMeetingRoomSelect">
-                            <span>เลือกห้องประชุม</span>
+                <form id="bookingForm">
+                    <div class="form-card">
+                        <h3 class="form-card-title">
+                            <i class="fas fa-user-circle"></i>
+                            ข้อมูลผู้จอง
+                        </h3>
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" 
+                                   placeholder="กรุณากรอกชื่อ-นามสกุล" required>
                         </div>
-                        <ul class="custom-select-options" id="meetingRoomOptions"></ul>
-                        <input type="hidden" id="meetingRoom" name="meetingRoom" required>
+                        <div class="mb-3">
+                            <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
+                            <input type="text" class="form-control" id="department" name="department" 
+                                   placeholder="กรุณากรอกสังกัด/ชื่อหน่วยงาน" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" 
+                                   placeholder="กรุณากรอกเบอร์โทรศัพท์" required>
+                        </div>
                     </div>
-                </div>
 
-                <div class="input-group">
-                    <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วม</label>
-                    <input type="number" class="form-control" id="attendees" name="attendees" placeholder="จำนวนคน" required min="1">
-                </div>
-
-                <div class="input-group">
-                    <label class="form-label required">ต้องการที่พัก</label>
-                    <div class="radio-options">
-                        <div class="radio-card" data-value="ต้องการ">
-                            <input type="radio" name="accommodation" value="ต้องการ" required>
-                            <div class="radio-icon">
-                                <i class="fas fa-bed"></i>
+                    <div class="form-card">
+                        <h3 class="form-card-title">
+                            <i class="fas fa-calendar-alt"></i>
+                            ข้อมูลการจองห้องประชุม
+                        </h3>
+                        <div class="mb-3">
+                            <label for="courseName" class="form-label required">ชื่อหลักสูตร/หัวข้อประชุม</label>
+                            <input type="text" class="form-control" id="courseName" name="courseName" 
+                                   placeholder="กรุณากรอกชื่อหลักสูตร/หัวข้อประชุม" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label required">ช่วงเวลา</label>
+                            <div class="date-range-wrapper">
+                                <div>
+                                    <label for="startDate" class="form-label" style="font-size: 0.85rem; font-weight: 500;">วันที่เริ่มต้น</label>
+                                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+                                </div>
+                                <div>
+                                    <label for="endDate" class="form-label" style="font-size: 0.85rem; font-weight: 500;">วันที่สิ้นสุด</label>
+                                    <input type="date" class="form-control" id="endDate" name="endDate" required>
+                                </div>
                             </div>
-                            <div class="radio-text">ต้องการ</div>
                         </div>
-                        <div class="radio-card" data-value="ไม่ต้องการ">
-                            <input type="radio" name="accommodation" value="ไม่ต้องการ">
-                            <div class="radio-icon">
-                                <i class="fas fa-home"></i>
+                        
+                        <div class="mb-3">
+                            <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
+                            <div class="custom-select-container">
+                                <div class="custom-select-selected" id="customMeetingRoomSelect">
+                                    <span style="color: var(--text-light);">กรุณาเลือกห้องประชุม</span>
+                                </div>
+                                <ul class="custom-select-options" id="meetingRoomOptions"></ul>
+                                <input type="hidden" id="meetingRoom" name="meetingRoom" required>
                             </div>
-                            <div class="radio-text">ไม่ต้องการ</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
+                            <input type="number" class="form-control" id="attendees" name="attendees" 
+                                   placeholder="กรุณากรอกจำนวนผู้เข้าร่วม" required min="1">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label required">ต้องการที่พัก</label>
+                            <div class="row g-3 mt-1">
+                                <div class="col-6">
+                                    <div class="radio-card" data-value="ต้องการ">
+                                        <input type="radio" name="accommodation" value="ต้องการ" required>
+                                        <div class="radio-icon">
+                                            <i class="fas fa-bed"></i>
+                                        </div>
+                                        <div class="radio-card-text">ต้องการ</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="radio-card" data-value="ไม่ต้องการ">
+                                        <input type="radio" name="accommodation" value="ไม่ต้องการ">
+                                        <div class="radio-icon">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                        <div class="radio-card-text">ไม่ต้องการ</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="accommodationStatus" style="display: none;"></div>
                         </div>
                     </div>
-                    <div id="accommodationStatus"></div>
-                </div>
 
-                <button type="submit" class="btn-submit" id="submitBtn">
-                    <i class="fas fa-check-circle me-2"></i>ยืนยันการจอง
-                </button>
-            </form>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
+                            <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
+                        </button>
+                    </div>
+                </form>
 
-            <div id="messageContainer"></div>
+                <div id="messageContainer" class="mt-3"></div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading-overlay">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">กำลังส่งข้อมูลการจอง...</div>
+            </div>
         </div>
     </div>
-
-    <div id="loading" class="loading-overlay">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">กำลังส่งข้อมูล...</div>
-        </div>
-    </div>
-</div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
