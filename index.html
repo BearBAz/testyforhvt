@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -15,23 +16,31 @@
 
 <style>
     :root {
-        --primary-color: #00B900;
-        --primary-dark: #009900;
-        --secondary-color: #06C755;
-        --accent-color: #FFB800;
+        --primary-color: #1e3a8a;
+	--secondary-color: #3b82f6;
+        --accent-color: #60a5fa;
         --success-color: #22c55e;
-        --danger-color: #FF334B;
-        --warning-color: #FFB800;
-        --background: #F8F9FA;
-        --card-bg: #FFFFFF;
-        --text-primary: #1A1A1A;
-        --text-secondary: #6B7280;
-        --text-light: #9CA3AF;
-        --border-color: #E5E7EB;
-        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        --danger-color: #ef4444;
+        --warning-color: #f59e0b;
+        
+        --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        --container-background: #ffffff;
+	--header-gradient: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #4338ca 100%);
+        --header-overlay: rgba(255, 255, 255, 0.1);
+        
+        --card-background: #ffffff;
+	--card-header-background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        --card-border: #e2e8f0;
+        
+        --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+	--shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.06);
+	--shadow-strong: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+	--shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+
+        --text-primary: #1e293b;
+        --text-secondary: #475569;
+	--text-muted: #64748b;
+        --text-light: #94a3b8;
     }
 
     * {
@@ -41,715 +50,221 @@
     }
 
     body {
-        font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background: var(--background);
+        font-family: 'Sarabun', sans-serif;
+        background: var(--background-gradient);
+        min-height: 100vh;
         color: var(--text-primary);
         line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
     }
 
     .app-container {
-        max-width: 480px;
-        margin: 0 auto;
-        background: var(--background);
+        max-width: 450px;
+	margin: 0 auto;
+        background: var(--container-background);
         min-height: 100vh;
         position: relative;
-    }
+        box-shadow: var(--shadow-xl);
+        overflow: hidden;
+}
 
-    /* Modern Header with Glassmorphism */
     .app-header {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        padding: 2rem 1.5rem 4rem;
-        text-align: center;
+        background: var(--header-gradient);
+        padding: 3rem 2rem 2rem;
+	text-align: center;
         position: relative;
         overflow: hidden;
-        border-radius: 0 0 30px 30px;
-        box-shadow: var(--shadow-lg);
     }
 
     .app-header::before {
         content: '';
-        position: absolute;
-        top: -50%;
-        right: -20%;
-        width: 300px;
-        height: 300px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        animation: float 6s ease-in-out infinite;
+	position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23dots)"/></svg>');
+opacity: 0.7;
     }
 
     .app-header::after {
         content: '';
         position: absolute;
-        bottom: -30%;
-        left: -10%;
-        width: 250px;
-        height: 250px;
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 50%;
-        animation: float 8s ease-in-out infinite reverse;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translate(0, 0) rotate(0deg); }
-        33% { transform: translate(30px, -30px) rotate(120deg); }
-        66% { transform: translate(-20px, 20px) rotate(240deg); }
+	bottom: 0;
+        left: 0;
+        right: 0;
+        height: 30px;
+        background: linear-gradient(135deg, var(--container-background) 0%, rgba(255, 255, 255, 0.9) 100%);
+	border-radius: 20px 20px 0 0;
     }
 
     .header-content {
         position: relative;
-        z-index: 2;
+	z-index: 2;
     }
 
     .header-icon {
-        width: 70px;
-        height: 70px;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1rem;
-        animation: bounce-subtle 2s ease-in-out infinite;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-
-    .header-icon i {
-        font-size: 2rem;
+        font-size: 3.5rem;
         color: #ffffff;
+	margin-bottom: 1rem;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        animation: float 3s ease-in-out infinite;
+	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
     }
 
-    @keyframes bounce-subtle {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px);
+}
+        50% { transform: translateY(-8px);
+}
     }
 
     .header-title {
-        font-size: 1.75rem;
-        font-weight: 700;
+        font-size: 2rem;
+	font-weight: 550;
         color: #ffffff;
         margin-bottom: 0.5rem;
-        letter-spacing: -0.5px;
-    }
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
     .header-subtitle {
         font-size: 0.95rem;
         color: rgba(255, 255, 255, 0.9);
-        font-weight: 400;
+	font-weight: 400;
+        line-height: 1.4;
+        opacity: 0.95;
     }
 
-    /* Modern Form Section */
     .form-section {
-        padding: 0 1rem 2rem;
-        margin-top: -2.5rem;
-        position: relative;
-        z-index: 3;
-    }
-
-    /* Progress Steps */
-    .progress-steps {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        padding: 1.5rem;
-        background: var(--card-bg);
-        border-radius: 20px;
-        box-shadow: var(--shadow-md);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .progress-steps::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(0, 185, 0, 0.02), rgba(6, 199, 85, 0.02));
-        opacity: 0;
-        transition: opacity 0.5s ease;
-    }
-
-    .progress-steps.has-progress::before {
-        opacity: 1;
-    }
-
-    .progress-line-container {
-        position: absolute;
-        top: 50%;
-        left: 10%;
-        right: 10%;
-        height: 4px;
-        transform: translateY(-50%);
-        z-index: 0;
-    }
-
-    .progress-line-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--border-color);
-        border-radius: 10px;
-    }
-
-    .progress-line-fill {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-        border-radius: 10px;
-        width: 0%;
-        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 0 10px rgba(0, 185, 0, 0.3);
-    }
-
-    .progress-line-fill::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        right: 0;
-        width: 12px;
-        height: 12px;
-        background: var(--secondary-color);
-        border-radius: 50%;
-        transform: translate(50%, -50%);
-        box-shadow: 0 0 0 4px rgba(6, 199, 85, 0.2);
-        animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-        0%, 100% {
-            box-shadow: 0 0 0 4px rgba(6, 199, 85, 0.2);
-        }
-        50% {
-            box-shadow: 0 0 0 8px rgba(6, 199, 85, 0.1);
-        }
-    }
-
-    .step {
-        flex: 1;
-        text-align: center;
+        padding: 2rem;
+	background: var(--container-background);
+        margin-top: -15px;
+        border-radius: 20px 20px 0 0;
         position: relative;
         z-index: 1;
-    }
+}
 
-    .step-circle {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: var(--background);
-        border: 3px solid var(--border-color);
-        color: var(--text-light);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 1.1rem;
-        position: relative;
-        margin-bottom: 0.75rem;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .step-circle i {
-        font-size: 1.2rem;
-        opacity: 0;
-        position: absolute;
-        transition: all 0.3s ease;
-    }
-
-    .step-circle span {
-        transition: all 0.3s ease;
-    }
-
-    .step.active .step-circle {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        border-color: var(--primary-color);
-        color: white;
-        transform: scale(1.15);
-        box-shadow: 0 0 0 6px rgba(0, 185, 0, 0.15), 0 4px 12px rgba(0, 185, 0, 0.3);
-        animation: bounce-in-step 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    @keyframes bounce-in-step {
-        0% {
-            transform: scale(0.8);
-            opacity: 0;
-        }
-        50% {
-            transform: scale(1.2);
-        }
-        100% {
-            transform: scale(1.15);
-            opacity: 1;
-        }
-    }
-
-    .step.completed .step-circle {
-        background: var(--primary-color);
-        border-color: var(--primary-color);
-        color: white;
-        box-shadow: 0 2px 8px rgba(0, 185, 0, 0.3);
-        animation: check-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    @keyframes check-pop {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.2) rotate(5deg);
-        }
-        100% {
-            transform: scale(1) rotate(0deg);
-        }
-    }
-
-    .step.completed .step-circle span {
-        opacity: 0;
-        transform: scale(0);
-    }
-
-    .step.completed .step-circle i {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-    }
-
-    .step-label {
-        font-size: 0.8rem;
-        color: var(--text-secondary);
-        font-weight: 500;
-        transition: all 0.3s ease;
-        line-height: 1.3;
-    }
-
-    .step.active .step-label {
-        color: var(--primary-color);
-        font-weight: 700;
-        transform: scale(1.05);
-    }
-
-    .step.completed .step-label {
-        color: var(--primary-color);
-        font-weight: 600;
-    }
-
-    .step-sublabel {
-        font-size: 0.65rem;
-        color: var(--text-light);
-        margin-top: 0.15rem;
-        opacity: 0;
-        transition: all 0.3s ease;
-    }
-
-    .step.active .step-sublabel {
-        opacity: 1;
-        color: var(--secondary-color);
-    }
-
-    .step.completed .step-sublabel {
-        opacity: 0.7;
-        color: var(--success-color);
-    }
-
-    /* Modern Form Card */
-    .form-card {
-        background: var(--card-bg);
-        border-radius: 24px;
-        padding: 1.5rem;
-        margin-bottom: 1.25rem;
-        box-shadow: var(--shadow-md);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        animation: slideUp 0.5s ease-out;
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .form-card:hover {
-        box-shadow: var(--shadow-lg);
-        transform: translateY(-2px);
-    }
-
-    .form-card-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 1.25rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .form-card-title i {
-        color: var(--primary-color);
-        font-size: 1.25rem;
-    }
-
-    /* Modern Form Controls */
     .form-label {
         font-weight: 600;
         color: var(--text-primary);
         margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
+	font-size: 0.95rem;
     }
 
     .required::after {
-        content: '*';
-        color: var(--danger-color);
-        margin-left: 0.25rem;
+        content: ' *';
+        color: #ef4444;
+	font-weight: 700;
     }
 
     .form-control, .form-select {
-        border: 2px solid var(--border-color);
-        border-radius: 14px;
+        border: 2px solid var(--card-border);
+	border-radius: 12px;
         padding: 0.875rem 1rem;
         font-size: 1rem;
         font-family: 'Sarabun', sans-serif;
-        transition: all 0.2s ease;
-        background: var(--card-bg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: var(--card-background);
+	box-shadow: var(--shadow-soft);
         color: var(--text-primary);
     }
 
     .form-control:focus, .form-select:focus {
         border-color: var(--primary-color);
-        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
+	box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        transform: translateY(-1px);
         outline: none;
-    }
+}
 
-    .form-control::placeholder {
-        color: var(--text-light);
-    }
+    .form-control:hover, .form-select:hover {
+        border-color: var(--secondary-color);
+        box-shadow: var(--shadow-medium);
+}
 
-    /* Modern Radio Cards */
     .radio-card {
-        background: var(--card-bg);
-        border: 2px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.25rem;
+        background: var(--card-background);
+        border: 2px solid var(--card-border);
+	border-radius: 12px;
+        padding: 1rem;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .radio-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        font-weight: 500;
+        box-shadow: var(--shadow-soft);
+	color: var(--text-primary);
     }
 
     .radio-card:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-md);
+        border-color: var(--secondary-color);
+        box-shadow: var(--shadow-medium);
+	transform: translateY(-2px);
     }
 
     .radio-card.active {
         border-color: var(--primary-color);
-        background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.05));
-        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
-    }
-
-    .radio-card.active::before {
-        opacity: 0.05;
-    }
+	background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+        box-shadow: var(--shadow-medium);
+        transform: translateY(-2px);
+}
 
     .radio-card input[type="radio"] {
         display: none;
-    }
+}
 
     .radio-card .radio-icon {
-        font-size: 2rem;
+        font-size: 1.5rem;
         margin-bottom: 0.5rem;
-        color: var(--text-secondary);
-        transition: all 0.3s ease;
-        position: relative;
-        z-index: 1;
-    }
-
-    .radio-card.active .radio-icon {
         color: var(--primary-color);
-        transform: scale(1.1);
-    }
+}
 
-    .radio-card-text {
-        font-weight: 600;
-        color: var(--text-primary);
-        position: relative;
-        z-index: 1;
-    }
-
-    /* Custom Select Dropdown */
-    .custom-select-container {
-        position: relative;
-    }
-
-    .custom-select-selected {
-        background: var(--card-bg);
-        border: 2px solid var(--border-color);
-        border-radius: 14px;
-        padding: 0.875rem 1rem;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: all 0.2s ease;
-        min-height: 52px;
-    }
-
-    .custom-select-selected:hover {
-        border-color: var(--primary-color);
-    }
-
-    .custom-select-selected.open {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
-    }
-
-    .custom-select-selected::after {
-        content: '\f078';
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        color: var(--text-secondary);
-        transition: transform 0.3s ease;
-    }
-
-    .custom-select-selected.open::after {
-        transform: rotate(180deg);
-        color: var(--primary-color);
-    }
-
-    .custom-select-options {
-        display: none;
-        position: absolute;
-        top: calc(100% + 8px);
-        left: 0;
-        right: 0;
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        box-shadow: var(--shadow-xl);
-        z-index: 100;
-        max-height: 280px;
-        overflow-y: auto;
-        padding: 0.5rem;
-        list-style: none;
-        animation: dropdownSlide 0.3s ease;
-    }
-
-    @keyframes dropdownSlide {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .custom-select-options.show {
-        display: block;
-    }
-
-    .custom-select-option {
-        padding: 1rem;
-        cursor: pointer;
-        border-radius: 12px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: all 0.2s ease;
-        margin-bottom: 0.25rem;
-    }
-
-    .custom-select-option:hover {
-        background: rgba(0, 185, 0, 0.05);
-    }
-
-    .custom-select-option.disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        background: var(--background);
-    }
-
-    .option-details {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .option-name {
-        font-weight: 600;
-        color: var(--text-primary);
-        font-size: 0.95rem;
-    }
-
-    .option-capacity {
-        font-size: 0.8rem;
-        color: var(--text-secondary);
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-
-    .status-badge {
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.35rem 0.75rem;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-    }
-
-    .status-available {
-        background: rgba(34, 197, 94, 0.1);
-        color: var(--success-color);
-    }
-
-    .status-unavailable {
-        background: rgba(255, 51, 75, 0.1);
-        color: var(--danger-color);
-    }
-
-    /* Modern Submit Button */
     .btn-primary-custom {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        background: var(--header-gradient);
         border: none;
-        border-radius: 16px;
-        padding: 1rem 2rem;
+        border-radius: 12px;
+	padding: 1rem 2rem;
         font-size: 1.1rem;
         font-weight: 600;
         color: #ffffff;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 185, 0, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-strong);
         position: relative;
-        overflow: hidden;
+	overflow: hidden;
     }
 
     .btn-primary-custom::before {
         content: '';
         position: absolute;
-        top: 0;
+	top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
         transition: left 0.5s ease;
-    }
-
-    .btn-primary-custom:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 185, 0, 0.4);
-    }
+}
 
     .btn-primary-custom:hover::before {
         left: 100%;
-    }
+}
+
+    .btn-primary-custom:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-xl);
+}
 
     .btn-primary-custom:active {
-        transform: translateY(0);
-    }
+        transform: translateY(-1px);
+}
 
     .btn-primary-custom:disabled {
-        opacity: 0.6;
+        opacity: 0.7;
         cursor: not-allowed;
         transform: none;
-    }
+}
 
-    /* Accommodation Status */
-    .accommodation-info {
-        background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.05));
-        border: 2px solid rgba(0, 185, 0, 0.2);
-        border-radius: 16px;
-        padding: 1.25rem;
-        margin-top: 1.5rem;
-        animation: slideUp 0.5s ease;
-    }
-
-    .accommodation-info h6 {
-        color: var(--primary-color);
-        margin-bottom: 1rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .accommodation-detail {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.75rem;
-        margin-bottom: 0.5rem;
-        background: white;
-        border-radius: 12px;
-        font-size: 0.9rem;
-    }
-
-    .accommodation-detail:last-child {
-        margin-bottom: 0;
-    }
-
-    .accommodation-label {
-        color: var(--text-secondary);
-    }
-
-    .accommodation-value {
-        font-weight: 600;
-        color: var(--text-primary);
-    }
-
-    .unavailable-message {
-        background: linear-gradient(135deg, rgba(255, 51, 75, 0.05), rgba(255, 51, 75, 0.1));
-        border: 2px solid rgba(255, 51, 75, 0.2);
-        border-radius: 16px;
-        padding: 1.25rem;
-        margin-top: 1rem;
-    }
-
-    .unavailable-message h6 {
-        color: var(--danger-color);
-        margin-bottom: 0.75rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    /* Loading Overlay */
     .loading-overlay {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
+	width: 100%;
         height: 100%;
         background: rgba(255, 255, 255, 0.95);
         display: none;
@@ -757,224 +272,412 @@
         justify-content: center;
         z-index: 9999;
         backdrop-filter: blur(10px);
-    }
+}
 
     .loading-overlay.show {
         display: flex;
-    }
+}
 
     .loading-content {
         text-align: center;
+        padding: 2.5rem;
+        background: var(--card-background);
+	border-radius: 20px;
+        box-shadow: var(--shadow-xl);
     }
 
     .loading-spinner {
         width: 60px;
-        height: 60px;
-        border: 4px solid rgba(0, 185, 0, 0.1);
+	height: 60px;
+        border: 4px solid #f1f5f9;
         border-top: 4px solid var(--primary-color);
         border-radius: 50%;
         animation: spin 1s linear infinite;
-        margin: 0 auto 1.5rem;
+	margin: 0 auto 1rem;
     }
 
     @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% { transform: rotate(0deg);
+}
+        100% { transform: rotate(360deg);
+}
     }
 
     .loading-text {
         font-size: 1.1rem;
-        color: var(--text-primary);
-        font-weight: 600;
+	color: var(--text-primary);
+        font-weight: 500;
     }
 
-    /* Alert Messages */
     .alert-custom {
         border: none;
-        border-radius: 14px;
-        padding: 1rem 1.25rem;
-        margin-bottom: 1rem;
+	border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
         font-weight: 500;
-        border-left: 4px solid;
-        animation: slideUp 0.3s ease;
-    }
+        box-shadow: var(--shadow-soft);
+}
 
     .alert-success-custom {
-        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
-        color: var(--success-color);
-        border-color: var(--success-color);
+        background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+	color: #166534;
+        border-left: 4px solid #22c55e;
     }
 
     .alert-danger-custom {
-        background: linear-gradient(135deg, rgba(255, 51, 75, 0.1), rgba(255, 51, 75, 0.05));
-        color: var(--danger-color);
-        border-color: var(--danger-color);
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+	color: #991b1b;
+        border-left: 4px solid #ef4444;
     }
 
     .alert-warning-custom {
-        background: linear-gradient(135deg, rgba(255, 184, 0, 0.1), rgba(255, 184, 0, 0.05));
-        color: var(--warning-color);
-        border-color: var(--warning-color);
+        background: linear-gradient(135deg, #fefbeb 0%, #fef3c7 100%);
+	color: #92400e;
+        border-left: 4px solid #f59e0b;
     }
 
     .alert-info-custom {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
-        color: #3B82F6;
-        border-color: #3B82F6;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+	color: #1e40af;
+        border-left: 4px solid #3b82f6;
     }
 
-    /* Date Input Enhancement */
-    .date-range-wrapper {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
+    .form-card {
+        background: var(--card-background);
+	border-radius: 16px;
+        box-shadow: var(--shadow-medium);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--card-border);
+}
+
+    .form-card-header {
+        background: var(--card-header-background);
+        padding: 1.25rem 1.5rem;
+	border-bottom: 1px solid rgba(30, 58, 138, 0.1);
     }
 
-    /* Responsive Design */
+    .form-card-title {
+        margin: 0;
+	font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+}
+
+    .form-card-body {
+        padding: 1.5rem;
+}
+
+    .date-range-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+	border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--card-border);
+}
+
+    .progress-bar-custom {
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+	border-radius: 10px;
+        height: 8px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+    .progress-fill {
+        height: 100%;
+	background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        width: 0%;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 10px;
+	box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3);
+    }
+
+    #accommodationStatus {
+        padding: 0.75rem 1.25rem;
+	border-radius: 12px;
+        font-weight: 500;
+        text-align: left;
+        transition: all 0.3s ease;
+        margin-top: 1.5rem;
+}
+
+    .accommodation-info {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+	border: 1px solid #0284c7;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+}
+
+    .accommodation-info h6 {
+        color: #0c4a6e;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+}
+
+    .accommodation-detail {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+	font-size: 0.9rem;
+    }
+
+    .accommodation-detail:last-child {
+        margin-bottom: 0;
+}
+
+    .accommodation-label {
+        color: #374151;
+}
+
+    .accommodation-value {
+        font-weight: 600;
+        color: #0c4a6e;
+}
+
     @media (max-width: 576px) {
         .app-container {
             max-width: 100%;
+	    box-shadow: none;
         }
-        
         .app-header {
-            padding: 1.5rem 1rem 3rem;
-            border-radius: 0 0 24px 24px;
-        }
-        
+            padding: 2rem 1rem 1.5rem;
+}
         .header-title {
-            font-size: 1.5rem;
-        }
-        
+            font-size: 1.75rem;
+}
         .form-section {
-            padding: 0 0.75rem 1.5rem;
-        }
-        
-        .form-card {
-            padding: 1.25rem;
-        }
-        
-        .progress-steps {
+            padding: 1.5rem;
+}
+        .form-card-body {
             padding: 1rem;
-        }
-        
-        .step-label {
-            font-size: 0.7rem;
-        }
+}
     }
 
-    /* SweetAlert2 Customization */
     .swal2-popup {
         font-family: 'Sarabun', sans-serif !important;
-        border-radius: 24px !important;
-        padding: 2rem !important;
-    }
-
-    .swal2-title {
-        font-size: 1.5rem !important;
-        font-weight: 700 !important;
+	border-radius: 20px !important;
     }
 
     .swal2-confirm {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+        background: var(--header-gradient) !important;
         border: none !important;
         border-radius: 12px !important;
-        padding: 0.75rem 2rem !important;
+        font-family: 'Sarabun', sans-serif !important;
         font-weight: 600 !important;
+}
+
+    .fade-in {
+        animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px);
+}
+        to { opacity: 1; transform: translateY(0);
+}
     }
 
-    /* Smooth Scrollbar */
-    ::-webkit-scrollbar {
-        width: 8px;
+    .bounce-in {
+        animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+    @keyframes bounceIn {
+        0% { transform: scale(0.3) translateY(20px);
+opacity: 0; }
+        50% { transform: scale(1.05) translateY(-10px);
+}
+        70% { transform: scale(0.9) translateY(5px);
+}
+        100% { transform: scale(1) translateY(0); opacity: 1;
+}
     }
 
-    ::-webkit-scrollbar-track {
-        background: var(--background);
+    .form-card:hover {
+        transform: translateY(-2px);
+	box-shadow: var(--shadow-strong);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    ::-webkit-scrollbar-thumb {
-        background: var(--text-light);
-        border-radius: 10px;
+    .form-control::placeholder {
+        color: var(--text-light);
+opacity: 0.7;
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--text-secondary);
+    .form-control:focus::placeholder {
+        opacity: 0.5;
+}
+
+    .unavailable-message {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+	border: 1px solid #ef4444;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+}
+    
+    .custom-select-container {
+        position: relative;
+    }
+    .custom-select-selected {
+        background: var(--card-background);
+        border: 2px solid var(--card-border);
+        border-radius: 12px;
+        padding: 0.875rem 1rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-soft);
+    }
+    .custom-select-selected.open {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    }
+    .custom-select-selected::after {
+        content: '\f078';
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        transition: transform 0.3s ease;
+    }
+    .custom-select-selected.open::after {
+        transform: rotate(180deg);
+    }
+    .custom-select-options {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        background: var(--card-background);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        box-shadow: var(--shadow-strong);
+        z-index: 100;
+        max-height: 250px;
+        overflow-y: auto;
+        padding: 0.5rem;
+        list-style: none;
+    }
+    .custom-select-options.show {
+        display: block;
+    }
+    .custom-select-option {
+        padding: 0.8rem 1rem;
+        cursor: pointer;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.2s ease;
+    }
+    .custom-select-option:hover {
+        background-color: #f1f5f9;
+    }
+    .custom-select-option.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f8fafc;
+        color: var(--text-muted);
+    }
+    .option-details {
+        display: flex;
+        flex-direction: column;
+    }
+    .option-name {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    .option-capacity {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+    .status-badge {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.25rem 0.6rem;
+        border-radius: 20px;
+    }
+    .status-available {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+    .status-unavailable {
+        background-color: #fee2e2;
+        color: #991b1b;
     }
 </style>
+
 </head>
 <body>
     <div class="app-container">
         <div class="app-header">
             <div class="header-content">
                 <div class="header-icon">
-                    <i class="fas fa-calendar-check"></i>
+                    <i class="fas fa-calendar-alt"></i>
                 </div>
-                <h1 class="header-title">จองห้องประชุม</h1>
-                <p class="header-subtitle">ศูนย์ศึกปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
+                <h1 class="header-title">แบบฟอร์มจองห้องประชุม</h1>
+	        <p class="header-subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
+                <br>
             </div>
         </div>
 
-        <div id="mainContent">
-            <div class="form-section">
-                <div class="progress-steps">
-                    <div class="step active" id="step1">
-                        <div class="step-circle">1</div>
-                        <div class="step-label">ข้อมูลผู้จอง</div>
+    <div id="mainContent" class="fade-in">
+        <div class="form-section">
+            <div class="progress-bar-custom">
+                <div class="progress-fill" id="progressFill"></div>
+	</div>
+
+            <form id="bookingForm">
+                <div class="form-card bounce-in">
+                    <div class="form-card-header">
+                        <h3 class="form-card-title">
+			<i class="fas fa-user me-2"></i>ข้อมูลผู้จอง
+                        </h3>
                     </div>
-                    <div class="step" id="step2">
-                        <div class="step-circle">2</div>
-                        <div class="step-label">รายละเอียด</div>
-                    </div>
-                    <div class="step" id="step3">
-                        <div class="step-circle">3</div>
-                        <div class="step-label">ยืนยัน</div>
+                    <div class="form-card-body">
+			<div class="mb-3">
+                            <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" required>
+                        </div>
+			<div class="mb-3">
+                            <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
+                            <input type="text" class="form-control" id="department" name="department" required>
+			</div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+			</div>
                     </div>
                 </div>
 
-                <form id="bookingForm">
-                    <div class="form-card">
-                        <h3 class="form-card-title">
-                            <i class="fas fa-user-circle"></i>
-                            ข้อมูลผู้จอง
+                <div class="form-card bounce-in">
+                    <div class="form-card-header">
+			<h3 class="form-card-title">
+                            <i class="fas fa-book me-2"></i>ข้อมูลการจองห้องประชุม
                         </h3>
-                        <div class="mb-3">
-                            <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
-                            <input type="text" class="form-control" id="fullName" name="fullName" 
-                                   placeholder="กรุณากรอกชื่อ-นามสกุล" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
-                            <input type="text" class="form-control" id="department" name="department" 
-                                   placeholder="กรุณากรอกสังกัด/ชื่อหน่วยงาน" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" 
-                                   placeholder="กรุณากรอกเบอร์โทรศัพท์" required>
-                        </div>
                     </div>
-
-                    <div class="form-card">
-                        <h3 class="form-card-title">
-                            <i class="fas fa-calendar-alt"></i>
-                            ข้อมูลการจองห้องประชุม
-                        </h3>
+			<div class="form-card-body">
                         <div class="mb-3">
                             <label for="courseName" class="form-label required">ชื่อหลักสูตร/หัวข้อประชุม</label>
-                            <input type="text" class="form-control" id="courseName" name="courseName" 
-                                   placeholder="กรุณากรอกชื่อหลักสูตร/หัวข้อประชุม" required>
+			    <input type="text" class="form-control" id="courseName" name="courseName" required>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label required">ช่วงเวลา</label>
-                            <div class="date-range-wrapper">
-                                <div>
-                                    <label for="startDate" class="form-label" style="font-size: 0.85rem; font-weight: 500;">วันที่เริ่มต้น</label>
-                                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+			   <div class="row g-3">
+                                <div class="col-6">
+                                    <label for="startDate" class="form-label required">วันที่เริ่มต้น</label>
+				    <input type="date" class="form-control" id="startDate" name="startDate" required>
                                 </div>
-                                <div>
-                                    <label for="endDate" class="form-label" style="font-size: 0.85rem; font-weight: 500;">วันที่สิ้นสุด</label>
+                                <div class="col-6">
+				    <label for="endDate" class="form-label required">วันที่สิ้นสุด</label>
                                     <input type="date" class="form-control" id="endDate" name="endDate" required>
-                                </div>
+				</div>
                             </div>
                         </div>
                         
@@ -982,67 +685,68 @@
                             <label for="meetingRoom" class="form-label required">เลือกห้องประชุม</label>
                             <div class="custom-select-container">
                                 <div class="custom-select-selected" id="customMeetingRoomSelect">
-                                    <span style="color: var(--text-light);">กรุณาเลือกห้องประชุม</span>
+                                    <span>-- เลือกห้องประชุม --</span>
                                 </div>
-                                <ul class="custom-select-options" id="meetingRoomOptions"></ul>
+                                <ul class="custom-select-options" id="meetingRoomOptions">
+                                    </ul>
                                 <input type="hidden" id="meetingRoom" name="meetingRoom" required>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
-                            <input type="number" class="form-control" id="attendees" name="attendees" 
-                                   placeholder="กรุณากรอกจำนวนผู้เข้าร่วม" required min="1">
+                            <input type="number" class="form-control" id="attendees" name="attendees" required min="1">
                         </div>
-                        
                         <div class="mb-3">
                             <label class="form-label required">ต้องการที่พัก</label>
-                            <div class="row g-3 mt-1">
+                            <div class="row g-3 mt-2">
                                 <div class="col-6">
-                                    <div class="radio-card" data-value="ต้องการ">
+				<div class="radio-card" data-value="ต้องการ">
                                         <input type="radio" name="accommodation" value="ต้องการ" required>
-                                        <div class="radio-icon">
+					    <div class="radio-icon">
                                             <i class="fas fa-bed"></i>
-                                        </div>
-                                        <div class="radio-card-text">ต้องการ</div>
+					   </div>
+                                        <div>ต้องการ</div>
                                     </div>
-                                </div>
+				</div>
                                 <div class="col-6">
                                     <div class="radio-card" data-value="ไม่ต้องการ">
-                                        <input type="radio" name="accommodation" value="ไม่ต้องการ">
+				    <input type="radio" name="accommodation" value="ไม่ต้องการ">
                                         <div class="radio-icon">
-                                            <i class="fas fa-home"></i>
+				        <i class="fas fa-home"></i>
                                         </div>
-                                        <div class="radio-card-text">ไม่ต้องการ</div>
-                                    </div>
+                                        <div>ไม่ต้องการ</div>
+				  </div>
                                 </div>
                             </div>
-                            <div id="accommodationStatus" style="display: none;"></div>
-                        </div>
+			    <div id="accommodationStatus" style="display: none;"></div>
+			</div>
                     </div>
+                </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
-                            <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
-                        </button>
-                    </div>
-                </form>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
+		    <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
+                    </button>
+                </div>
+            </form>
 
-                <div id="messageContainer" class="mt-3"></div>
-            </div>
-        </div>
-
-        <div id="loading" class="loading-overlay">
-            <div class="loading-content">
-                <div class="loading-spinner"></div>
-                <div class="loading-text">กำลังส่งข้อมูลการจอง...</div>
-            </div>
+            <div id="messageContainer" class="mt-3"></div>
         </div>
     </div>
+
+    <div id="loading" class="loading-overlay">
+        <div class="loading-content">
+	<div class="loading-spinner"></div>
+            <div class="loading-text">กำลังส่งข้อมูลการจอง...</div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
     const LIFF_ID = "2007138631-Ono58j50";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec";
 
@@ -1052,6 +756,7 @@
     const submitBtn = document.getElementById('submitBtn');
     const messageContainer = document.getElementById('messageContainer');
     const loadingDiv = document.getElementById('loading');
+    const progressFill = document.getElementById('progressFill');
     const accommodationStatusDiv = document.getElementById('accommodationStatus');
     const customMeetingRoomSelect = document.getElementById('customMeetingRoomSelect');
     const meetingRoomOptions = document.getElementById('meetingRoomOptions');
@@ -1060,45 +765,47 @@
     let userId = '';
     let displayName = '';
     let checkTimeout;
-    let roomData = [];
+    let roomData = []; // Store room data from backend
     let accommodationAvailable = true;
 
     async function initializeLiff() {
         try {
             await liff.init({ liffId: LIFF_ID });
-            if (!liff.isLoggedIn()) {
+    if (!liff.isLoggedIn()) {
                 liff.login();
                 return;
-            }
+	}
             const profile = await liff.getProfile();
             userId = profile.userId;
             displayName = profile.displayName;
             
             await autofillUserData(); 
-            updateProgressSteps();
+            updateProgress();
         } catch (err) {
             console.error('LIFF initialization error:', err);
-            showMessage('เกิดข้อผิดพลาดในการโหลดข้อมูล LINE', 'danger');
+	    showMessage('เกิดข้อผิดพลาดในการโหลดข้อมูล LINE', 'danger');
         }
     }
 
+    // Autofill user data
     async function autofillUserData() {
         if (!userId) return;
-        const autofillUrl = `${GAS_WEB_APP_URL}?userId=${userId}`;
+	const autofillUrl = `${GAS_WEB_APP_URL}?userId=${userId}`;
         try {
             const response = await fetch(autofillUrl);
-            const userData = await response.json();
+	    const userData = await response.json();
             if (userData && userData.fullName) {
                 document.getElementById('fullName').value = userData.fullName;
                 document.getElementById('department').value = userData.department;
                 document.getElementById('phone').value = userData.phone;
-                updateProgressSteps();
+                updateProgress(); 
             }
         } catch (error) {
             console.error('Autofill error:', error);
-        }
+	}
     }
 
+    // Show message function
     function showMessage(text, type = 'success') {
         const alertClass = type === 'success' ? 'alert-success-custom' :
                          type === 'danger' ? 'alert-danger-custom' :
@@ -1106,67 +813,52 @@
         const icon = type === 'success' ? 'fas fa-check-circle' :
                     type === 'danger' ? 'fas fa-exclamation-circle' :
                     type === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle';
-        const messageHtml = `<div class="alert alert-custom ${alertClass}" role="alert"><i class="${icon} me-2"></i>${text}</div>`;
+        const messageHtml = `<div class="alert alert-custom ${alertClass} fade-in" role="alert"><i class="${icon} me-2"></i>${text}</div>`;
         messageContainer.innerHTML = messageHtml;
         if (type === 'success') {
             setTimeout(() => { messageContainer.innerHTML = ''; }, 5000);
-        }
+}
     }
 
-    function updateProgressSteps() {
-        const step1Fields = ['fullName', 'department', 'phone'];
-        const step2Fields = ['courseName', 'startDate', 'endDate', 'meetingRoom', 'attendees'];
-        const accommodationChecked = document.querySelector('input[name="accommodation"]:checked') !== null;
-
-        const step1Complete = step1Fields.every(field => document.getElementById(field).value.trim() !== '');
-        const step2Complete = step2Fields.every(field => document.getElementById(field).value.trim() !== '') && accommodationChecked;
-
-        const step1El = document.getElementById('step1');
-        const step2El = document.getElementById('step2');
-        const step3El = document.getElementById('step3');
-
-        step1El.classList.toggle('completed', step1Complete);
-        step1El.classList.toggle('active', !step1Complete);
-
-        if (step1Complete) {
-            step2El.classList.add('active');
-            step2El.classList.toggle('completed', step2Complete);
-        } else {
-            step2El.classList.remove('active', 'completed');
-        }
-
-        if (step2Complete) {
-            step3El.classList.add('active');
-        } else {
-            step3El.classList.remove('active');
-        }
+    // Update progress bar
+    function updateProgress() {
+        const formInputs = document.querySelectorAll('input[required]');
+        const filledInputs = Array.from(formInputs).filter(input => {
+            if (input.type === 'radio') {
+                return document.querySelector(`input[name="${input.name}"]:checked`) !== null;
+            }
+            return input.value.trim() !== '';
+        });
+        const progress = (filledInputs.length / formInputs.length) * 100;
+        progressFill.style.width = `${progress}%`;
     }
 
+    // Check meeting room availability
     async function checkMeetingRoomAvailability() {
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
         if (!startDate || !endDate) {
             updateCustomMeetingRoomSelect([]);
-            return;
+	return;
         }
         try {
             const checkUrl = `${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${startDate}&endDate=${endDate}`;
-            const response = await fetch(checkUrl);
+	    const response = await fetch(checkUrl);
             const result = await response.json();
-            if (result.error) { throw new Error(result.error); }
+	if (result.error) { throw new Error(result.error); }
             roomData = result.rooms || [];
             updateCustomMeetingRoomSelect(roomData);
-        } catch (error) {
+	} catch (error) {
             console.error('Meeting room availability check error:', error);
             updateCustomMeetingRoomSelect([]);
-        }
+	}
     }
 
+    // NEW: Update custom meeting room select
     function updateCustomMeetingRoomSelect(rooms) {
         meetingRoomOptions.innerHTML = '';
         if (rooms.length === 0) {
             customMeetingRoomSelect.querySelector('span').textContent = 'กรุณาเลือกวันที่';
-            customMeetingRoomSelect.querySelector('span').style.color = 'var(--text-light)';
             return;
         }
 
@@ -1178,10 +870,9 @@
             optionEl.innerHTML = `
                 <div class="option-details">
                     <span class="option-name">${room.name}</span>
-                    <span class="option-capacity"><i class="fas fa-users me-1"></i>${room.capacity} คน</span>
+                    <span class="option-capacity">ความจุ: ${room.capacity} คน</span>
                 </div>
                 <span class="status-badge ${room.isAvailable ? 'status-available' : 'status-unavailable'}">
-                    <i class="fas ${room.isAvailable ? 'fa-check-circle' : 'fa-times-circle'}"></i>
                     ${room.isAvailable ? 'ว่าง' : 'ไม่ว่าง'}
                 </span>
             `;
@@ -1191,28 +882,30 @@
             } else {
                 optionEl.addEventListener('click', () => {
                     customMeetingRoomSelect.querySelector('span').textContent = room.name;
-                    customMeetingRoomSelect.querySelector('span').style.color = 'var(--text-primary)';
                     hiddenMeetingRoomInput.value = room.name;
                     meetingRoomOptions.classList.remove('show');
                     customMeetingRoomSelect.classList.remove('open');
+                    
+                    // Trigger change event for validation and progress update
                     hiddenMeetingRoomInput.dispatchEvent(new Event('change'));
                 });
             }
             meetingRoomOptions.appendChild(optionEl);
         });
 
+        // Clear selection if selected room becomes unavailable
         const selectedRoomValue = hiddenMeetingRoomInput.value;
         if (selectedRoomValue) {
             const selectedRoomData = rooms.find(r => r.name === selectedRoomValue);
             if (!selectedRoomData || !selectedRoomData.isAvailable) {
                 hiddenMeetingRoomInput.value = '';
-                customMeetingRoomSelect.querySelector('span').textContent = 'กรุณาเลือกห้องประชุม';
-                customMeetingRoomSelect.querySelector('span').style.color = 'var(--text-light)';
-                updateProgressSteps();
+                customMeetingRoomSelect.querySelector('span').textContent = '-- เลือกห้องประชุม --';
+                updateProgress();
             }
         }
     }
 
+    // Check accommodation availability
     async function checkAccommodation() {
         clearTimeout(checkTimeout);
         checkTimeout = setTimeout(async () => {
@@ -1223,77 +916,61 @@
 
             if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
                 accommodationStatusDiv.innerHTML = '';
-                accommodationStatusDiv.style.display = 'none';
-                accommodationAvailable = true;
-                return;
+		accommodationStatusDiv.style.display = 'none';
+                accommodationAvailable = true; return;
             }
             if (!startDate || !endDate) {
-                accommodationAvailable = true;
-                return;
+		accommodationAvailable = true; return;
             }
 
             accommodationStatusDiv.style.display = 'block';
-            accommodationStatusDiv.innerHTML = `<div class="alert alert-info-custom"><i class="fas fa-spinner fa-spin me-2"></i>กำลังตรวจสอบห้องว่าง...</div>`;
+	    accommodationStatusDiv.innerHTML = `<div class="alert alert-info-custom"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...</div>`;
             
             try {
-                const startDateObj = new Date(startDate);
-                const endDateObj = new Date(endDate);
+		const startDateObj = new Date(startDate);
+		const endDateObj = new Date(endDate);
                 const checkin = new Date(startDateObj);
                 checkin.setDate(startDateObj.getDate() - 1);
                 const checkout = new Date(endDateObj);
-                checkout.setDate(endDateObj.getDate() - 1);
+		checkout.setDate(endDateObj.getDate() - 1);
                 const checkinStr = checkin.toISOString().split('T')[0];
                 const checkoutStr = checkout.toISOString().split('T')[0];
 
                 const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${checkoutStr}`;
                 const response = await fetch(checkUrl);
-                const result = await response.json();
-                if (result.error) { throw new Error(result.error); }
+		const result = await response.json();
+		if (result.error) { throw new Error(result.error); }
 
                 const available = result.availableRooms;
-                const requiredRooms = Math.ceil(attendees / 2);
-                const nights = Math.max(1, Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24)) + 1);
+		const requiredRooms = Math.ceil(attendees / 2);
+		const nights = Math.max(1, Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24)) + 1);
 
                 if (available > 0 && (attendees === 0 || available >= requiredRooms)) {
                     accommodationAvailable = true;
-                    let statusHtml = `<div class="alert alert-success-custom"><i class="fas fa-check-circle me-2"></i>มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก`;
-                    if (attendees > 0) {
-                        statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`;
-                    }
+		let statusHtml = `<div class="alert alert-success-custom"><i class="fas fa-check-circle"></i> มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก`;
+		if (attendees > 0) { statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`; }
                     statusHtml += `</div>`;
-                    statusHtml += `
+		    statusHtml += `
                         <div class="accommodation-info">
-                            <h6><i class="fas fa-info-circle"></i>ข้อมูลการเข้าพัก</h6>
-                            <div class="accommodation-detail">
-                                <span class="accommodation-label">วันเข้าพัก:</span>
-                                <span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span>
-                            </div>
-                            <div class="accommodation-detail">
-                                <span class="accommodation-label">วันออกจากที่พัก:</span>
-                                <span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}</span>
-                            </div>
-                            <div class="accommodation-detail">
-                                <span class="accommodation-label">จำนวนคืน:</span>
-                                <span class="accommodation-value">${nights} คืน</span>
-                            </div>
+                            <h6><i class="fas fa-info-circle me-2"></i>ข้อมูลการเข้าพัก</h6>
+                            <div class="accommodation-detail"><span class="accommodation-label">วันเข้าพัก:</span><span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span></div>
+			    <div class="accommodation-detail"><span class="accommodation-label">วันออกจากที่พัก:</span><span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}			</span></div>
+                            <div class="accommodation-detail"><span class="accommodation-label">จำนวนคืน:</span><span class="accommodation-value">${nights} คืน</span></div>
                         </div>`;
-                    accommodationStatusDiv.innerHTML = statusHtml;
+		    accommodationStatusDiv.innerHTML = statusHtml;
                 } else {
                     accommodationAvailable = false;
-                    accommodationStatusDiv.innerHTML = `
-                        <div class="alert alert-danger-custom"><i class="fas fa-times-circle me-2"></i>ห้องพักไม่เพียงพอสำหรับการจอง<br><small>มีห้องว่าง ${available} ห้อง แต่ต้องการ ${requiredRooms} ห้อง</small></div>
-                        <div class="unavailable-message">
-                            <h6><i class="fas fa-exclamation-triangle"></i>ไม่สามารถจองได้</h6>
-                            <p class="mb-0">กรุณาเปลี่ยนช่วงเวลา หรือลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก</p>
-                        </div>`;
-                }
+		    accommodationStatusDiv.innerHTML = `
+                        <div class="alert alert-danger-custom"><i class="fas fa-times-circle"></i> ห้องพักไม่เพียงพอสำหรับการจอง<br><small>มีห้องว่าง ${available} ห้อง แต่ต้องการ ${requiredRooms} ห้อง</small></div>
+			<div class="unavailable-message"><h6><i class="fas fa-exclamation-triangle me-2"></i>ไม่สามารถจองได้</h6><p class="mb-0">กรุณาเปลี่ยนช่วงเวลา หรือลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก</p></div>`;
+}
             } catch (error) {
                 console.error('Accommodation availability check error:', error);
-                accommodationAvailable = true;
-                accommodationStatusDiv.innerHTML = `<div class="alert alert-warning-custom"><i class="fas fa-exclamation-circle me-2"></i>ไม่สามารถตรวจสอบห้องว่างได้</div>`;
-            }
+		accommodationAvailable = true;
+                accommodationStatusDiv.innerHTML = `<div class="alert alert-warning-custom"><i class="fas fa-exclamation-circle"></i> ไม่สามารถตรวจสอบห้องว่างได้</div>`;
+}
         }, 500);
-    }
+}
     
     document.querySelectorAll('.radio-card').forEach(card => {
         card.addEventListener('click', function() {
@@ -1301,28 +978,20 @@
             this.classList.add('active');
             const radio = this.querySelector('input[type="radio"]');
             radio.checked = true;
-            radio.dispatchEvent(new Event('change'));
-            updateProgressSteps();
+	    radio.dispatchEvent(new Event('change'));
+            updateProgress();
         });
     });
 
     document.querySelectorAll('input, select').forEach(input => {
-        input.addEventListener('input', updateProgressSteps);
-        input.addEventListener('change', updateProgressSteps);
+        input.addEventListener('input', updateProgress);
+        input.addEventListener('change', updateProgress);
     });
 
-    document.getElementById('startDate').addEventListener('change', () => {
-        checkMeetingRoomAvailability();
-        checkAccommodation();
-    });
-    document.getElementById('endDate').addEventListener('change', () => {
-        checkMeetingRoomAvailability();
-        checkAccommodation();
-    });
+    document.getElementById('startDate').addEventListener('change', () => { checkMeetingRoomAvailability(); checkAccommodation(); });
+    document.getElementById('endDate').addEventListener('change', () => { checkMeetingRoomAvailability(); checkAccommodation(); });
     document.getElementById('attendees').addEventListener('input', checkAccommodation);
-    document.querySelectorAll('input[name="accommodation"]').forEach(radio => 
-        radio.addEventListener('change', checkAccommodation)
-    );
+    document.querySelectorAll('input[name="accommodation"]').forEach(radio => radio.addEventListener('change', checkAccommodation));
 
     customMeetingRoomSelect.addEventListener('click', () => {
         meetingRoomOptions.classList.toggle('show');
@@ -1336,6 +1005,7 @@
         }
     });
 
+    // Validation Listeners
     function validateRoomCapacity() {
         const selectedRoomName = hiddenMeetingRoomInput.value;
         const attendees = parseInt(document.getElementById('attendees').value) || 0;
@@ -1349,117 +1019,83 @@
     hiddenMeetingRoomInput.addEventListener('change', validateRoomCapacity);
     document.getElementById('attendees').addEventListener('input', validateRoomCapacity);
 
-    bookingForm.addEventListener('submit', async function(event) {
-    event.preventDefault();
-    const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
-    if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
-        await Swal.fire({
-            title: 'ที่พักไม่เพียงพอ!',
-            text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา ลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก',
-            icon: 'error', 
-            confirmButtonText: 'ตกลง'
-        });
-        return;
-    }
+    // Form submission
+        bookingForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
+        if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
+            await Swal.fire({ title: 'ที่พักไม่เพียงพอ!', text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา ลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก', icon: 'error', confirmButtonText: 'ตกลง' });
+            return;
+        }
 
-    const selectedRoomName = hiddenMeetingRoomInput.value;
-    const attendees = parseInt(document.getElementById('attendees').value) || 0;
-    const roomConfig = roomData.find(r => r.name === selectedRoomName);
+        const selectedRoomName = hiddenMeetingRoomInput.value;
+        const attendees = parseInt(document.getElementById('attendees').value) || 0;
+        const roomConfig = roomData.find(r => r.name === selectedRoomName);
 
-    if (roomConfig && attendees > roomConfig.capacity) { 
-        await Swal.fire({
-            title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!',
-            text: `ห้อง ${selectedRoomName} รองรับได้ ${roomConfig.capacity} คน แต่มีผู้เข้าร่วม ${attendees} คน`,
-            icon: 'error',
-            confirmButtonText: 'ตกลง'
-        });
-        return;
-    }
+        if (roomConfig && attendees > roomConfig.capacity) {
+            await Swal.fire({ title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!', text: `ห้อง ${selectedRoomName} รองรับได้ ${roomConfig.capacity} คน แต่มีผู้เข้าร่วม ${attendees} คน`, icon: 'error', 	    	    confirmButtonText: 'ตกลง' });
+            return;
+        }
+        if (roomConfig && !roomConfig.isAvailable) {
+            await Swal.fire({ title: 'ห้องประชุมไม่ว่าง!', text: 'ห้องประชุมที่คุณเลือกไม่ว่างในช่วงเวลาที่กำหนด กรุณาเลือกห้องอื่น', icon: 'error', confirmButtonText: 'ตกลง' });
+            return;
+        }
 
-    if (roomConfig && !roomConfig.isAvailable) {
-        await Swal.fire({
-            title: 'ห้องประชุมไม่ว่าง!',
-            text: 'ห้องประชุมที่คุณเลือกไม่ว่างในช่วงเวลาที่กำหนด กรุณาเลือกห้องอื่น',
-            icon: 'error',
-            confirmButtonText: 'ตกลง'
-        });
-        return;
-    }
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
+	mainContent.style.display = 'none';
+        loadingDiv.classList.add('show');
 
-    submitBtn.disabled = true; 
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...'; 
-    mainContent.style.display = 'none'; 
-    loadingDiv.classList.add('show'); 
+        const formData = new FormData(event.target);
+        const data = {
+            userId: userId, displayName: displayName,
+            fullName: formData.get('fullName'), department: formData.get('department'),
+            phone: formData.get('phone'), courseName: formData.get('courseName'),
+	    startDate: formData.get('startDate'), endDate: formData.get('endDate'),
+            meetingRoom: formData.get('meetingRoom'), accommodation: formData.get('accommodation'),
+            attendees: formData.get('attendees'), timestamp: new Date().toISOString()
+        };
+	try {
+            await fetch(GAS_WEB_APP_URL, {
+                method: 'POST', mode: 'no-cors', cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(data), redirect: 'follow'
+            });
+	    loadingDiv.classList.remove('show');
+            mainContent.style.display = 'block';
 
-    const formData = new FormData(event.target);
-    const data = {
-        userId: userId,
-        displayName: displayName,
-        fullName: formData.get('fullName'),
-        department: formData.get('department'),
-        phone: formData.get('phone'),
-        courseName: formData.get('courseName'),
-        startDate: formData.get('startDate'), 
-        endDate: formData.get('endDate'), 
-        meetingRoom: formData.get('meetingRoom'), 
-        accommodation: formData.get('accommodation'), 
-        attendees: formData.get('attendees'), 
-        timestamp: new Date().toISOString()
-    };
-    try {
-        await fetch(GAS_WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data), 
-            redirect: 'follow' 
-        });
-        loadingDiv.classList.remove('show'); 
-        mainContent.style.display = 'block'; 
-
-        await Swal.fire({
-            title: 'บันทึกข้อมูลสำเร็จ!',
-            text: 'ระบบได้บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว และจะส่งสรุปให้ทาง LINE',
-            icon: 'success',
-            confirmButtonText: 'ตกลง', 
-            allowOutsideClick: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                if (liff.isInClient()) {
-                    liff.closeWindow();
-                } else { 
-                    window.close();
+            await Swal.fire({
+                title: 'บันทึกข้อมูลสำเร็จ!',
+		text: 'ระบบได้บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว และจะส่งสรุปให้ทาง LINE',
+                icon: 'success',
+		showConfirmButton: true, confirmButtonText: 'ตกลง', allowOutsideClick: false,
+                customClass: { popup: 'bounce-in' }
+	    }).then((result) => {
+                if (result.isConfirmed) {
+                    if (liff.isInClient()) { liff.closeWindow(); } 
+                    else { window.close(); }
                 }
-            }
-        });
-
-    } catch (error) { 
-        console.error('Submit error:', error); 
-        loadingDiv.classList.remove('show');
-        mainContent.style.display = 'block';
-        await Swal.fire({
-            title: 'เกิดข้อผิดพลาด!',
-            text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
-            icon: 'error', 
-            confirmButtonText: 'ลองอีกครั้ง', 
-            confirmButtonColor: '#dc3545'
-        });
-        submitBtn.disabled = false; 
-        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
-    }
-});
+            });
+	} catch (error) {
+            console.error('Submit error:', error);
+            loadingDiv.classList.remove('show');
+	    mainContent.style.display = 'block';
+            await Swal.fire({ title: 'เกิดข้อผิดพลาด!', text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง', icon: 'error', confirmButtonText: 'ลองอีกครั้ง', confirmButtonColor: '#dc3545' });
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
+        }
+    });
     
-    document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('startDate').setAttribute('min', today);
         document.getElementById('startDate').addEventListener('change', function() {
-            document.getElementById('endDate').setAttribute('min', this.value);
+        document.getElementById('endDate').setAttribute('min', this.value);
         });
-        updateProgressSteps();
+        updateProgress();
     });
 
-    initializeLiff();
+initializeLiff();
 </script>
 </body>
 </html>
