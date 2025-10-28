@@ -1417,37 +1417,25 @@
                 redirect: 'follow'
             });
 
-            loadingDiv.classList.remove('show');
-            mainContent.style.display = 'block';
-
-            await Swal.fire({
-                title: 'บันทึกข้อมูลสำเร็จ!',
-                html: `
-                    <div class="text-start mt-3" style="background: var(--background); padding: 1.5rem; border-radius: 16px;">
-                        <p style="margin-bottom: 0.75rem;"><i class="fas fa-user me-2" style="color: var(--primary-color);"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
-                        <p style="margin-bottom: 0.75rem;"><i class="fas fa-building me-2" style="color: var(--primary-color);"></i><strong>สังกัด/ชื่อหน่วยงาน:</strong> ${data.department}</p>
-                        <p style="margin-bottom: 0.75rem;"><i class="fas fa-book me-2" style="color: var(--primary-color);"></i><strong>ชื่อหลักสูตร/หัวข้อประชุม:</strong> ${data.courseName}</p>
-                        <p style="margin-bottom: 0.75rem;"><i class="fas fa-calendar me-2" style="color: var(--primary-color);"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
-                        <p style="margin-bottom: 0.75rem;"><i class="fas fa-door-open me-2" style="color: var(--primary-color);"></i><strong>ห้องประชุม:</strong> ${data.meetingRoom}</p>
-                        <p style="margin-bottom: 0.75rem;"><i class="fas fa-users me-2" style="color: var(--primary-color);"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
-                        <p style="margin-bottom: 0;"><i class="fas fa-bed me-2" style="color: var(--primary-color);"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
-                    </div>
-                    <div class="alert alert-success mt-3" role="alert" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05)); border: none; border-radius: 12px;">
-                        <i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว
-                    </div>`,
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonText: 'ตกลง',
-                allowOutsideClick: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    if (liff.isInClient()) {
-                        liff.closeWindow();
-                    } else {
+            setTimeout(() => {
+                if (liff.isInClient()) {
+                    liff.closeWindow();
+                } else {
+                    // สำหรับการเปิดใน browser
+                    loadingDiv.classList.remove('show');
+                    mainContent.style.display = 'block';
+                    Swal.fire({
+                        title: 'บันทึกข้อมูลสำเร็จ!',
+                        text: 'ระบบได้บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว และจะส่งสรุปข้อมูลการจองให้ทาง LINE',
+                        icon: 'success',
+                        confirmButtonText: 'ตกลง',
+                        timer: 3000
+                    }).then(() => {
                         window.close();
-                    }
+                    });
                 }
-            });
+            }, 1000);
+    
         } catch (error) {
             console.error('Submit error:', error);
             loadingDiv.classList.remove('show');
