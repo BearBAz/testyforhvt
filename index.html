@@ -1406,7 +1406,10 @@
             attendees: formData.get('attendees'),
             timestamp: new Date().toISOString()
         };
-
+        
+        loadingDiv.classList.remove('show');
+        mainContent.style.display = 'block';
+        
         try {
             await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
