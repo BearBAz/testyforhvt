@@ -1417,24 +1417,21 @@
                 redirect: 'follow'
             });
 
-            setTimeout(() => {
+            await Swal.fire({
+            title: 'บันทึกข้อมูลสำเร็จ!',
+            text: 'ระบบได้บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว และจะส่งข้อมูลการจองให้ทาง LINE',
+            icon: 'success',
+            confirmButtonText: 'ตกลง',
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
                 if (liff.isInClient()) {
                     liff.closeWindow();
                 } else {
-                    // สำหรับการเปิดใน browser
-                    loadingDiv.classList.remove('show');
-                    mainContent.style.display = 'block';
-                    Swal.fire({
-                        title: 'บันทึกข้อมูลสำเร็จ!',
-                        text: 'ระบบได้บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว และจะส่งสรุปข้อมูลการจองให้ทาง LINE',
-                        icon: 'success',
-                        confirmButtonText: 'ตกลง',
-                        timer: 3000
-                    }).then(() => {
-                        window.close();
-                    });
+                    window.close();
                 }
-            }, 1000);
+            }
+        });
     
         } catch (error) {
             console.error('Submit error:', error);
