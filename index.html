@@ -990,10 +990,11 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
+						<div class="mb-3">
                             <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
                             <input type="number" class="form-control" id="attendees" name="attendees" 
-                                   placeholder="กรุณากรอกจำนวนผู้เข้าร่วม" required min="1">
+                                   placeholder="กรุณากรอกจำนวนผู้เข้าร่วม" required min="1"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         
                         <div class="mb-3">
@@ -1018,7 +1019,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="accommodationStatus" style="display: none;"></div>
+                            <div id="accommodationStatus" style="display: none;" class="mt-3"></div>
                         </div>
                     </div>
 
@@ -1336,19 +1337,6 @@
             customMeetingRoomSelect.classList.remove('open');
         }
     });
-
-    function validateRoomCapacity() {
-        const selectedRoomName = hiddenMeetingRoomInput.value;
-        const attendees = parseInt(document.getElementById('attendees').value) || 0;
-        if (selectedRoomName && attendees > 0 && roomData.length > 0) {
-            const roomConfig = roomData.find(r => r.name === selectedRoomName);
-            if (roomConfig && attendees > roomConfig.capacity) {
-                showMessage(`ห้องที่เลือกรองรับได้เพียง ${roomConfig.capacity} คน แต่คุณมีผู้เข้าร่วม ${attendees} คน กรุณาเลือกห้องอื่น`, 'warning');
-            }
-        }
-    }
-    hiddenMeetingRoomInput.addEventListener('change', validateRoomCapacity);
-    document.getElementById('attendees').addEventListener('input', validateRoomCapacity);
 
     bookingForm.addEventListener('submit', async function(event) {
         event.preventDefault();
