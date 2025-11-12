@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ยืนยันการจองห้องประชุม ศฝฟ.</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+    :root {
+        --primary-color: #00B900;
+        --primary-dark: #009900;
+        --secondary-color: #06C755;
+        --accent-color: #FFB800;
+        --success-color: #22c55e;
+        --danger-color: #FF334B;
+        --warning-color: #FFB800;
+        --background: #F8F9FA;
+        --card-bg: #FFFFFF;
+        --text-primary: #1A1A1A;
+        --text-secondary: #6B7280;
+        --text-light: #9CA3AF;
+        --border-color: #E5E7EB;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--background);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .app-container {
+        max-width: 480px;
+        margin: 0 auto;
+        background: var(--background);
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* Modern Header with Glassmorphism */
+    .app-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 2rem 1.5rem 4rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0 0 30px 30px;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .app-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .app-header::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        animation: float 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(30px, -30px) rotate(120deg); }
+        66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .header-icon {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        animation: bounce-subtle 2s ease-in-out infinite;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-icon i {
+        font-size: 2rem;
+        color: #ffffff;
+    }
+
+    @keyframes bounce-subtle {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .header-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+    }
+
+    .header-subtitle {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 400;
+    }
+
+    .form-section {
+        padding: 0 1rem 2rem;
+        margin-top: -2.5rem;
+        position: relative;
+        z-index: 3;
+    }
+
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-steps::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(0, 185, 0, 0.02), rgba(6, 199, 85, 0.02));
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .progress-steps.has-progress::before {
+        opacity: 1;
+    }
+
+    .progress-line-container {
+        position: absolute;
+        top: 50%;
+        left: 10%;
+        right: 10%;
+        height: 4px;
+        transform: translateY(-50%);
+        z-index: 0;
+    }
+
+    .progress-line-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--border-color);
+        border-radius: 10px;
+    }
+
+    .progress-line-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 10px;
+        width: 0%;
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 10px rgba(0, 185, 0, 0.3);
+    }
+
+    .progress-line-fill::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 12px;
+        height: 12px;
+        background: var(--secondary-color);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+        box-shadow: 0 0 0 4px rgba(6, 199, 85, 0.2);
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 0 0 4px rgba(6, 199, 85, 0.2);
+        }
+        50% {
+            box-shadow: 0 0 0 8px rgba(6, 199, 85, 0.1);
+        }
+    }
+
+    .step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .step-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--background);
+        border: 3px solid var(--border-color);
+        color: var(--text-light);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        position: relative;
+        margin-bottom: 0.75rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .step-circle i {
+        font-size: 1.2rem;
+        opacity: 0;
+        position: absolute;
+        transition: all 0.3s ease;
+    }
+
+    .step-circle span {
+        transition: all 0.3s ease;
+    }
+
+    .step.active .step-circle {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-color: var(--primary-color);
+        color: white;
+        transform: scale(1.15);
+        box-shadow: 0 0 0 6px rgba(0, 185, 0, 0.15), 0 4px 12px rgba(0, 185, 0, 0.3);
+        animation: bounce-in-step 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes bounce-in-step {
+        0% {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1.15);
+            opacity: 1;
+        }
+    }
+
+    .step.completed .step-circle {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+        box-shadow: 0 2px 8px rgba(0, 185, 0, 0.3);
+        animation: check-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes check-pop {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.2) rotate(5deg);
+        }
+        100% {
+            transform: scale(1) rotate(0deg);
+        }
+    }
+
+    .step.completed .step-circle span {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    .step.completed .step-circle i {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+
+    .step-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        line-height: 1.3;
+    }
+
+    .step.active .step-label {
+        color: var(--primary-color);
+        font-weight: 700;
+        transform: scale(1.05);
+    }
+
+    .step.completed .step-label {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .step-sublabel {
+        font-size: 0.65rem;
+        color: var(--text-light);
+        margin-top: 0.15rem;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .step.active .step-sublabel {
+        opacity: 1;
+        color: var(--secondary-color);
+    }
+
+    .step.completed .step-sublabel {
+        opacity: 0.7;
+        color: var(--success-color);
+    }
+
+    .form-card {
+        background: var(--card-bg);
+        border-radius: 24px;
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+    }
+
+    .form-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-card-title i {
+        color: var(--primary-color);
+        font-size: 1.25rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .required::after {
+        content: '*';
+        color: var(--danger-color);
+        margin-left: 0.25rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid var(--border-color);
+        border-radius: 14px;
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        font-family: 'Sarabun', sans-serif;
+        transition: all 0.2s ease;
+        background: var(--card-bg);
+        color: var(--text-primary);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
+        outline: none;
+    }
+
+    .form-control::placeholder {
+        color: var(--text-light);
+    }
+
+    .radio-card {
+        background: var(--card-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.25rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .radio-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .radio-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .radio-card.active {
+        border-color: var(--primary-color);
+        background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.05));
+        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
+    }
+
+    .radio-card.active::before {
+        opacity: 0.05;
+    }
+
+    .radio-card input[type="radio"] {
+        display: none;
+    }
+
+    .radio-card .radio-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .radio-card.active .radio-icon {
+        color: var(--primary-color);
+        transform: scale(1.1);
+    }
+
+    .radio-card-text {
+        font-weight: 600;
+        color: var(--text-primary);
+        position: relative;
+        z-index: 1;
+    }
+
+    .custom-select-container {
+        position: relative;
+    }
+
+    .custom-select-selected {
+        background: var(--card-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 14px;
+        padding: 0.875rem 1rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+        min-height: 52px;
+    }
+
+    .custom-select-selected:hover {
+        border-color: var(--primary-color);
+    }
+
+    .custom-select-selected.open {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
+    }
+
+    .custom-select-selected::after {
+        content: '\f078';
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        color: var(--text-secondary);
+        transition: transform 0.3s ease;
+    }
+
+    .custom-select-selected.open::after {
+        transform: rotate(180deg);
+        color: var(--primary-color);
+    }
+
+    .custom-select-options {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        box-shadow: var(--shadow-xl);
+        z-index: 100;
+        max-height: 280px;
+        overflow-y: auto;
+        padding: 0.5rem;
+        list-style: none;
+        animation: dropdownSlide 0.3s ease;
+    }
+
+    @keyframes dropdownSlide {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .custom-select-options.show {
+        display: block;
+    }
+
+    .custom-select-option {
+        padding: 1rem;
+        cursor: pointer;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+        margin-bottom: 0.25rem;
+    }
+
+    .custom-select-option:hover {
+        background: rgba(0, 185, 0, 0.05);
+    }
+
+    .custom-select-option.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: var(--background);
+    }
+
+    .option-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .option-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    .option-capacity {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .status-available {
+        background: rgba(34, 197, 94, 0.1);
+        color: var(--success-color);
+    }
+
+    .status-unavailable {
+        background: rgba(255, 51, 75, 0.1);
+        color: var(--danger-color);
+    }
+
+    .btn-primary-custom {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        border-radius: 16px;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 185, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary-custom::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-primary-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 185, 0, 0.4);
+    }
+
+    .btn-primary-custom:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary-custom:active {
+        transform: translateY(0);
+    }
+
+    .btn-primary-custom:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .accommodation-info {
+        background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.05));
+        border: 2px solid rgba(0, 185, 0, 0.2);
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-top: 1.5rem;
+        animation: slideUp 0.5s ease;
+    }
+
+    .accommodation-info h6 {
+        color: var(--primary-color);
+        margin-bottom: 1.25rem;
+	font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .accommodation-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        background: white;
+        border-radius: 12px;
+        font-size: 0.95rem;
+    }
+
+    .accommodation-detail:last-child {
+        margin-bottom: 0;
+    }
+
+    .accommodation-label {
+        color: var(--text-secondary);
+    }
+
+    .accommodation-value {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .unavailable-message {
+        background: linear-gradient(135deg, rgba(255, 51, 75, 0.05), rgba(255, 51, 75, 0.1));
+        border: 2px solid rgba(255, 51, 75, 0.2);
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-top: 1.5rem;
+    }
+
+    .unavailable-message h6 {
+        color: var(--danger-color);
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        backdrop-filter: blur(10px);
+    }
+
+    .loading-overlay.show {
+        display: flex;
+    }
+
+    .loading-content {
+        text-align: center;
+    }
+
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(0, 185, 0, 0.1);
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1.5rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        font-size: 1.1rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .alert-custom {
+        border: none;
+        border-radius: 14px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+        border-left: 4px solid;
+        animation: slideUp 0.3s ease;
+    }
+
+    .alert-success-custom {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+        color: var(--success-color);
+        border-color: var(--success-color);
+    }
+
+    .alert-danger-custom {
+        background: linear-gradient(135deg, rgba(255, 51, 75, 0.1), rgba(255, 51, 75, 0.05));
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+    }
+
+    .alert-warning-custom {
+        background: linear-gradient(135deg, rgba(255, 184, 0, 0.1), rgba(255, 184, 0, 0.05));
+        color: var(--warning-color);
+        border-color: var(--warning-color);
+    }
+
+    .alert-info-custom {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+        color: #3B82F6;
+        border-color: #3B82F6;
+    }
+
+    .date-range-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    @media (max-width: 576px) {
+        .app-container {
+            max-width: 100%;
+        }
+        
+        .app-header {
+            padding: 1.5rem 1rem 3rem;
+            border-radius: 0 0 24px 24px;
+        }
+        
+        .header-title {
+            font-size: 1.5rem;
+        }
+        
+        .form-section {
+            padding: 0 0.75rem 1.5rem;
+        }
+        
+        .form-card {
+            padding: 1.25rem;
+        }
+        
+        .progress-steps {
+            padding: 1rem;
+        }
+        
+        .step-label {
+            font-size: 0.7rem;
+        }
+    }
+
+    .swal2-popup {
+        font-family: 'Sarabun', sans-serif !important;
+        border-radius: 24px !important;
+        padding: 2rem !important;
+    }
+
+    .swal2-title {
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+    }
+
+    .swal2-confirm {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+        border: none !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 2rem !important;
+        font-weight: 600 !important;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--background);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--text-light);
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-secondary);
+    }
+
+        #confirmationCard {
+            display: none; /* ซ่อนฟอร์มหลักไว้ก่อน */
+        }
+        .form-check-label {
+            font-weight: 500;
+        }
+        .form-text {
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="app-header">
+            <div class="header-content">
+                <div class="header-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h1 class="header-title">ยืนยันการจองห้องประชุม</h1>
+                <p class="header-subtitle">ศูนย์ศึกปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
+            </div>
+        </div>
+
+        <div id="mainContent">
+            <div class="form-section">
+
+                <div class="form-card" id="lookupCard">
+                    <h3 class="form-card-title">
+                        <i class="fas fa-search"></i>
+                        ค้นหาการจองของคุณ
+                    </h3>
+                    <form id="lookupForm">
+                        <div class="mb-3">
+                            <label for="bookingId" class="form-label required">Booking ID</label>
+                            <input type="text" class="form-control" id="bookingId" placeholder="เช่น HVT-1234" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary-custom btn-lg">
+                                <i class="fas fa-search me-2"></i>ค้นหา
+                            </button>
+                        </div>
+                    </form>
+                    <div id="lookupMessageContainer" class="mt-3"></div>
+                </div>
+
+                <form id="confirmationForm" style="display: none;">
+                    <input type="hidden" id="bookingId_confirm" name="bookingId_confirm">
+                    
+                    <div class="form-card">
+                        <h3 class="form-card-title">
+                            <i class="fas fa-user-circle"></i>
+                            ข้อมูลผู้จอง (ตรวจสอบและแก้ไขได้)
+                        </h3>
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
+                            <input type="text" class="form-control" id="department" name="department" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseName" class="form-label required">ชื่อหลักสูตร/หัวข้อประชุม</label>
+                            <input type="text" class="form-control" id="courseName" name="courseName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <h3 class="form-card-title">
+                            <i class="fas fa-calendar-alt"></i>
+                            ข้อมูลการจอง (ตรวจสอบและแก้ไขได้)
+                        </h3>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label for="startDate" class="form-label required">1. วันที่อบรม</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="endDate" class="form-label required">วันที่สิ้นสุด</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label for="checkin" class="form-label">2. วันที่เข้าพัก</label>
+                                <input type="date" class="form-control" id="checkin" name="checkin">
+                            </div>
+                            <div class="col-6">
+                                <label for="checkout" class="form-label">วันที่สิ้นสุด</label>
+                                <input type="date" class="form-control" id="checkout" name="checkout">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="attendees" class="form-label required">4. จำนวนผู้เข้าอบรม</label>
+                            <input type="number" class="form-control" id="attendees" name="attendees" min="1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <h3 class="form-card-title">
+                            <i class="fas fa-bed"></i>
+                            5. ห้องพัก
+                        </h3>
+                        <div class="mb-3">
+                            <label for="standardRooms" class="form-label">ห้อง Standard (จำนวนห้อง)</label>
+                            <input type="number" class="form-control" id="standardRooms" name="standardRooms" min="0" placeholder="กรอกจำนวนห้อง">
+                        </div>
+                        <div class="mb-3">
+                            <label for="vipRooms" class="form-label">ห้อง VIP (จำนวนห้อง)</label>
+                            <input type="number" class="form-control" id="vipRooms" name="vipRooms" min="0" placeholder="กรอกจำนวนห้อง">
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <h3 class="form-card-title">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            6. รูปแบบการจัดห้องประชุม
+                        </h3>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="roomSetup" id="setupClassroom" value="Classroom" required>
+                            <label class="form-check-label" for="setupClassroom">
+                                โต๊ะเรียน (Classroom)
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="roomSetup" id="setupUShape" value="U-Shape">
+                            <label class="form-check-label" for="setupUShape">
+                                โต๊ะประชุมตัว U
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="roomSetup" id="setupGroup" value="Group">
+                            <label class="form-check-label" for="setupGroup">
+                                จัดโต๊ะแบ่งกลุ่ม
+                            </label>
+                            <input type="number" class="form-control form-control-sm mt-1" id="groupCount" name="groupCount" placeholder="ระบุจำนวนกลุ่ม" min="1">
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="roomSetup" id="setupComputer" value="Computer">
+                            <label class="form-check-label" for="setupComputer">
+                                ห้องคอมพิวเตอร์ (จำนวน 40 เครื่อง)
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="roomSetup" id="setupOther" value="Other">
+                            <label class="form-check-label" for="setupOther">
+                                อื่นๆ
+                            </label>
+                            <input type="text" class="form-control form-control-sm mt-1" id="roomSetupOther" name="roomSetupOther" placeholder="ระบุรายละเอียด">
+                        </div>
+                    </div>
+                    
+                    <div class="form-card">
+                        <h3 class="form-card-title">
+                            <i class="fas fa-desktop"></i>
+                            7. รายการอุปกรณ์ประจำห้องประชุม
+                        </h3>
+                        <p class="form-text text-muted mb-3">
+                            (ศฝฟ. มีอุปกรณ์พื้นฐานให้ คือ ไมค์ลอย 2 ตัว และ Projector 1 ชุด)
+                        </p>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="equipment" value="Flipchart" id="equipFlipchart">
+                            <label class="form-check-label" for="equipFlipchart">
+                                แท่น Flipchart 1 ตัว (ศฝฟ. ไม่มีกระดาษ Flipchart ให้)
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="equipment" value="Podium" id="equipPodium">
+                            <label class="form-check-label" for="equipPodium">
+                                แท่นโพเดียม
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="equipment" value="MeetingMics" id="equipMics">
+                            <label class="form-check-label" for="equipMics">
+                                ชุดไมค์ประชุม
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="equipment" value="TV" id="equipTV">
+                            <label class="form-check-label" for="equipTV">
+                                จอทีวี
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="equipment" value="PowerStrips" id="equipPower">
+                            <label class="form-check-label" for="equipPower">
+                                ปลั๊กพ่วง 5 ชุด
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <label for="equipmentOther" class="form-label">อื่นๆ (ระบุ):</label>
+                            <input type="text" class="form-control" id="equipmentOther" name="equipmentOther">
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <h3 class="form-card-title">
+                            <i class="fas fa-campground"></i>
+                            8. กิจกรรมภาคสนาม
+                        </h3>
+                        <p class="form-text text-danger mb-3">
+                            (ศฝฟ. ไม่มีเต็นท์ให้บริการ หากท่านมีการฝึกอบรมภาคสนาม ขอให้ผู้จัดงานเช่าเต็นท์มาติดตั้งเอง)
+                        </p>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="fieldActivity" value="Speaker" id="fieldSpeaker">
+                            <label class="form-check-label" for="fieldSpeaker">
+                                เครื่องขยายเสียงกลางแจ้งเคลื่อนที่ได้ (1 ชุด)
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="fieldActivity" value="Megaphone" id="fieldMegaphone">
+                            <label class="form-check-label" for="fieldMegaphone">
+                                โทรโข่ง (1 ตัว)
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="fieldActivity" value="Chairs" id="fieldChairs">
+                            <label class="form-check-label" for="fieldChairs">
+                                เก้าอี้พลาสติก
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <label for="fieldActivityOther" class="form-label">อื่นๆ (ระบุ):</label>
+                            <input type="text" class="form-control" id="fieldActivityOther" name="fieldActivityOther">
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <h3 class="form-card-title">
+                            <i class="fas fa-file-upload"></i>
+                            ไฟล์แนบ
+                        </h3>
+                        <div class="mb-3">
+                            <label for="approvalFile" class="form-label required">1. ไฟล์อนุมัติ (PDF)</label>
+                            <input class="form-control" type="file" id="approvalFile" name="approvalFile" accept=".pdf" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="attendeeListFile" class="form-label required">2. รายชื่อผู้เข้าอบรม (Excel)</label>
+                            <input class="form-control" type="file" id="attendeeListFile" name="attendeeListFile" accept=".xls,.xlsx" required>
+                        </div>
+                        <hr>
+                        <h3 class="form-card-title mt-4">
+                            <i class="fas fa-utensils"></i>
+                            แบบฟอร์มจองอาหาร
+                        </h3>
+                        <p class="form-text">
+                            กรุณาดาวน์โหลดแบบฟอร์มและเมนูอาหารด้านล่าง เพื่อกรอกและอัปโหลดไฟล์
+                        </p>
+                        <button type="button" class="btn btn-outline-success w-100 mb-3" data-bs-toggle="modal" data-bs-target="#foodModal">
+                            <i class="fas fa-download me-2"></i>ดาวน์โหลดแบบฟอร์มและเมนูอาหาร
+                        </button>
+                        <div class="mb-3">
+                            <label for="foodOrderFile" class="form-label">3. แบบฟอร์มจองอาหาร (Excel)</label>
+                            <input class="form-control" type="file" id="foodOrderFile" name="foodOrderFile" accept=".xls,.xlsx">
+                        </div>
+                    </div>
+
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
+                            <i class="fas fa-paper-plane me-2"></i>ยืนยันการจอง
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="loading" class="loading-overlay">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" id="loadingText">กำลังค้นหาข้อมูล...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="foodModal" tabindex="-1" aria-labelledby="foodModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 24px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="foodModalLabel">ดาวน์โหลดแบบฟอร์ม</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>กรุณาดาวน์โหลดไฟล์เพื่อกรอกข้อมูลการสั่งอาหาร</p>
+                    <div class="d-grid gap-2">
+                        <a href="URL_TO_YOUR_FOOD_FORM_EXCEL" target="_blank" class="btn btn-success">
+                            <i class="fas fa-file-excel me-2"></i>ดาวน์โหลดแบบฟอร์มจองอาหาร
+                        </a>
+                        <a href="URL_TO_YOUR_MENU_PDF_OR_DOC" target="_blank" class="btn btn-info">
+                            <i class="fas fa-book-open me-2"></i>ดาวน์โหลดเมนูอาหาร
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ----------------------------------------------------
+        // Configuration
+        // ----------------------------------------------------
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySn8uGwcpt3td4gYL8U1QfV5XVA2C-XUjfXksY6G5pt-l_WCGW0Y_OVf1gClRDF2L49A/exec"; // << สำคัญ: ใส่ URL ที่ได้จากการ Deploy ใหม่
+
+        // ----------------------------------------------------
+        // DOM Elements
+        // ----------------------------------------------------
+        const lookupForm = document.getElementById('lookupForm');
+        const confirmationForm = document.getElementById('confirmationForm');
+        const lookupMessageContainer = document.getElementById('lookupMessageContainer');
+        const loadingDiv = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // ----------------------------------------------------
+        // Helper Functions
+        // ----------------------------------------------------
+
+        // ฟังก์ชันแสดงข้อความ (คัดลอกจาก index.html.txt)
+        function showMessage(container, text, type = 'success') {
+            const alertClass = type === 'success' ? 'alert-success-custom' :
+                            type === 'danger' ? 'alert-danger-custom' :
+                            type === 'warning' ? 'alert-warning-custom' : 'alert-info-custom';
+            const icon = type === 'success' ? 'fas fa-check-circle' :
+                        type === 'danger' ? 'fas fa-exclamation-circle' :
+                        type === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle';
+            const messageHtml = `<div class="alert alert-custom ${alertClass}" role="alert"><i class="${icon} me-2"></i>${text}</div>`;
+            container.innerHTML = messageHtml;
+        }
+
+        // ฟังก์ชันแปลงไฟล์เป็น Base64
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ----------------------------------------------------
+        // Event Listeners
+        // ----------------------------------------------------
+
+        // 1. จัดการการค้นหา Booking ID
+        lookupForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            loadingText.textContent = 'กำลังค้นหาข้อมูล...';
+            loadingDiv.classList.add('show');
+            lookupMessageContainer.innerHTML = '';
+
+            const bookingId = document.getElementById('bookingId').value.trim();
+            if (!bookingId) {
+                loadingDiv.classList.remove('show');
+                showMessage(lookupMessageContainer, 'กรุณากรอก Booking ID', 'danger');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${GAS_WEB_APP_URL}?action=getBookingDetails&bookingId=${bookingId}`);
+                const result = await response.json();
+
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+
+                if (result.success && result.data) {
+                    populateForm(result.data);
+                    document.getElementById('lookupCard').style.display = 'none';
+                    confirmationForm.style.display = 'block';
+                    showMessage(lookupMessageContainer, 'พบข้อมูลการจอง กรุณากรอกข้อมูลยืนยัน', 'success');
+                } else {
+                    throw new Error('ไม่พบข้อมูล Booking ID หรือข้อมูลไม่สมบูรณ์');
+                }
+
+            } catch (error) {
+                console.error('Lookup error:', error);
+                showMessage(lookupMessageContainer, error.message, 'danger');
+            } finally {
+                loadingDiv.classList.remove('show');
+            }
+        });
+
+        // 2. จัดการการส่งฟอร์มยืนยัน
+        confirmationForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            loadingText.textContent = 'กำลังส่งข้อมูลยืนยัน...';
+            loadingDiv.classList.add('show');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่ง...';
+
+            try {
+                // 1. รวบรวมข้อมูลไฟล์
+                const approvalFile = document.getElementById('approvalFile').files[0];
+                const attendeeListFile = document.getElementById('attendeeListFile').files[0];
+                const foodOrderFile = document.getElementById('foodOrderFile').files[0];
+
+                const fileData = {};
+                if (approvalFile) {
+                    const base64 = await readFileAsBase64(approvalFile);
+                    fileData.approvalFile = { name: approvalFile.name, type: approvalFile.type, data: base64.split(',')[1] };
+                }
+                if (attendeeListFile) {
+                    const base64 = await readFileAsBase64(attendeeListFile);
+                    fileData.attendeeListFile = { name: attendeeListFile.name, type: attendeeListFile.type, data: base64.split(',')[1] };
+                }
+                if (foodOrderFile) {
+                    const base64 = await readFileAsBase64(foodOrderFile);
+                    fileData.foodOrderFile = { name: foodOrderFile.name, type: foodOrderFile.type, data: base64.split(',')[1] };
+                }
+
+                // 2. รวบรวมข้อมูลฟอร์ม
+                const formData = new FormData(event.target);
+                const data = {
+                    action: 'submitConfirmation',
+                    bookingId: formData.get('bookingId_confirm'),
+                    fullName: formData.get('fullName'),
+                    department: formData.get('department'),
+                    phone: formData.get('phone'),
+                    courseName: formData.get('courseName'),
+                    startDate: formData.get('startDate'),
+                    endDate: formData.get('endDate'),
+                    checkin: formData.get('checkin'),
+                    checkout: formData.get('checkout'),
+                    attendees: formData.get('attendees'),
+                    standardRooms: formData.get('standardRooms'),
+                    vipRooms: formData.get('vipRooms'),
+                    roomSetup: formData.get('roomSetup'),
+                    groupCount: formData.get('groupCount'),
+                    roomSetupOther: formData.get('roomSetupOther'),
+                    equipment: Array.from(formData.getAll('equipment')).join(', '),
+                    equipmentOther: formData.get('equipmentOther'),
+                    fieldActivity: Array.from(formData.getAll('fieldActivity')).join(', '),
+                    fieldActivityOther: formData.get('fieldActivityOther'),
+                    files: fileData
+                };
+
+                // 3. ส่งข้อมูลไปยัง GAS
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    await Swal.fire({
+                        title: 'ส่งข้อมูลสำเร็จ!',
+                        text: 'ระบบได้บันทึกข้อมูลการยืนยันของคุณเรียบร้อยแล้ว',
+                        icon: 'success',
+                        confirmButtonText: 'ตกลง'
+                    });
+                    // ปิดหน้าต่างหรือกลับไปหน้าแรก
+                    window.location.href = "YOUR_THANK_YOU_PAGE_OR_CLOSE_WINDOW";
+                } else {
+                    throw new Error(result.message || 'ไม่สามารถส่งข้อมูลได้');
+                }
+
+            } catch (error) {
+                console.error('Submit error:', error);
+                await Swal.fire({
+                    title: 'เกิดข้อผิดพลาด!',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonText: 'ลองอีกครั้ง'
+                });
+            } finally {
+                loadingDiv.classList.remove('show');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ยืนยันการจอง';
+            }
+        });
+
+        // ----------------------------------------------------
+        // Form Population
+        // ----------------------------------------------------
+        function populateForm(data) {
+            // ข้อมูลผู้จอง
+            document.getElementById('bookingId_confirm').value = data.bookingId || '';
+            document.getElementById('fullName').value = data.fullName || '';
+            document.getElementById('department').value = data.department || '';
+            document.getElementById('phone').value = data.phone ? String(data.phone).replace("'", "") : ''; // เอา ' ออกจากเบอร์โทร
+            document.getElementById('courseName').value = data.courseName || '';
+            
+            // ข้อมูลการจอง
+            document.getElementById('startDate').value = data.startDate || '';
+            document.getElementById('endDate').value = data.endDate || '';
+            document.getElementById('checkin').value = data.checkin || '';
+            document.getElementById('checkout').value = data.checkout || '';
+            document.getElementById('attendees').value = data.attendees || '';
+            
+            // ถ้ามีข้อมูลที่พักอยู่แล้ว (จากฟอร์มเดิม) ให้กรอกค่าเริ่มต้น
+            if (data.accommodation === 'ต้องการ') {
+                document.getElementById('standardRooms').value = data.numRooms || 0;
+            } else {
+                 document.getElementById('checkin').disabled = true;
+                 document.getElementById('checkout').disabled = true;
+            }
+            document.getElementById('vipRooms').value = data.viprooms || 0; // สมมติมีคอลัมน์นี้
+        }
+    </script>
+</body>
+</html>
