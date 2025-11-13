@@ -1377,7 +1377,7 @@
 
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
-        mainContent.style.display = 'none';
+        // mainContent.style.display = 'none';
         loadingDiv.classList.add('show');
 
         const formData = new FormData(event.target);
@@ -1399,7 +1399,7 @@
         try {
             await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors',
+                // mode: 'no-cors',
                 cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -1407,7 +1407,7 @@
             });
 
             loadingDiv.classList.remove('show');
-            mainContent.style.display = 'block';
+            // mainContent.style.display = 'block';
 
             await Swal.fire({
                 title: 'บันทึกข้อมูลสำเร็จ!',
