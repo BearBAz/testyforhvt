@@ -1339,107 +1339,123 @@
     });
 
     bookingForm.addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
-        if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
-            await Swal.fire({
-                title: 'ที่พักไม่เพียงพอ!',
-                text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา ลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก',
-                icon: 'error',
-                confirmButtonText: 'ตกลง'
-            });
-            return;
+    event.preventDefault(); 
+    const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
+    if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) { 
+        await Swal.fire({
+            title: 'ที่พักไม่เพียงพอ!',
+            text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา ลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก',
+            icon: 'error', 
+            confirmButtonText: 'ตกลง'
+        });
+        return;
+    }
+
+    const selectedRoomName = hiddenMeetingRoomInput.value;
+    const attendees = parseInt(document.getElementById('attendees').value) || 0;
+    const roomConfig = roomData.find(r => r.name === selectedRoomName);
+
+    if (roomConfig && attendees > roomConfig.capacity) { 
+        await Swal.fire({
+            title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!',
+            text: `ห้อง ${selectedRoomName} รองรับได้ ${roomConfig.capacity} คน แต่มีผู้เข้าร่วม ${attendees} คน`,
+            icon: 'error',
+            confirmButtonText: 'ตกลง' 
+        });
+        return;
+    }
+
+    if (roomConfig && !roomConfig.isAvailable) {
+        await Swal.fire({
+            title: 'ห้องประชุมไม่ว่าง!',
+            text: 'ห้องประชุมที่คุณเลือกไม่ว่างในช่วงเวลาที่กำหนด กรุณาเลือกห้องอื่น',
+            icon: 'error',
+            confirmButtonText: 'ตกลง' 
+        });
+        return; 
+    }
+
+    submitBtn.disabled = true; 
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
+    mainContent.style.display = 'none'; 
+    loadingDiv.classList.add('show'); 
+
+    const formData = new FormData(event.target);
+    const data = {
+        userId: userId,
+        displayName: displayName,
+        fullName: formData.get('fullName'),
+        department: formData.get('department'),
+        phone: formData.get('phone'),
+        courseName: formData.get('courseName'),
+        startDate: formData.get('startDate'), 
+        endDate: formData.get('endDate'), 
+        meetingRoom: formData.get('meetingRoom'),
+        accommodation: formData.get('accommodation'),
+        attendees: formData.get('attendees'),
+        timestamp: new Date().toISOString()
+    }; 
+
+    try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify(data), 
+            redirect: 'follow' 
+        });
+
+        if (!response.ok) {
+            let errorMsg = 'ไม่สามารถส่งข้อมูลได้ (Server Error)';
+            try {
+                const errorResult = await response.json();
+                errorMsg = errorResult.message || errorMsg;
+            } catch (e) {
+                // ไม่สามารถ parse json ได้
+            }
+            throw new Error(errorMsg);
         }
 
-        const selectedRoomName = hiddenMeetingRoomInput.value;
-        const attendees = parseInt(document.getElementById('attendees').value) || 0;
-        const roomConfig = roomData.find(r => r.name === selectedRoomName);
+        const result = await response.json();
 
-        if (roomConfig && attendees > roomConfig.capacity) {
-            await Swal.fire({
-                title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!',
-                text: `ห้อง ${selectedRoomName} รองรับได้ ${roomConfig.capacity} คน แต่มีผู้เข้าร่วม ${attendees} คน`,
-                icon: 'error',
-                confirmButtonText: 'ตกลง'
-            });
-            return;
+        if (result.status !== 'success') {
+            throw new Error(result.message || 'Backend returned an error');
         }
 
-        if (roomConfig && !roomConfig.isAvailable) {
-            await Swal.fire({
-                title: 'ห้องประชุมไม่ว่าง!',
-                text: 'ห้องประชุมที่คุณเลือกไม่ว่างในช่วงเวลาที่กำหนด กรุณาเลือกห้องอื่น',
-                icon: 'error',
-                confirmButtonText: 'ตกลง'
-            });
-            return;
-        }
+        loadingDiv.classList.remove('show'); 
+        mainContent.style.display = 'block'; 
 
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
-        mainContent.style.display = 'none';
-        loadingDiv.classList.add('show');
-
-        const formData = new FormData(event.target);
-        const data = {
-            userId: userId,
-            displayName: displayName,
-            fullName: formData.get('fullName'),
-            department: formData.get('department'),
-            phone: formData.get('phone'),
-            courseName: formData.get('courseName'),
-            startDate: formData.get('startDate'),
-            endDate: formData.get('endDate'),
-            meetingRoom: formData.get('meetingRoom'),
-            accommodation: formData.get('accommodation'),
-            attendees: formData.get('attendees'),
-            timestamp: new Date().toISOString()
-        };
-
-        try {
-            await fetch(GAS_WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                cache: 'no-cache',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-                redirect: 'follow'
-            });
-
-            loadingDiv.classList.remove('show');
-            mainContent.style.display = 'block';
-
-            await Swal.fire({
-                title: 'บันทึกข้อมูลสำเร็จ!',
-   				text: 'ระบบได้บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว และจะส่งสรุปให้ทาง LINE',
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonText: 'ตกลง',
-                allowOutsideClick: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    if (liff.isInClient()) {
-                        liff.closeWindow();
-                    } else {
-                        window.close();
-                    }
+        await Swal.fire({
+            title: 'บันทึกข้อมูลสำเร็จ!',
+            text: 'ระบบได้บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว และจะส่งสรุปให้ทาง LINE',
+            icon: 'success',
+            showConfirmButton: true,
+            confirmButtonText: 'ตกลง',
+            allowOutsideClick: false
+        }).then((result) => { 
+            if (result.isConfirmed) {
+                if (liff.isInClient()) {
+                    liff.closeWindow();
+                } else {
+                    window.close(); 
                 }
-            });
-        } catch (error) {
-            console.error('Submit error:', error);
-            loadingDiv.classList.remove('show');
-            mainContent.style.display = 'block';
-            await Swal.fire({
-                title: 'เกิดข้อผิดพลาด!',
-                text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
-                icon: 'error',
-                confirmButtonText: 'ลองอีกครั้ง',
-                confirmButtonColor: '#dc3545'
-            });
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
-        }
-    });
+            }
+        }); 
+    } catch (error) {
+        console.error('Submit error:', error);
+        loadingDiv.classList.remove('show'); 
+        mainContent.style.display = 'block'; 
+        await Swal.fire({
+            title: 'เกิดข้อผิดพลาด!',
+            text: error.message || 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+            icon: 'error',
+            confirmButtonText: 'ลองอีกครั้ง',
+            confirmButtonColor: '#dc3545' 
+        });
+        submitBtn.disabled = false; 
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
+    }
+});
     
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
