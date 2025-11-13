@@ -1343,8 +1343,7 @@
                         icon: 'success',
                         confirmButtonText: 'ตกลง'
                     });
-                    // ปิดหน้าต่างหรือกลับไปหน้าแรก
-                    window.location.href = "YOUR_THANK_YOU_PAGE_OR_CLOSE_WINDOW";
+                    window.close();
                 } else {
                     throw new Error(result.message || 'ไม่สามารถส่งข้อมูลได้');
                 }
