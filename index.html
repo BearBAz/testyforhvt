@@ -312,41 +312,7 @@
         outline: none;
     }
 
-    .radio-card {
-        background: var(--card-bg);
-        border: 2px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.25rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-    }
-
-    .radio-card:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-4px);
-    }
-
-    .radio-card.active {
-        border-color: var(--primary-color);
-        background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.05));
-    }
-
-    .radio-card input[type="radio"] {
-        display: none;
-    }
-
-    .radio-card .radio-icon {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-        color: var(--text-secondary);
-        transition: all 0.3s ease;
-    }
-
-    .radio-card.active .radio-icon {
-        color: var(--primary-color);
-    }
-
+    /* Custom Select Dropdown (Style from Index 4) */
     .custom-select-container {
         position: relative;
     }
@@ -383,6 +349,7 @@
 
     .custom-select-selected.open::after {
         transform: rotate(180deg);
+        color: var(--primary-color);
     }
 
     .custom-select-options {
@@ -400,6 +367,13 @@
         overflow-y: auto;
         padding: 0.5rem;
         list-style: none;
+        /* Animation from Index 4 */
+        animation: dropdownSlide 0.3s ease; 
+    }
+
+    @keyframes dropdownSlide {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .custom-select-options.show {
@@ -414,6 +388,7 @@
         justify-content: space-between;
         align-items: center;
         transition: all 0.2s ease;
+        margin-bottom: 0.25rem; /* Added from Index 4 */
     }
 
     .custom-select-option:hover {
@@ -423,13 +398,39 @@
     .custom-select-option.disabled {
         opacity: 0.5;
         cursor: not-allowed;
+        background: var(--background); /* Match index 4 */
     }
 
+    /* Option details internal style */
+    .option-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .option-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    .option-capacity {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    /* Status Badges */
     .status-badge {
         font-size: 0.75rem;
         font-weight: 600;
         padding: 0.35rem 0.75rem;
         border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
     }
 
     .status-available {
@@ -440,6 +441,49 @@
     .status-unavailable {
         background: rgba(255, 51, 75, 0.1);
         color: var(--danger-color);
+    }
+
+    /* Radio Cards */
+    .radio-card {
+        background: var(--card-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.25rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    .radio-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-4px);
+    }
+
+    .radio-card.active {
+        border-color: var(--primary-color);
+        background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.05));
+    }
+
+    .radio-card input[type="radio"] {
+        display: none;
+    }
+
+    .radio-card .radio-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .radio-card.active .radio-icon {
+        color: var(--primary-color);
+    }
+
+    /* Date Range Wrapper - Mobile & Desktop */
+    .date-range-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Side by side always */
+        gap: 0.75rem; /* Smaller gap for mobile */
     }
 
     .btn-primary-custom {
@@ -771,28 +815,27 @@
         /* Custom Grid for Room (Large) and Attendees (Small) */
         .form-row-room-attendee {
             display: grid;
-            grid-template-columns: 7fr 3fr; /* 70% for Room, 30% for Attendees */
+            grid-template-columns: 7fr 3fr;
             gap: 1.5rem;
         }
 
         .date-range-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            /* Desktop: Maintain grid with larger gap */
             gap: 1.5rem;
         }
 
-        /* Larger Radio Cards */
+        /* Larger Radio Cards (Adjusted to be smaller as requested) */
         .radio-card {
-            padding: 2rem;
+            padding: 1.25rem; /* Reduced from 2rem */
         }
 
         .radio-card .radio-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 2rem; /* Reduced from 3rem */
+            margin-bottom: 0.75rem;
         }
 
         .radio-card-text {
-            font-size: 1.1rem;
+            font-size: 1rem; /* Reduced slightly */
         }
 
         /* Submit Button */
@@ -848,7 +891,7 @@
         }
     }
     
-    /* Mobile override for grid to stack */
+    /* Mobile override for grid to stack (except date) */
     @media (max-width: 767px) {
         .form-row-room-attendee {
             display: block;
@@ -1454,7 +1497,7 @@
         }
     });
 
-    // Enhanced Submit Logic from Index 4
+    // Enhanced Submit Logic
     bookingForm.addEventListener('submit', async function(event) {
         event.preventDefault();
         
