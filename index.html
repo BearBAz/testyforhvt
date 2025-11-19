@@ -14,7 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    /* --- Base Variables --- */
     :root {
         --primary-color: #00B900;
         --primary-dark: #009900;
@@ -50,7 +49,6 @@
         -moz-osx-font-smoothing: grayscale;
     }
 
-    /* --- Mobile First Styles --- */
     .app-container {
         max-width: 480px;
         margin: 0 auto;
@@ -59,7 +57,6 @@
         position: relative;
     }
 
-    /* Header Style (Index 4) */
     .app-header {
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
         padding: 2rem 1.5rem 4rem;
@@ -143,7 +140,6 @@
         font-weight: 400;
     }
 
-    /* Form Section */
     .form-section {
         padding: 0 1rem 2rem;
         margin-top: -2.5rem;
@@ -151,13 +147,12 @@
         z-index: 3;
     }
 
-    /* --- Progress Steps --- */
     .progress-steps {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         margin-bottom: 2rem;
-        padding: 1.5rem; /* Fixed padding */
+        padding: 1.5rem;
         background: var(--card-bg);
         border-radius: 20px;
         box-shadow: var(--shadow-md);
@@ -181,20 +176,11 @@
         opacity: 1;
     }
 
-    /* --- FIXED PROGRESS LINE (MOBILE) --- */
     .progress-line-container {
         position: absolute;
-        /* Vertical Center: Padding-top (1.5rem) + Half Circle Height (25px) */
         top: calc(1.5rem + 25px); 
-        
-        /* Horizontal Start/End: 
-           Logic: 2/3 of Padding + 1/6 of Container Width (16.66%)
-           Since Padding is 1.5rem, 2/3 is 1rem.
-           This places the line start/end exactly at the center of the first and last circles.
-        */
         left: calc(1rem + 16.66%); 
         right: calc(1rem + 16.66%);
-        
         height: 4px;
         transform: translateY(-50%);
         z-index: 0;
@@ -309,7 +295,6 @@
         transform: scale(1.05);
     }
 
-    /* --- Form Elements --- */
     .form-card {
         background: var(--card-bg);
         border-radius: 24px;
@@ -376,7 +361,6 @@
         outline: none;
     }
 
-    /* --- Dropdown Styles --- */
     .custom-select-container {
         position: relative;
     }
@@ -504,7 +488,6 @@
         color: var(--danger-color);
     }
 
-    /* --- Radio Cards --- */
     .radio-card {
         background: var(--card-bg);
         border: 2px solid var(--border-color);
@@ -549,7 +532,6 @@
         color: var(--text-primary);
     }
 
-    /* --- Date Range Wrapper --- */
     .date-range-wrapper {
         display: grid;
         grid-template-columns: 1fr 1fr; 
@@ -576,7 +558,6 @@
         box-shadow: 0 6px 20px rgba(0, 185, 0, 0.4);
     }
 
-    /* Loading & Alert */
     .loading-overlay {
         position: fixed;
         top: 0;
@@ -603,7 +584,6 @@
 
     .desktop-sidebar { display: none; }
 
-    /* --- DESKTOP OVERRIDES --- */
     @media (min-width: 768px) {
         body {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
@@ -616,7 +596,6 @@
             background: transparent;
         }
 
-        /* Desktop Sidebar */
         .desktop-sidebar {
             display: flex;
             flex-direction: column;
@@ -651,25 +630,25 @@
         .sidebar-logo i { font-size: 3rem; color: white; }
         .sidebar-title { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 0.75rem; line-height: 1.3; }
         .sidebar-subtitle { font-size: 1rem; color: rgba(255, 255, 255, 0.85); margin-bottom: 3rem; line-height: 1.6; }
-
-        /* Sidebar Steps (Desktop Vertical) */
         .sidebar-steps { display: flex; flex-direction: column; gap: 2rem; position: relative; }
-        
-        /* FIXED PROGRESS LINE (DESKTOP) */
-        .sidebar-steps::before {
-            content: '';
-            position: absolute;
-            /* 25px (Center of circle) - 1px (Half line width) = 24px */
-            left: 24px; 
-            /* Start at Center of first circle (25px) */
-            top: 25px; 
-            /* End near bottom - variable height makes 'bottom' safer than 'height' */
-            bottom: 25px; 
-            width: 2px;
-            background: rgba(255, 255, 255, 0.2);
+        .sidebar-step { 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 1.5rem; 
+            position: relative; 
         }
 
-        .sidebar-step { display: flex; align-items: flex-start; gap: 1.5rem; position: relative; }
+        .sidebar-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 24px; 
+            top: 50px; 
+            width: 2px;
+            height: calc(100% + 2rem - 50px);
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1;
+        }
+
         .sidebar-step-circle {
             width: 50px; height: 50px; border-radius: 50%;
             background: rgba(255, 255, 255, 0.15); border: 3px solid rgba(255, 255, 255, 0.3);
@@ -689,7 +668,6 @@
         .sidebar-step.active .sidebar-step-title { color: white; font-weight: 700; }
         .sidebar-step.completed .sidebar-step-title { color: rgba(255, 255, 255, 0.95); }
         .sidebar-step-desc { font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); line-height: 1.5; }
-        
         .sidebar-footer { margin-top: auto; padding-top: 3rem; border-top: 1px solid rgba(255, 255, 255, 0.2); }
         .sidebar-info {
             display: flex; align-items: center; gap: 1rem; padding: 1rem;
@@ -698,8 +676,6 @@
         .sidebar-info i { font-size: 1.5rem; color: rgba(255, 255, 255, 0.9); }
         .sidebar-info-title { font-size: 0.875rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.25rem; }
         .sidebar-info-value { font-size: 1rem; color: white; font-weight: 600; }
-
-        /* Desktop Main */
         .desktop-main { flex: 1; padding: 3rem; overflow-y: auto; }
         .app-header { display: none; } 
         .progress-steps { display: none; } 
@@ -733,7 +709,6 @@
             gap: 1.5rem;
         }
         
-        /* Smaller Desktop Radio Buttons */
         .radio-card { padding: 1rem 1.25rem; }
         .radio-card .radio-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
         .radio-card-text { font-size: 1rem; }
@@ -815,7 +790,7 @@
                     <div class="header-icon">
                         <i class="fas fa-calendar-check"></i>
                     </div>
-                    <h1 class="header-title">จองห้องประชุม</h1>
+                    <h1 class="header-title">ระบบจองห้องประชุม</h1>
                     <p class="header-subtitle">ศูนย์ศึกปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
                 </div>
             </div>
