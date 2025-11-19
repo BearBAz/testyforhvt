@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    /* --- Base Variables from Index 4 --- */
+    /* --- Base Variables --- */
     :root {
         --primary-color: #00B900;
         --primary-dark: #009900;
@@ -50,7 +50,7 @@
         -moz-osx-font-smoothing: grayscale;
     }
 
-    /* --- Mobile First Styles (Index 4 Base) --- */
+    /* --- Mobile First Styles --- */
     .app-container {
         max-width: 480px;
         margin: 0 auto;
@@ -143,7 +143,7 @@
         font-weight: 400;
     }
 
-    /* Form Section (Index 4) */
+    /* Form Section */
     .form-section {
         padding: 0 1rem 2rem;
         margin-top: -2.5rem;
@@ -151,13 +151,13 @@
         z-index: 3;
     }
 
-    /* --- Progress Steps (Strictly Index 4 Style) --- */
+    /* --- Progress Steps --- */
     .progress-steps {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start; /* Changed from center to flex-start to help alignment */
+        align-items: flex-start;
         margin-bottom: 2rem;
-        padding: 1.5rem; /* IMPORTANT: This padding determines the line position */
+        padding: 1.5rem; /* Fixed padding */
         background: var(--card-bg);
         border-radius: 20px;
         box-shadow: var(--shadow-md);
@@ -165,7 +165,6 @@
         overflow: hidden;
     }
 
-    /* Add background animation from index 4 */
     .progress-steps::before {
         content: '';
         position: absolute;
@@ -182,15 +181,22 @@
         opacity: 1;
     }
 
-    /* --- FIXED PROGRESS LINE --- */
+    /* --- FIXED PROGRESS LINE (MOBILE) --- */
     .progress-line-container {
         position: absolute;
-        /* Calculation: Padding Top (1.5rem) + Half Circle Height (25px) */
+        /* Vertical Center: Padding-top (1.5rem) + Half Circle Height (25px) */
         top: calc(1.5rem + 25px); 
-        left: 0; /* Start inside the first circle area */
-        right: 0; /* End inside the last circle area */
+        
+        /* Horizontal Start/End: 
+           Logic: 2/3 of Padding + 1/6 of Container Width (16.66%)
+           Since Padding is 1.5rem, 2/3 is 1rem.
+           This places the line start/end exactly at the center of the first and last circles.
+        */
+        left: calc(1rem + 16.66%); 
+        right: calc(1rem + 16.66%);
+        
         height: 4px;
-        transform: translateY(-50%); /* Center the line vertically on the calculated point */
+        transform: translateY(-50%);
         z-index: 0;
     }
 
@@ -216,7 +222,6 @@
         box-shadow: 0 0 10px rgba(0, 185, 0, 0.3);
     }
     
-    /* Index 4 Pulse Effect */
     .progress-line-fill::after {
         content: '';
         position: absolute;
@@ -258,10 +263,9 @@
         position: relative;
         margin-bottom: 0.75rem;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 2; /* Ensure circle is above line */
+        z-index: 2; 
     }
 
-    /* Index 4 Step Animations */
     .step.active .step-circle {
         background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         border-color: var(--primary-color);
@@ -305,7 +309,7 @@
         transform: scale(1.05);
     }
 
-    /* --- Form Elements (Index 4 Base) --- */
+    /* --- Form Elements --- */
     .form-card {
         background: var(--card-bg);
         border-radius: 24px;
@@ -372,7 +376,7 @@
         outline: none;
     }
 
-    /* --- Dropdown Styles (Strictly Index 4) --- */
+    /* --- Dropdown Styles --- */
     .custom-select-container {
         position: relative;
     }
@@ -500,7 +504,7 @@
         color: var(--danger-color);
     }
 
-    /* --- Radio Cards (Index 4 Style) --- */
+    /* --- Radio Cards --- */
     .radio-card {
         background: var(--card-bg);
         border: 2px solid var(--border-color);
@@ -545,11 +549,11 @@
         color: var(--text-primary);
     }
 
-    /* --- Date Range Wrapper (Forces side-by-side on Mobile & Desktop) --- */
+    /* --- Date Range Wrapper --- */
     .date-range-wrapper {
         display: grid;
         grid-template-columns: 1fr 1fr; 
-        gap: 1rem; /* Space for mobile */
+        gap: 1rem;
     }
 
     .btn-primary-custom {
@@ -572,7 +576,7 @@
         box-shadow: 0 6px 20px rgba(0, 185, 0, 0.4);
     }
 
-    /* Loading & Alert Styles from Index 4 */
+    /* Loading & Alert */
     .loading-overlay {
         position: fixed;
         top: 0;
@@ -599,7 +603,7 @@
 
     .desktop-sidebar { display: none; }
 
-    /* --- DESKTOP OVERRIDES (Index 5 Features) --- */
+    /* --- DESKTOP OVERRIDES --- */
     @media (min-width: 768px) {
         body {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
@@ -612,7 +616,7 @@
             background: transparent;
         }
 
-        /* Desktop Sidebar - Visible */
+        /* Desktop Sidebar */
         .desktop-sidebar {
             display: flex;
             flex-direction: column;
@@ -623,7 +627,6 @@
             overflow: hidden;
         }
         
-        /* Sidebar Decorations */
         .desktop-sidebar::before {
             content: '';
             position: absolute;
@@ -649,11 +652,23 @@
         .sidebar-title { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 0.75rem; line-height: 1.3; }
         .sidebar-subtitle { font-size: 1rem; color: rgba(255, 255, 255, 0.85); margin-bottom: 3rem; line-height: 1.6; }
 
-        /* Sidebar Steps (Desktop Specific) */
+        /* Sidebar Steps (Desktop Vertical) */
         .sidebar-steps { display: flex; flex-direction: column; gap: 2rem; position: relative; }
+        
+        /* FIXED PROGRESS LINE (DESKTOP) */
         .sidebar-steps::before {
-            content: ''; position: absolute; left: 24px; top: 50px; bottom: 50px; width: 2px; background: rgba(255, 255, 255, 0.2);
+            content: '';
+            position: absolute;
+            /* 25px (Center of circle) - 1px (Half line width) = 24px */
+            left: 24px; 
+            /* Start at Center of first circle (25px) */
+            top: 25px; 
+            /* End near bottom - variable height makes 'bottom' safer than 'height' */
+            bottom: 25px; 
+            width: 2px;
+            background: rgba(255, 255, 255, 0.2);
         }
+
         .sidebar-step { display: flex; align-items: flex-start; gap: 1.5rem; position: relative; }
         .sidebar-step-circle {
             width: 50px; height: 50px; border-radius: 50%;
@@ -675,7 +690,6 @@
         .sidebar-step.completed .sidebar-step-title { color: rgba(255, 255, 255, 0.95); }
         .sidebar-step-desc { font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); line-height: 1.5; }
         
-        /* Sidebar Footer */
         .sidebar-footer { margin-top: auto; padding-top: 3rem; border-top: 1px solid rgba(255, 255, 255, 0.2); }
         .sidebar-info {
             display: flex; align-items: center; gap: 1rem; padding: 1rem;
@@ -685,14 +699,13 @@
         .sidebar-info-title { font-size: 0.875rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.25rem; }
         .sidebar-info-value { font-size: 1rem; color: white; font-weight: 600; }
 
-        /* Desktop Main Area */
+        /* Desktop Main */
         .desktop-main { flex: 1; padding: 3rem; overflow-y: auto; }
-        .app-header { display: none; } /* Hide Mobile Header */
-        .progress-steps { display: none; } /* Hide Mobile Steps */
+        .app-header { display: none; } 
+        .progress-steps { display: none; } 
         
         .form-section { padding: 0; margin-top: 0; max-width: 900px; margin: 0 auto; }
         
-        /* Desktop Welcome Card */
         .desktop-welcome {
             background: white; border-radius: 24px; padding: 2.5rem; margin-bottom: 2rem;
             box-shadow: var(--shadow-lg); border: 1px solid rgba(0, 185, 0, 0.1);
@@ -711,30 +724,27 @@
         .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 0.25rem; }
         .stat-label { font-size: 0.875rem; color: var(--text-secondary); }
 
-        /* Desktop Layout Grids */
         .form-card { padding: 2rem; margin-bottom: 1.5rem; }
         .form-row-2col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
         
-        /* Room & Attendees Side-by-Side */
         .form-row-room-attendee {
             display: grid;
-            grid-template-columns: 7fr 3fr; /* 70% Room, 30% Attendee */
+            grid-template-columns: 7fr 3fr;
             gap: 1.5rem;
         }
         
-        /* Desktop Radio Buttons - Smaller */
-        .radio-card { padding: 1rem 1.25rem; } /* Smaller padding */
-        .radio-card .radio-icon { font-size: 1.75rem; margin-bottom: 0.5rem; } /* Smaller icon */
+        /* Smaller Desktop Radio Buttons */
+        .radio-card { padding: 1rem 1.25rem; }
+        .radio-card .radio-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
         .radio-card-text { font-size: 1rem; }
         
         .btn-primary-custom { width: auto; min-width: 250px; padding: 1.25rem 3rem; font-size: 1.15rem; }
         .submit-wrapper { display: flex; justify-content: center; margin-top: 2rem; }
         
-        .date-range-wrapper { gap: 1.5rem; } /* Bigger gap for desktop */
+        .date-range-wrapper { gap: 1.5rem; }
     }
 
     @media (max-width: 767px) {
-        /* Force stacking for custom row on mobile */
         .form-row-room-attendee { display: block; }
     }
     
@@ -1037,7 +1047,7 @@
         const step1Complete = step1Fields.every(field => document.getElementById(field).value.trim() !== '');
         const step2Complete = step2Fields.every(field => document.getElementById(field).value.trim() !== '') && accommodationChecked;
 
-        // Mobile steps (Using Index 4 Logic for styling classes)
+        // Mobile steps
         const step1El = document.getElementById('step1');
         const step2El = document.getElementById('step2');
         const step3El = document.getElementById('step3');
@@ -1068,7 +1078,7 @@
             }
         }
 
-        // Desktop steps (Sidebar Logic)
+        // Desktop steps
         const desktopStep1 = document.getElementById('desktop-step1');
         const desktopStep2 = document.getElementById('desktop-step2');
         const desktopStep3 = document.getElementById('desktop-step3');
