@@ -1044,7 +1044,20 @@
                             
                             <div id="accommodationStatus" style="display: none;" class="mt-3"></div>
                         </div>
-
+                            <div class="form-card mt-3" style="border-left: 5px solid var(--primary-color);">
+                            <div class="form-check d-flex align-items-start gap-2">
+                                <input class="form-check-input" type="checkbox" id="pdpaConsent" required style="margin-top: 0.3rem; border-color: var(--primary-color);">
+                                <label class="form-check-label" for="pdpaConsent" style="font-size: 0.95rem; color: var(--text-primary); line-height: 1.6;">
+                                    ข้าพเจ้ายินยอมให้เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ในการจองห้องประชุมและการบริหารจัดการที่พัก
+                                    <a href="#" onclick="showPDPADetail(event)" style="color: var(--primary-color); font-weight: 700; text-decoration: underline;">
+                                        ตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)
+                                    </a>
+                                    <div class="text-muted mt-1" style="font-size: 0.85rem;">
+                                        * จำเป็นต้องกดยินยอมเพื่อดำเนินการจอง
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
                         <div class="submit-wrapper">
                             <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
                                 <i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง
@@ -1399,6 +1412,18 @@
     bookingForm.addEventListener('submit', async function(event) {
         event.preventDefault();
         
+        const pdpaCheckbox = document.getElementById('pdpaConsent');
+        if (!pdpaCheckbox.checked) {
+            await Swal.fire({
+                title: 'กรุณายอมรับเงื่อนไข',
+                text: 'ท่านต้องยอมรับนโยบาย PDPA ก่อนทำการจองห้องประชุม',
+                icon: 'warning',
+                confirmButtonText: 'ตกลง'
+            });
+            pdpaCheckbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return; 
+        }
+        
         const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
         if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
             await Swal.fire({
@@ -1496,6 +1521,26 @@
             submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
         }
     });
+    
+    function showPDPADetail(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)',
+            html: '<div style="text-align: left; font-size: 0.9rem;">' +
+                  '<p>การไฟฟ้าส่วนภูมิภาค (กฟภ.) เคารพสิทธิความเป็นส่วนตัวของท่าน...</p>' +
+                  '<ul>' +
+                  '<li>ข้อมูลที่จัดเก็บ: ชื่อ, เบอร์โทร, สังกัด</li>' +
+                  '<li>วัตถุประสงค์: เพื่อการบริหารจัดการห้องประชุมและที่พัก</li>' +
+                  '<li>ระยะเวลาจัดเก็บ: ตามระเบียบสารบรรณ</li>' +
+                  '</ul>' +
+                  '</div>',
+            icon: 'info',
+            confirmButtonText: 'รับทราบ',
+            customClass: {
+                confirmButton: 'btn-primary-custom' // ใช้ class ปุ่มเดิมของธีม
+            }
+        });
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
