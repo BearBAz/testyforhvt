@@ -698,432 +698,532 @@
 
     .desktop-sidebar { display: none; }
 
-@media (min-width: 768px) {
-body {
-background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-}
-    .app-container {
-        max-width: 100%;
-        display: flex;
-        min-height: 100vh;
-        background: transparent;
+    /* New Desktop Styles */
+    @media (min-width: 768px) {
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -20%;
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(0, 185, 0, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -30%;
+            left: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(6, 199, 85, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 25s ease-in-out infinite reverse;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app-container {
+            max-width: 100%;
+            display: flex;
+            min-height: 100vh;
+            background: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .desktop-sidebar {
+            display: flex;
+            flex-direction: column;
+            width: 420px;
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 3rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        .desktop-sidebar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite;
+        }
+        
+        .desktop-sidebar::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+        
+        .sidebar-content { 
+            position: relative; 
+            z-index: 2; 
+        }
+        
+        .sidebar-logo {
+            width: 110px;
+            height: 110px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+            animation: bounce-subtle 3s ease-in-out infinite;
+        }
+        
+        .sidebar-logo i { 
+            font-size: 3.5rem; 
+            color: white;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+        
+        .sidebar-title { 
+            font-size: 2.25rem; 
+            font-weight: 700; 
+            color: white; 
+            margin-bottom: 0.75rem; 
+            line-height: 1.3;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-subtitle { 
+            font-size: 1.05rem; 
+            color: rgba(255, 255, 255, 0.9); 
+            margin-bottom: 3rem; 
+            line-height: 1.7;
+        }
+        
+        .sidebar-steps { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 2.5rem; 
+            position: relative; 
+        } 
+        
+        .sidebar-step { 
+            display: flex;
+            align-items: flex-start; 
+            gap: 1.75rem; 
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-step:hover {
+            transform: translateX(4px);
+        }
+
+        .sidebar-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 27px; 
+            top: 56px; 
+            width: 3px;
+            height: calc(100% + 2.5rem - 56px);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 2px;
+            z-index: 1;
+        }
+        
+        .sidebar-step.completed:not(:last-child)::after {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 100%);
+        }
+
+        .sidebar-step-circle {
+            width: 56px;
+            height: 56px; 
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15); 
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem; 
+            font-weight: 700; 
+            color: rgba(255, 255, 255, 0.6);
+            flex-shrink: 0; 
+            position: relative; 
+            z-index: 2;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .sidebar-step.active .sidebar-step-circle {
+            background: white;
+            border-color: white; 
+            color: var(--primary-color);
+            box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.2), 0 8px 24px rgba(0, 0, 0, 0.15);
+            transform: scale(1.12);
+        }
+        
+        .sidebar-step.completed .sidebar-step-circle {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(255, 255, 255, 0.95); 
+            color: var(--primary-color);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-step-content { 
+            padding-top: 0.75rem;
+            flex: 1;
+        }
+        
+        .sidebar-step-title { 
+            font-size: 1.15rem; 
+            font-weight: 600; 
+            color: rgba(255, 255, 255, 0.75); 
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-step.active .sidebar-step-title { 
+            color: white; 
+            font-weight: 700;
+            transform: translateX(2px);
+        }
+        
+        .sidebar-step.completed .sidebar-step-title { 
+            color: rgba(255, 255, 255, 0.95); 
+        }
+        
+        .sidebar-step-desc { 
+            font-size: 0.9rem; 
+            color: rgba(255, 255, 255, 0.6); 
+            line-height: 1.6; 
+        }
+        
+        .sidebar-footer { 
+            margin-top: auto; 
+            padding-top: 3rem; 
+            border-top: 1px solid rgba(255, 255, 255, 0.2); 
+        }
+        
+        .sidebar-info {
+            display: flex;
+            align-items: center; 
+            gap: 1.25rem; 
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.12); 
+            border-radius: 16px; 
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .sidebar-info:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .sidebar-info i { 
+            font-size: 1.75rem; 
+            color: rgba(255, 255, 255, 0.95); 
+        }
+        
+        .sidebar-info-title { 
+            font-size: 0.875rem; 
+            color: rgba(255, 255, 255, 0.75); 
+            margin-bottom: 0.25rem; 
+        }
+        
+        .sidebar-info-value { 
+            font-size: 1.05rem; 
+            color: white; 
+            font-weight: 600; 
+        }
+        
+        .desktop-main { 
+            flex: 1; 
+            padding: 3.5rem; 
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .app-header { display: none; } 
+        .progress-steps { display: none; } 
+        
+        .form-section { 
+            padding: 0; 
+            margin-top: 0; 
+            max-width: 920px; 
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .desktop-welcome {
+            background: white;
+            border-radius: 28px; 
+            padding: 3rem; 
+            margin-bottom: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 185, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .desktop-welcome::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 185, 0, 0.02), rgba(6, 199, 85, 0.02));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .desktop-welcome:hover {
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+        
+        .desktop-welcome:hover::before {
+            opacity: 1;
+        }
+        
+        .welcome-header { 
+            display: flex; 
+            align-items: center; 
+            gap: 2rem; 
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-icon {
+            width: 90px;
+            height: 90px; 
+            background: linear-gradient(135deg, rgba(0, 185, 0, 0.12), rgba(6, 199, 85, 0.12));
+            border-radius: 24px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 4px 24px rgba(0, 185, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .welcome-icon::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 24px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .desktop-welcome:hover .welcome-icon::before {
+            opacity: 0.1;
+        }
+        
+        .desktop-welcome:hover .welcome-icon {
+            transform: scale(1.05) rotate(5deg);
+        }
+        
+        .welcome-icon i { 
+            font-size: 2.75rem; 
+            color: var(--primary-color);
+            filter: drop-shadow(0 2px 4px rgba(0, 185, 0, 0.2));
+        }
+        
+        .welcome-text h2 { 
+            font-size: 2rem; 
+            font-weight: 700; 
+            color: var(--text-primary); 
+            margin-bottom: 0.65rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .welcome-text p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .welcome-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 2rem; 
+            padding-top: 2rem; 
+            border-top: 2px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-item { 
+            text-align: center;
+            transition: all 0.3s ease;
+            padding: 1rem;
+            border-radius: 16px;
+        }
+        
+        .stat-item:hover {
+            background: rgba(0, 185, 0, 0.04);
+            transform: translateY(-4px);
+        }
+        
+        .stat-value { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block; 
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 185, 0, 0.1));
+        }
+        
+        .stat-label { 
+            font-size: 0.95rem; 
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .form-card { 
+            padding: 2.5rem; 
+            margin-bottom: 2rem;
+            border-radius: 28px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .form-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .form-card-title {
+            font-size: 1.35rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-row-2col { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 2rem; 
+        }
+        
+        .form-row-room-attendee {
+            display: grid;
+            grid-template-columns: 7fr 3fr;
+            gap: 2rem;
+        }
+        
+        .form-control, .form-select {
+            padding: 1rem 1.25rem;
+            font-size: 1.05rem;
+            border-radius: 16px;
+        }
+        
+        .custom-select-selected {
+            padding: 1rem 1.25rem;
+            border-radius: 16px;
+        }
+        
+        .radio-card { 
+            padding: 1.5rem 1.5rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .radio-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .radio-card .radio-icon { 
+            font-size: 2.25rem; 
+            margin-bottom: 0.75rem; 
+        }
+        
+        .radio-card-text { 
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        
+        .btn-primary-custom { 
+            width: auto; 
+            min-width: 280px; 
+            padding: 1.35rem 3.5rem; 
+            font-size: 1.2rem;
+            border-radius: 18px;
+            box-shadow: 0 6px 24px rgba(0, 185, 0, 0.35);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 32px rgba(0, 185, 0, 0.45);
+        }
+        
+        .submit-wrapper { 
+            display: flex; 
+            justify-content: center; 
+            margin-top: 2.5rem; 
+        }
+        
+        .date-range-wrapper { 
+            gap: 2rem; 
+        }
+        
+        .accommodation-info,
+        .unavailable-message {
+            border-radius: 20px;
+            padding: 1.75rem;
+        }
+        
+        .alert-custom {
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+        }
     }
 
-    .desktop-sidebar {
-        display: flex;
-        flex-direction: column;
-        width: 420px;
-        background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-        padding: 3rem 2.5rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 4px 0 30px rgba(0, 0, 0, 0.1);
+    @media (max-width: 767px) {
+        .form-row-room-attendee { display: block; }
     }
-    
-    .desktop-sidebar::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -30%;
-        width: 500px;
-        height: 500px;
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 50%;
-        animation: float 8s ease-in-out infinite;
-    }
-    
-    .desktop-sidebar::after {
-        content: '';
-        position: absolute;
-        bottom: -30%;
-        left: -20%;
-        width: 400px;
-        height: 400px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 50%;
-        animation: float 10s ease-in-out infinite reverse;
-    }
-    
-    .sidebar-content { position: relative; z-index: 2; }
-    
-    .sidebar-logo {
-        width: 110px;
-        height: 110px;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        border-radius: 28px;
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-        margin-bottom: 2rem;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease;
-    }
-    
-    .sidebar-logo:hover {
-        transform: scale(1.05);
-    }
-    
-    .sidebar-logo i { 
-        font-size: 3.5rem; 
-        color: white;
-        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
-    }
-    
-    .sidebar-title { 
-        font-size: 2.25rem; 
-        font-weight: 700; 
-        color: white; 
-        margin-bottom: 0.75rem; 
-        line-height: 1.3;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .sidebar-subtitle { 
-        font-size: 1.05rem; 
-        color: rgba(255, 255, 255, 0.9); 
-        margin-bottom: 3.5rem; 
-        line-height: 1.6;
-    }
-    
-    .sidebar-steps { 
-        display: flex; 
-        flex-direction: column; 
-        gap: 2.5rem; 
-        position: relative;
-    } 
-    
-    .sidebar-step { 
-        display: flex;
-        align-items: flex-start; 
-        gap: 1.75rem; 
-        position: relative;
-        transition: all 0.3s ease;
-    }
-
-    .sidebar-step:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        left: 27px; 
-        top: 55px; 
-        width: 3px;
-        height: calc(100% + 2.5rem - 55px);
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
-        z-index: 1;
-        border-radius: 10px;
-    }
-
-    .sidebar-step-circle {
-        width: 56px;
-        height: 56px; 
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.15); 
-        border: 3px solid rgba(255, 255, 255, 0.3);
-        display: flex; 
-        align-items: center;
-        justify-content: center;
-        font-size: 1.3rem; 
-        font-weight: 700; 
-        color: rgba(255, 255, 255, 0.6);
-        flex-shrink: 0; 
-        position: relative; 
-        z-index: 2;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .sidebar-step.active .sidebar-step-circle {
-        background: white;
-        border-color: white; 
-        color: var(--primary-color);
-        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.2), 0 4px 20px rgba(0, 0, 0, 0.15);
-        transform: scale(1.1);
-        animation: pulse-desktop 2s ease-in-out infinite;
-    }
-    
-    @keyframes pulse-desktop {
-        0%, 100% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.2), 0 4px 20px rgba(0, 0, 0, 0.15); }
-        50% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0.1), 0 6px 25px rgba(0, 0, 0, 0.2); }
-    }
-    
-    .sidebar-step.completed .sidebar-step-circle {
-        background: rgba(255, 255, 255, 0.95);
-        border-color: rgba(255, 255, 255, 0.95); 
-        color: var(--primary-color);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    }
-    
-    .sidebar-step-content { 
-        padding-top: 0.75rem; 
-        flex: 1;
-    }
-    
-    .sidebar-step-title { 
-        font-size: 1.15rem; 
-        font-weight: 600; 
-        color: rgba(255, 255, 255, 0.7); 
-        margin-bottom: 0.5rem;
-        transition: all 0.3s ease;
-    }
-    
-    .sidebar-step.active .sidebar-step-title { 
-        color: white; 
-        font-weight: 700;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    .sidebar-step.completed .sidebar-step-title { 
-        color: rgba(255, 255, 255, 0.95); 
-    }
-    
-    .sidebar-step-desc { 
-        font-size: 0.9rem; 
-        color: rgba(255, 255, 255, 0.6); 
-        line-height: 1.6;
-    }
-    
-    .sidebar-step.active .sidebar-step-desc {
-        color: rgba(255, 255, 255, 0.85);
-    }
-    
-    .sidebar-footer { 
-        margin-top: auto; 
-        padding-top: 3rem; 
-        border-top: 1px solid rgba(255, 255, 255, 0.2); 
-    }
-    
-    .sidebar-info {
-        display: flex;
-        align-items: center; 
-        gap: 1.25rem; 
-        padding: 1.25rem;
-        background: rgba(255, 255, 255, 0.15); 
-        border-radius: 16px; 
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .sidebar-info:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-    
-    .sidebar-info i { 
-        font-size: 1.75rem; 
-        color: rgba(255, 255, 255, 0.95); 
-    }
-    
-    .sidebar-info-title { 
-        font-size: 0.9rem; 
-        color: rgba(255, 255, 255, 0.8); 
-        margin-bottom: 0.25rem; 
-    }
-    
-    .sidebar-info-value { 
-        font-size: 1.05rem; 
-        color: white; 
-        font-weight: 600; 
-    }
-    
-    .desktop-main { 
-        flex: 1; 
-        padding: 3rem; 
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .app-header { display: none; } 
-    .progress-steps { display: none; } 
-    
-    .form-section { 
-        padding: 0; 
-        margin-top: 0; 
-        max-width: 950px; 
-        margin: 0 auto;
-        width: 100%;
-    }
-    
-    .desktop-welcome {
-        background: white;
-        border-radius: 28px; 
-        padding: 2.75rem; 
-        margin-bottom: 2.5rem;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(0, 185, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .desktop-welcome:hover {
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
-        transform: translateY(-2px);
-    }
-    
-    .welcome-header { 
-        display: flex; 
-        align-items: center; 
-        gap: 2rem; 
-        margin-bottom: 2rem; 
-    }
-    
-    .welcome-icon {
-        width: 90px;
-        height: 90px; 
-        background: linear-gradient(135deg, rgba(0, 185, 0, 0.1), rgba(6, 199, 85, 0.15));
-        border-radius: 24px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-        flex-shrink: 0;
-        transition: all 0.3s ease;
-    }
-    
-    .welcome-icon:hover {
-        transform: scale(1.05) rotate(5deg);
-    }
-    
-    .welcome-icon i { 
-        font-size: 2.75rem; 
-        color: var(--primary-color); 
-    }
-    
-    .welcome-text h2 { 
-        font-size: 1.9rem; 
-        font-weight: 700; 
-        color: var(--text-primary); 
-        margin-bottom: 0.75rem; 
-    }
-    
-    .welcome-text p {
-        font-size: 1.05rem;
-        color: var(--text-secondary);
-        line-height: 1.6;
-    }
-    
-    .welcome-stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); 
-        gap: 2rem; 
-        padding-top: 2rem; 
-        border-top: 2px solid var(--border-color);
-    }
-    
-    .stat-item { 
-        text-align: center;
-        transition: all 0.3s ease;
-        padding: 1rem;
-        border-radius: 16px;
-    }
-    
-    .stat-item:hover {
-        background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.05));
-        transform: translateY(-4px);
-    }
-    
-    .stat-value { 
-        font-size: 2.5rem; 
-        font-weight: 700; 
-        color: var(--primary-color); 
-        display: block; 
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 8px rgba(0, 185, 0, 0.1);
-    }
-    
-    .stat-label { 
-        font-size: 0.95rem; 
-        color: var(--text-secondary);
-        font-weight: 500;
-    }
-    
-    .form-card { 
-        padding: 2.25rem; 
-        margin-bottom: 1.75rem;
-        transition: all 0.3s ease;
-    }
-    
-    .form-card:hover {
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-    }
-    
-    .form-card-title {
-        font-size: 1.25rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .form-row-2col { 
-        display: grid; 
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 1.75rem; 
-    }
-    
-    .form-row-room-attendee {
-        display: grid;
-        grid-template-columns: 7fr 3fr;
-        gap: 1.75rem;
-    }
-    
-    .form-label {
-        font-size: 0.95rem;
-        margin-bottom: 0.65rem;
-    }
-    
-    .form-control, .form-select {
-        padding: 1rem 1.25rem;
-        font-size: 1.05rem;
-        border-radius: 16px;
-    }
-    
-    .custom-select-selected {
-        padding: 1rem 1.25rem;
-        border-radius: 16px;
-        min-height: 56px;
-    }
-    
-    .radio-card { 
-        padding: 1.5rem 1.5rem;
-        border-radius: 18px;
-    }
-    
-    .radio-card .radio-icon { 
-        font-size: 2rem; 
-        margin-bottom: 0.75rem; 
-    }
-    
-    .radio-card-text { 
-        font-size: 1.05rem;
-        font-weight: 600;
-    }
-    
-    .btn-primary-custom { 
-        width: auto; 
-        min-width: 300px; 
-        padding: 1.35rem 3.5rem; 
-        font-size: 1.2rem;
-        border-radius: 18px;
-    }
-    
-    .submit-wrapper { 
-        display: flex; 
-        justify-content: center; 
-        margin-top: 2.5rem; 
-    }
-    
-    .date-range-wrapper { 
-        gap: 1.75rem; 
-    }
-    
-    .accommodation-info {
-        padding: 1.5rem;
-        border-radius: 18px;
-    }
-    
-    .accommodation-detail {
-        padding: 1.25rem;
-        border-radius: 14px;
-        margin-bottom: 1rem;
-    }
-}
 </style>
 </head>
 <body>
@@ -1165,7 +1265,7 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
                             <i class="fas fa-check" style="display: none;"></i>
                         </div>
                         <div class="sidebar-step-content">
-                            <div class="sidebar-step-title">ยืนยันและส่ง</div>
+                            <div class="sidebar-step-title">ยืนยันการจอง</div>
                             <div class="sidebar-step-desc">ตรวจสอบข้อมูลและส่งคำขอจอง</div>
                         </div>
                     </div>
@@ -1176,8 +1276,8 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
                 <div class="sidebar-info">
                     <i class="fas fa-phone-alt"></i>
                     <div class="sidebar-info-text">
-                        <div class="sidebar-info-title">ติดต่อสอบถาม</div>
-                        <div class="sidebar-info-value">034-339-224</div>
+                        <div class="sidebar-info-title">ติดต่อสอบถามโทร. </div>
+                        <div class="sidebar-info-value">034-339-224 และ (33)15619</div>
                     </div>
                 </div>
             </div>
@@ -1190,7 +1290,7 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
                         <i class="fas fa-calendar-check"></i>
                     </div>
                     <h1 class="header-title">ระบบจองห้องประชุม</h1>
-                    <p class="header-subtitle">ศูนย์ศึกปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
+                    <p class="header-subtitle">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
                 </div>
             </div>
 
@@ -1214,10 +1314,6 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
                             <div class="stat-item">
                                 <span class="stat-value">90</span>
                                 <span class="stat-label">ห้องพักทั้งหมด</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value">24/7</span>
-                                <span class="stat-label">เปิดให้บริการ</span>
                             </div>
                         </div>
                     </div>
@@ -1346,15 +1442,11 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
                                 
                                 <div style="flex: 1;">
                                     <label class="form-check-label" for="pdpaConsent" style="font-size: 0.95rem; color: var(--text-primary); line-height: 1.6; cursor: pointer; display: block;">
-                                        ข้าพเจ้ายินยอมให้เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ในการจองห้องประชุมและที่พัก ตาม 
+                                        ข้าพเจ้ายินยอมให้เก็บรวบรวม และเปิดเผยข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ในการจองห้องพัก และห้องประชุมของศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง ตาม
                                         <a href="#" onclick="showPDPADetail(event)" style="color: var(--primary-color); font-weight: 700; text-decoration: none; border-bottom: 1px dashed var(--primary-color);">
-                                            นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)
+                                            พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)
                                         </a>
                                     </label>
-                                    <div class="mt-2 d-flex align-items-center" style="font-size: 0.85rem; color: var(--text-secondary);">
-                                        <i class="fas fa-info-circle me-2" style="color: var(--primary-color);"></i>
-                                        <span>จำเป็นต้องกดยินยอมเพื่อดำเนินการจอง</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1383,7 +1475,6 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
 <script>
     const LIFF_ID = "2007138631-Ono58j50";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
-
 
     const mainContent = document.getElementById('mainContent');
     const bookingForm = document.getElementById('bookingForm');
@@ -1587,13 +1678,29 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             const attendees = parseInt(document.getElementById('attendees').value) || 0;
+            const roomCountInput = document.getElementById('roomCount'); // เพิ่มตัวแปร
+            const roomCountWrapper = document.getElementById('roomCountWrapper'); // เพิ่มตัวแปร wrapper
 
             if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
                 accommodationStatusDiv.innerHTML = '';
                 accommodationStatusDiv.style.display = 'none';
+                roomCountWrapper.style.display = 'none'; // ซ่อนช่องกรอก
+                roomCountInput.value = ''; // เคลียร์ค่า
+                roomCountInput.removeAttribute('required'); // เอา required ออก
                 accommodationAvailable = true;
                 return;
             }
+
+            // แสดงช่องกรอกจำนวนห้อง
+            roomCountWrapper.style.display = 'block';
+            roomCountInput.setAttribute('required', 'true');
+            
+            // คำนวณค่าเริ่มต้น (ถ้ายังไม่มีค่า หรือค่าเป็น 0)
+            const calculatedRooms = Math.ceil(attendees / 2);
+            if (!roomCountInput.value || roomCountInput.value == 0) {
+                 roomCountInput.value = calculatedRooms > 0 ? calculatedRooms : 1;
+            }
+
             if (!startDate || !endDate) {
                 accommodationAvailable = true;
                 return;
@@ -1601,6 +1708,7 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
 
             accommodationStatusDiv.style.display = 'block';
             accommodationStatusDiv.innerHTML = `<div class="alert alert-info-custom"><i class="fas fa-spinner fa-spin me-2"></i>กำลังตรวจสอบห้องว่าง...</div>`;
+
             try {
                 const startDateObj = new Date(startDate);
                 const endDateObj = new Date(endDate);
@@ -1614,18 +1722,25 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
                 const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${checkoutStr}`;
                 const response = await fetch(checkUrl);
                 const result = await response.json();
+                
                 if (result.error) throw new Error(result.error);
 
                 const available = result.availableRooms;
-                const requiredRooms = Math.ceil(attendees / 2);
+                
+                // ใช้ค่าจาก Input ที่ผู้ใช้กรอก (หรือค่า Default) มาตรวจสอบกับห้องว่าง
+                const userRequestedRooms = parseInt(roomCountInput.value) || calculatedRooms;
                 const nights = Math.max(1, Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24)) + 1);
-                if (available > 0 && (attendees === 0 || available >= requiredRooms)) {
+
+                // ตรวจสอบ: ห้องว่างต้องมากกว่าหรือเท่ากับจำนวนที่ผู้ใช้ขอ
+                if (available > 0 && (attendees === 0 || available >= userRequestedRooms)) {
                     accommodationAvailable = true;
-                    let statusHtml = `<div class="alert alert-success-custom"><i class="fas fa-check-circle me-2"></i>มีห้องพักว่าง <strong>${available}</strong> ห้อง ในช่วงวันที่คุณเลือก`;
+                    let statusHtml = `<div class="alert alert-success-custom"><i class="fas fa-check-circle me-2"></i>มีห้องพักว่าง <strong>${available}</strong> ห้อง`;
+                    
                     if (attendees > 0) {
-                        statusHtml += `<br><small>จำนวนผู้เข้าร่วม ${attendees} คน ต้องการห้องพักประมาณ ${requiredRooms} ห้อง</small>`;
+                        statusHtml += `<br><small>ท่านระบุความต้องการ <strong>${userRequestedRooms}</strong> ห้อง (ระบบแนะนำ: ${calculatedRooms} ห้อง)</small>`;
                     }
                     statusHtml += `</div>`;
+                    
                     statusHtml += `
                         <div class="accommodation-info">
                             <h6><i class="fas fa-info-circle"></i>ข้อมูลการเข้าพัก</h6>
@@ -1646,10 +1761,10 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
                 } else {
                     accommodationAvailable = false;
                     accommodationStatusDiv.innerHTML = `
-                        <div class="alert alert-danger-custom mt-3"><i class="fas fa-times-circle me-2"></i>ห้องพักไม่เพียงพอสำหรับการจอง<br><small>มีห้องว่าง ${available} ห้อง แต่ต้องการ ${requiredRooms} ห้อง</small></div>
+                        <div class="alert alert-danger-custom mt-3"><i class="fas fa-times-circle me-2"></i>ห้องพักไม่เพียงพอ<br><small>มีห้องว่าง ${available} ห้อง แต่ท่านต้องการ ${userRequestedRooms} ห้อง</small></div>
                         <div class="unavailable-message">
                             <h6><i class="fas fa-exclamation-triangle"></i>ไม่สามารถจองได้</h6>
-                            <p class="mb-0">กรุณาเปลี่ยนช่วงเวลา หรือลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก</p>
+                            <p class="mb-0">กรุณาลดจำนวนห้องพักที่ต้องการ หรือเปลี่ยนช่วงเวลา</p>
                         </div>`;
                 }
             } catch (error) {
@@ -1684,7 +1799,10 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         checkAccommodation();
     });
     document.getElementById('attendees').addEventListener('input', checkAccommodation);
-    
+    document.getElementById('roomCount').addEventListener('input', () => {
+        checkAccommodation();
+        updateProgressSteps();
+    });
     document.querySelectorAll('input[name="accommodation"]').forEach(radio => 
         radio.addEventListener('change', checkAccommodation)
     );
@@ -1713,7 +1831,6 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             pdpaCheckbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
-        // ============================================
         
         const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
         if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
@@ -1768,6 +1885,7 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             meetingRoom: formData.get('meetingRoom'),
             accommodation: formData.get('accommodation'),
             attendees: formData.get('attendees'),
+            numRooms: formData.get('numRooms'), 
             timestamp: new Date().toISOString()
         };
         try {
@@ -1824,12 +1942,14 @@ background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
     function showPDPADetail(e) {
         e.preventDefault();
         Swal.fire({
-            title: 'นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)',
+            title: 'เพื่อปฏิบัติตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)',
             html: '<div style="text-align: left; font-size: 0.9rem;">' +
-                  '<p>การไฟฟ้าส่วนภูมิภาค (กฟภ.) เคารพสิทธิความเป็นส่วนตัวของท่าน และให้ความสำคัญกับการคุ้มครองข้อมูลส่วนบุคคล</p>' +
-                  '<p><b>1. วัตถุประสงค์การเก็บรวบรวม:</b> เพื่อใช้ในการจองห้องประชุม การจัดสรรที่พัก และการติดต่อสื่อสารที่เกี่ยวข้อง</p>' +
-                  '<p><b>2. ข้อมูลที่เก็บรวบรวม:</b> ชื่อ-นามสกุล, เบอร์โทรศัพท์, สังกัดหน่วยงาน</p>' +
-                  '<p><b>3. ระยะเวลาการเก็บรักษา:</b> ข้อมูลจะถูกจัดเก็บไว้ตามระยะเวลาที่กำหนดในระเบียบงานสารบรรณ</p>' +
+                  '<p>ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง ขอแจ้งให้ท่านทราบเกี่ยวกับวัตถุประสงค์และรายละเอียดการเก็บรวบรวม ใช้ และเปิดเผย (รวมเรียกว่า "การประมวลผล") ข้อมูลส่วนบุคคลของท่าน ดังนี้:</p>' +
+                  '<p><b>1. ข้อมูลส่วนบุคคลที่จัดเก็บ: ศฝฟ. จะทำการเก็บรวบรวมข้อมูลส่วนบุคคลของท่านดังต่อไปนี้:</b> ที่อยู่อีเมล (Email Address) ,บัญชีผู้ใช้งานแอปพลิเคชัน Line (Line ID/Account) ,หมายเลขโทรศัพท์ (Phone Number) </p>' +
+                  '<p><b>2. วัตถุประสงค์ในการประมวลผลข้อมูล: ข้อมูลส่วนบุคคลข้างต้นจะถูกประมวลผลเพื่อวัตถุประสงค์ดังต่อไปนี้เท่านั้น:</b> เพื่อใช้ในการติดต่อสื่อสารเกี่ยวกับการจองและการยืนยัน การจองห้องพักและห้องประชุมของศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูงเพื่อแจ้งข้อมูล ที่เกี่ยวข้องกับการใช้บริการ การเปลี่ยนแปลง หรือเหตุฉุกเฉินเกี่ยวกับห้องพัก/ห้องประชุมที่ท่านได้ทำการจองไว้</p>' +
+                  '<p><b>3. ระยะเวลาในการเก็บรักษา:</b> ข้อมูลส่วนบุคคลของท่านจะถูกเก็บรักษาไว้เท่าที่จำเป็น เพื่อให้บรรลุวัตถุประสงค์ที่ระบุไว้ในข้อ 2 และตามที่กฎหมายกำหนด</p>' +
+		  '<p><b>4. การให้ความยินยอม:</b> การที่ท่านให้ข้อมูลส่วนบุคคลดังกล่าวข้างต้นแก่ ศฝฟ. และดำเนินการจองห้องพัก/ห้องประชุม ถือว่าท่านได้ รับทราบและให้ความยินยอม ในการประมวลผลข้อมูลส่วนบุคคลตามวัตถุประสงค์ที่ระบุไว้ข้างต้น</p>' +
+		  '<p>ท่านมีสิทธิ์ในการเข้าถึง ขอแก้ไข หรือเพิกถอนความยินยอมในการประมวลผลข้อมูลส่วนบุคคลของท่านภายใต้หลักเกณฑ์ที่กฎหมายกำหนด</p>' +
                   '</div>',
             icon: 'info',
             confirmButtonText: 'รับทราบ',
