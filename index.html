@@ -1700,7 +1700,6 @@
         }
     }
 
-    // ฟังก์ชันใหม่: ตรวจสอบห้องว่างและแสดงช่องกรอก
     async function checkAccommodation() {
         clearTimeout(checkTimeout);
         checkTimeout = setTimeout(async () => {
@@ -1708,7 +1707,6 @@
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             
-            // ถ้าเลือกไม่ต้องการ หรือยังไม่เลือกวัน -> ซ่อนทุกอย่าง
             if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
                 accommodationStatusDiv.innerHTML = '';
                 accommodationStatusDiv.style.display = 'none';
@@ -1721,7 +1719,6 @@
 
             if (!startDate || !endDate) {
                 accommodationAvailable = true;
-                // ยังไม่แสดง error แต่ซ่อนช่องกรอกไว้ก่อนจนกว่าจะเลือกวัน
                 roomCountContainer.style.display = 'none';
                 return;
             }
@@ -1751,7 +1748,6 @@
 
                 if (available > 0) {
                     accommodationAvailable = true;
-                    // แสดงจำนวนห้องว่าง
                     accommodationStatusDiv.innerHTML = '';
                     
                     // แสดง info
@@ -1775,14 +1771,13 @@
                     roomCountContainer.style.display = 'block';
                     roomCountInput.setAttribute('required', 'true');
                     roomCountInput.setAttribute('max', available);
-                    maxRoomInfo.textContent = `*สามารถจองได้ไม่เกินจำนวน ${available} ห้อง`;
 
                 } else {
                     accommodationAvailable = false;
                     maxAvailableRooms = 0;
                     accommodationStatusDiv.innerHTML = `
                         <div class="unavailable-message">
-                            <h6><i class="fas fa-exclamation-triangle"></i> ที่พักเต็มแล้ว</h6>
+                            <h6><i class="fas fa-exclamation-triangle"></i> ห้องพักเต็มแล้ว</h6>
                             <p class="mb-0">ไม่มีห้องว่างในช่วงเวลาดังกล่าว กรุณาเปลี่ยนช่วงเวลา หรือเลือกไม่ต้องการที่พัก</p>
                         </div>`;
                     roomCountContainer.style.display = 'none';
