@@ -1729,7 +1729,7 @@
             // แสดงสถานะกำลังตรวจสอบ
             accommodationStatusDiv.style.display = 'block';
             accommodationStatusDiv.innerHTML = `<div class="alert alert-info-custom"><i class="fas fa-spinner fa-spin me-2"></i>กำลังตรวจสอบห้องว่าง...</div>`;
-            roomCountContainer.style.display = 'none'; // ซ่อนช่องกรอกขณะตรวจสอบ
+            roomCountContainer.style.display = 'none'; 
 
             try {
                 const startDateObj = new Date(startDate);
@@ -1747,33 +1747,35 @@
                 if (result.error) throw new Error(result.error);
 
                 const available = result.availableRooms;
-                maxAvailableRooms = available; // บันทึกค่าห้องว่างสูงสุด
+                maxAvailableRooms = available;
 
                 if (available > 0) {
                     accommodationAvailable = true;
                     // แสดงจำนวนห้องว่าง
-                    accommodationStatusDiv.innerHTML = ''; // ลบ loading ออก
+                    accommodationStatusDiv.innerHTML = '';
                     
                     // แสดง info
                     let statusHtml = `
                         <div class="accommodation-info">
-                            <h6><i class="fas fa-check-circle"></i> ข้อมูลห้องพักว่าง</h6>
+                            <h6><i class="fas fa-info-circle"></i>ข้อมูลการจองห้องพัก</h6>
                             <div class="accommodation-detail">
-                                <span class="accommodation-label">ช่วงเวลาเข้าพัก:</span>
-                                <span class="accommodation-value">${checkin.toLocaleDateString('en-GB')} - ${checkout.toLocaleDateString('en-GB')}</span>
+                                <span class="accommodation-label">วันเข้าพัก:</span>
+                                <span class="accommodation-value">${checkin.toLocaleDateString('en-GB')}</span>
                             </div>
                             <div class="accommodation-detail">
-                                <span class="accommodation-label">สถานะ:</span>
-                                <span class="accommodation-value" style="color: var(--success-color);">ว่าง ${available} ห้อง</span>
+                                <span class="accommodation-label">วันออกจากที่พัก:</span>
+                                <span class="accommodation-value">${endDateObj.toLocaleDateString('en-GB')}</span>
+                            </div>
+                            <div class="accommodation-detail">
+                                <span class="accommodation-label">จำนวนห้องพักที่ว่าง:</span>
+                                <span class="accommodation-value" style="color: var(--success-color);">${available} ห้อง</span>
                             </div>
                         </div>`;
                     accommodationStatusDiv.innerHTML = statusHtml;
-
-                    // แสดงช่องกรอก และตั้งค่า Max
                     roomCountContainer.style.display = 'block';
                     roomCountInput.setAttribute('required', 'true');
                     roomCountInput.setAttribute('max', available);
-                    maxRoomInfo.textContent = `(ว่างสูงสุด ${available} ห้อง)`;
+                    maxRoomInfo.textContent = `*สามารถจองได้ไม่เกินจำนวน ${available} ห้อง`;
 
                 } else {
                     accommodationAvailable = false;
