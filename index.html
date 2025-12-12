@@ -1219,113 +1219,175 @@
             border-radius: 16px;
             padding: 1.25rem 1.5rem;
         }
-
-		.accom-card {
-    	background: #ffffff;
-   	 	border: 1px solid rgba(0, 185, 0, 0.15);
-    	border-radius: 20px;
-    	overflow: hidden;
-    	box-shadow: var(--shadow-sm);
-    	transition: all 0.3s ease;
-		}
-
-		.accom-header {
-    	background: linear-gradient(135deg, rgba(0, 185, 0, 0.08) 0%, rgba(6, 199, 85, 0.05) 100%);
-    	padding: 1.25rem;
-    	border-bottom: 1px solid rgba(0, 185, 0, 0.1);
-    	display: flex;
-    	align-items: center;
-    	justify-content: space-between;
-		}
-
-		.accom-body {
-    	padding: 1.5rem;
-		}
-
-		.info-grid {
-    	display: grid;
-    	grid-template-columns: repeat(2, 1fr);
-    	gap: 1rem;
-    	margin-bottom: 1.5rem;
-		}
-
-		.info-item {
-    	background: var(--background);
-    	padding: 0.75rem;
-    	border-radius: 12px;
-    	text-align: center;
-		}
-
-		.info-label {
-    	font-size: 0.75rem;
-    	color: var(--text-secondary);
-    	display: block;
-    	margin-bottom: 0.25rem;
-		}
-
-		.info-value {
-    	font-size: 0.95rem;
-    	font-weight: 700;
-    	color: var(--text-primary);
-		}
-
-		.availability-badge {
-    	padding: 0.5rem 1rem;
-    	border-radius: 12px;
-    	font-size: 0.85rem;
-    	font-weight: 700;
-    	display: flex;
-   	 	align-items: center;
-    	gap: 0.5rem;
-		}
-
-		.availability-high { background: rgba(34, 197, 94, 0.1); color: var(--success-color); }
-		.availability-low { background: rgba(255, 184, 0, 0.1); color: var(--warning-color); }
-
-		.stepper-container {
-    	display: flex;
-    	align-items: center;
-    	background: var(--background);
-    	border-radius: 14px;
-    	padding: 0.25rem;
-    	border: 2px solid var(--border-color);
-    	max-width: 180px;
-    	margin: 0 auto;
-		}
-
-		.stepper-btn {
-    	width: 40px;
-    	height: 40px;
-    	border-radius: 10px;
-   	 	border: none;
-    	background: white;
-    	color: var(--primary-color);
-    	font-weight: bold;
-    	display: flex;
-    	align-items: center;
-    	justify-content: center;
-    	transition: all 0.2s;
-		}
-
-		.stepper-btn:hover { background: var(--primary-color); color: white; }
-		.stepper-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-		.stepper-input {
-    	flex: 1;
-    	border: none;
-    	background: transparent;
-    	text-align: center;
-    	font-weight: 700;
-    	font-size: 1.1rem;
-   	 	width: 50px;
-		}
-
-		.stepper-input:focus { outline: none; }
-    	}
+    }
 
     @media (max-width: 767px) {
         .form-row-room-attendee { display: block; }
     }
+	/* --- New Accommodation UI Styles --- */
+		.accommodation-result-card {
+   			background: #ffffff;
+    		border-radius: 20px;
+    		border: 1px solid rgba(0, 185, 0, 0.1);
+    		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    		overflow: hidden;
+    		animation: slideUp 0.4s ease-out;
+    		margin-top: 1.5rem;
+	}
+
+		.acc-header {
+    		background: linear-gradient(135deg, rgba(0, 185, 0, 0.08) 0%, rgba(6, 199, 85, 0.03) 100%);
+    		padding: 1.25rem 1.5rem;
+    		border-bottom: 1px solid rgba(0, 185, 0, 0.1);
+    		display: flex;
+    		justify-content: space-between;
+    		align-items: center;
+	}
+
+		.acc-title {
+    		font-weight: 700;
+    		color: var(--primary-color);
+    		font-size: 1.05rem;
+    		display: flex;
+    		align-items: center;
+    		gap: 0.75rem;
+	}
+
+		.acc-body {
+    		padding: 1.5rem;
+	}
+
+/* Info Grid for Dates */
+		.acc-info-grid {
+    		display: grid;
+    		grid-template-columns: repeat(2, 1fr);
+    		gap: 1rem;
+    		margin-bottom: 1.5rem;
+	}
+
+		.acc-info-item {
+   		 	background: #F8F9FA;
+    		padding: 1rem;
+    		border-radius: 12px;
+    		position: relative;
+    		border: 1px solid transparent;
+    		transition: all 0.3s ease;
+	}
+
+		.acc-info-item:hover {
+    		border-color: rgba(0, 185, 0, 0.2);
+    		background: #fff;
+    		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+	}
+
+		.acc-label {
+    		font-size: 0.8rem;
+    		color: var(--text-secondary);
+    		margin-bottom: 0.25rem;
+    		display: block;
+	}
+
+		.acc-value {
+    		font-size: 1rem;
+    		font-weight: 600;
+    		color: var(--text-primary);
+    		display: block;
+	}
+
+		.acc-icon-bg {
+    		position: absolute;
+    		right: 10px;
+    		bottom: 10px;
+    		font-size: 1.5rem;
+    		color: var(--primary-color);
+    		opacity: 0.1;
+	}
+
+/* Room Availability Status */
+		.room-status-container {
+    		display: flex;
+    		align-items: center;
+    		justify-content: space-between;
+    		background: rgba(34, 197, 94, 0.05);
+    		border: 1px solid rgba(34, 197, 94, 0.2);
+    		border-radius: 12px;
+    		padding: 1rem 1.25rem;
+    		margin-bottom: 1.5rem;
+	}
+
+		.status-text {
+    		font-weight: 600;
+    		color: var(--success-color);
+    		display: flex;
+    		align-items: center;
+    		gap: 0.5rem;
+	}
+
+		.room-count-badge {
+    		background: var(--success-color);
+    		color: white;
+    		padding: 0.25rem 0.75rem;
+    		border-radius: 20px;
+    		font-weight: 700;
+    		font-size: 0.9rem;
+    		box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
+	}
+
+/* Input Section */
+		.room-input-section {
+    		background: #fff;
+    		border-top: 1px dashed var(--border-color);
+    		padding-top: 1.5rem;
+	}
+
+		.room-input-group {
+    		position: relative;
+	}
+
+		.room-input-wrapper {
+    		display: flex;
+    		align-items: center;
+    		gap: 1rem;
+	}
+
+		.form-control-lg-custom {
+    		font-size: 1.1rem;
+    		font-weight: 600;
+    		text-align: center;
+    		border-radius: 12px;
+    		padding: 0.75rem;
+    		border: 2px solid var(--border-color);
+	}
+
+		.form-control-lg-custom:focus {
+    		border-color: var(--primary-color);
+    		box-shadow: 0 0 0 4px rgba(0, 185, 0, 0.1);
+	}
+
+		.helper-text {
+    		font-size: 0.85rem;
+    		color: var(--text-secondary);
+    		margin-top: 0.5rem;
+    		display: flex;
+    		align-items: center;
+    		gap: 0.4rem;
+	}
+
+/* Loading & Error States */
+		.loading-skeleton {
+    		background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+    		background-size: 200% 100%;
+    		animation: loading 1.5s infinite;
+    		border-radius: 12px;
+    		height: 100px;
+    		width: 100%;
+	}
+
+		@keyframes loading {
+    	0% { background-position: 200% 0; }
+    	100% { background-position: -200% 0; }
+	}
+	
 </style>
 </head>
 <body>
@@ -1773,139 +1835,193 @@
         }
     }
 
-    async function checkAccommodation() {
-        clearTimeout(checkTimeout);
-        checkTimeout = setTimeout(async () => {
-            const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            const attendees = parseInt(document.getElementById('attendees').value) || 0;
+let maxAvailableRooms = 0;
 
-            maxAvailableRooms = 0;
-
-            if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
-                accommodationStatusDiv.innerHTML = '';
-                accommodationStatusDiv.style.display = 'none';
-                accommodationAvailable = true;
-                return;
-            }
-            if (!startDate || !endDate) {
-                accommodationAvailable = true;
-                return;
-            }
-
-            accommodationStatusDiv.style.display = 'block';
-            accommodationStatusDiv.innerHTML = `<div class="alert alert-info-custom"><i class="fas fa-spinner fa-spin me-2"></i>กำลังตรวจสอบห้องว่าง...</div>`;
-
-            try {
-                const startDateObj = new Date(startDate);
-                const endDateObj = new Date(endDate);
-                
-                const checkin = new Date(startDateObj);
-                checkin.setDate(startDateObj.getDate() - 1);
-                const checkout = new Date(endDateObj); 
-                const diffTime = Math.abs(endDateObj - checkin);
-                const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                
-                const checkinStr = checkin.toISOString().split('T')[0];
-                const checkoutStr = checkout.toISOString().split('T')[0]; 
-                const apiCheckout = new Date(endDateObj);
-                apiCheckout.setDate(endDateObj.getDate() - 1);
-                const apiCheckoutStr = apiCheckout.toISOString().split('T')[0];
-
-                const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${apiCheckoutStr}`;
-                const response = await fetch(checkUrl);
-                const result = await response.json();
-                
-                if (result.error) throw new Error(result.error);
-
-                const available = result.availableRooms;
-                maxAvailableRooms = available; 
-
-                const suggestedRooms = Math.ceil(attendees / 2);
-                const defaultInputValue = suggestedRooms > available ? available : suggestedRooms;
-
-					// [index.html] ปรับปรุงส่วนแสดงผลใน checkAccommodation
-if (available > 0) {
-    accommodationAvailable = true;
-    const isLow = available < 5; // ตัวอย่างเงื่อนไขแสดงสถานะห้องเหลือน้อย
+async function checkAccommodation() {
+    clearTimeout(checkTimeout);
     
-    let htmlContent = `
-        <div class="accom-card animate-slide-up">
-            <div class="accom-header">
-                <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
-                    <i class="fas fa-bed me-2"></i>รายละเอียดที่พัก
-                </h6>
-                <div class="availability-badge ${isLow ? 'availability-low' : 'availability-high'}">
-                    <i class="fas ${isLow ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
-                    ว่าง ${available} ห้อง
+    checkTimeout = setTimeout(async () => {
+        const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const attendees = parseInt(document.getElementById('attendees').value) || 0;
+        const container = document.getElementById('accommodationStatus');
+
+        maxAvailableRooms = 0;
+        accommodationAvailable = true;
+
+        if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
+            container.innerHTML = '';
+            container.style.display = 'none';
+            return;
+        }
+
+        if (!startDate || !endDate) {
+            container.style.display = 'none';
+            return;
+        }
+
+        container.style.display = 'block';
+        container.innerHTML = `
+            <div class="accommodation-result-card">
+                <div class="acc-header">
+                    <div class="acc-title"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...</div>
                 </div>
-            </div>
+                <div class="acc-body">
+                    <div class="loading-skeleton"></div>
+                </div>
+            </div>`;
+
+        try {
+            const startDateObj = new Date(startDate);
+            const endDateObj = new Date(endDate);
             
-            <div class="accom-body">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label">วันที่เข้าพัก (Check-in)</span>
-                        <span class="info-value">${checkin.toLocaleDateString('th-TH')}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">วันที่ออก (Check-out)</span>
-                        <span class="info-value">${endDateObj.toLocaleDateString('th-TH')}</span>
-                    </div>
-                </div>
+            const checkin = new Date(startDateObj);
+            checkin.setDate(startDateObj.getDate() - 1);
+            
+            const apiCheckout = new Date(endDateObj);
+            apiCheckout.setDate(endDateObj.getDate() - 1);
 
-                <div class="text-center mb-3">
-                    <label class="form-label required" style="font-size: 0.9rem;">ระบุจำนวนห้องที่ต้องการ</label>
-                    <div class="stepper-container">
-                        <button type="button" class="stepper-btn" onclick="stepDown()">-</button>
-                        <input type="number" class="stepper-input" id="numRooms" name="numRooms" 
-                               min="1" max="${available}" value="${defaultInputValue}" readonly>
-                        <button type="button" class="stepper-btn" onclick="stepUp(${available})">+</button>
-                    </div>
-                    <div id="roomAlert" class="text-danger mt-2" style="display:none; font-size: 0.8rem;">
-                        * ขออภัย ห้องพักไม่เพียงพอ
-                    </div>
-                </div>
+            const diffTime = Math.abs(endDateObj - checkin);
+            const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                <div class="alert alert-info-custom m-0" style="font-size: 0.8rem; border-left: none; text-align: center;">
-                    <i class="fas fa-info-circle me-1"></i> เข้าพักได้สูงสุด 2 ท่านต่อห้อง
-                </div>
-            </div>
-        </div>
-    `;
+            const checkinStr = checkin.toISOString().split('T')[0];
+            const apiCheckoutStr = apiCheckout.toISOString().split('T')[0];
+            
+            const dateOptions = { day: 'numeric', month: 'short', year: '2-digit' };
+            const showCheckin = checkin.toLocaleDateString('th-TH', dateOptions);
+            const showCheckout = endDateObj.toLocaleDateString('th-TH', dateOptions); // แสดงวัน checkout จริงคือวันจบ
 
-    accommodationStatusDiv.innerHTML = htmlContent;
-	}
-                    
-                    const numRoomsInput = document.getElementById('numRooms');
-                    const roomAlert = document.getElementById('roomAlert');
-                    
-                    numRoomsInput.addEventListener('input', function() {
-                        const val = parseInt(this.value);
-                        if (val > maxAvailableRooms) {
-                            roomAlert.style.display = 'block';
-                            this.classList.add('is-invalid');
-                        } else {
-                            roomAlert.style.display = 'none';
-                            this.classList.remove('is-invalid');
-                        }
-                    });
+            const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${apiCheckoutStr}`;
+            const response = await fetch(checkUrl);
+            const result = await response.json();
 
-                } else {
-                    accommodationAvailable = false;
-                    accommodationStatusDiv.innerHTML = `
-                        <div class="unavailable-message">
-                            <h6><i class="fas fa-exclamation-triangle"></i> ห้องพักไม่ว่าง</h6>
-                            <p class="mb-0">ในช่วงวันที่ ${checkin.toLocaleDateString('th-TH')} - ${endDateObj.toLocaleDateString('th-TH')} ไม่มีห้องพักว่างเพียงพอ</p>
-                        </div>`;
-                }
-            } catch (error) {
-                console.error('Accommodation check error:', error);
+            if (result.error) throw new Error(result.error);
+
+            const available = result.availableRooms;
+            maxAvailableRooms = available;
+
+            const suggestedRooms = Math.ceil(attendees / 2);
+            const defaultInputValue = (available > 0) ? (suggestedRooms > available ? available : suggestedRooms) : 0;
+
+            if (available > 0) {
                 accommodationAvailable = true;
-                accommodationStatusDiv.innerHTML = `<div class="alert alert-warning-custom">ไม่สามารถตรวจสอบห้องว่างได้</div>`;
+                
+                container.innerHTML = `
+                <div class="accommodation-result-card">
+                    <div class="acc-header">
+                        <div class="acc-title">
+                            <i class="fas fa-bed-pulse"></i> ข้อมูลที่พัก
+                        </div>
+                        <span class="badge bg-light text-dark border">${nights} คืน</span>
+                    </div>
+                    
+                    <div class="acc-body">
+                        <div class="acc-info-grid">
+                            <div class="acc-info-item">
+                                <span class="acc-label">เข้าพัก (Check-in)</span>
+                                <span class="acc-value text-primary">${showCheckin}</span>
+                                <span class="acc-label" style="font-size: 0.7rem; margin-top:4px;">เวลา 14:00 น.</span>
+                                <i class="fas fa-calendar-check acc-icon-bg"></i>
+                            </div>
+                            <div class="acc-info-item">
+                                <span class="acc-label">คืนห้อง (Check-out)</span>
+                                <span class="acc-value text-danger">${showCheckout}</span>
+                                <span class="acc-label" style="font-size: 0.7rem; margin-top:4px;">เวลา 09:30 น.</span>
+                                <i class="fas fa-calendar-times acc-icon-bg"></i>
+                            </div>
+                        </div>
+
+                        <div class="room-status-container">
+                            <div class="status-text">
+                                <i class="fas fa-check-circle"></i> ห้องพักว่าง
+                            </div>
+                            <div class="room-count-badge">${available} ห้อง</div>
+                        </div>
+
+                        <div class="room-input-section">
+                            <label for="numRooms" class="form-label required" style="font-weight: 600;">
+                                ระบุจำนวนห้องพักที่ต้องการ
+                            </label>
+                            
+                            <div class="room-input-wrapper">
+                                <div style="flex: 1;">
+                                    <input type="number" 
+                                           class="form-control form-control-lg-custom" 
+                                           id="numRooms" 
+                                           name="numRooms" 
+                                           min="1" 
+                                           max="${available}" 
+                                           value="${defaultInputValue}" 
+                                           required>
+                                </div>
+                                <div style="flex: 2;">
+                                    <div class="helper-text text-primary">
+                                        <i class="fas fa-user-friends"></i> 
+                                        แนะนำ: ${suggestedRooms} ห้อง (สำหรับ ${attendees} ท่าน)
+                                    </div>
+                                    <div class="helper-text">
+                                        <i class="fas fa-info-circle"></i> 
+                                        พักได้ 2 ท่าน/ห้อง
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="invalid-feedback" id="roomAlert" style="display:none; margin-top: 0.5rem; font-weight: 500;">
+                                <i class="fas fa-exclamation-circle"></i> จำนวนห้องเกินกว่าที่ว่าง หรือระบุไม่ถูกต้อง
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+                const numRoomsInput = document.getElementById('numRooms');
+                const roomAlert = document.getElementById('roomAlert');
+                
+                numRoomsInput.addEventListener('input', function() {
+                    const val = parseInt(this.value);
+                    if (isNaN(val) || val <= 0) {
+                        this.classList.add('is-invalid');
+                        roomAlert.style.display = 'block';
+                        roomAlert.innerHTML = '<i class="fas fa-exclamation-circle"></i> กรุณาระบุอย่างน้อย 1 ห้อง';
+                    } else if (val > maxAvailableRooms) {
+                        this.classList.add('is-invalid');
+                        roomAlert.style.display = 'block';
+                        roomAlert.innerHTML = `<i class="fas fa-exclamation-circle"></i> ห้องว่างเหลือเพียง ${maxAvailableRooms} ห้อง`;
+                    } else {
+                        this.classList.remove('is-invalid');
+                        roomAlert.style.display = 'none';
+                    }
+                });
+
+            } else {
+                accommodationAvailable = false;
+                container.innerHTML = `
+                <div class="unavailable-message shadow-sm">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-danger mb-0 fw-bold">ห้องพักเต็ม / ไม่เพียงพอ</h6>
+                            <small class="text-muted">วันที่ ${showCheckin} - ${showCheckout}</small>
+                        </div>
+                    </div>
+                    <p class="mb-0 text-secondary" style="font-size: 0.9rem; margin-left: 3.5rem;">
+                        ขออภัยในช่วงเวลาดังกล่าวไม่มีห้องพักว่าง หรือห้องพักไม่เพียงพอสำหรับการจอง
+                    </p>
+                </div>`;
             }
-        }, 500);
-    }
+
+        } catch (error) {
+            console.error('Accommodation check error:', error);
+            accommodationAvailable = true; // ยอมให้ผ่านไปก่อนถ้าเช็คไม่ได้ (Fail open or close ขึ้นอยู่กับ policy)
+            container.innerHTML = `
+                <div class="alert alert-warning-custom">
+                    <i class="fas fa-exclamation-triangle me-2"></i> ไม่สามารถตรวจสอบสถานะห้องพักได้ในขณะนี้
+                </div>`;
+        }
+    }, 600); 
+}
     
     document.querySelectorAll('.radio-card').forEach(card => {
         card.addEventListener('click', function() {
@@ -2090,23 +2206,6 @@ if (available > 0) {
         updateProgressSteps();
     });
     
-	function stepUp(max) {
-    const input = document.getElementById('numRooms');
-    let val = parseInt(input.value);
-    if (val < max) {
-        input.value = val + 1;
-        input.dispatchEvent(new Event('input'));
-    }
-}
-
-function stepDown() {
-    const input = document.getElementById('numRooms');
-    let val = parseInt(input.value);
-    if (val > 1) {
-        input.value = val - 1;
-        input.dispatchEvent(new Event('input'));
-    }
-}
     function showPDPADetail(e) {
         e.preventDefault();
         Swal.fire({
