@@ -1732,19 +1732,19 @@
                             
                             <div class="row g-2 mb-3">
                                 <div class="col-6">
-                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.04)); border-left: 3px solid #3B82F6;">
+                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.03)); border-left: 3px solid var(--primary-color);">
                                         <div class="d-flex align-items-center mb-1">
-                                            <i class="fas fa-calendar-check me-2" style="color: #3B82F6; font-size: 0.9rem;"></i>
+                                            <i class="fas fa-calendar-check me-2" style="color: var(--primary-color); font-size: 0.9rem;"></i>
                                             <span class="accommodation-label" style="font-size: 0.8rem;">วันเข้าพัก</span>
                                         </div>
                                         <span class="accommodation-value" style="font-size: 0.95rem;">${checkin.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(168, 85, 247, 0.04)); border-left: 3px solid #A855F7;">
+                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.03)); border-left: 3px solid var(--secondary-color);">
                                         <div class="d-flex align-items-center mb-1">
-                                            <i class="fas fa-calendar-times me-2" style="color: #A855F7; font-size: 0.9rem;"></i>
-                                            <span class="accommodation-label" style="font-size: 0.8rem;">วันออกจากที่พัก</span>
+                                            <i class="fas fa-calendar-times me-2" style="color: var(--secondary-color); font-size: 0.9rem;"></i>
+                                            <span class="accommodation-label" style="font-size: 0.8rem;">วันออก</span>
                                         </div>
                                         <span class="accommodation-value" style="font-size: 0.95rem;">${endDateObj.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                                     </div>
@@ -1753,17 +1753,17 @@
                             
                             <div class="row g-2 mb-3">
                                 <div class="col-6">
-                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(236, 72, 153, 0.04)); border-left: 3px solid #EC4899;">
+                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.03)); border-left: 3px solid var(--accent-color);">
                                         <div class="d-flex align-items-center mb-1">
-                                            <i class="fas fa-moon me-2" style="color: #EC4899; font-size: 0.9rem;"></i>
+                                            <i class="fas fa-moon me-2" style="color: var(--accent-color); font-size: 0.9rem;"></i>
                                             <span class="accommodation-label" style="font-size: 0.8rem;">จำนวนคืน</span>
                                         </div>
-                                        <span class="accommodation-value" style="font-size: 1.25rem; font-weight: 700;">${nights} <span style="font-size: 0.9rem; font-weight: 500;">คืน</span></span>
+                                        <span class="accommodation-value" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-color);">${nights} <span style="font-size: 0.9rem; font-weight: 500;">คืน</span></span>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05)); border-left: 3px solid var(--success-color); position: relative; overflow: hidden;">
-                                        <div style="position: absolute; top: -10px; right: -10px; width: 50px; height: 50px; background: rgba(34, 197, 94, 0.1); border-radius: 50%; animation: pulse 2s ease-in-out infinite;"></div>
+                                        <div style="position: absolute; top: -10px; right: -10px; width: 50px; height: 50px; background: rgba(34, 197, 94, 0.08); border-radius: 50%; animation: pulse 2s ease-in-out infinite;"></div>
                                         <div class="d-flex align-items-center mb-1" style="position: relative; z-index: 1;">
                                             <i class="fas fa-door-open me-2" style="color: var(--success-color); font-size: 0.9rem;"></i>
                                             <span class="accommodation-label" style="font-size: 0.8rem;">ห้องพักว่าง</span>
@@ -1776,9 +1776,9 @@
                                 </div>
                             </div>
                             
-                            <div style="background: linear-gradient(135deg, rgba(255, 184, 0, 0.06), rgba(255, 184, 0, 0.02)); border: 1px dashed rgba(255, 184, 0, 0.3); border-radius: 12px; padding: 0.875rem; margin-bottom: 1rem;">
+                            <div style="background: linear-gradient(135deg, rgba(0, 185, 0, 0.04), rgba(6, 199, 85, 0.02)); border: 1px dashed rgba(0, 185, 0, 0.25); border-radius: 12px; padding: 0.875rem; margin-bottom: 1rem;">
                                 <div class="d-flex align-items-start">
-                                    <i class="fas fa-lightbulb me-2 mt-1" style="color: var(--warning-color); font-size: 1rem;"></i>
+                                    <i class="fas fa-info-circle me-2 mt-1" style="color: var(--primary-color); font-size: 1rem;"></i>
                                     <div style="flex: 1;">
                                         <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
                                             <strong style="color: var(--text-primary);">คำแนะนำ:</strong> ห้องพัก 1 ห้อง สามารถพักได้ 2 ท่าน<br>
