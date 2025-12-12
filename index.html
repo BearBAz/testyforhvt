@@ -1671,7 +1671,6 @@
         }
     }
 
-    // [index.html] แทนที่ฟังก์ชัน checkAccommodation เดิม
     async function checkAccommodation() {
         clearTimeout(checkTimeout);
         checkTimeout = setTimeout(async () => {
@@ -1680,7 +1679,6 @@
             const endDate = document.getElementById('endDate').value;
             const attendees = parseInt(document.getElementById('attendees').value) || 0;
 
-            // รีเซ็ตค่าห้องว่าง
             maxAvailableRooms = 0;
 
             if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
@@ -1701,21 +1699,14 @@
                 const startDateObj = new Date(startDate);
                 const endDateObj = new Date(endDate);
                 
-                // คำนวณวันเข้าพักและวันออก (Checkin - CheckOut)
-                // ตาม Logic เดิม: Checkin = start - 1, Checkout = end - 1 (เช้าวัน end)
                 const checkin = new Date(startDateObj);
                 checkin.setDate(startDateObj.getDate() - 1);
-                const checkout = new Date(endDateObj); // ใช้วันจบการอบรมเป็นวัน checkout (ช่วงเช้า)
-                // checkout.setDate(endDateObj.getDate() - 1); // *แก้* ตาม requirement ใหม่ที่ให้แสดง checkin - enddate
-                
-                // คำนวณจำนวนคืน (Nights)
+                const checkout = new Date(endDateObj); 
                 const diffTime = Math.abs(endDateObj - checkin);
                 const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
                 
                 const checkinStr = checkin.toISOString().split('T')[0];
-                const checkoutStr = checkout.toISOString().split('T')[0]; // ใช้วัน End Date ส่งไปเช็ค (เพื่อให้ครอบคลุม)
-                
-                // ใช้ EndDate - 1 สำหรับส่งไป API เพื่อเช็ค availability ตาม Logic เดิมของ backend
+                const checkoutStr = checkout.toISOString().split('T')[0]; 
                 const apiCheckout = new Date(endDateObj);
                 apiCheckout.setDate(endDateObj.getDate() - 1);
                 const apiCheckoutStr = apiCheckout.toISOString().split('T')[0];
@@ -1727,52 +1718,101 @@
                 if (result.error) throw new Error(result.error);
 
                 const available = result.availableRooms;
-                maxAvailableRooms = available; // เก็บค่าไว้เช็คตอน submit
+                maxAvailableRooms = available; 
 
-                // คำนวณห้องที่ควรจองเบื้องต้น (attendees / 2)
                 const suggestedRooms = Math.ceil(attendees / 2);
                 const defaultInputValue = suggestedRooms > available ? available : suggestedRooms;
 
-                if (available > 0) {
+					if (available > 0) {
                     accommodationAvailable = true;
                     
                     let htmlContent = `
                         <div class="accommodation-info">
-                            <h6><i class="fas fa-bed"></i> รายละเอียดที่พัก</h6>
-                            <div class="accommodation-detail">
-                                <span class="accommodation-label">ช่วงเวลา:</span>
-                                <span class="accommodation-value">${checkin.toLocaleDateString('th-TH')} - ${endDateObj.toLocaleDateString('th-TH')}</span>
-                            </div>
-                             <div class="accommodation-detail">
-                                <span class="accommodation-label">จำนวนคืน:</span>
-                                <span class="accommodation-value">${nights} คืน</span>
-                            </div>
-                            <div class="accommodation-detail">
-                                <span class="accommodation-label">ห้องพักว่าง:</span>
-                                <span class="accommodation-value" style="color: var(--success-color); font-weight: bold;">${available} ห้อง</span>
+                            <h6><i class="fas fa-bed me-2"></i>รายละเอียดที่พัก</h6>
+                            
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.04)); border-left: 3px solid #3B82F6;">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fas fa-calendar-check me-2" style="color: #3B82F6; font-size: 0.9rem;"></i>
+                                            <span class="accommodation-label" style="font-size: 0.8rem;">วันเข้าพัก</span>
+                                        </div>
+                                        <span class="accommodation-value" style="font-size: 0.95rem;">${checkin.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(168, 85, 247, 0.04)); border-left: 3px solid #A855F7;">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fas fa-calendar-times me-2" style="color: #A855F7; font-size: 0.9rem;"></i>
+                                            <span class="accommodation-label" style="font-size: 0.8rem;">วันออกจากที่พัก</span>
+                                        </div>
+                                        <span class="accommodation-value" style="font-size: 0.95rem;">${endDateObj.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <hr style="margin: 1rem 0; opacity: 0.1;">
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(236, 72, 153, 0.04)); border-left: 3px solid #EC4899;">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fas fa-moon me-2" style="color: #EC4899; font-size: 0.9rem;"></i>
+                                            <span class="accommodation-label" style="font-size: 0.8rem;">จำนวนคืน</span>
+                                        </div>
+                                        <span class="accommodation-value" style="font-size: 1.25rem; font-weight: 700;">${nights} <span style="font-size: 0.9rem; font-weight: 500;">คืน</span></span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05)); border-left: 3px solid var(--success-color); position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: -10px; right: -10px; width: 50px; height: 50px; background: rgba(34, 197, 94, 0.1); border-radius: 50%; animation: pulse 2s ease-in-out infinite;"></div>
+                                        <div class="d-flex align-items-center mb-1" style="position: relative; z-index: 1;">
+                                            <i class="fas fa-door-open me-2" style="color: var(--success-color); font-size: 0.9rem;"></i>
+                                            <span class="accommodation-label" style="font-size: 0.8rem;">ห้องพักว่าง</span>
+                                        </div>
+                                        <div style="position: relative; z-index: 1;">
+                                            <span class="accommodation-value" style="font-size: 1.25rem; font-weight: 700; color: var(--success-color);">${available} <span style="font-size: 0.9rem; font-weight: 500;">ห้อง</span></span>
+                                            <i class="fas fa-check-circle ms-1" style="color: var(--success-color); font-size: 0.85rem;"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
-                            <div class="mb-2">
-                                <label for="numRooms" class="form-label required" style="font-size: 0.9rem;">ระบุจำนวนห้องพักที่ต้องการ</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            <div style="background: linear-gradient(135deg, rgba(255, 184, 0, 0.06), rgba(255, 184, 0, 0.02)); border: 1px dashed rgba(255, 184, 0, 0.3); border-radius: 12px; padding: 0.875rem; margin-bottom: 1rem;">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-lightbulb me-2 mt-1" style="color: var(--warning-color); font-size: 1rem;"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                                            <strong style="color: var(--text-primary);">คำแนะนำ:</strong> ห้องพัก 1 ห้อง สามารถพักได้ 2 ท่าน<br>
+                                            <span style="color: var(--text-light);">ระบบแนะนำ: <strong style="color: var(--primary-color);">${suggestedRooms}</strong> ห้อง สำหรับผู้เข้าร่วม <strong style="color: var(--primary-color);">${attendees}</strong> คน</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-0">
+                                <label for="numRooms" class="form-label required d-flex align-items-center" style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-sliders-h me-2" style="color: var(--primary-color);"></i>
+                                    ระบุจำนวนห้องพักที่ต้องการ
+                                </label>
+                                <div class="input-group" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border-radius: 14px; overflow: hidden;">
+                                    <span class="input-group-text" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border: none; color: white; padding: 0.875rem 1rem;">
+                                        <i class="fas fa-key"></i>
+                                    </span>
                                     <input type="number" class="form-control" id="numRooms" name="numRooms" 
-                                           min="1" max="${available}" value="${defaultInputValue}" required>
+                                           min="1" max="${available}" value="${defaultInputValue}" required
+                                           style="border: 2px solid var(--border-color); border-left: none; font-size: 1rem; font-weight: 600; padding: 0.875rem 1rem;">
+                                    <span class="input-group-text" style="background: white; border: 2px solid var(--border-color); border-left: none; color: var(--text-secondary); padding: 0.875rem 1rem;">
+                                        ห้อง
+                                    </span>
                                 </div>
-                                <div class="form-text mt-1 text-danger" id="roomAlert" style="display:none; font-size: 0.85rem;">
-                                    * ห้องพักไม่เพียงพอในช่วงเวลาดังกล่าว
-                                </div>
-                                <div class="form-text mt-1 text-muted" style="font-size: 0.8rem;">
-                                    <i class="fas fa-info-circle me-1"></i> ห้องพัก 1 ห้อง สามารถพักได้ 2 ท่าน
+                                <div class="form-text mt-2 text-danger" id="roomAlert" style="display:none; font-size: 0.85rem; padding: 0.5rem 0.75rem; background: rgba(255, 51, 75, 0.08); border-radius: 8px; border-left: 3px solid var(--danger-color);">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    <strong>ห้องพักไม่เพียงพอ!</strong> มีห้องว่างเพียง ${available} ห้องเท่านั้น
                                 </div>
                             </div>
                         </div>`;
 
                     accommodationStatusDiv.innerHTML = htmlContent;
                     
-                    // Add Event Listener for real-time validation
                     const numRoomsInput = document.getElementById('numRooms');
                     const roomAlert = document.getElementById('roomAlert');
                     
