@@ -1219,7 +1219,109 @@
             border-radius: 16px;
             padding: 1.25rem 1.5rem;
         }
-    }
+
+		.accom-card {
+    	background: #ffffff;
+   	 	border: 1px solid rgba(0, 185, 0, 0.15);
+    	border-radius: 20px;
+    	overflow: hidden;
+    	box-shadow: var(--shadow-sm);
+    	transition: all 0.3s ease;
+		}
+
+		.accom-header {
+    	background: linear-gradient(135deg, rgba(0, 185, 0, 0.08) 0%, rgba(6, 199, 85, 0.05) 100%);
+    	padding: 1.25rem;
+    	border-bottom: 1px solid rgba(0, 185, 0, 0.1);
+    	display: flex;
+    	align-items: center;
+    	justify-content: space-between;
+		}
+
+		.accom-body {
+    	padding: 1.5rem;
+		}
+
+		.info-grid {
+    	display: grid;
+    	grid-template-columns: repeat(2, 1fr);
+    	gap: 1rem;
+    	margin-bottom: 1.5rem;
+		}
+
+		.info-item {
+    	background: var(--background);
+    	padding: 0.75rem;
+    	border-radius: 12px;
+    	text-align: center;
+		}
+
+		.info-label {
+    	font-size: 0.75rem;
+    	color: var(--text-secondary);
+    	display: block;
+    	margin-bottom: 0.25rem;
+		}
+
+		.info-value {
+    	font-size: 0.95rem;
+    	font-weight: 700;
+    	color: var(--text-primary);
+		}
+
+		.availability-badge {
+    	padding: 0.5rem 1rem;
+    	border-radius: 12px;
+    	font-size: 0.85rem;
+    	font-weight: 700;
+    	display: flex;
+   	 	align-items: center;
+    	gap: 0.5rem;
+		}
+
+		.availability-high { background: rgba(34, 197, 94, 0.1); color: var(--success-color); }
+		.availability-low { background: rgba(255, 184, 0, 0.1); color: var(--warning-color); }
+
+		.stepper-container {
+    	display: flex;
+    	align-items: center;
+    	background: var(--background);
+    	border-radius: 14px;
+    	padding: 0.25rem;
+    	border: 2px solid var(--border-color);
+    	max-width: 180px;
+    	margin: 0 auto;
+		}
+
+		.stepper-btn {
+    	width: 40px;
+    	height: 40px;
+    	border-radius: 10px;
+   	 	border: none;
+    	background: white;
+    	color: var(--primary-color);
+    	font-weight: bold;
+    	display: flex;
+    	align-items: center;
+    	justify-content: center;
+    	transition: all 0.2s;
+		}
+
+		.stepper-btn:hover { background: var(--primary-color); color: white; }
+		.stepper-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+		.stepper-input {
+    	flex: 1;
+    	border: none;
+    	background: transparent;
+    	text-align: center;
+    	font-weight: 700;
+    	font-size: 1.1rem;
+   	 	width: 50px;
+		}
+
+		.stepper-input:focus { outline: none; }
+    	}
 
     @media (max-width: 767px) {
         .form-row-room-attendee { display: block; }
@@ -1723,95 +1825,57 @@
                 const suggestedRooms = Math.ceil(attendees / 2);
                 const defaultInputValue = suggestedRooms > available ? available : suggestedRooms;
 
-					if (available > 0) {
-                    accommodationAvailable = true;
-                    
-                    let htmlContent = `
-                        <div class="accommodation-info">
-                            <h6><i class="fas fa-bed me-2"></i>รายละเอียดที่พัก</h6>
-                            
-                            <div class="row g-2 mb-3">
-                                <div class="col-6">
-                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.03)); border-left: 3px solid var(--primary-color);">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <i class="fas fa-calendar-check me-2" style="color: var(--primary-color); font-size: 0.9rem;"></i>
-                                            <span class="accommodation-label" style="font-size: 0.8rem;">วันเข้าพัก</span>
-                                        </div>
-                                        <span class="accommodation-value" style="font-size: 0.95rem;">${checkin.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.03)); border-left: 3px solid var(--secondary-color);">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <i class="fas fa-calendar-times me-2" style="color: var(--secondary-color); font-size: 0.9rem;"></i>
-                                            <span class="accommodation-label" style="font-size: 0.8rem;">วันออก</span>
-                                        </div>
-                                        <span class="accommodation-value" style="font-size: 0.95rem;">${endDateObj.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="row g-2 mb-3">
-                                <div class="col-6">
-                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(0, 185, 0, 0.05), rgba(6, 199, 85, 0.03)); border-left: 3px solid var(--accent-color);">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <i class="fas fa-moon me-2" style="color: var(--accent-color); font-size: 0.9rem;"></i>
-                                            <span class="accommodation-label" style="font-size: 0.8rem;">จำนวนคืน</span>
-                                        </div>
-                                        <span class="accommodation-value" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-color);">${nights} <span style="font-size: 0.9rem; font-weight: 500;">คืน</span></span>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="accommodation-detail" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05)); border-left: 3px solid var(--success-color); position: relative; overflow: hidden;">
-                                        <div style="position: absolute; top: -10px; right: -10px; width: 50px; height: 50px; background: rgba(34, 197, 94, 0.08); border-radius: 50%; animation: pulse 2s ease-in-out infinite;"></div>
-                                        <div class="d-flex align-items-center mb-1" style="position: relative; z-index: 1;">
-                                            <i class="fas fa-door-open me-2" style="color: var(--success-color); font-size: 0.9rem;"></i>
-                                            <span class="accommodation-label" style="font-size: 0.8rem;">ห้องพักว่าง</span>
-                                        </div>
-                                        <div style="position: relative; z-index: 1;">
-                                            <span class="accommodation-value" style="font-size: 1.25rem; font-weight: 700; color: var(--success-color);">${available} <span style="font-size: 0.9rem; font-weight: 500;">ห้อง</span></span>
-                                            <i class="fas fa-check-circle ms-1" style="color: var(--success-color); font-size: 0.85rem;"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div style="background: linear-gradient(135deg, rgba(0, 185, 0, 0.04), rgba(6, 199, 85, 0.02)); border: 1px dashed rgba(0, 185, 0, 0.25); border-radius: 12px; padding: 0.875rem; margin-bottom: 1rem;">
-                                <div class="d-flex align-items-start">
-                                    <i class="fas fa-info-circle me-2 mt-1" style="color: var(--primary-color); font-size: 1rem;"></i>
-                                    <div style="flex: 1;">
-                                        <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-                                            <strong style="color: var(--text-primary);">คำแนะนำ:</strong> ห้องพัก 1 ห้อง สามารถพักได้ 2 ท่าน<br>
-                                            <span style="color: var(--text-light);">ระบบแนะนำ: <strong style="color: var(--primary-color);">${suggestedRooms}</strong> ห้อง สำหรับผู้เข้าร่วม <strong style="color: var(--primary-color);">${attendees}</strong> คน</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-0">
-                                <label for="numRooms" class="form-label required d-flex align-items-center" style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem;">
-                                    <i class="fas fa-sliders-h me-2" style="color: var(--primary-color);"></i>
-                                    ระบุจำนวนห้องพักที่ต้องการ
-                                </label>
-                                <div class="input-group" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border-radius: 14px; overflow: hidden;">
-                                    <span class="input-group-text" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border: none; color: white; padding: 0.875rem 1rem;">
-                                        <i class="fas fa-key"></i>
-                                    </span>
-                                    <input type="number" class="form-control" id="numRooms" name="numRooms" 
-                                           min="1" max="${available}" value="${defaultInputValue}" required
-                                           style="border: 2px solid var(--border-color); border-left: none; font-size: 1rem; font-weight: 600; padding: 0.875rem 1rem;">
-                                    <span class="input-group-text" style="background: white; border: 2px solid var(--border-color); border-left: none; color: var(--text-secondary); padding: 0.875rem 1rem;">
-                                        ห้อง
-                                    </span>
-                                </div>
-                                <div class="form-text mt-2 text-danger" id="roomAlert" style="display:none; font-size: 0.85rem; padding: 0.5rem 0.75rem; background: rgba(255, 51, 75, 0.08); border-radius: 8px; border-left: 3px solid var(--danger-color);">
-                                    <i class="fas fa-exclamation-triangle me-1"></i>
-                                    <strong>ห้องพักไม่เพียงพอ!</strong> มีห้องว่างเพียง ${available} ห้องเท่านั้น
-                                </div>
-                            </div>
-                        </div>`;
+					// [index.html] ปรับปรุงส่วนแสดงผลใน checkAccommodation
+if (available > 0) {
+    accommodationAvailable = true;
+    const isLow = available < 5; // ตัวอย่างเงื่อนไขแสดงสถานะห้องเหลือน้อย
+    
+    let htmlContent = `
+        <div class="accom-card animate-slide-up">
+            <div class="accom-header">
+                <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                    <i class="fas fa-bed me-2"></i>รายละเอียดที่พัก
+                </h6>
+                <div class="availability-badge ${isLow ? 'availability-low' : 'availability-high'}">
+                    <i class="fas ${isLow ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                    ว่าง ${available} ห้อง
+                </div>
+            </div>
+            
+            <div class="accom-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">วันที่เข้าพัก (Check-in)</span>
+                        <span class="info-value">${checkin.toLocaleDateString('th-TH')}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">วันที่ออก (Check-out)</span>
+                        <span class="info-value">${endDateObj.toLocaleDateString('th-TH')}</span>
+                    </div>
+                </div>
 
-                    accommodationStatusDiv.innerHTML = htmlContent;
+                <div class="text-center mb-3">
+                    <label class="form-label required" style="font-size: 0.9rem;">ระบุจำนวนห้องที่ต้องการ</label>
+                    <div class="stepper-container">
+                        <button type="button" class="stepper-btn" onclick="stepDown()">-</button>
+                        <input type="number" class="stepper-input" id="numRooms" name="numRooms" 
+                               min="1" max="${available}" value="${defaultInputValue}" readonly>
+                        <button type="button" class="stepper-btn" onclick="stepUp(${available})">+</button>
+                    </div>
+                    <div id="roomAlert" class="text-danger mt-2" style="display:none; font-size: 0.8rem;">
+                        * ขออภัย ห้องพักไม่เพียงพอ
+                    </div>
+                </div>
+
+                <div class="alert alert-info-custom m-0" style="font-size: 0.8rem; border-left: none; text-align: center;">
+                    <i class="fas fa-info-circle me-1"></i> เข้าพักได้สูงสุด 2 ท่านต่อห้อง
+                </div>
+            </div>
+        </div>
+    `;
+
+    accommodationStatusDiv.innerHTML = htmlContent;
+	}
                     
                     const numRoomsInput = document.getElementById('numRooms');
                     const roomAlert = document.getElementById('roomAlert');
@@ -2026,6 +2090,23 @@
         updateProgressSteps();
     });
     
+	function stepUp(max) {
+    const input = document.getElementById('numRooms');
+    let val = parseInt(input.value);
+    if (val < max) {
+        input.value = val + 1;
+        input.dispatchEvent(new Event('input'));
+    }
+}
+
+function stepDown() {
+    const input = document.getElementById('numRooms');
+    let val = parseInt(input.value);
+    if (val > 1) {
+        input.value = val - 1;
+        input.dispatchEvent(new Event('input'));
+    }
+}
     function showPDPADetail(e) {
         e.preventDefault();
         Swal.fire({
