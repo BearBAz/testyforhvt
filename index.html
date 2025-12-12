@@ -1430,16 +1430,6 @@
                                 </div>
                             </div>
                             
-                            <div id="roomSelectionSection" style="display: none;" class="mt-3 slide-up">
-                                <label for="numRooms" class="form-label required">จำนวนห้องพักที่ต้องการ</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="numRooms" name="numRooms" 
-                                           min="1" placeholder="ระบุจำนวนห้อง" required disabled>
-                                    <span class="input-group-text" id="roomAvailabilityBadge">รอตรวจสอบ...</span>
-                                </div>
-                                <div class="form-text" id="roomAvailabilityText"></div>
-                            </div>
-                            
                             <div id="accommodationStatus" style="display: none;" class="mt-3"></div>
                         </div>
                         
@@ -1537,12 +1527,12 @@
     }
 
     function updateProgressSteps() {
+        const step1Fields = ['fullName', 'department', 'phone'];
         const step2Fields = ['courseName', 'startDate', 'endDate', 'meetingRoom', 'attendees'];
-        const accommodationNeeded = document.querySelector('input[name="accommodation"]:checked')?.value === 'ต้องการ';
-        const numRoomsFilled = !accommodationNeeded || (document.getElementById('numRooms').value.trim() !== '');
+        const accommodationChecked = document.querySelector('input[name="accommodation"]:checked') !== null;
         const step1Complete = step1Fields.every(field => document.getElementById(field).value.trim() !== '');
-        const step2Complete = step2Fields.every(field => document.getElementById(field).value.trim() !== '') && numRoomsFilled;
- 
+        const step2Complete = step2Fields.every(field => document.getElementById(field).value.trim() !== '') && accommodationChecked;
+        // Mobile steps
         const step1El = document.getElementById('step1');
         const step2El = document.getElementById('step2');
         const step3El = document.getElementById('step3');
@@ -1681,119 +1671,140 @@
         }
     }
 
+    // [index.html] แทนที่ฟังก์ชัน checkAccommodation เดิม
     async function checkAccommodation() {
         clearTimeout(checkTimeout);
-        
-        const roomSection = document.getElementById('roomSelectionSection');
-        const numRoomsInput = document.getElementById('numRooms');
-        const statusDiv = document.getElementById('accommodationStatus');
-        const badge = document.getElementById('roomAvailabilityBadge');
-        const helpText = document.getElementById('roomAvailabilityText');
-
         checkTimeout = setTimeout(async () => {
             const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
-            // ไม่ต้องใช้ attendees ในการคำนวณห้องแล้ว แต่เก็บไว้เผื่อ logic อื่น
-            // const attendees = parseInt(document.getElementById('attendees').value) || 0; 
+            const attendees = parseInt(document.getElementById('attendees').value) || 0;
+
+            // รีเซ็ตค่าห้องว่าง
+            maxAvailableRooms = 0;
 
             if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
-                statusDiv.style.display = 'none';
-                roomSection.style.display = 'none';
-                numRoomsInput.disabled = true;
-                numRoomsInput.value = ''; // clear value
+                accommodationStatusDiv.innerHTML = '';
+                accommodationStatusDiv.style.display = 'none';
                 accommodationAvailable = true;
-                updateProgressSteps(); // Update step status
                 return;
             }
-            
             if (!startDate || !endDate) {
                 accommodationAvailable = true;
                 return;
             }
 
-            statusDiv.style.display = 'block';
-            statusDiv.innerHTML = `<div class="alert alert-info-custom"><i class="fas fa-spinner fa-spin me-2"></i>กำลังตรวจสอบห้องว่าง...</div>`;
-            roomSection.style.display = 'none'; // ซ่อนช่องกรอกไปก่อนระหว่างโหลด
+            accommodationStatusDiv.style.display = 'block';
+            accommodationStatusDiv.innerHTML = `<div class="alert alert-info-custom"><i class="fas fa-spinner fa-spin me-2"></i>กำลังตรวจสอบห้องว่าง...</div>`;
 
             try {
                 const startDateObj = new Date(startDate);
                 const endDateObj = new Date(endDate);
+                
+                // คำนวณวันเข้าพักและวันออก (Checkin - CheckOut)
+                // ตาม Logic เดิม: Checkin = start - 1, Checkout = end - 1 (เช้าวัน end)
                 const checkin = new Date(startDateObj);
                 checkin.setDate(startDateObj.getDate() - 1);
-                const checkout = new Date(endDateObj);
-                checkout.setDate(endDateObj.getDate() - 1);
+                const checkout = new Date(endDateObj); // ใช้วันจบการอบรมเป็นวัน checkout (ช่วงเช้า)
+                // checkout.setDate(endDateObj.getDate() - 1); // *แก้* ตาม requirement ใหม่ที่ให้แสดง checkin - enddate
+                
+                // คำนวณจำนวนคืน (Nights)
+                const diffTime = Math.abs(endDateObj - checkin);
+                const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                
                 const checkinStr = checkin.toISOString().split('T')[0];
-                const checkoutStr = checkout.toISOString().split('T')[0];
+                const checkoutStr = checkout.toISOString().split('T')[0]; // ใช้วัน End Date ส่งไปเช็ค (เพื่อให้ครอบคลุม)
+                
+                // ใช้ EndDate - 1 สำหรับส่งไป API เพื่อเช็ค availability ตาม Logic เดิมของ backend
+                const apiCheckout = new Date(endDateObj);
+                apiCheckout.setDate(endDateObj.getDate() - 1);
+                const apiCheckoutStr = apiCheckout.toISOString().split('T')[0];
 
-                const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${checkoutStr}`;
+                const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${apiCheckoutStr}`;
                 const response = await fetch(checkUrl);
                 const result = await response.json();
                 
                 if (result.error) throw new Error(result.error);
 
                 const available = result.availableRooms;
-                const nights = Math.max(1, Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24)) + 1);
+                maxAvailableRooms = available; // เก็บค่าไว้เช็คตอน submit
+
+                // คำนวณห้องที่ควรจองเบื้องต้น (attendees / 2)
+                const suggestedRooms = Math.ceil(attendees / 2);
+                const defaultInputValue = suggestedRooms > available ? available : suggestedRooms;
 
                 if (available > 0) {
                     accommodationAvailable = true;
                     
-                    statusDiv.innerHTML = ''; // ล้างข้อความ Loading
-                    statusDiv.style.display = 'none'; // ซ่อน div alert เดิม
-                    
-                    roomSection.style.display = 'block';
-                    numRoomsInput.disabled = false;
-                    numRoomsInput.max = available; // กำหนดค่าสูงสุดตามห้องว่างจริง
-                    
-                    badge.textContent = `ว่าง ${available} ห้อง`;
-                    badge.className = 'input-group-text bg-success text-white';
-                    helpText.innerHTML = `<i class="fas fa-check-circle text-success"></i> สามารถจองได้สูงสุด ${available} ห้อง (เข้าพัก ${checkin.toLocaleDateString('th-TH')} - ${checkout.toLocaleDateString('th-TH')} รวม ${nights} คืน)`;
-                    
-                    let infoHtml = `
-                        <div class="accommodation-info mt-3">
-                            <h6><i class="fas fa-info-circle"></i>ข้อมูลการเข้าพัก</h6>
+                    let htmlContent = `
+                        <div class="accommodation-info">
+                            <h6><i class="fas fa-bed"></i> รายละเอียดที่พัก</h6>
                             <div class="accommodation-detail">
-                                <span class="accommodation-label">วันเข้าพัก:</span>
-                                <span class="accommodation-value">${checkin.toLocaleDateString('en-GB')}</span>
+                                <span class="accommodation-label">ช่วงเวลา:</span>
+                                <span class="accommodation-value">${checkin.toLocaleDateString('th-TH')} - ${endDateObj.toLocaleDateString('th-TH')}</span>
                             </div>
-                            <div class="accommodation-detail">
-                                <span class="accommodation-label">วันออกจากที่พัก:</span>
-                                <span class="accommodation-value">${checkout.toLocaleDateString('en-GB')}</span>
-                            </div>
-                            <div class="accommodation-detail">
+                             <div class="accommodation-detail">
                                 <span class="accommodation-label">จำนวนคืน:</span>
                                 <span class="accommodation-value">${nights} คืน</span>
                             </div>
+                            <div class="accommodation-detail">
+                                <span class="accommodation-label">ห้องพักว่าง:</span>
+                                <span class="accommodation-value" style="color: var(--success-color); font-weight: bold;">${available} ห้อง</span>
+                            </div>
+                            
+                            <hr style="margin: 1rem 0; opacity: 0.1;">
+                            
+                            <div class="mb-2">
+                                <label for="numRooms" class="form-label required" style="font-size: 0.9rem;">ระบุจำนวนห้องพักที่ต้องการ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    <input type="number" class="form-control" id="numRooms" name="numRooms" 
+                                           min="1" max="${available}" value="${defaultInputValue}" required>
+                                </div>
+                                <div class="form-text mt-1 text-danger" id="roomAlert" style="display:none; font-size: 0.85rem;">
+                                    * ห้องพักไม่เพียงพอในช่วงเวลาดังกล่าว
+                                </div>
+                                <div class="form-text mt-1 text-muted" style="font-size: 0.8rem;">
+                                    <i class="fas fa-info-circle me-1"></i> ห้องพัก 1 ห้อง สามารถพักได้ 2 ท่าน
+                                </div>
+                            </div>
                         </div>`;
+
+                    accommodationStatusDiv.innerHTML = htmlContent;
                     
-                    statusDiv.innerHTML = infoHtml;
-                    statusDiv.style.display = 'block';
+                    // Add Event Listener for real-time validation
+                    const numRoomsInput = document.getElementById('numRooms');
+                    const roomAlert = document.getElementById('roomAlert');
+                    
+                    numRoomsInput.addEventListener('input', function() {
+                        const val = parseInt(this.value);
+                        if (val > maxAvailableRooms) {
+                            roomAlert.style.display = 'block';
+                            this.classList.add('is-invalid');
+                        } else {
+                            roomAlert.style.display = 'none';
+                            this.classList.remove('is-invalid');
+                        }
+                    });
 
                 } else {
                     accommodationAvailable = false;
-                    roomSection.style.display = 'none'; // ซ่อนช่องกรอกถ้าห้องเต็ม
-                    numRoomsInput.disabled = true;
-                    numRoomsInput.value = '';
-                    
-                    statusDiv.innerHTML = `
-                        <div class="alert alert-danger-custom mt-3"><i class="fas fa-times-circle me-2"></i>ห้องพักเต็มในช่วงเวลาดังกล่าว</div>
+                    accommodationStatusDiv.innerHTML = `
                         <div class="unavailable-message">
-                            <h6><i class="fas fa-exclamation-triangle"></i>ไม่สามารถจองที่พักได้</h6>
-                            <p class="mb-0">กรุณาเปลี่ยนช่วงเวลา หรือเลือก "ไม่ต้องการ" ที่พัก</p>
+                            <h6><i class="fas fa-exclamation-triangle"></i> ห้องพักไม่ว่าง</h6>
+                            <p class="mb-0">ในช่วงวันที่ ${checkin.toLocaleDateString('th-TH')} - ${endDateObj.toLocaleDateString('th-TH')} ไม่มีห้องพักว่างเพียงพอ</p>
                         </div>`;
-                    statusDiv.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Accommodation check error:', error);
-                accommodationAvailable = true; // อนุญาตให้ผ่านไปก่อนถ้าเช็คไม่ได้ (หรือจะ set false ก็ได้)
-                statusDiv.innerHTML = `<div class="alert alert-warning-custom"><i class="fas fa-exclamation-circle me-2"></i>ไม่สามารถตรวจสอบห้องว่างได้ (โปรดตรวจสอบการเชื่อมต่อ)</div>`;
+                accommodationAvailable = true;
+                accommodationStatusDiv.innerHTML = `<div class="alert alert-warning-custom">ไม่สามารถตรวจสอบห้องว่างได้</div>`;
             }
-            updateProgressSteps();
         }, 500);
     }
     
     document.querySelectorAll('.radio-card').forEach(card => {
-            card.addEventListener('click', function() {
+        card.addEventListener('click', function() {
             document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
             this.classList.add('active');
             const radio = this.querySelector('input[type="radio"]');
@@ -1803,50 +1814,27 @@
             updateProgressSteps();
         });
     });
-    
     document.querySelectorAll('input, select').forEach(input => {
         input.addEventListener('input', updateProgressSteps);
         input.addEventListener('change', updateProgressSteps);
     });
-
-    const numRoomsInput = document.getElementById('numRooms');
-    numRoomsInput.addEventListener('input', function() {
-        const max = parseInt(this.max);
-        const val = parseInt(this.value);
-        if (val > max) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'เกินจำนวนห้องว่าง',
-                text: `มีห้องว่างเพียง ${max} ห้องในช่วงเวลานี้`,
-                timer: 2000,
-                showConfirmButton: false
-            });
-            this.value = max;
-        }
-        updateProgressSteps();
-    });
-
     document.getElementById('startDate').addEventListener('change', () => {
         checkMeetingRoomAvailability();
         checkAccommodation();
     });
-
     document.getElementById('endDate').addEventListener('change', () => {
         checkMeetingRoomAvailability();
         checkAccommodation();
     });
-
     document.getElementById('attendees').addEventListener('input', checkAccommodation);
     
     document.querySelectorAll('input[name="accommodation"]').forEach(radio => 
         radio.addEventListener('change', checkAccommodation)
     );
-
     customMeetingRoomSelect.addEventListener('click', () => {
         meetingRoomOptions.classList.toggle('show');
         customMeetingRoomSelect.classList.toggle('open');
     });
-
     document.addEventListener('click', (e) => {
         if (!customMeetingRoomSelect.contains(e.target)) {
             meetingRoomOptions.classList.remove('show');
@@ -1854,7 +1842,7 @@
         }
     });
 
-        bookingForm.addEventListener('submit', async function(event) {
+    bookingForm.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         const pdpaCheckbox = document.getElementById('pdpaConsent');
@@ -1870,14 +1858,40 @@
         }
         
         const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
-        if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
-            await Swal.fire({
-                title: 'ที่พักไม่เพียงพอ!',
-                text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา ลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก',
-                icon: 'error',
-                confirmButtonText: 'ตกลง'
-            });
-            return;
+        let numRoomsValue = 0;
+
+        if (accommodationChoice && accommodationChoice.value === 'ต้องการ') {
+            const numRoomsInput = document.getElementById('numRooms');
+            if (numRoomsInput) {
+                numRoomsValue = parseInt(numRoomsInput.value) || 0;
+                
+                // เช็คว่ากรอกเกินห้องว่างหรือไม่
+                if (numRoomsValue > maxAvailableRooms) {
+                    await Swal.fire({
+                        title: 'ห้องพักไม่เพียงพอ!',
+                        html: `ห้องพักว่างเพียง <b>${maxAvailableRooms}</b> ห้อง <br>กรุณาระบุจำนวนไม่เกินยอดคงเหลือ`,
+                        icon: 'warning',
+                        confirmButtonText: 'แก้ไขข้อมูล'
+                    });
+                    numRoomsInput.focus();
+                    return; // หยุดการทำงาน ไม่ส่งข้อมูล
+                }
+                
+                // เช็คว่ากรอก <= 0 หรือไม่
+                if (numRoomsValue <= 0) {
+                     await Swal.fire({ title: 'ข้อมูลไม่ถูกต้อง', text: 'กรุณาระบุจำนวนห้องพักอย่างน้อย 1 ห้อง', icon: 'warning', confirmButtonText: 'ตกลง' });
+                     return;
+                }
+            } else if (!accommodationAvailable) {
+                // กรณีเลือกต้องการ แต่ไม่มี input โผล่มา (คือห้องเต็มตั้งแต่เช็ค)
+                await Swal.fire({
+                    title: 'ที่พักไม่เพียงพอ!',
+                    text: 'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว กรุณาเปลี่ยนช่วงเวลา',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง'
+                });
+                return;
+            }
         }
 
         const selectedRoomName = hiddenMeetingRoomInput.value;
@@ -1922,7 +1936,7 @@
             meetingRoom: formData.get('meetingRoom'),
             accommodation: formData.get('accommodation'),
             attendees: formData.get('attendees'),
-            numRooms: formData.get('numRooms'),
+	    numRooms: numRoomsValue,
             timestamp: new Date().toISOString()
         };
         try {
@@ -1945,11 +1959,7 @@
                 allowOutsideClick: false
             }).then((result) => {
                 if (result.isConfirmed) {
-                    if (liff.isInClient()) {
-                        liff.closeWindow();
-                    } else {
-                        window.close();
-                    }
+                    if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
                 }
             });
         } catch (error) {
