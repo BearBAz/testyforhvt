@@ -1919,7 +1919,7 @@ async function checkAccommodation() {
                 <div class="accommodation-result-card">
                     <div class="acc-header">
                         <div class="acc-title">
-                            <i class="fas fa-bed-pulse"></i> ข้อมูลที่พัก
+                            <i class="fas fa-bed-pulse"></i> ข้อมูลการจองที่พัก
                         </div>
                         <span class="badge bg-light text-dark border">${nights} คืน</span>
                     </div>
@@ -1935,7 +1935,7 @@ async function checkAccommodation() {
                             <div class="acc-info-item">
                                 <span class="acc-label">คืนห้อง (Check-out)</span>
                                 <span class="helper-text text-recommend">${showCheckout}</span>
-                                <span class="acc-label" style="font-size: 0.7rem; margin-top:4px;">เวลา 09:30 น.</span>
+                                <span class="acc-label" style="font-size: 0.7rem; margin-top:4px;">เวลา 10:00 น.</span>
                                 <i class="fas fa-calendar-times acc-icon-bg"></i>
                             </div>
                         </div>
@@ -1966,7 +1966,7 @@ async function checkAccommodation() {
                                 <div style="flex: 2;">
                                     <div class="helper-text text-recommend">
                                         <i class="fas fa-user-friends"></i> 
-                                        แนะนำ: ${suggestedRooms} ห้อง (สำหรับ ${attendees} ท่าน)
+                                        แนะนำ: ${suggestedRooms} ห้อง (สำหรับผู้เข้าอบรม ${attendees} ท่าน)
                                     </div>
                                     <div class="helper-text">
                                         <i class="fas fa-info-circle"></i> 
@@ -2022,7 +2022,7 @@ async function checkAccommodation() {
 
         } catch (error) {
             console.error('Accommodation check error:', error);
-            accommodationAvailable = true; // ยอมให้ผ่านไปก่อนถ้าเช็คไม่ได้ (Fail open or close ขึ้นอยู่กับ policy)
+            accommodationAvailable = true;
             container.innerHTML = `
                 <div class="alert alert-warning-custom">
                     <i class="fas fa-exclamation-triangle me-2"></i> ไม่สามารถตรวจสอบสถานะห้องพักได้ในขณะนี้
