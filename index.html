@@ -2123,7 +2123,7 @@ async function checkAccommodation() {
             return;
         }
         
-        const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
+		const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
         let numRoomsValue = 0;
 
         if (accommodationChoice && accommodationChoice.value === 'ต้องการ') {
@@ -2183,7 +2183,7 @@ async function checkAccommodation() {
         
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
-        mainContent.style.display = 'none';
+        // mainContent.style.display = 'none';
         loadingDiv.classList.add('show');
 
         const formData = new FormData(event.target);
@@ -2199,7 +2199,7 @@ async function checkAccommodation() {
             meetingRoom: formData.get('meetingRoom'),
             accommodation: formData.get('accommodation'),
             attendees: formData.get('attendees'),
-	    numRooms: numRoomsValue,
+	    	numRooms: numRoomsValue,
             timestamp: new Date().toISOString()
         };
         try {
