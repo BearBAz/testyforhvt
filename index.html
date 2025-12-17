@@ -1948,13 +1948,11 @@ async function checkAccommodation() {
             maxAvailableRooms = available;
 
             const suggestedRooms = Math.ceil(attendees / 2);
-            const defaultInputValue = (available > 0) ? (suggestedRooms > available ? available : suggestedRooms) : 0;
-
-            if (available > 0) {
+            if (available > 0 && available >= suggestedRooms) {
+                
                 accommodationAvailable = true;
-
-                // คำนวณ Quota
-                const quotaLimit = suggestedRooms + 5; 
+                const defaultInputValue = suggestedRooms; // ใช้ค่าแนะนำเป็นค่าตั้งต้นเลยเพราะเราเช็คแล้วว่าพอ
+                const quotaLimit = suggestedRooms + 5;
 
                 container.innerHTML = `
                 <div class="accommodation-result-card">
@@ -2028,7 +2026,6 @@ async function checkAccommodation() {
                 
                 numRoomsInput.addEventListener('input', function() {
                     const val = parseInt(this.value);
-                    
                     if (isNaN(val) || val <= 0) {
                         this.classList.add('is-invalid');
                         roomAlert.style.display = 'block';
@@ -2046,9 +2043,18 @@ async function checkAccommodation() {
                         roomAlert.style.display = 'none';
                     }
                 });
-				
+
             } else {
                 accommodationAvailable = false;
+                
+                let errorTitle = "ห้องพักไม่เพียงพอ";
+                let errorDesc = `ความต้องการ ${suggestedRooms} ห้อง แต่เหลือว่างเพียง ${available} ห้อง`;
+                
+                if (available === 0) {
+                    errorTitle = "ห้องพักเต็ม";
+                    errorDesc = "ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว";
+                }
+
                 container.innerHTML = `
                 <div class="unavailable-message shadow-sm">
                     <div class="d-flex align-items-center mb-2">
@@ -2056,15 +2062,16 @@ async function checkAccommodation() {
                             <i class="fas fa-times"></i>
                         </div>
                         <div>
-                            <h6 class="text-danger mb-0 fw-bold">ห้องพักเต็ม / ไม่เพียงพอ</h6>
+                            <h6 class="text-danger mb-0 fw-bold">${errorTitle}</h6>
                             <small class="text-muted">วันที่ ${showCheckin} - ${showCheckout}</small>
                         </div>
                     </div>
-                    <p class="mb-0 text-secondary" style="font-size: 0.9rem; margin-left: 3.5rem;">
-                        ขออภัยในช่วงเวลาดังกล่าวไม่มีห้องพักว่าง หรือห้องพักไม่เพียงพอสำหรับการจอง
-                    </p>
+                    <div class="alert alert-danger-custom mt-3 mb-0" style="font-size: 0.9rem;">
+                        <i class="fas fa-exclamation-triangle me-2"></i> ${errorDesc} <br>
+                        <strong>กรุณาเลือกช่วงเวลาอื่น หรือลดจำนวนผู้เข้าพัก</strong>
+                    </div>
                 </div>`;
-            }
+			}
 
         } catch (error) {
             console.error('Accommodation check error:', error);
