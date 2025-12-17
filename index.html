@@ -1952,7 +1952,10 @@ async function checkAccommodation() {
 
             if (available > 0) {
                 accommodationAvailable = true;
-                
+
+                // คำนวณ Quota
+                const quotaLimit = suggestedRooms + 5; 
+
                 container.innerHTML = `
                 <div class="accommodation-result-card">
                     <div class="acc-header">
@@ -2025,6 +2028,7 @@ async function checkAccommodation() {
                 
                 numRoomsInput.addEventListener('input', function() {
                     const val = parseInt(this.value);
+                    
                     if (isNaN(val) || val <= 0) {
                         this.classList.add('is-invalid');
                         roomAlert.style.display = 'block';
@@ -2033,12 +2037,16 @@ async function checkAccommodation() {
                         this.classList.add('is-invalid');
                         roomAlert.style.display = 'block';
                         roomAlert.innerHTML = `<i class="fas fa-exclamation-circle"></i> ห้องว่างเหลือเพียง ${maxAvailableRooms} ห้อง`;
+                    } else if (val > quotaLimit) {
+                        this.classList.add('is-invalid');
+                        roomAlert.style.display = 'block';
+                        roomAlert.innerHTML = `<i class="fas fa-exclamation-circle"></i> ไม่สามารถจองห้องพักเกินโควต้าที่กำหนดได้ โปรดติดต่อ admin ผ่าน Line OA`;
                     } else {
                         this.classList.remove('is-invalid');
                         roomAlert.style.display = 'none';
                     }
                 });
-
+				
             } else {
                 accommodationAvailable = false;
                 container.innerHTML = `
@@ -2122,7 +2130,7 @@ async function checkAccommodation() {
             pdpaCheckbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
-        
+			
 		const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
         let numRoomsValue = 0;
 
@@ -2131,6 +2139,10 @@ async function checkAccommodation() {
             if (numRoomsInput) {
                 numRoomsValue = parseInt(numRoomsInput.value) || 0;
                 
+                const currentAttendees = parseInt(document.getElementById('attendees').value) || 0;
+                const suggested = Math.ceil(currentAttendees / 2);
+                const quotaLimit = suggested + 5;
+
                 if (numRoomsValue > maxAvailableRooms) {
                     await Swal.fire({
                         title: 'ห้องพักไม่เพียงพอ!',
@@ -2141,11 +2153,24 @@ async function checkAccommodation() {
                     numRoomsInput.focus();
                     return; 
                 }
+
+                if (numRoomsValue > quotaLimit) {
+                     await Swal.fire({
+                        title: 'เกินโควต้าที่กำหนด',
+                        text: 'ไม่สามารถจองห้องพักเกินโควต้าที่กำหนดได้ โปรดติดต่อ admin ผ่าน Line OA',
+                        icon: 'warning',
+                        confirmButtonText: 'ตกลง'
+                    });
+                    numRoomsInput.classList.add('is-invalid');
+                    numRoomsInput.focus();
+                    return;
+                }
                 
                 if (numRoomsValue <= 0) {
                      await Swal.fire({ title: 'ข้อมูลไม่ถูกต้อง', text: 'กรุณาระบุจำนวนห้องพักอย่างน้อย 1 ห้อง', icon: 'warning', confirmButtonText: 'ตกลง' });
                      return;
                 }
+				
             } else if (!accommodationAvailable) {
                 await Swal.fire({
                     title: 'ที่พักไม่เพียงพอ!',
@@ -2202,6 +2227,7 @@ async function checkAccommodation() {
 	    	numRooms: numRoomsValue,
             timestamp: new Date().toISOString()
         };
+		
         try {
             await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
@@ -2211,6 +2237,7 @@ async function checkAccommodation() {
                 body: JSON.stringify(data),
                 redirect: 'follow'
             });
+			
             loadingDiv.classList.remove('show');
             mainContent.style.display = 'block';
 
@@ -2225,6 +2252,7 @@ async function checkAccommodation() {
                     if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); }
                 }
             });
+			
         } catch (error) {
             console.error('Submit error:', error);
             loadingDiv.classList.remove('show');
