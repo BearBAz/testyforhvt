@@ -2047,8 +2047,8 @@ async function checkAccommodation() {
             } else {
                 accommodationAvailable = false;
                 
-                let errorTitle = "ห้องพักไม่เพียงพอ";
-                let errorDesc = `ความต้องการ ${suggestedRooms} ห้อง แต่เหลือว่างเพียง ${available} ห้อง`;
+                let errorTitle = "ห้องพักไม่เพียงพอในช่วงเวลาที่เลือก";
+                let errorDesc = `ต้องการห้องพัก ${suggestedRooms} ห้อง แต่มีห้องพักที่ว่าง ${available} ห้อง`;
                 
                 if (available === 0) {
                     errorTitle = "ห้องพักเต็ม";
@@ -2063,12 +2063,12 @@ async function checkAccommodation() {
                         </div>
                         <div>
                             <h6 class="text-danger mb-0 fw-bold">${errorTitle}</h6>
-                            <small class="text-muted">วันที่ ${showCheckin} - ${showCheckout}</small>
+                            <small class="text-muted">ระหว่างวันที่ ${showCheckin} - ${showCheckout}</small>
                         </div>
                     </div>
                     <div class="alert alert-danger-custom mt-3 mb-0" style="font-size: 0.9rem;">
                         <i class="fas fa-exclamation-triangle me-2"></i> ${errorDesc} <br>
-                        <strong>กรุณาเลือกช่วงเวลาอื่น หรือลดจำนวนผู้เข้าพัก</strong>
+                        <strong>โปรดเลือกช่วงเวลาอื่น หรือลดจำนวนผู้เข้าอบรม</strong>
                     </div>
                 </div>`;
 			}
