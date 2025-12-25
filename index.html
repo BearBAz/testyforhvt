@@ -1902,7 +1902,6 @@ async function checkAccommodation() {
         }
 
         if (!startDate || !endDate || !attendeesInput || attendees <= 0) {
-
             container.innerHTML = ''; 
             container.style.display = 'none';
             return;
@@ -1923,23 +1922,25 @@ async function checkAccommodation() {
             const startDateObj = new Date(startDate);
             const endDateObj = new Date(endDate);
             
+            // คำนวณวันเข้าพัก-ออก: startDate-1 ถึง endDate-1
             const checkin = new Date(startDateObj);
             checkin.setDate(startDateObj.getDate() - 1);
             
-            const apiCheckout = new Date(endDateObj);
-            apiCheckout.setDate(endDateObj.getDate() - 1);
+            const checkout = new Date(endDateObj);
+            checkout.setDate(endDateObj.getDate() - 1);
 
-            const diffTime = Math.abs(endDateObj - checkin);
+            // คำนวณจำนวนคืนที่พักจริง (checkin ถึงก่อน checkout)
+            const diffTime = checkout - checkin;
             const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            const checkinStr = checkin.toISOString().split('T')[0];
-            const apiCheckoutStr = apiCheckout.toISOString().split('T')[0];
+            const startDateStr = startDateObj.toISOString().split('T')[0];
+            const endDateStr = endDateObj.toISOString().split('T')[0];
             
             const dateOptions = { day: 'numeric', month: 'short', year: '2-digit' };
             const showCheckin = checkin.toLocaleDateString('th-TH', dateOptions);
-            const showCheckout = endDateObj.toLocaleDateString('th-TH', dateOptions); // แสดงวัน checkout จริงคือวันจบ
+            const showCheckout = checkout.toLocaleDateString('th-TH', dateOptions);
 
-            const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&checkin=${checkinStr}&checkout=${apiCheckoutStr}`;
+            const checkUrl = `${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${startDateStr}&endDate=${endDateStr}`;
             const response = await fetch(checkUrl);
             const result = await response.json();
 
@@ -1949,8 +1950,8 @@ async function checkAccommodation() {
             maxAvailableRooms = available;
 
             const suggestedRooms = Math.ceil(attendees / 2);
+            
             if (available > 0 && available >= suggestedRooms) {
-                
                 accommodationAvailable = true;
                 const defaultInputValue = suggestedRooms;
                 const quotaLimit = suggestedRooms + 5;
@@ -2044,15 +2045,15 @@ async function checkAccommodation() {
                         roomAlert.style.display = 'none';
                     }
                 });
-				
-} else {
+                
+            } else {
                 accommodationAvailable = false;
 
                 let errorTitle = "ห้องพักไม่เพียงพอ";
                 let errorDesc = `ต้องการห้องพักจำนวน ${suggestedRooms} ห้อง แต่มีห้องพักว่างเพียง ${available} ห้อง`;
                 
                 if (available === 0) {
-                    errorTitle = "ห้องพักเต็ม";
+                    errorTitle = "ห้องพักเต็म";
                     errorDesc = "ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว";
                 }
 
@@ -2064,7 +2065,7 @@ async function checkAccommodation() {
                         </div>
                         <div>
                             <h6 class="text-danger mb-0 fw-bold">${errorTitle}</h6>
-                            <small class="text-muted">ระหว่างวันที่ ${showCheckin} - ${showCheckout}</small>
+                            <small class="text-muted">ระหว่างวันที่ ${showCheckin} - ${showCheckout} (${nights} คืน)</small>
                         </div>
                     </div>
                     <div class="alert alert-danger-custom mt-3 mb-0" style="font-size: 0.9rem;">
