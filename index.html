@@ -1683,7 +1683,6 @@
     const LIFF_ID = "2007138631-Ono58j50";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
 
-
     const mainContent = document.getElementById('mainContent');
     const bookingForm = document.getElementById('bookingForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -1922,14 +1921,17 @@ async function checkAccommodation() {
             const startDateObj = new Date(startDate);
             const endDateObj = new Date(endDate);
             
-            // คำนวณวันเข้าพัก-ออก: startDate-1 ถึง endDate-1
+            // คำนวณวันเข้าพัก-ออก
+            // จองห้องประชุม 11-12/01
+            // → เข้าพัก 10/01 เวลา 14:00
+            // → ออก 12/01 เวลา 10:00
             const checkin = new Date(startDateObj);
-            checkin.setDate(startDateObj.getDate() - 1);
+            checkin.setDate(startDateObj.getDate() - 1);  // startDate - 1
             
-            const checkout = new Date(endDateObj);
-            checkout.setDate(endDateObj.getDate() - 1);
+            const checkout = new Date(endDateObj);  // endDate (ไม่ -1)
 
-            // คำนวณจำนวนคืนที่พักจริง (checkin ถึงก่อน checkout)
+            // คำนวณจำนวนคืนที่พักจริง
+            // ตัวอย่าง: checkin 10/01, checkout 12/01 = พัก 2 คืน (คืนวันที่ 10 และ 11)
             const diffTime = checkout - checkin;
             const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -2053,7 +2055,7 @@ async function checkAccommodation() {
                 let errorDesc = `ต้องการห้องพักจำนวน ${suggestedRooms} ห้อง แต่มีห้องพักว่างเพียง ${available} ห้อง`;
                 
                 if (available === 0) {
-                    errorTitle = "ห้องพักเต็म";
+                    errorTitle = "ห้องพักเต็ม";
                     errorDesc = "ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว";
                 }
 
