@@ -1538,36 +1538,23 @@
                     </div>
 
                     <form id="bookingForm">
-<div class="form-card">
-    <h3 class="form-card-title">
-        <i class="fas fa-user-circle"></i> ข้อมูลผู้จอง
-    </h3>
-    
-    <div class="mb-3">
-        <label for="employeeId" class="form-label required">รหัสพนักงาน</label>
-        <div class="input-group">
-            <input type="tel" class="form-control" id="employeeId" name="employeeId" 
-                   placeholder="กรอกรหัสพนักงาน" maxlength="6" 
-                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-            <button class="btn btn-secondary" type="button" id="btnCheckEmp" onclick="checkEmployeeData()" 
-                    style="background-color: var(--primary-color); border-color: var(--primary-color); color: white;">
-                <i class="fas fa-search me-1"></i>
-            </button>
-			 </div>
-    </div>
-
-    <div class="form-row-2col">
-        <div class="mb-3">
-            <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
-            <input type="text" class="form-control" id="fullName" name="fullName" 
-                   placeholder="กรุณากรอกชื่อ-นามสกุล" required>
-        </div>
-        <div class="mb-3">
-            <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
-            <input type="text" class="form-control" id="department" name="department" 
-                   placeholder="รอการตรวจสอบข้อมูล..." required readonly style="background-color: #f8f9fa;">
-        </div>
-    </div>
+                        <div class="form-card">
+                            <h3 class="form-card-title">
+                                <i class="fas fa-user-circle"></i>
+                                ข้อมูลผู้จอง
+                            </h3>
+                            <div class="form-row-2col">
+                                <div class="mb-3">
+                                    <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
+                                    <input type="text" class="form-control" id="fullName" name="fullName" 
+                                           placeholder="กรุณากรอกชื่อ-นามสกุล" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="department" class="form-label required">สังกัด/ชื่อหน่วยงาน</label>
+                                    <input type="text" class="form-control" id="department" name="department" 
+                                           placeholder="กรุณากรอกสังกัด/ชื่อหน่วยงาน" required>
+                                </div>
+                            </div>
                             <div class="mb-3">
                                 <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
                                 <input type="tel" class="form-control" id="phone" name="phone" 
@@ -1696,6 +1683,7 @@
     const LIFF_ID = "2007138631-Ono58j50";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
 
+
     const mainContent = document.getElementById('mainContent');
     const bookingForm = document.getElementById('bookingForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -1710,7 +1698,6 @@
     let checkTimeout;
     let roomData = [];
     let accommodationAvailable = true;
-    let isEmployeeVerified = false;
 
     async function initializeLiff() {
         try {
@@ -1730,80 +1717,6 @@
         }
     }
 
-async function checkEmployeeData() {
-    const empId = document.getElementById('employeeId').value;
-    const btnCheck = document.getElementById('btnCheckEmp');
-    
-    if (!empId || empId.length !== 6) {
-        Swal.fire({
-            title: 'แจ้งเตือน',
-            text: 'กรุณากรอกรหัสพนักงานให้ครบ 6 หลัก',
-            icon: 'warning',
-            confirmButtonText: 'ตกลง'
-        });
-        return;
-    }
-
-    // Effect ปุ่ม Loading
-    const originalBtnText = btnCheck.innerHTML;
-    btnCheck.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    btnCheck.disabled = true;
-
-    try {
-        const url = `${GAS_WEB_APP_URL}?action=checkEmployee&empId=${empId}`;
-        const response = await fetch(url);
-        const result = await response.json();
-
-        if (result.found) {
-            // พบข้อมูล
-            document.getElementById('fullName').value = result.data.name;
-            document.getElementById('department').value = result.data.dept;
-            
-            isEmployeeVerified = true;
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'พบข้อมูลพนักงาน',
-                text: `คุณ ${result.data.name}`,
-                timer: 1500,
-                showConfirmButton: false
-            });
-            
-            // ปลดล็อกปุ่มถัดไปโดยเรียก updateProgressSteps
-            updateProgressSteps();
-
-        } else {
-            // ไม่พบข้อมูล
-            resetEmployeeData();
-            Swal.fire({
-                title: 'ไม่พบข้อมูล',
-                text: 'ไม่พบรหัสพนักงานนี้ในระบบ หรือท่านไม่มีสิทธิ์จอง',
-                icon: 'error',
-                confirmButtonText: 'ลองใหม่'
-            });
-        }
-    } catch (error) {
-        console.error(error);
-        Swal.fire({
-            title: 'ข้อผิดพลาด',
-            text: 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้',
-            icon: 'error',
-            confirmButtonText: 'ตกลง'
-        });
-        resetEmployeeData();
-    } finally {
-        btnCheck.innerHTML = originalBtnText;
-        btnCheck.disabled = false;
-    }
-}
-
-function resetEmployeeData() {
-    document.getElementById('fullName').value = '';
-    document.getElementById('department').value = '';
-    isEmployeeVerified = false;
-    updateProgressSteps();
-}
-
     async function autofillUserData() {
         if (!userId) return;
         const autofillUrl = `${GAS_WEB_APP_URL}?userId=${userId}`;
@@ -1822,11 +1735,10 @@ function resetEmployeeData() {
     }
 
     function updateProgressSteps() {
-        const step1Fields = ['employeeId', 'fullName', 'department', 'phone'];
+        const step1Fields = ['fullName', 'department', 'phone'];
         const step2Fields = ['courseName', 'startDate', 'endDate', 'meetingRoom', 'attendees'];
         const accommodationChecked = document.querySelector('input[name="accommodation"]:checked') !== null;
-        const step1Filled = step1Fields.every(field => document.getElementById(field).value.trim() !== '');
-    const step1Complete = step1Filled && isEmployeeVerified; // เพิ่มเงื่อนไขนี้
+        const step1Complete = step1Fields.every(field => document.getElementById(field).value.trim() !== '');
         const step2Complete = step2Fields.every(field => document.getElementById(field).value.trim() !== '') && accommodationChecked;
         // Mobile steps
         const step1El = document.getElementById('step1');
@@ -2315,7 +2227,6 @@ async function checkAccommodation() {
         const data = {
             userId: userId,
             displayName: displayName,
-	    employeeId: formData.get('employeeId'),
             fullName: formData.get('fullName'),
             department: formData.get('department'),
             phone: formData.get('phone'),
@@ -2370,27 +2281,13 @@ async function checkAccommodation() {
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-    // 1. จัดการวันที่ (โค้ดเดิม)
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('startDate').setAttribute('min', today);
-    document.getElementById('startDate').addEventListener('change', function() {
-        document.getElementById('endDate').setAttribute('min', this.value);
-    });
-
-    // 2. จัดการ Input รหัสพนักงาน (ย้ายเข้ามาไว้ข้างในนี้เพื่อให้ชัวร์ว่า Element โหลดเสร็จแล้ว)
-    const empInput = document.getElementById('employeeId');
-    if(empInput){
-        empInput.addEventListener('input', function() {
-            // ถ้ารหัสเปลี่ยน (User พิมพ์แก้เลข) ต้องรีเซ็ตสถานะการยืนยันทันที
-            if (isEmployeeVerified) {
-                resetEmployeeData();
-            }
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').setAttribute('min', today);
+        document.getElementById('startDate').addEventListener('change', function() {
+            document.getElementById('endDate').setAttribute('min', this.value);
         });
-    }
-
-    // 3. อัปเดต Step
-    updateProgressSteps();
-});
+        updateProgressSteps();
+    });
     
     function showPDPADetail(e) {
         e.preventDefault();
