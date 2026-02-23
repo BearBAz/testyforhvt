@@ -1828,9 +1828,25 @@ function resetEmployeeData() {
         const step1Fields = ['employeeId', 'fullName', 'department', 'phone'];
         const step2Fields = ['courseName', 'startDate', 'endDate', 'meetingRoom', 'attendees'];
         const accommodationChecked = document.querySelector('input[name="accommodation"]:checked') !== null;
+        
         const step1Filled = step1Fields.every(field => document.getElementById(field).value.trim() !== '');
-    const step1Complete = step1Filled && isEmployeeVerified; // เพิ่มเงื่อนไขนี้
+        const step1Complete = step1Filled && isEmployeeVerified;
         const step2Complete = step2Fields.every(field => document.getElementById(field).value.trim() !== '') && accommodationChecked;
+
+        const pdpaChecked = document.getElementById('pdpaConsent') ? document.getElementById('pdpaConsent').checked : false;
+        const submitBtn = document.getElementById('submitBtn');
+        
+        if (submitBtn) {
+            if (step1Complete && step2Complete && pdpaChecked) {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        }
         // Mobile steps
         const step1El = document.getElementById('step1');
         const step2El = document.getElementById('step2');
@@ -2195,6 +2211,8 @@ async function checkAccommodation() {
         input.addEventListener('input', updateProgressSteps);
         input.addEventListener('change', updateProgressSteps);
     });
+	document.getElementById('pdpaConsent').addEventListener('change', updateProgressSteps);
+	
     document.getElementById('startDate').addEventListener('change', () => {
         checkMeetingRoomAvailability();
         checkAccommodation();
