@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ตรวจสอบสถานะการจอง ศฝฟ.</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green:#00B900; --green-dark:#009900;
+            --gold:#FFB800; --blue:#3B82F6; --success:#22c55e;
+            --bg:#F0F4F0; --card:#FFFFFF; --text:#1A1A1A;
+            --muted:#6B7280; --border:#E5E7EB;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Sarabun',sans-serif; background:var(--bg); color:var(--text); }
+        .app-wrap { max-width:480px; margin:0 auto; min-height:100vh; background:var(--bg); padding-bottom:2rem; }
+
+        .page-header {
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            padding:1.5rem 1.5rem 3.5rem; position:relative; overflow:hidden;
+        }
+        .page-header::before { content:''; position:absolute; top:-40px; right:-40px; width:150px; height:150px; background:rgba(255,255,255,0.1); border-radius:50%; }
+        .back-btn { display:inline-flex; align-items:center; gap:0.5rem; color:rgba(255,255,255,0.9); font-size:0.9rem; text-decoration:none; margin-bottom:1rem; position:relative; z-index:1; }
+        .back-btn:hover { color:#fff; }
+        .page-title { font-size:1.5rem; font-weight:700; color:#fff; position:relative; z-index:1; margin-bottom:0.3rem; }
+        .page-sub { font-size:0.85rem; color:rgba(255,255,255,0.85); position:relative; z-index:1; }
+
+        .content { padding:0 1rem; margin-top:-2rem; }
+        .section-card { background:var(--card); border-radius:20px; padding:1.25rem; margin-bottom:1rem; box-shadow:0 4px 16px rgba(0,0,0,0.07); border:1px solid var(--border); }
+        .section-title { font-size:1rem; font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem; }
+        .section-title i { color:var(--blue); }
+
+        /* STATUS CARD */
+        .status-card {
+            background:#fff; border:1px solid var(--border); border-radius:14px;
+            padding:1.1rem; margin-bottom:0.75rem; position:relative;
+            transition:all 0.2s; cursor:default;
+        }
+        .status-card:last-child { margin-bottom:0; }
+        .status-card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.6rem; }
+        .booking-id-tag { display:inline-block; background:rgba(59,130,246,0.1); color:#1D4ED8; font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:8px; }
+        
+        /* STATUS PILL */
+        .status-pill { display:inline-flex; align-items:center; gap:0.3rem; padding:0.3rem 0.8rem; border-radius:20px; font-size:0.78rem; font-weight:700; }
+        .status-pill.approved { background:rgba(255,184,0,0.12); color:#B8860B; }
+        .status-pill.confirmed { background:rgba(34,197,94,0.12); color:#15803d; }
+
+        .status-course { font-size:1rem; font-weight:700; margin-bottom:0.5rem; line-height:1.4; }
+        .status-meta { display:flex; flex-wrap:wrap; gap:0.6rem 1rem; }
+        .status-meta-item { font-size:0.82rem; color:var(--muted); display:flex; align-items:center; gap:0.3rem; }
+        .status-meta-item i { color:var(--blue); width:14px; text-align:center; }
+        .status-meta-item.accent i { color:var(--success); }
+
+        /* EXPAND DETAIL */
+        .status-card-detail {
+            display:none; margin-top:0.75rem; padding-top:0.75rem;
+            border-top:1px dashed var(--border);
+        }
+        .status-card.expanded .status-card-detail { display:block; }
+        .detail-row { display:flex; justify-content:space-between; padding:0.35rem 0; font-size:0.88rem; }
+        .detail-label { color:var(--muted); }
+        .detail-value { font-weight:600; text-align:right; max-width:60%; }
+        .expand-toggle { font-size:0.8rem; color:var(--blue); cursor:pointer; margin-top:0.6rem; display:inline-flex; align-items:center; gap:0.3rem; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align:center; padding:3rem 1rem; color:var(--muted); }
+        .empty-state i { font-size:3rem; color:var(--border); margin-bottom:1rem; display:block; }
+        .empty-state h5 { font-weight:600; color:var(--text); margin-bottom:0.5rem; }
+
+        /* SKELETON */
+        .skeleton { background:linear-gradient(90deg,#f0f0f0 25%,#f8f8f8 50%,#f0f0f0 75%); background-size:200%; animation:shimmer 1.5s infinite; border-radius:8px; height:16px; margin-bottom:0.5rem; }
+        .skeleton.tall { height:80px; }
+        @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+    </style>
+</head>
+<body>
+<div class="app-wrap">
+    <div class="page-header">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> หน้าหลัก</a>
+        <div class="page-title"><i class="fas fa-search me-2"></i>สถานะการจอง</div>
+        <div class="page-sub">รายการที่อนุมัติและยืนยันแล้ว</div>
+    </div>
+
+    <div class="content">
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-list"></i> รายการจองของคุณ
+                <span style="margin-left:auto;font-size:0.82rem;color:var(--muted);font-weight:400;" id="countText">กำลังโหลด...</span>
+            </div>
+            <div id="statusList">
+                <div class="skeleton tall"></div>
+                <div class="skeleton tall"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec"; // ← ใส่ GAS Web App URL
+
+function init() {
+    const userId = sessionStorage.getItem('userId') || '';
+    if (!userId) { window.location.href = 'index.html'; return; }
+    loadStatus(userId);
+}
+
+async function loadStatus(userId) {
+    try {
+        const res = await fetch(`${GAS_URL}?action=getAllBookings&userId=${userId}`);
+        const result = await res.json();
+        const bookings = (result.bookings || []).filter(b =>
+            b.approvalStatus === 'Approved' || b.approvalStatus === 'Confirmed'
+        );
+        renderStatus(bookings);
+    } catch(e) {
+        document.getElementById('statusList').innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><h5>ไม่สามารถโหลดข้อมูลได้</h5><p>กรุณาลองใหม่</p></div>`;
+    }
+}
+
+function renderStatus(bookings) {
+    const container = document.getElementById('statusList');
+    const countText = document.getElementById('countText');
+
+    if (bookings.length === 0) {
+        countText.textContent = '0 รายการ';
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><h5>ไม่มีรายการ</h5><p>ยังไม่มีรายการจองที่อนุมัติหรือยืนยัน</p></div>`;
+        return;
+    }
+
+    countText.textContent = `${bookings.length} รายการ`;
+    container.innerHTML = bookings.map((b, i) => {
+        const statusCls = b.approvalStatus === 'Confirmed' ? 'confirmed' : 'approved';
+        const statusTxt = b.approvalStatus === 'Confirmed' ? '<i class="fas fa-check-double"></i> ยืนยันแล้ว' : '<i class="fas fa-clock"></i> รออยืนยัน';
+        const sd = formatDateTH(b.startDate), ed = formatDateTH(b.endDate);
+        const ci = formatDateTH(b.checkin), co = formatDateTH(b.checkout);
+        const hasAcc = b.accommodation === 'ต้องการ';
+
+        return `
+        <div class="status-card" id="card_${i}">
+            <div class="status-card-top">
+                <span class="booking-id-tag">${b.bookingId}</span>
+                <span class="status-pill ${statusCls}">${statusTxt}</span>
+            </div>
+            <div class="status-course">${b.courseName || '-'}</div>
+            <div class="status-meta">
+                <span class="status-meta-item"><i class="fas fa-calendar"></i>${sd} – ${ed}</span>
+                <span class="status-meta-item"><i class="fas fa-users"></i>${b.attendees} คน</span>
+                <span class="status-meta-item"><i class="fas fa-door-open"></i>${b.room || '-'}</span>
+                ${hasAcc ? `<span class="status-meta-item accent"><i class="fas fa-bed"></i>พัก ${b.numRooms} ห้อง</span>` : ''}
+            </div>
+            <div class="status-card-detail">
+                <div class="detail-row"><span class="detail-label">หน่วยงาน</span><span class="detail-value">${b.department || '-'}</span></div>
+                <div class="detail-row"><span class="detail-label">เบอร์โทร</span><span class="detail-value">${String(b.phone||'').replace("'","")}</span></div>
+                ${hasAcc ? `
+                <div class="detail-row"><span class="detail-label">Check-in</span><span class="detail-value">${ci}</span></div>
+                <div class="detail-row"><span class="detail-label">Check-out</span><span class="detail-value">${co}</span></div>
+                ${parseInt(b.viprooms||0)>0?`<div class="detail-row"><span class="detail-label">ห้อง VIP</span><span class="detail-value">${b.viprooms} ห้อง</span></div>`:''}
+                ` : '<div class="detail-row"><span class="detail-label">ที่พัก</span><span class="detail-value">ไม่ต้องการ</span></div>'}
+            </div>
+            <span class="expand-toggle" onclick="toggleExpand(${i})">
+                <i class="fas fa-chevron-down" id="icon_${i}"></i> ดูรายละเอียด
+            </span>
+        </div>`;
+    }).join('');
+}
+
+function toggleExpand(i) {
+    const card = document.getElementById(`card_${i}`);
+    const icon = document.getElementById(`icon_${i}`);
+    const isExpanded = card.classList.toggle('expanded');
+    icon.className = isExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+}
+
+function formatDateTH(dateStr) {
+    if (!dateStr) return '-';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+}
+
+init();
+</script>
+</body>
+</html>
