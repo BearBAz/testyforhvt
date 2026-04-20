@@ -318,6 +318,37 @@
                 </div>
             </div>
 
+<!-- ===== การจองอาหารและอาหารว่าง (NEW) ===== -->
+                <div class="form-card">
+                    <div class="form-card-title">
+                        <i class="fas fa-utensils"></i>
+                        จองอาหารและอาหารว่าง
+                    </div>
+                    <p class="text-secondary mb-3" style="font-size:0.88rem;">
+                        กรุณาระบุความต้องการจองอาหารและอาหารว่างสำหรับการอบรม
+                    </p>
+                    <div class="food-radio-group">
+                        <!-- ต้องการ -->
+                        <div class="food-radio-card" id="foodCardYes">
+                            <span class="radio-card-check" id="checkYes" style="display:none;"><i class="fas fa-check-circle"></i></span>
+                            <input type="radio" name="foodBooking" id="foodBookingYes" value="ต้องการ" onchange="onFoodBookingChange('ต้องการ')">
+                            <label for="foodBookingYes">
+                                <div class="radio-card-icon"><i class="fas fa-utensils"></i></div>
+                                <div class="radio-card-text">ต้องการ</div>
+                            </label>
+                        </div>
+                        <!-- ไม่ต้องการ -->
+                        <div class="food-radio-card" id="foodCardNo">
+                            <span class="radio-card-check" id="checkNo" style="display:none;"><i class="fas fa-check-circle"></i></span>
+                            <input type="radio" name="foodBooking" id="foodBookingNo" value="ไม่ต้องการ" onchange="onFoodBookingChange('ไม่ต้องการ')">
+                            <label for="foodBookingNo">
+                                <div class="radio-card-icon"><i class="fas fa-times-circle"></i></div>
+                                <div class="radio-card-text">ไม่ต้องการ</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            
             <div class="section-card">
                 <div class="section-title"><i class="fas fa-file-upload"></i> อัปโหลดเอกสาร</div>
                 <!-- เอกสารอนุมัติ (required) -->
@@ -599,6 +630,7 @@ async function submitConfirmation() {
             equipmentOther: document.getElementById('f_equipOther').value,
             fieldActivity: fields,
             fieldActivityOther: document.getElementById('f_fieldOther').value,
+            foodBooking: currentFoodBooking,   // <-- NEW: ช่อง 25
             approvalFile: approvalData,
             attendeeListFile: attendeeData,
             foodOrderFile: foodData,
