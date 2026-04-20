@@ -1,193 +1,338 @@
 <!DOCTYPE html>
+
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ระบบจองห้องประชุม ศฝฟ.</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #7C3AED;
-            --primary-dark: #5B21B6;
-            --primary-light: #8B5CF6;
-            --primary-soft: #EDE9FE;
-            --accent: #F59E0B;
-            --danger: #EF4444;
-            --success: #10B981;
-            --bg: #F5F3FF;
-            --card: #FFFFFF;
-            --text: #1E1B4B;
-            --muted: #6B7280;
-            --border: #E5E7EB;
+            --p900: #1E0A3C;
+            --p800: #2D1060;
+            --p700: #4A1D96;
+            --p600: #6D28D9;
+            --p500: #7C3AED;
+            --p400: #8B5CF6;
+            --p300: #A78BFA;
+            --p200: #C4B5FD;
+            --p100: #EDE9FE;
+            --p50:  #F5F3FF;
+            --gold: #F59E0B;
+            --gold-light: #FEF3C7;
+            --emerald: #059669;
+            --emerald-light: #D1FAE5;
+            --rose: #E11D48;
+            --white: #FFFFFF;
+            --gray50: #F9FAFB;
+            --gray100: #F3F4F6;
+            --gray200: #E5E7EB;
+            --gray400: #9CA3AF;
+            --gray600: #4B5563;
+            --gray900: #111827;
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-sm: 0 2px 8px rgba(109,40,217,0.08);
+            --shadow-md: 0 4px 20px rgba(109,40,217,0.12);
+            --shadow-lg: 0 12px 40px rgba(109,40,217,0.18);
+            --shadow-xl: 0 24px 60px rgba(109,40,217,0.22);
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Sarabun',sans-serif; background:var(--bg); min-height:100vh; color:var(--text); -webkit-font-smoothing: antialiased; }
-        .app-wrap { max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; background:var(--bg); box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html { scroll-behavior:smooth; }
+        body {
+            font-family: 'IBM Plex Sans Thai', 'Plus Jakarta Sans', sans-serif;
+            background: var(--p50);
+            color: var(--gray900);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .app { max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; background: var(--white); position: relative; overflow: hidden; }
 
-        /* HERO */
-        .hero {
-            background: linear-gradient(145deg, #7C3AED 0%, #5B21B6 55%, #4C1D95 100%);
-            padding: 3.5rem 1.5rem 5.5rem;
-            position: relative; overflow: hidden; text-align: center;
-            border-radius: 0 0 32px 32px;
-            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.15);
-        }
-        .hero::before {
-            content:'';
-            position:absolute; top:-80px; right:-60px;
-            width:260px; height:260px; background:rgba(255,255,255,0.07); border-radius:50%;
-        }
-        .hero::after {
-            content:'';
-            position:absolute; bottom:-60px; left:-50px;
-            width:200px; height:200px; background:rgba(255,255,255,0.05); border-radius:50%;
-        }
-        .hero-orb {
-            position:absolute;
-            top:40px; left:20px;
-            width:100px; height:100px; background:rgba(245,158,11,0.12); border-radius:50%;
-        }
-        .hero-icon {
-            width:84px;
-            height:84px; background:rgba(255,255,255,0.18);
-            border-radius:24px; display:inline-flex; align-items:center; justify-content:center;
-            margin-bottom:1rem; backdrop-filter:blur(12px); position:relative; z-index:1;
-            border:1px solid rgba(255,255,255,0.25); box-shadow:0 8px 32px rgba(0,0,0,0.15);
-        }
-        .hero-icon i { font-size:2.2rem; color:#fff; }
-        .hero-title { font-size:1.9rem; font-weight:700; color:#fff; position:relative; z-index:1; margin-bottom:0.4rem; letter-spacing:-0.5px; }
-        .hero-sub { font-size:0.88rem; color:rgba(255,255,255,0.82); position:relative; z-index:1; }
+```
+    /* ───── LOADING ───── */
+    .loader {
+        position: fixed; inset: 0; z-index: 9999;
+        background: var(--p800);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .loader.out { opacity: 0; pointer-events: none; transform: scale(1.04); }
+    .loader-ring {
+        width: 72px; height: 72px; border-radius: 22px;
+        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 20px;
+        animation: ring-pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes ring-pulse {
+        0%,100% { box-shadow: 0 0 0 0 rgba(167,139,250,0.4); transform: scale(1); }
+        50% { box-shadow: 0 0 0 16px rgba(167,139,250,0); transform: scale(1.05); }
+    }
+    .loader-ring i { font-size: 1.8rem; color: var(--p200); }
+    .loader-text { color: rgba(255,255,255,0.7); font-size: 0.88rem; letter-spacing: 0.05em; }
+    .loader-bar { width: 120px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 16px; overflow: hidden; }
+    .loader-bar-fill { height: 100%; background: linear-gradient(90deg, var(--p300), var(--p200)); border-radius: 10px; animation: bar-fill 1.2s ease-in-out infinite; }
+    @keyframes bar-fill { 0% { width:0%; margin-left:0; } 60% { width:80%; } 100% { width:80%; margin-left:100%; } }
 
-        /* PROFILE CHIP */
-        .profile-chip {
-            display:flex;
-            align-items:center; gap:0.75rem;
-            background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.3);
-            border-radius:50px; padding:0.5rem 1rem;
-            margin:1.5rem auto 0; width:fit-content;
-            position:relative; z-index:1; backdrop-filter:blur(10px);
-        }
-        .profile-avatar { width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; overflow:hidden; }
-        .profile-avatar img { width:100%; height:100%; object-fit:cover; }
-        .profile-avatar i { color:#fff; font-size:1rem; }
-        .profile-name { font-size:0.9rem; color:#fff; font-weight:600; }
+    /* ───── HERO ───── */
+    .hero {
+        background: linear-gradient(160deg, var(--p900) 0%, var(--p800) 40%, var(--p700) 100%);
+        padding: 52px 24px 72px;
+        position: relative; overflow: hidden;
+    }
+    .hero-geo {
+        position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    }
+    .hero-geo::before {
+        content: ''; position: absolute;
+        width: 320px; height: 320px;
+        background: radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%);
+        top: -80px; right: -80px; border-radius: 50%;
+    }
+    .hero-geo::after {
+        content: ''; position: absolute;
+        width: 200px; height: 200px;
+        background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%);
+        bottom: 0; left: -40px; border-radius: 50%;
+    }
+    .hero-dot-grid {
+        position: absolute; inset: 0;
+        background-image: radial-gradient(circle, rgba(167,139,250,0.15) 1px, transparent 1px);
+        background-size: 28px 28px;
+    }
+    .hero-inner { position: relative; z-index: 2; }
+    .hero-tag {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 20px; padding: 5px 12px; margin-bottom: 20px;
+        font-size: 0.75rem; color: var(--p200); letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .hero-tag i { font-size: 0.65rem; color: var(--gold); }
+    .hero-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 2.1rem; font-weight: 800;
+        color: var(--white); line-height: 1.2; margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+    .hero-title span { color: var(--p300); }
+    .hero-subtitle { font-size: 0.88rem; color: rgba(255,255,255,0.6); margin-bottom: 28px; font-weight: 400; }
 
-        /* MENU */
-        .menu-section { flex:1; padding:0 1.25rem 2rem; margin-top:-3rem; position:relative; z-index:3; }
-        .menu-grid { display:flex; flex-direction:column; gap:1.25rem; }
-        .menu-card {
-            background:var(--card);
-            border-radius:24px; padding:1.5rem;
-            display:flex; align-items:center; gap:1.25rem;
-            box-shadow:0 8px 24px rgba(124,58,237,0.06); border:1px solid rgba(124,58,237,0.08);
-            cursor:pointer; transition:all 0.3s ease;
-            text-decoration:none; color:inherit; position:relative; overflow:hidden;
-        }
-        .menu-card:hover, .menu-card:active {
-            transform:translateY(-4px);
-            box-shadow:0 12px 32px rgba(124,58,237,0.15);
-            border-color:rgba(124,58,237,0.3); color:inherit;
-        }
-        .menu-card::after { content:''; position:absolute; right:-24px; top:50%; transform:translateY(-50%); width:90px; height:90px; border-radius:50%; opacity:0.04; }
-        .menu-card.violet::after { background:#7C3AED; }
-        .menu-card.amber::after { background:#F59E0B; }
-        .menu-card.indigo::after { background:#4F46E5; }
+    /* PROFILE PILL */
+    .profile-pill {
+        display: none; align-items: center; gap: 10px;
+        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
+        backdrop-filter: blur(12px);
+        border-radius: 50px; padding: 8px 14px 8px 8px;
+        width: fit-content;
+    }
+    .profile-pill.show { display: flex; }
+    .profile-ava {
+        width: 34px; height: 34px; border-radius: 50%;
+        background: var(--p600); border: 2px solid rgba(255,255,255,0.3);
+        display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;
+    }
+    .profile-ava img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-ava i { color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+    .profile-info {}
+    .profile-label { font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 1px; }
+    .profile-name { font-size: 0.88rem; color: var(--white); font-weight: 600; }
 
-        .menu-icon { width:62px; height:62px; border-radius:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-        .menu-icon.violet { background:linear-gradient(135deg, #7C3AED, #8B5CF6); box-shadow: 0 4px 12px rgba(124,58,237,0.3); }
-        .menu-icon.amber { background:linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
-        .menu-icon.indigo { background:linear-gradient(135deg, #4F46E5, #6366F1); box-shadow: 0 4px 12px rgba(79,70,229,0.3); }
-        .menu-icon i { font-size:1.5rem; color:#fff; }
+    /* STATS ROW */
+    .stats-row {
+        display: flex; gap: 10px;
+        margin: 0 16px; margin-top: -32px; margin-bottom: 20px;
+        position: relative; z-index: 5;
+    }
+    .stat-chip {
+        flex: 1; background: var(--white);
+        border-radius: var(--radius-md); padding: 14px 12px;
+        box-shadow: var(--shadow-md); border: 1px solid var(--gray100);
+        text-align: center;
+    }
+    .stat-chip-num { font-size: 1.3rem; font-weight: 800; color: var(--p600); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .stat-chip-label { font-size: 0.72rem; color: var(--gray400); margin-top: 2px; }
 
-        .menu-text { flex:1; }
-        .menu-label { font-size:1.15rem; font-weight:700; margin-bottom:0.25rem; color:var(--text); }
-        .menu-desc { font-size:0.85rem; color:var(--muted); line-height: 1.4; }
-        .menu-arrow { color:#C4B5FD; font-size:1.2rem; transition: transform 0.3s ease; }
-        .menu-card:hover .menu-arrow { transform: translateX(4px); color: var(--primary); }
+    /* ───── MENU ───── */
+    .menu { flex: 1; padding: 0 16px 32px; }
+    .menu-label { font-size: 0.72rem; font-weight: 700; color: var(--gray400); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; padding-left: 4px; }
+    .menu-stack { display: flex; flex-direction: column; gap: 12px; }
 
-        /* LOADING */
-        .loading-screen {
-            position:fixed; inset:0;
-            background:linear-gradient(145deg, #7C3AED, #5B21B6);
-            display:flex; flex-direction:column; align-items:center; justify-content:center;
-            z-index:9999; transition:opacity 0.5s ease;
-        }
-        .loading-screen.hide { opacity:0; pointer-events:none; }
-        .loading-logo { width:90px; height:90px; background:rgba(255,255,255,0.18); border-radius:28px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; animation:pulse-logo 1.5s ease-in-out infinite; }
-        .loading-logo i { font-size:2.5rem; color:#fff; }
-        @keyframes pulse-logo { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
-        .loading-text { color:rgba(255,255,255,0.9); font-size:1.05rem; font-weight:500; }
-        .loading-dots::after { content:'...'; animation:dots 1.5s steps(4,end) infinite; }
-        @keyframes dots { 0%,100%{content:'.';} 33%{content:'..';} 66%{content:'...';} }
+    .menu-card {
+        display: flex; align-items: center; gap: 16px;
+        background: var(--white); border-radius: var(--radius-lg);
+        padding: 18px 18px; text-decoration: none; color: inherit;
+        border: 1.5px solid var(--gray100);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+        position: relative; overflow: hidden;
+    }
+    .menu-card:active { transform: scale(0.97); }
+    .menu-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--p200); color: inherit; }
+    .menu-card-bg {
+        position: absolute; right: -20px; bottom: -20px;
+        width: 100px; height: 100px; border-radius: 50%; opacity: 0.05;
+        transition: all 0.3s;
+    }
+    .menu-card:hover .menu-card-bg { transform: scale(1.4); opacity: 0.08; }
 
-        /* FOOTER */
-        .app-footer { text-align:center; padding:1.5rem 1rem 2.5rem; color:var(--muted); font-size:0.85rem; font-weight: 500; }
-        .app-footer i { color:var(--primary); margin-right:0.4rem; }
+    .menu-icon-wrap {
+        width: 56px; height: 56px; border-radius: 18px;
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        position: relative; z-index: 1;
+    }
+    .menu-icon-wrap i { font-size: 1.3rem; color: var(--white); }
 
-        /* PENDING BADGE */
-        .pending-badge { background:var(--danger); color:#fff; font-size:0.75rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:12px; min-width:24px; text-align:center; box-shadow: 0 2px 8px rgba(239,68,68,0.4); }
-    </style>
+    .menu-icon-wrap.violet { background: linear-gradient(135deg, var(--p500) 0%, var(--p400) 100%); box-shadow: 0 8px 20px rgba(124,58,237,0.35); }
+    .menu-icon-wrap.amber  { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); box-shadow: 0 8px 20px rgba(245,158,11,0.35); }
+    .menu-icon-wrap.indigo { background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%); box-shadow: 0 8px 20px rgba(79,70,229,0.35); }
+    .menu-card-bg.violet { background: var(--p500); }
+    .menu-card-bg.amber  { background: #F59E0B; }
+    .menu-card-bg.indigo { background: #4F46E5; }
+
+    .menu-text { flex: 1; min-width: 0; position: relative; z-index: 1; }
+    .menu-text-title { font-size: 1.0rem; font-weight: 700; color: var(--gray900); margin-bottom: 3px; }
+    .menu-text-desc  { font-size: 0.8rem; color: var(--gray400); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .menu-arrow-wrap { display: flex; align-items: center; gap: 8px; position: relative; z-index: 1; flex-shrink: 0; }
+    .menu-badge { background: var(--rose); color: var(--white); font-size: 0.68rem; font-weight: 800; padding: 3px 7px; border-radius: 10px; min-width: 22px; text-align: center; display: none; }
+    .menu-badge.show { display: block; animation: badge-pop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes badge-pop { from { transform: scale(0); } to { transform: scale(1); } }
+    .menu-chev { color: var(--p300); font-size: 0.8rem; }
+
+    /* ───── FOOTER ───── */
+    .app-footer {
+        padding: 16px 20px 28px;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        border-top: 1px solid var(--gray100);
+    }
+    .footer-icon { width: 28px; height: 28px; background: var(--p100); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .footer-icon i { font-size: 0.75rem; color: var(--p500); }
+    .footer-text { font-size: 0.78rem; color: var(--gray400); }
+    .footer-text strong { color: var(--gray600); }
+
+    /* ───── SHIMMER ───── */
+    .shimmer { background: linear-gradient(90deg, var(--gray100) 25%, var(--gray50) 50%, var(--gray100) 75%); background-size: 200%; animation: shimmer 1.4s infinite; border-radius: 8px; }
+    @keyframes shimmer { 0% { background-position: 200%; } 100% { background-position: -200%; } }
+
+    /* ───── ENTRANCE ANIMATIONS ───── */
+    .fade-up { opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
+    .fade-up.in { opacity: 1; transform: translateY(0); }
+</style>
+```
+
 </head>
 <body>
 
-<div class="loading-screen" id="loadingScreen">
-    <div class="loading-logo"><i class="fas fa-door-open"></i></div>
-    <div class="loading-text">กำลังเข้าสู่ระบบ<span class="loading-dots"></span></div>
+<!-- LOADER -->
+
+<div class="loader" id="loader">
+    <div class="loader-ring"><i class="fas fa-building"></i></div>
+    <div class="loader-text">กำลังเข้าสู่ระบบ</div>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
 </div>
 
-<div class="app-wrap" id="mainApp" style="display:none;">
+<div class="app" id="app" style="display:none;">
+    <!-- HERO -->
     <div class="hero">
-        <div class="hero-orb"></div>
-        <div class="hero-icon"><i class="fas fa-door-open"></i></div>
-        <div class="hero-title">ระบบจองห้องประชุม</div>
-        <div class="hero-sub">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง (ศฝฟ.)</div>
-        <div class="profile-chip" id="profileChip" style="display:none;">
-            <div class="profile-avatar" id="profileAvatar"><i class="fas fa-user"></i></div>
-            <span class="profile-name" id="profileName">กำลังโหลด...</span>
+        <div class="hero-geo"></div>
+        <div class="hero-dot-grid"></div>
+        <div class="hero-inner">
+            <div class="hero-tag"><i class="fas fa-circle"></i> LIVE SYSTEM</div>
+            <div class="hero-title">จอง<span>ห้องประชุม</span><br>ได้ทันที</div>
+            <div class="hero-subtitle">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง (ศฝฟ.)</div>
+            <div class="profile-pill" id="profilePill">
+                <div class="profile-ava" id="profileAva"><i class="fas fa-user"></i></div>
+                <div class="profile-info">
+                    <div class="profile-label">เข้าสู่ระบบในชื่อ</div>
+                    <div class="profile-name" id="profileName">กำลังโหลด…</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="menu-section">
-        <div class="menu-grid">
-            <a href="booking.html" class="menu-card violet">
-                <div class="menu-icon violet"><i class="fas fa-calendar-plus"></i></div>
-                <div class="menu-text">
-                    <div class="menu-label">จองห้องประชุม</div>
-                    <div class="menu-desc">เลือกห้อง วันที่ และรายละเอียดการใช้งาน</div>
-                </div>
-                <i class="fas fa-chevron-right menu-arrow"></i>
-            </a>
-            <a href="confirm.html" class="menu-card amber">
-                <div class="menu-icon amber"><i class="fas fa-clipboard-check"></i></div>
-                <div class="menu-text">
-                    <div class="menu-label">ยืนยันการจอง</div>
-                    <div class="menu-desc">ยืนยันรายการที่ได้รับการอนุมัติแล้ว</div>
-                </div>
-                <div style="display:flex;align-items:center;gap:0.5rem;">
-                    <span class="pending-badge" id="pendingBadge" style="display:none;">0</span>
-                    <i class="fas fa-chevron-right menu-arrow"></i>
-                </div>
-            </a>
-            <a href="status.html" class="menu-card indigo">
-                <div class="menu-icon indigo"><i class="fas fa-search"></i></div>
-                <div class="menu-text">
-                    <div class="menu-label">ตรวจสอบสถานะการจอง</div>
-                    <div class="menu-desc">ดูรายการจองที่อนุมัติและยืนยันแล้ว</div>
-                </div>
-                <i class="fas fa-chevron-right menu-arrow"></i>
-            </a>
-        </div>
+```
+<!-- STATS -->
+<div class="stats-row fade-up" id="statsRow">
+    <div class="stat-chip">
+        <div class="stat-chip-num">16</div>
+        <div class="stat-chip-label">ห้องทั้งหมด</div>
     </div>
+    <div class="stat-chip">
+        <div class="stat-chip-num">90</div>
+        <div class="stat-chip-label">ห้องพัก</div>
+    </div>
+    <div class="stat-chip">
+        <div class="stat-chip-num" id="statPending">—</div>
+        <div class="stat-chip-label">รอยืนยัน</div>
+    </div>
+</div>
 
-    <div class="app-footer"><i class="fas fa-phone-alt"></i>ติดต่อสอบถาม โทร. 034-339-224 และ (33)15619</div>
+<!-- MENU -->
+<div class="menu">
+    <div class="menu-label">เมนูหลัก</div>
+    <div class="menu-stack">
+        <a href="booking.html" class="menu-card fade-up" style="transition-delay:0.1s;">
+            <div class="menu-icon-wrap violet"><i class="fas fa-calendar-plus"></i></div>
+            <div class="menu-text">
+                <div class="menu-text-title">จองห้องประชุม</div>
+                <div class="menu-text-desc">เลือกห้อง วันที่ และรายละเอียดการจอง</div>
+            </div>
+            <div class="menu-arrow-wrap">
+                <i class="fas fa-chevron-right menu-chev"></i>
+            </div>
+            <div class="menu-card-bg violet"></div>
+        </a>
+
+        <a href="confirm.html" class="menu-card fade-up" style="transition-delay:0.18s;">
+            <div class="menu-icon-wrap amber"><i class="fas fa-clipboard-check"></i></div>
+            <div class="menu-text">
+                <div class="menu-text-title">ยืนยันการจอง</div>
+                <div class="menu-text-desc">ยืนยันรายการที่ได้รับการอนุมัติแล้ว</div>
+            </div>
+            <div class="menu-arrow-wrap">
+                <span class="menu-badge" id="pendingBadge">0</span>
+                <i class="fas fa-chevron-right menu-chev"></i>
+            </div>
+            <div class="menu-card-bg amber"></div>
+        </a>
+
+        <a href="status.html" class="menu-card fade-up" style="transition-delay:0.26s;">
+            <div class="menu-icon-wrap indigo"><i class="fas fa-search"></i></div>
+            <div class="menu-text">
+                <div class="menu-text-title">ตรวจสอบสถานะ</div>
+                <div class="menu-text-desc">ดูรายการที่อนุมัติและยืนยันแล้ว</div>
+            </div>
+            <div class="menu-arrow-wrap">
+                <i class="fas fa-chevron-right menu-chev"></i>
+            </div>
+            <div class="menu-card-bg indigo"></div>
+        </a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="app-footer">
+    <div class="footer-icon"><i class="fas fa-phone-alt"></i></div>
+    <div class="footer-text">โทร. <strong>034-339-224</strong> และ <strong>(33)15619</strong></div>
+</div>
+```
+
 </div>
 
 <script>
 const LIFF_ID = "2007138631-Ono58j50";
 const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
+
+function animateIn() {
+    document.querySelectorAll('.fade-up').forEach((el, i) => {
+        setTimeout(() => el.classList.add('in'), 100 + i * 60);
+    });
+}
 
 async function init() {
     try {
@@ -198,35 +343,44 @@ async function init() {
         sessionStorage.setItem('displayName', profile.displayName);
         sessionStorage.setItem('pictureUrl', profile.pictureUrl || '');
         sessionStorage.setItem('liffReady', 'true');
+
         document.getElementById('profileName').textContent = profile.displayName;
         if (profile.pictureUrl) {
-            document.getElementById('profileAvatar').innerHTML = `<img src="${profile.pictureUrl}" alt="avatar">`;
+            document.getElementById('profileAva').innerHTML = `<img src="${profile.pictureUrl}" alt="">`;
         }
-        document.getElementById('profileChip').style.display = 'flex';
+        document.getElementById('profilePill').classList.add('show');
+
         loadPendingCount(profile.userId);
+
         setTimeout(() => {
-            document.getElementById('loadingScreen').classList.add('hide');
-            document.getElementById('mainApp').style.display = 'flex';
-        }, 800);
+            document.getElementById('loader').classList.add('out');
+            document.getElementById('app').style.display = 'flex';
+            setTimeout(animateIn, 80);
+        }, 900);
     } catch(err) {
-        console.error('LIFF init error:', err);
-        document.querySelector('.loading-text').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+        console.error(err);
+        document.querySelector('.loader-text').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
     }
 }
 
 async function loadPendingCount(userId) {
     try {
-        const res = await fetch(`${GAS_URL}?action=getApprovedBookings&userId=${userId}`);
+        const res = await fetch(`${GAS_WEB_APP_URL}?action=getApprovedBookings&userId=${userId}`);
         const result = await res.json();
-        if (result.bookings && result.bookings.length > 0) {
+        const count = result.bookings?.length || 0;
+        document.getElementById('statPending').textContent = count;
+        if (count > 0) {
             const badge = document.getElementById('pendingBadge');
-            badge.textContent = result.bookings.length;
-            badge.style.display = 'inline-block';
+            badge.textContent = count;
+            badge.classList.add('show');
         }
-    } catch(e) { console.error('loadPendingCount error:', e); }
+    } catch(e) {
+        document.getElementById('statPending').textContent = '0';
+    }
 }
 
 init();
 </script>
+
 </body>
 </html>
