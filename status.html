@@ -6,93 +6,217 @@
     <title>ตรวจสอบสถานะการจอง ศฝฟ.</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --green:#00B900; --green-dark:#009900;
-            --gold:#FFB800; --blue:#3B82F6; --success:#22c55e;
-            --bg:#F0F4F0; --card:#FFFFFF; --text:#1A1A1A;
-            --muted:#6B7280; --border:#E5E7EB;
+            --primary: #6C48C5;
+            --primary-dark: #4E32A0;
+            --primary-soft: #F0EDFB;
+            --primary-xsoft: #FAF8FF;
+            --accent: #F4A836;
+            --accent-soft: #FEF4E4;
+            --teal: #0090C1;
+            --teal-soft: #E3F4FC;
+            --danger: #E5484D;
+            --danger-soft: #FEF0F0;
+            --success: #12A150;
+            --success-soft: #E8F7EE;
+            --warning: #D97706;
+            --warning-soft: #FEF3C7;
+            --bg: #F7F5FF;
+            --surface: #FFFFFF;
+            --text: #1A1033;
+            --text-2: #4A4569;
+            --muted: #8B87A8;
+            --border: #E8E4F5;
+            --border-strong: #D0C9EC;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-lg: 24px;
+            --shadow-sm: 0 1px 4px rgba(108,72,197,0.06);
+            --shadow-md: 0 4px 16px rgba(108,72,197,0.10);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Sarabun',sans-serif; background:var(--bg); color:var(--text); }
-        .app-wrap { max-width:480px; margin:0 auto; min-height:100vh; background:var(--bg); padding-bottom:2rem; }
+        .app-wrap { max-width:480px; margin:0 auto; min-height:100vh; background:var(--bg); padding-bottom:3rem; }
 
+        /* ===== HEADER ===== */
         .page-header {
-            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
-            padding:1.5rem 1.5rem 3.5rem; position:relative; overflow:hidden;
+            background: linear-gradient(160deg, #6C48C5 0%, #4E32A0 55%, #3B2479 100%);
+            padding: 1.5rem 1.5rem 4.5rem;
+            position: relative; overflow: hidden;
         }
-        .page-header::before { content:''; position:absolute; top:-40px; right:-40px; width:150px; height:150px; background:rgba(255,255,255,0.1); border-radius:50%; }
-        .back-btn { display:inline-flex; align-items:center; gap:0.5rem; color:rgba(255,255,255,0.9); font-size:0.9rem; text-decoration:none; margin-bottom:1rem; position:relative; z-index:1; }
-        .back-btn:hover { color:#fff; }
-        .page-title { font-size:1.5rem; font-weight:700; color:#fff; position:relative; z-index:1; margin-bottom:0.3rem; }
-        .page-sub { font-size:0.85rem; color:rgba(255,255,255,0.85); position:relative; z-index:1; }
-
-        .content { padding:0 1rem; margin-top:-2rem; }
-        .section-card { background:var(--card); border-radius:20px; padding:1.25rem; margin-bottom:1rem; box-shadow:0 4px 16px rgba(0,0,0,0.07); border:1px solid var(--border); }
-        .section-title { font-size:1rem; font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem; }
-        .section-title i { color:var(--blue); }
-
-        /* STATUS CARD */
-        .status-card {
-            background:#fff; border:1px solid var(--border); border-radius:14px;
-            padding:1.1rem; margin-bottom:0.75rem; position:relative;
-            transition:all 0.2s; cursor:default;
+        .header-dots {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+            background-size: 22px 22px;
         }
-        .status-card:last-child { margin-bottom:0; }
-        .status-card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.6rem; }
-        .booking-id-tag { display:inline-block; background:rgba(59,130,246,0.1); color:#1D4ED8; font-size:0.78rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:8px; }
-        
-        /* STATUS PILL */
-        .status-pill { display:inline-flex; align-items:center; gap:0.3rem; padding:0.3rem 0.8rem; border-radius:20px; font-size:0.78rem; font-weight:700; }
-        .status-pill.approved { background:rgba(255,184,0,0.12); color:#B8860B; }
-        .status-pill.confirmed { background:rgba(34,197,94,0.12); color:#15803d; }
-
-        .status-course { font-size:1rem; font-weight:700; margin-bottom:0.5rem; line-height:1.4; }
-        .status-meta { display:flex; flex-wrap:wrap; gap:0.6rem 1rem; }
-        .status-meta-item { font-size:0.82rem; color:var(--muted); display:flex; align-items:center; gap:0.3rem; }
-        .status-meta-item i { color:var(--blue); width:14px; text-align:center; }
-        .status-meta-item.accent i { color:var(--success); }
-
-        /* EXPAND DETAIL */
-        .status-card-detail {
-            display:none; margin-top:0.75rem; padding-top:0.75rem;
-            border-top:1px dashed var(--border);
+        .header-blob {
+            position: absolute; top: -50px; right: -50px;
+            width: 180px; height: 180px;
+            background: rgba(255,255,255,0.07); border-radius: 50%;
         }
-        .status-card.expanded .status-card-detail { display:block; }
-        .detail-row { display:flex; justify-content:space-between; padding:0.35rem 0; font-size:0.88rem; }
-        .detail-label { color:var(--muted); }
-        .detail-value { font-weight:600; text-align:right; max-width:60%; }
-        .expand-toggle { font-size:0.8rem; color:var(--blue); cursor:pointer; margin-top:0.6rem; display:inline-flex; align-items:center; gap:0.3rem; }
+        .header-inner { position: relative; z-index: 2; }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            color: rgba(255,255,255,0.85); font-size: 0.88rem;
+            text-decoration: none; margin-bottom: 1.2rem;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 20px; padding: 0.35rem 0.8rem;
+        }
+        .back-btn:hover { color: #fff; }
+        .page-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.25rem; letter-spacing: -0.3px; }
+        .page-sub { font-size: 0.85rem; color: rgba(255,255,255,0.72); }
 
-        /* EMPTY STATE */
-        .empty-state { text-align:center; padding:3rem 1rem; color:var(--muted); }
-        .empty-state i { font-size:3rem; color:var(--border); margin-bottom:1rem; display:block; }
-        .empty-state h5 { font-weight:600; color:var(--text); margin-bottom:0.5rem; }
+        /* ===== CONTENT ===== */
+        .content { padding: 0 1rem; margin-top: -3rem; }
 
-        /* SKELETON */
-        .skeleton { background:linear-gradient(90deg,#f0f0f0 25%,#f8f8f8 50%,#f0f0f0 75%); background-size:200%; animation:shimmer 1.5s infinite; border-radius:8px; height:16px; margin-bottom:0.5rem; }
-        .skeleton.tall { height:80px; }
+        .section-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+        .section-head {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.1rem;
+        }
+        .section-title-text {
+            font-size: 0.95rem; font-weight: 700; color: var(--text);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .section-title-text i { color: var(--primary); }
+        .count-pill {
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-size: 0.75rem; font-weight: 700;
+            padding: 0.2rem 0.65rem; border-radius: 12px;
+        }
+
+        /* ===== BOOKING CARD ===== */
+        .booking-card {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.1rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+        .booking-card:last-child { margin-bottom: 0; }
+        .booking-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.65rem; }
+        .booking-id {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            background: var(--primary-soft); color: var(--primary-dark);
+            font-size: 0.75rem; font-weight: 700; padding: 0.22rem 0.65rem; border-radius: 8px;
+        }
+        .booking-id i { font-size: 0.65rem; }
+
+        /* Status pills */
+        .status-pill {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            padding: 0.25rem 0.7rem; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 700;
+        }
+        .status-pill.approved { background: var(--warning-soft); color: var(--warning); }
+        .status-pill.confirmed { background: var(--success-soft); color: var(--success); }
+        .status-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+        }
+        .status-pill.approved .status-dot { background: var(--warning); }
+        .status-pill.confirmed .status-dot { background: var(--success); }
+
+        .course-name {
+            font-size: 1.02rem; font-weight: 700;
+            color: var(--text); margin-bottom: 0.6rem;
+            line-height: 1.4;
+        }
+
+        .meta-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-bottom: 0.6rem; }
+        .meta-item {
+            display: flex; align-items: center; gap: 0.35rem;
+            font-size: 0.8rem; color: var(--text-2);
+        }
+        .meta-item i { color: var(--primary-light, var(--primary)); width: 13px; text-align: center; font-size: 0.75rem; }
+        .meta-item.green i { color: var(--success); }
+
+        /* Expand section */
+        .expand-btn {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            font-size: 0.78rem; color: var(--primary); cursor: pointer;
+            font-weight: 600; margin-top: 0.4rem;
+            background: var(--primary-soft); border-radius: 8px;
+            padding: 0.3rem 0.7rem; transition: all 0.2s;
+        }
+        .expand-btn:hover { background: var(--border-strong); }
+
+        .card-detail {
+            display: none; margin-top: 0.9rem;
+            padding-top: 0.9rem;
+            border-top: 1.5px dashed var(--border);
+        }
+        .booking-card.expanded .card-detail { display: block; }
+
+        .detail-grid { display: flex; flex-direction: column; gap: 0; }
+        .detail-row {
+            display: flex; justify-content: space-between;
+            align-items: center; padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { font-size: 0.82rem; color: var(--muted); }
+        .detail-value { font-size: 0.88rem; font-weight: 600; color: var(--text); text-align: right; max-width: 60%; }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center; padding: 3rem 1.5rem; color: var(--muted);
+        }
+        .empty-icon {
+            width: 72px; height: 72px;
+            background: var(--primary-soft); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.2rem;
+        }
+        .empty-icon i { font-size: 2rem; color: var(--primary); opacity: 0.5; }
+        .empty-title { font-size: 1.05rem; font-weight: 700; color: var(--text-2); margin-bottom: 0.4rem; }
+        .empty-sub { font-size: 0.85rem; line-height: 1.5; }
+
+        /* ===== SKELETON ===== */
+        .skeleton {
+            background: linear-gradient(90deg, #ede8f8 25%, #f5f2fc 50%, #ede8f8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite; border-radius: var(--radius-sm);
+        }
+        .skel-card { height: 90px; margin-bottom: 0.75rem; border-radius: var(--radius); }
         @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
     </style>
 </head>
 <body>
 <div class="app-wrap">
     <div class="page-header">
-        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> หน้าหลัก</a>
-        <div class="page-title"><i class="fas fa-search me-2"></i>สถานะการจอง</div>
-        <div class="page-sub">รายการที่อนุมัติและยืนยันแล้ว</div>
+        <div class="header-dots"></div>
+        <div class="header-blob"></div>
+        <div class="header-inner">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> หน้าหลัก</a>
+            <div class="page-title"><i class="fas fa-search me-2"></i>สถานะการจอง</div>
+            <div class="page-sub">รายการที่อนุมัติและยืนยันแล้ว</div>
+        </div>
     </div>
 
     <div class="content">
         <div class="section-card">
-            <div class="section-title">
-                <i class="fas fa-list"></i> รายการจองของคุณ
-                <span style="margin-left:auto;font-size:0.82rem;color:var(--muted);font-weight:400;" id="countText">กำลังโหลด...</span>
+            <div class="section-head">
+                <div class="section-title-text"><i class="fas fa-list"></i> รายการจองของคุณ</div>
+                <span class="count-pill" id="countText">กำลังโหลด...</span>
             </div>
             <div id="statusList">
-                <div class="skeleton tall"></div>
-                <div class="skeleton tall"></div>
+                <div class="skeleton skel-card"></div>
+                <div class="skeleton skel-card"></div>
             </div>
         </div>
     </div>
@@ -116,7 +240,13 @@ async function loadStatus(userId) {
         );
         renderStatus(bookings);
     } catch(e) {
-        document.getElementById('statusList').innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><h5>ไม่สามารถโหลดข้อมูลได้</h5><p>กรุณาลองใหม่</p></div>`;
+        document.getElementById('statusList').innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon"><i class="fas fa-exclamation"></i></div>
+                <div class="empty-title">ไม่สามารถโหลดข้อมูลได้</div>
+                <div class="empty-sub">กรุณาลองใหม่อีกครั้ง</div>
+            </div>`;
+        document.getElementById('countText').textContent = 'ข้อผิดพลาด';
     }
 }
 
@@ -126,43 +256,53 @@ function renderStatus(bookings) {
 
     if (bookings.length === 0) {
         countText.textContent = '0 รายการ';
-        container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><h5>ไม่มีรายการ</h5><p>ยังไม่มีรายการจองที่อนุมัติหรือยืนยัน</p></div>`;
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+                <div class="empty-title">ยังไม่มีรายการ</div>
+                <div class="empty-sub">ยังไม่มีรายการจองที่อนุมัติหรือยืนยัน</div>
+            </div>`;
         return;
     }
 
     countText.textContent = `${bookings.length} รายการ`;
     container.innerHTML = bookings.map((b, i) => {
-        const statusCls = b.approvalStatus === 'Confirmed' ? 'confirmed' : 'approved';
-        const statusTxt = b.approvalStatus === 'Confirmed' ? '<i class="fas fa-check-double"></i> ยืนยันแล้ว' : '<i class="fas fa-clock"></i> รออยืนยัน';
+        const isConfirmed = b.approvalStatus === 'Confirmed';
+        const statusCls = isConfirmed ? 'confirmed' : 'approved';
+        const statusTxt = isConfirmed
+            ? '<span class="status-dot"></span> ยืนยันแล้ว'
+            : '<span class="status-dot"></span> รออยืนยัน';
         const sd = formatDateTH(b.startDate), ed = formatDateTH(b.endDate);
         const ci = formatDateTH(b.checkin), co = formatDateTH(b.checkout);
         const hasAcc = b.accommodation === 'ต้องการ';
 
         return `
-        <div class="status-card" id="card_${i}">
-            <div class="status-card-top">
-                <span class="booking-id-tag">${b.bookingId}</span>
+        <div class="booking-card" id="card_${i}">
+            <div class="card-top">
+                <span class="booking-id"><i class="fas fa-hashtag"></i>${b.bookingId}</span>
                 <span class="status-pill ${statusCls}">${statusTxt}</span>
             </div>
-            <div class="status-course">${b.courseName || '-'}</div>
-            <div class="status-meta">
-                <span class="status-meta-item"><i class="fas fa-calendar"></i>${sd} – ${ed}</span>
-                <span class="status-meta-item"><i class="fas fa-users"></i>${b.attendees} คน</span>
-                <span class="status-meta-item"><i class="fas fa-door-open"></i>${b.room || '-'}</span>
-                ${hasAcc ? `<span class="status-meta-item accent"><i class="fas fa-bed"></i>พัก ${b.numRooms} ห้อง</span>` : ''}
+            <div class="course-name">${b.courseName || '-'}</div>
+            <div class="meta-row">
+                <span class="meta-item"><i class="fas fa-calendar-range"></i>${sd} – ${ed}</span>
+                <span class="meta-item"><i class="fas fa-users"></i>${b.attendees} คน</span>
+                <span class="meta-item"><i class="fas fa-door-open"></i>${b.room || '-'}</span>
+                ${hasAcc ? `<span class="meta-item green"><i class="fas fa-bed"></i>พัก ${b.numRooms} ห้อง</span>` : ''}
             </div>
-            <div class="status-card-detail">
-                <div class="detail-row"><span class="detail-label">หน่วยงาน</span><span class="detail-value">${b.department || '-'}</span></div>
-                <div class="detail-row"><span class="detail-label">เบอร์โทร</span><span class="detail-value">${String(b.phone||'').replace("'","")}</span></div>
-                ${hasAcc ? `
-                <div class="detail-row"><span class="detail-label">Check-in</span><span class="detail-value">${ci}</span></div>
-                <div class="detail-row"><span class="detail-label">Check-out</span><span class="detail-value">${co}</span></div>
-                ${parseInt(b.viprooms||0)>0?`<div class="detail-row"><span class="detail-label">ห้อง VIP</span><span class="detail-value">${b.viprooms} ห้อง</span></div>`:''}
-                ` : '<div class="detail-row"><span class="detail-label">ที่พัก</span><span class="detail-value">ไม่ต้องการ</span></div>'}
-            </div>
-            <span class="expand-toggle" onclick="toggleExpand(${i})">
+            <span class="expand-btn" onclick="toggleExpand(${i})" id="btn_${i}">
                 <i class="fas fa-chevron-down" id="icon_${i}"></i> ดูรายละเอียด
             </span>
+            <div class="card-detail">
+                <div class="detail-grid">
+                    <div class="detail-row"><span class="detail-label">หน่วยงาน</span><span class="detail-value">${b.department || '-'}</span></div>
+                    <div class="detail-row"><span class="detail-label">เบอร์โทร</span><span class="detail-value">${String(b.phone||'').replace("'","")}</span></div>
+                    ${hasAcc ? `
+                    <div class="detail-row"><span class="detail-label">Check-in</span><span class="detail-value">${ci}</span></div>
+                    <div class="detail-row"><span class="detail-label">Check-out</span><span class="detail-value">${co}</span></div>
+                    ${parseInt(b.viprooms||0)>0?`<div class="detail-row"><span class="detail-label">ห้อง VIP</span><span class="detail-value">${b.viprooms} ห้อง</span></div>`:''}
+                    ` : `<div class="detail-row"><span class="detail-label">ที่พัก</span><span class="detail-value">ไม่ต้องการ</span></div>`}
+                </div>
+            </div>
         </div>`;
     }).join('');
 }
@@ -170,8 +310,10 @@ function renderStatus(bookings) {
 function toggleExpand(i) {
     const card = document.getElementById(`card_${i}`);
     const icon = document.getElementById(`icon_${i}`);
+    const btn = document.getElementById(`btn_${i}`);
     const isExpanded = card.classList.toggle('expanded');
     icon.className = isExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+    btn.innerHTML = `<i class="${isExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'}" id="icon_${i}"></i> ${isExpanded ? 'ย่อ' : 'ดูรายละเอียด'}`;
 }
 
 function formatDateTH(dateStr) {
