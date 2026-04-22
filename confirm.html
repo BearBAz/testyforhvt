@@ -47,7 +47,7 @@
     /* ===== HEADER ===== */
     .page-header {
         background: linear-gradient(160deg, #F4A836 0%, #E8920A 50%, #C97A08 100%);
-        padding: 1.5rem 1.5rem 4.5rem;
+        padding: 1.5rem 1.5rem 2rem; /* ลดระยะ padding ด้านล่างลงจาก 4.5rem เป็น 2rem */
         position: relative; overflow: hidden;
     }
     .header-dots { position:absolute; inset:0; background-image:radial-gradient(circle, rgba(255,255,255,0.09) 1px, transparent 1px); background-size:22px 22px; }
@@ -64,7 +64,10 @@
     .page-sub { font-size:0.85rem; color:rgba(255,255,255,0.8); }
 
     /* ===== CONTENT ===== */
-    .content { padding:0 1rem; margin-top:-3rem; }
+   .content { 
+        padding: 0 1rem; 
+        margin-top: 1rem; /* ลบค่าติดลบออก และเปลี่ยนเป็น 1rem เพื่อให้ต่อกันพอดีไม่ทับซ้อน */
+    }
     .section-card {
         background:var(--surface); border-radius:var(--radius-lg); padding:1.25rem;
         margin-bottom:1rem; box-shadow:var(--shadow-md); border:1px solid var(--border);
