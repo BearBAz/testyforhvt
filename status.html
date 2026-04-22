@@ -43,7 +43,7 @@
         /* ===== HEADER ===== */
         .page-header {
             background: linear-gradient(160deg, #6C48C5 0%, #4E32A0 55%, #3B2479 100%);
-            padding: 1.5rem 1.5rem 4.5rem;
+            padding: 1.5rem 1.5rem 2rem; /* ลดระยะ padding ด้านล่างลง */
             position: relative; overflow: hidden;
         }
         .header-dots {
@@ -70,7 +70,10 @@
         .page-sub { font-size: 0.85rem; color: rgba(255,255,255,0.72); }
 
         /* ===== CONTENT ===== */
-        .content { padding: 0 1rem; margin-top: -3rem; }
+        .content { 
+            padding: 0 1rem; 
+            margin-top: 1rem; /* ลบค่าติดลบออก เพื่อให้กล่องเนื้อหาลงมาอยู่ใต้ Header */
+        }
 
         .section-card {
             background: var(--surface);
