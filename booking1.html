@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -20,6 +19,7 @@
     --primary-soft: #F0EDFB;
     --primary-xsoft: #FAF8FF;
     --accent: #F4A836;
+    --accent-dark: #D97706;
     --accent-soft: #FEF4E4;
     --danger: #E5484D;
     --danger-soft: #FEF0F0;
@@ -43,66 +43,27 @@
     --radius-sm: 10px;
     --radius-lg: 22px;
 }
+
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
     font-family: 'Sarabun', sans-serif;
     background: var(--bg);
     color: var(--text);
-    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
 }
-.app-wrap { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--bg); }
 
-/* ===== STEP INDICATOR ===== */
-.step-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0;
-    position: sticky; top: 0; z-index: 50;
-}
-.step-bar-inner {
-    display: flex; position: relative;
-}
-.step-tab {
-    flex: 1; text-align: center;
-    padding: 0.85rem 0.5rem 0.75rem;
-    cursor: pointer; position: relative;
-    transition: all 0.25s;
-    border-bottom: 3px solid transparent;
-}
-.step-tab.active { border-bottom-color: var(--primary); }
-.step-tab.done { border-bottom-color: var(--success); }
-.step-num {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--bg); border: 2px solid var(--border);
-    color: var(--muted); font-size: 0.78rem; font-weight: 700;
-    display: inline-flex; align-items: center; justify-content: center;
-    margin-bottom: 0.25rem; transition: all 0.3s;
-}
-.step-tab.active .step-num { background: var(--primary); border-color: var(--primary); color: #fff; }
-.step-tab.done .step-num { background: var(--success); border-color: var(--success); color: #fff; }
-.step-name { font-size: 0.7rem; font-weight: 600; color: var(--muted); display: block; }
-.step-tab.active .step-name { color: var(--primary); }
-.step-tab.done .step-name { color: var(--success); }
+/* ===== APP WRAPPER ===== */
+.app-container { max-width: 480px; margin: 0 auto; background: var(--bg); min-height: 100vh; position: relative; }
 
-/* ===== PAGE SECTIONS ===== */
-.page { display: none; }
-.page.active { display: block; }
-
-/* ===== HERO SEARCH ===== */
-.hero {
+/* ===== HEADER ===== */
+.app-header {
     background: linear-gradient(160deg, #6C48C5 0%, #4E32A0 55%, #3B2479 100%);
     padding: 1.8rem 1.5rem 2rem;
     position: relative; overflow: hidden;
 }
-.hero-dots {
-    position: absolute; inset: 0;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-    background-size: 22px 22px;
-}
-.hero-blob { position: absolute; top:-60px; right:-40px; width:200px; height:200px; background:rgba(255,255,255,0.07); border-radius:50%; }
-.hero-blob2 { position: absolute; bottom:-40px; left:-60px; width:160px; height:160px; background:rgba(255,255,255,0.05); border-radius:50%; }
-.hero-content { position: relative; z-index: 2; }
+.header-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 22px 22px; }
+.header-blob { position: absolute; top: -60px; right: -40px; width: 200px; height: 200px; background: rgba(255,255,255,0.07); border-radius: 50%; }
+.header-content { position: relative; z-index: 2; }
 .back-btn {
     display: inline-flex; align-items: center; gap: 0.5rem;
     color: rgba(255,255,255,0.85); font-size: 0.85rem;
@@ -110,369 +71,269 @@ body {
     background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
     border-radius: 20px; padding: 0.32rem 0.8rem;
 }
-.hero-icon {
-    width: 56px; height: 56px;
-    background: rgba(255,255,255,0.15); border-radius: 16px;
+.header-icon { width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 17px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.9rem; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
+.header-icon i { font-size: 1.7rem; color: #fff; }
+.header-title { font-size: 1.55rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; margin-bottom: 0.2rem; }
+.header-subtitle { font-size: 0.82rem; color: rgba(255,255,255,0.72); }
+
+/* ===== STEP INDICATOR (top pill) ===== */
+.step-indicator {
     display: flex; align-items: center; justify-content: center;
-    margin-bottom: 0.9rem;
-    border: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
+    gap: 0; margin: 1.2rem 0 0;
 }
-.hero-icon i { font-size: 1.6rem; color: #fff; }
-.hero-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.2rem; }
-.hero-sub { font-size: 0.82rem; color: rgba(255,255,255,0.72); }
+.step-pip {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.5); font-size: 0.75rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+}
+.step-pip.active { background: #fff; border-color: #fff; color: var(--primary); transform: scale(1.15); box-shadow: 0 0 0 4px rgba(255,255,255,0.2); }
+.step-pip.done { background: rgba(18,161,80,0.8); border-color: transparent; color: #fff; }
+.step-line { width: 28px; height: 2px; background: rgba(255,255,255,0.2); }
+.step-line.done { background: rgba(18,161,80,0.6); }
+.step-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; }
+.step-label-text { font-size: 0.68rem; color: rgba(255,255,255,0.55); text-align: center; flex: 1; }
+.step-label-text.active { color: rgba(255,255,255,0.95); font-weight: 700; }
 
-/* ===== SEARCH CARD ===== */
-.search-card {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    margin: -1rem 1rem 1rem;
-    position: relative; z-index: 5;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border);
-}
-.search-card-title {
-    font-size: 0.95rem; font-weight: 700; color: var(--text);
-    margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.6rem;
-}
-.search-card-title i { color: var(--primary); }
+/* ===== MAIN SECTIONS ===== */
+.main-section { padding: 1.25rem 1rem 3rem; }
 
-.form-label { font-weight: 600; color: var(--text-2); margin-bottom: 0.4rem; font-size: 0.85rem; display: block; }
-.required::after { content: ' *'; color: var(--danger); }
-
-.form-control, .form-select {
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); padding: 0.75rem 1rem;
-    font-size: 0.93rem; font-family: 'Sarabun', sans-serif;
-    transition: all 0.2s; background: var(--surface); color: var(--text);
-    width: 100%;
-}
-.form-control:focus, .form-select:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(108,72,197,0.12);
-    outline: none;
-}
-
-/* ===== MONTH MULTI-SELECT ===== */
-.month-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
-.month-chip {
-    text-align: center; padding: 0.5rem 0.25rem;
-    background: var(--bg); border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); cursor: pointer;
-    font-size: 0.78rem; font-weight: 600; color: var(--muted);
-    transition: all 0.2s; user-select: none;
-}
-.month-chip:hover { border-color: var(--primary-light); color: var(--primary); }
-.month-chip.selected { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
-.month-chip.past { opacity: 0.35; cursor: not-allowed; }
-
-/* ===== NUMBER INPUT ROW ===== */
-.num-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-.num-input-group { position: relative; }
-.num-input-group .num-suffix {
-    position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
-    font-size: 0.8rem; color: var(--muted); pointer-events: none; font-weight: 500;
-}
-
-.btn-search {
-    width: 100%; padding: 1rem; border: none; border-radius: var(--radius);
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    color: #fff; font-size: 1.02rem; font-weight: 700;
-    font-family: 'Sarabun', sans-serif;
-    cursor: pointer; transition: all 0.25s ease;
-    box-shadow: 0 6px 20px rgba(108,72,197,0.35);
-    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
-    margin-top: 1.2rem;
-}
-.btn-search:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(108,72,197,0.45); }
-.btn-search:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
-
-/* ===== STEP 2: DATE RESULTS ===== */
-.results-header {
-    padding: 1.2rem 1rem 0.5rem;
-    display: flex; align-items: center; justify-content: space-between;
-}
-.results-title { font-size: 1rem; font-weight: 700; color: var(--text); }
-.results-sub { font-size: 0.8rem; color: var(--muted); }
-.edit-search-btn {
-    font-size: 0.8rem; color: var(--primary); font-weight: 700;
-    background: var(--primary-soft); border: none; border-radius: 20px;
-    padding: 0.3rem 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;
-}
-
-/* Summary Chips */
-.search-summary {
-    display: flex; flex-wrap: wrap; gap: 0.45rem;
-    padding: 0.5rem 1rem 1rem;
-}
-.summary-chip {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 20px; padding: 0.25rem 0.75rem;
-    font-size: 0.76rem; color: var(--text-2); font-weight: 600;
-    display: flex; align-items: center; gap: 0.3rem;
-}
-.summary-chip i { color: var(--primary); font-size: 0.7rem; }
-
-/* Month sections */
-.month-section { padding: 0 1rem 0.5rem; }
-.month-label {
-    font-size: 0.78rem; font-weight: 700; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.5px;
-    padding: 0.5rem 0; margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 0.4rem;
-}
-.month-label i { font-size: 0.72rem; }
-
-/* Date Slot Cards */
-.date-slots { display: flex; flex-direction: column; gap: 0.65rem; }
-.date-slot {
-    background: var(--surface); border: 1.5px solid var(--border);
-    border-radius: var(--radius); padding: 1rem 1.1rem;
-    cursor: pointer; transition: all 0.22s ease;
-    display: flex; align-items: center; justify-content: space-between;
-    position: relative; overflow: hidden;
-}
-.date-slot::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-    width: 4px; background: var(--border); transition: all 0.22s;
-    border-radius: 4px 0 0 4px;
-}
-.date-slot:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); transform: translateX(2px); }
-.date-slot:hover::before { background: var(--primary-light); }
-.date-slot.selected { border-color: var(--primary); background: var(--primary-xsoft); box-shadow: 0 0 0 3px rgba(108,72,197,0.1); }
-.date-slot.selected::before { background: var(--primary); }
-.date-slot.full { opacity: 0.55; cursor: not-allowed; }
-.date-slot.full::before { background: var(--danger); }
-
-.slot-left { display: flex; flex-direction: column; gap: 0.2rem; }
-.slot-dates { font-size: 0.95rem; font-weight: 700; color: var(--text); }
-.slot-meta { font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; }
-.slot-meta span { display: flex; align-items: center; gap: 0.25rem; }
-
-.slot-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; }
-.avail-pill {
-    font-size: 0.72rem; font-weight: 700; padding: 0.22rem 0.65rem; border-radius: 20px;
-    display: flex; align-items: center; gap: 0.3rem;
-}
-.avail-pill.ok { background: var(--success-soft); color: var(--success); }
-.avail-pill.warn { background: var(--warning-soft); color: var(--warning); }
-.avail-pill.full { background: var(--danger-soft); color: var(--danger); }
-
-.room-avail-mini {
-    font-size: 0.72rem; color: var(--muted); text-align: right;
-    display: flex; align-items: center; gap: 0.3rem;
-}
-.select-indicator {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--primary); display: none;
-    align-items: center; justify-content: center; flex-shrink: 0;
-    margin-left: 0.5rem;
-}
-.select-indicator i { font-size: 0.6rem; color: #fff; }
-.date-slot.selected .select-indicator { display: flex; }
-
-.no-slots {
-    background: var(--surface); border: 1.5px dashed var(--border);
-    border-radius: var(--radius); padding: 2rem 1.5rem; text-align: center;
-    color: var(--muted); font-size: 0.88rem;
-}
-.no-slots i { font-size: 2rem; color: var(--border); display: block; margin-bottom: 0.5rem; }
-
-.btn-next {
-    width: 100%; padding: 1rem; border: none; border-radius: var(--radius);
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    color: #fff; font-size: 1.02rem; font-weight: 700;
-    font-family: 'Sarabun', sans-serif;
-    cursor: pointer; transition: all 0.25s ease;
-    box-shadow: 0 6px 20px rgba(108,72,197,0.35);
-    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
-}
-.btn-next:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
-.btn-next:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(108,72,197,0.45); }
-
-.sticky-next {
-    position: sticky; bottom: 0;
-    background: var(--bg); border-top: 1px solid var(--border);
-    padding: 1rem;
-    z-index: 20;
-}
-
-/* ===== STEP 3: BOOKING FORM ===== */
-.form-section { padding: 1rem; }
-.form-card {
+/* ===== CARD BASE ===== */
+.card-block {
     background: var(--surface); border-radius: var(--radius-lg);
     padding: 1.4rem; margin-bottom: 1rem;
     box-shadow: var(--shadow-sm); border: 1px solid var(--border);
     animation: fadeUp 0.4s ease-out;
 }
-@keyframes fadeUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
 
-.form-card-title {
+.card-title {
     font-size: 1rem; font-weight: 700; color: var(--text);
-    margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.6rem;
-    padding-bottom: 0.9rem; border-bottom: 1.5px solid var(--border);
+    margin-bottom: 1.1rem; display: flex; align-items: center; gap: 0.6rem;
+    padding-bottom: 0.85rem; border-bottom: 1.5px solid var(--border);
 }
-.title-icon {
-    width: 34px; height: 34px; border-radius: 10px;
-    background: var(--primary-soft); display: flex; align-items: center; justify-content: center;
-}
-.title-icon i { font-size: 0.9rem; color: var(--primary); }
+.card-title-icon { width: 32px; height: 32px; border-radius: 9px; background: var(--primary-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.card-title-icon i { font-size: 0.9rem; color: var(--primary); }
+.card-title-icon.accent { background: var(--accent-soft); }
+.card-title-icon.accent i { color: var(--accent-dark); }
 
-/* Selected Date Summary Banner */
-.booking-summary-banner {
-    background: linear-gradient(135deg, var(--primary-soft), var(--primary-xsoft));
-    border: 1.5px solid var(--border-strong);
-    border-radius: var(--radius); padding: 1rem 1.1rem;
-    margin-bottom: 1rem; display: flex; align-items: center; gap: 0.85rem;
-    animation: fadeUp 0.3s ease;
+/* ===== FORM ELEMENTS ===== */
+.form-label { font-weight: 600; color: var(--text-2); margin-bottom: 0.4rem; font-size: 0.88rem; display: block; }
+.form-label .req { color: var(--danger); }
+.form-control, .form-select {
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.78rem 1rem; font-size: 0.93rem;
+    font-family: 'Sarabun', sans-serif; transition: all 0.2s;
+    background: var(--surface); color: var(--text); width: 100%;
 }
-.bsb-icon {
-    width: 40px; height: 40px; background: var(--primary); border-radius: 12px;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.bsb-icon i { color: #fff; font-size: 1rem; }
-.bsb-title { font-size: 0.92rem; font-weight: 700; color: var(--primary); }
-.bsb-sub { font-size: 0.8rem; color: var(--text-2); }
-.bsb-edit {
-    margin-left: auto; font-size: 0.75rem; color: var(--primary);
-    font-weight: 700; background: rgba(108,72,197,0.1);
-    border: none; border-radius: 12px; padding: 0.3rem 0.7rem; cursor: pointer;
-}
+.form-control:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,72,197,0.12); outline: none; }
+.form-control:disabled { background: var(--bg); color: var(--muted); }
+.form-hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.35rem; display: flex; align-items: center; gap: 0.3rem; }
+.input-wrap { position: relative; }
+.input-suffix { position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; transition: color 0.2s; }
 
-/* Custom select */
-.custom-select-container { position: relative; }
-.custom-select-selected {
+/* ===== STEP 1: SMART SEARCH ===== */
+
+/* Month multi-select grid */
+.months-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.5rem; }
+.month-chip {
+    padding: 0.55rem 0.3rem; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); text-align: center;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    transition: all 0.18s; background: var(--surface); color: var(--text-2);
+    user-select: none;
+}
+.month-chip:hover { border-color: var(--primary-light); background: var(--primary-xsoft); }
+.month-chip.selected { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); box-shadow: 0 0 0 2px rgba(108,72,197,0.12); }
+
+/* Number stepper */
+.stepper-row { display: flex; align-items: center; gap: 0.8rem; }
+.stepper-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 1.5px solid var(--border); background: var(--surface);
+    font-size: 1.2rem; font-weight: 700; color: var(--text-2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.18s; flex-shrink: 0;
+}
+.stepper-btn:hover:not(:disabled) { background: var(--primary); color: #fff; border-color: var(--primary); }
+.stepper-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.stepper-val { font-size: 1.25rem; font-weight: 800; min-width: 40px; text-align: center; color: var(--text); }
+.stepper-unit { font-size: 0.82rem; color: var(--muted); }
+
+/* Search button */
+.btn-search {
+    width: 100%; padding: 0.95rem; border: none; border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff; font-size: 1rem; font-weight: 700;
+    font-family: 'Sarabun', sans-serif; cursor: pointer;
+    transition: all 0.25s; box-shadow: 0 6px 20px rgba(108,72,197,0.32);
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.btn-search:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(108,72,197,0.42); }
+.btn-search:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+/* ===== STEP 2: CALENDAR + RESULTS ===== */
+
+/* Calendar */
+.calendar-wrap { margin-bottom: 0; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; }
+.cal-month-label { font-size: 1rem; font-weight: 700; color: var(--text); }
+.cal-nav { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--text-2); transition: all 0.18s; }
+.cal-nav:hover { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+.cal-day-label { text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--muted); padding: 0.3rem 0; }
+.cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-size: 0.82rem; font-weight: 500;
+    cursor: pointer; transition: all 0.15s; color: var(--text);
+}
+.cal-day:hover:not(.disabled):not(.empty) { background: var(--primary-soft); color: var(--primary); }
+.cal-day.empty { cursor: default; }
+.cal-day.today { font-weight: 800; color: var(--primary); position: relative; }
+.cal-day.today::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--primary); border-radius: 50%; }
+.cal-day.disabled { color: var(--border); cursor: not-allowed; }
+.cal-day.highlight-month { background: rgba(108,72,197,0.06); }
+.cal-day.in-range { background: var(--primary-soft); border-radius: 0; color: var(--primary); }
+.cal-day.range-start, .cal-day.range-end { background: var(--primary); color: #fff; border-radius: 50%; font-weight: 700; }
+.cal-day.range-start { border-radius: 50% 0 0 50%; }
+.cal-day.range-end { border-radius: 0 50% 50% 0; }
+.cal-day.range-start.range-end { border-radius: 50%; }
+.cal-day.unavailable { background: var(--danger-soft) !important; color: var(--danger) !important; position: relative; }
+.cal-day.unavailable::before { content: '✕'; position: absolute; font-size: 0.5rem; top: 2px; right: 2px; color: var(--danger); }
+
+.cal-legend { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+.legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.73rem; color: var(--muted); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* Date summary strip */
+.date-summary-strip {
+    background: var(--primary-soft); border: 1.5px solid rgba(108,72,197,0.2);
+    border-radius: var(--radius-sm); padding: 0.7rem 1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 0.85rem; animation: fadeUp 0.3s ease;
+}
+.date-summary-label { font-size: 0.82rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
+.date-summary-range { font-size: 0.82rem; color: var(--primary); font-weight: 600; }
+.date-clear-btn { font-size: 0.75rem; color: var(--muted); cursor: pointer; padding: 0.25rem 0.5rem; background: rgba(255,255,255,0.6); border-radius: 6px; border: 1px solid rgba(108,72,197,0.15); }
+
+/* Room result list (OTA style) */
+.result-section-title { font-size: 0.8rem; font-weight: 700; color: var(--muted); letter-spacing: 0.07em; text-transform: uppercase; margin: 1.2rem 0 0.65rem 0.2rem; }
+
+.room-result-card {
     background: var(--surface); border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); padding: 0.75rem 1rem;
-    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-    transition: all 0.2s; min-height: 48px;
+    border-radius: var(--radius); overflow: hidden;
+    margin-bottom: 0.75rem; cursor: pointer;
+    transition: all 0.22s ease; position: relative;
 }
-.custom-select-selected:hover { border-color: var(--border-strong); }
-.custom-select-selected.open { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,72,197,0.12); }
-.select-arrow { color: var(--muted); transition: transform 0.3s; font-size: 0.85rem; }
-.custom-select-selected.open .select-arrow { transform: rotate(180deg); color: var(--primary); }
-.custom-select-options {
-    display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+.room-result-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.room-result-card.selected { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,72,197,0.12); }
+.room-result-card.unavailable-card { opacity: 0.55; cursor: not-allowed; }
+.room-result-card.unavailable-card:hover { transform: none; box-shadow: none; border-color: var(--border); }
+.room-card-body { padding: 1rem; }
+.room-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.7rem; margin-bottom: 0.6rem; }
+.room-name { font-size: 1rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+.room-avail-tag { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.22rem 0.6rem; border-radius: 8px; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
+.room-avail-tag.avail { background: var(--success-soft); color: var(--success); }
+.room-avail-tag.full { background: var(--danger-soft); color: var(--danger); }
+.room-meta-row { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+.room-meta-item { display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; color: var(--text-2); }
+.room-meta-item i { color: var(--primary); font-size: 0.75rem; }
+.room-selected-check { position: absolute; top: 0.75rem; right: 0.75rem; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); display: none; align-items: center; justify-content: center; }
+.room-selected-check i { font-size: 0.65rem; color: #fff; }
+.room-result-card.selected .room-selected-check { display: flex; }
+
+/* Accommodation availability card */
+.acc-avail-card {
     background: var(--surface); border: 1.5px solid var(--border);
-    border-radius: var(--radius); box-shadow: var(--shadow-lg);
-    z-index: 100; max-height: 280px; overflow-y: auto;
-    padding: 0.5rem; list-style: none;
-    animation: dropDown 0.25s ease;
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 0.75rem;
 }
-@keyframes dropDown { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
-.custom-select-options.show { display: block; }
-.custom-select-option {
-    padding: 0.85rem; cursor: pointer; border-radius: var(--radius-sm);
-    display: flex; justify-content: space-between; align-items: center;
-    transition: background 0.15s; margin-bottom: 0.25rem;
+.acc-avail-header { background: var(--primary-soft); padding: 0.8rem 1rem; border-bottom: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.acc-avail-title { font-size: 0.9rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.4rem; }
+.acc-nights-chip { background: var(--primary); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.18rem 0.6rem; border-radius: 8px; }
+.acc-avail-body { padding: 1rem; }
+.acc-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.85rem; }
+.acc-info-box { background: var(--bg); border-radius: var(--radius-sm); padding: 0.75rem; border: 1px solid var(--border); position: relative; }
+.acc-info-label { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.2rem; display: block; }
+.acc-info-val { font-size: 0.9rem; font-weight: 700; color: var(--primary); display: block; }
+.acc-info-sub { font-size: 0.68rem; color: var(--muted); margin-top: 0.1rem; display: block; }
+.acc-info-decor { position: absolute; right: 7px; bottom: 7px; font-size: 1.2rem; color: var(--primary); opacity: 0.07; }
+
+.avail-bar { display: flex; align-items: center; justify-content: space-between; background: var(--success-soft); border: 1px solid rgba(18,161,80,0.2); border-radius: var(--radius-sm); padding: 0.65rem 0.9rem; margin-bottom: 0.85rem; }
+.avail-bar-label { font-size: 0.85rem; font-weight: 600; color: var(--success); display: flex; align-items: center; gap: 0.4rem; }
+.avail-bar-count { background: var(--success); color: #fff; font-weight: 800; font-size: 0.85rem; padding: 0.18rem 0.65rem; border-radius: 10px; }
+
+.room-count-wrap { border-top: 1.5px dashed var(--border); padding-top: 0.85rem; }
+.room-count-row { display: flex; align-items: center; gap: 0.7rem; }
+.room-count-input { flex: 0 0 88px; }
+.room-count-input input { text-align: center; font-weight: 800; font-size: 1.05rem; }
+.room-count-hint-col { flex: 1; }
+.room-count-hint { font-size: 0.77rem; color: var(--muted); display: flex; align-items: flex-start; gap: 0.35rem; margin-bottom: 0.3rem; line-height: 1.4; }
+.room-count-hint.green { color: var(--success); font-weight: 600; }
+.room-count-hint i { margin-top: 2px; flex-shrink: 0; }
+
+/* Full/unavail card */
+.unavail-card {
+    background: var(--danger-soft); border: 1.5px solid rgba(229,72,77,0.22);
+    border-radius: var(--radius); padding: 1.1rem;
 }
-.custom-select-option:last-child { margin-bottom: 0; }
-.custom-select-option:hover { background: var(--primary-soft); }
-.custom-select-option.disabled { opacity: 0.45; cursor: not-allowed; background: var(--bg); }
-.option-name { font-weight: 600; color: var(--text); font-size: 0.92rem; }
-.option-capacity { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
-.avail-tag {
-    font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 8px;
-    display: flex; align-items: center; gap: 0.25rem; flex-shrink: 0;
+.unavail-top { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.65rem; }
+.unavail-icon-wrap { width: 36px; height: 36px; border-radius: 50%; background: var(--danger); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.unavail-title { font-weight: 700; color: var(--danger); font-size: 0.92rem; }
+.unavail-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
+
+/* Proceed button */
+.btn-proceed {
+    width: 100%; padding: 0.95rem; border: none; border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff; font-size: 1rem; font-weight: 700;
+    font-family: 'Sarabun', sans-serif; cursor: pointer;
+    transition: all 0.25s; box-shadow: 0 6px 20px rgba(108,72,197,0.32);
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    margin-top: 1rem;
 }
-.avail-tag.yes { background: var(--success-soft); color: var(--success); }
-.avail-tag.no { background: var(--danger-soft); color: var(--danger); }
+.btn-proceed:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(108,72,197,0.42); }
+.btn-proceed:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+/* Back step link */
+.step-back-link { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--primary); font-size: 0.85rem; font-weight: 600; cursor: pointer; margin-bottom: 0.85rem; }
+.step-back-link:hover { text-decoration: underline; }
+
+/* ===== STEP 3: BOOKING DETAILS ===== */
+
+/* Booking summary box */
+.booking-summary-box {
+    background: var(--primary-xsoft); border: 1.5px solid rgba(108,72,197,0.2);
+    border-radius: var(--radius); padding: 1rem; margin-bottom: 0.2rem;
+}
+.summary-row { display: flex; justify-content: space-between; align-items: center; padding: 0.38rem 0; border-bottom: 1px solid var(--border); }
+.summary-row:last-child { border-bottom: none; }
+.summary-label { font-size: 0.8rem; color: var(--muted); }
+.summary-val { font-size: 0.88rem; font-weight: 700; color: var(--text); text-align: right; max-width: 65%; }
 
 /* Radio cards */
-.radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
 .radio-card {
     background: var(--surface); border: 1.5px solid var(--border);
-    border-radius: var(--radius); padding: 1.1rem 0.9rem;
-    cursor: pointer; transition: all 0.2s ease; text-align: center; position: relative;
+    border-radius: var(--radius); padding: 1rem 0.85rem;
+    cursor: pointer; transition: all 0.18s; text-align: center; position: relative;
 }
 .radio-card:hover { border-color: var(--primary-light); background: var(--primary-xsoft); }
 .radio-card.active { border-color: var(--primary); background: var(--primary-soft); box-shadow: 0 0 0 3px rgba(108,72,197,0.1); }
 .radio-card input[type="radio"] { display: none; }
-.radio-icon { font-size: 1.7rem; margin-bottom: 0.4rem; color: var(--muted); transition: all 0.2s; }
-.radio-card.active .radio-icon { color: var(--primary); }
-.radio-text { font-size: 0.92rem; font-weight: 600; color: var(--text); }
-.check-indicator {
-    position: absolute; top: 0.5rem; right: 0.5rem;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: var(--primary); display: none;
-    align-items: center; justify-content: center;
-}
-.check-indicator i { font-size: 0.55rem; color: #fff; }
-.radio-card.active .check-indicator { display: flex; }
-
-/* Accommodation */
-.acc-result-card {
-    background: var(--surface); border-radius: var(--radius);
-    border: 1.5px solid var(--border); overflow: hidden;
-    animation: fadeUp 0.35s ease; margin-top: 1rem;
-}
-.acc-header {
-    background: var(--primary-soft); padding: 0.9rem 1.1rem;
-    border-bottom: 1.5px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-}
-.acc-header-title { font-weight: 700; color: var(--primary); font-size: 0.92rem; display: flex; align-items: center; gap: 0.5rem; }
-.acc-nights-badge { background: var(--primary-soft); color: var(--primary); font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 8px; }
-.acc-body { padding: 1.1rem; }
-.acc-info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1rem; }
-.acc-info-box { background: var(--bg); border-radius: var(--radius-sm); padding: 0.8rem; border: 1px solid var(--border); position: relative; }
-.acc-label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 0.25rem; }
-.acc-value { font-size: 0.92rem; font-weight: 700; color: var(--primary); display: block; }
-.acc-sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.1rem; display: block; }
-.acc-icon-decor { position: absolute; right: 8px; bottom: 8px; font-size: 1.3rem; color: var(--primary); opacity: 0.08; }
-.avail-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--success-soft); border: 1px solid rgba(18,161,80,0.2);
-    border-radius: var(--radius-sm); padding: 0.7rem 1rem; margin-bottom: 1rem;
-}
-.avail-bar-label { font-size: 0.88rem; font-weight: 600; color: var(--success); display: flex; align-items: center; gap: 0.4rem; }
-.avail-count { background: var(--success); color: #fff; font-weight: 800; font-size: 0.88rem; padding: 0.2rem 0.7rem; border-radius: 10px; }
-.room-input-wrap { border-top: 1.5px dashed var(--border); padding-top: 1rem; }
-.room-input-row { display: flex; align-items: flex-start; gap: 0.75rem; }
-.room-input-num { flex: 0 0 90px; }
-.room-input-num input { text-align: center; font-weight: 700; font-size: 1.1rem; }
-.room-hint-col { flex: 1; }
-.room-hint { font-size: 0.78rem; color: var(--muted); display: flex; align-items: flex-start; gap: 0.35rem; margin-bottom: 0.35rem; line-height: 1.4; }
-.room-hint.green { color: var(--success); font-weight: 600; }
-.room-hint i { margin-top: 2px; flex-shrink: 0; }
-.unavail-card {
-    background: var(--danger-soft); border: 1.5px solid rgba(229,72,77,0.2);
-    border-radius: var(--radius); padding: 1.1rem; margin-top: 1rem;
-    animation: fadeUp 0.35s ease;
-}
-.unavail-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.7rem; }
-.unavail-icon { width: 38px; height: 38px; background: var(--danger); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.unavail-icon i { color: #fff; font-size: 1rem; }
-.unavail-title { font-weight: 700; color: var(--danger); font-size: 0.95rem; }
-.unavail-sub { font-size: 0.8rem; color: var(--muted); }
-
-/* Alerts */
-.alert-ota {
-    border: 1.5px solid; border-radius: var(--radius-sm);
-    padding: 0.85rem 1rem; margin-bottom: 1rem;
-    display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.88rem;
-}
-.alert-ota i { margin-top: 2px; flex-shrink: 0; }
-.alert-ota.success { background: var(--success-soft); border-color: rgba(18,161,80,0.25); color: var(--success); }
-.alert-ota.warning { background: var(--warning-soft); border-color: rgba(217,119,6,0.25); color: var(--warning); }
-.alert-ota.danger { background: var(--danger-soft); border-color: rgba(229,72,77,0.25); color: var(--danger); }
-.alert-ota.info { background: var(--info-soft); border-color: rgba(0,144,193,0.25); color: var(--info); }
-
-/* Input with icon */
-.input-with-icon { position: relative; }
-.input-with-icon .form-control { padding-right: 2.75rem; }
-.input-suffix {
-    position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%);
-    color: var(--muted); pointer-events: none;
-}
+.radio-card-icon { font-size: 1.6rem; margin-bottom: 0.4rem; color: var(--muted); transition: color 0.18s; }
+.radio-card.active .radio-card-icon { color: var(--primary); }
+.radio-card-text { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+.radio-check { position: absolute; top: 0.45rem; right: 0.45rem; width: 17px; height: 17px; border-radius: 50%; background: var(--primary); display: none; align-items: center; justify-content: center; }
+.radio-check i { font-size: 0.5rem; color: #fff; }
+.radio-card.active .radio-check { display: flex; }
 
 /* PDPA */
-.pdpa-card { background: var(--primary-xsoft); border: 1.5px solid var(--border-strong); border-radius: var(--radius); padding: 1.1rem; }
-.pdpa-inner { display: flex; align-items: flex-start; gap: 0.85rem; }
-.pdpa-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border-strong); background: var(--surface); cursor: pointer; flex-shrink: 0; margin-top: 2px; accent-color: var(--primary); }
-.pdpa-text { font-size: 0.88rem; color: var(--text-2); line-height: 1.6; }
+.pdpa-card { background: var(--primary-xsoft); border: 1.5px solid var(--border-strong); border-radius: var(--radius); padding: 1rem; }
+.pdpa-inner { display: flex; align-items: flex-start; gap: 0.8rem; }
+.pdpa-check { width: 20px; height: 20px; border-radius: 5px; border: 2px solid var(--border-strong); background: var(--surface); cursor: pointer; flex-shrink: 0; margin-top: 2px; accent-color: var(--primary); }
+.pdpa-text { font-size: 0.85rem; color: var(--text-2); line-height: 1.6; }
 .pdpa-link { color: var(--primary); font-weight: 700; text-decoration: none; border-bottom: 1px dashed var(--primary); }
 
 /* Submit */
@@ -480,708 +341,459 @@ body {
     width: 100%; padding: 1rem; border: none; border-radius: var(--radius);
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: #fff; font-size: 1.05rem; font-weight: 700;
-    font-family: 'Sarabun', sans-serif;
-    cursor: pointer; transition: all 0.25s ease;
-    box-shadow: 0 6px 20px rgba(108,72,197,0.35);
+    font-family: 'Sarabun', sans-serif; cursor: pointer;
+    transition: all 0.25s; box-shadow: 0 6px 20px rgba(108,72,197,0.35);
     display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    margin-top: 1.2rem;
 }
 .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(108,72,197,0.45); }
-.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
-/* Loading */
-.loading-overlay {
-    position: fixed; inset: 0;
-    background: rgba(108,72,197,0.12);
-    backdrop-filter: blur(10px);
-    display: none; align-items: center; justify-content: center;
-    z-index: 9999;
-}
+/* ===== ALERTS ===== */
+.alert-ota { border: 1.5px solid; border-radius: var(--radius-sm); padding: 0.8rem 1rem; margin-bottom: 0.85rem; display: flex; align-items: flex-start; gap: 0.55rem; font-size: 0.85rem; }
+.alert-ota i { margin-top: 2px; flex-shrink: 0; }
+.alert-ota.success { background: var(--success-soft); border-color: rgba(18,161,80,0.25); color: var(--success); }
+.alert-ota.warning { background: var(--warning-soft); border-color: rgba(217,119,6,0.25); color: var(--warning); }
+.alert-ota.danger { background: var(--danger-soft); border-color: rgba(229,72,77,0.25); color: var(--danger); }
+.alert-ota.info { background: var(--info-soft); border-color: rgba(0,144,193,0.25); color: var(--info); }
+
+/* ===== LOADING ===== */
+.loading-overlay { position: fixed; inset: 0; background: rgba(108,72,197,0.12); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 9999; }
 .loading-overlay.show { display: flex; }
-.loading-box {
-    background: var(--surface); border-radius: var(--radius-lg);
-    padding: 2.5rem 2rem; text-align: center;
-    box-shadow: var(--shadow-lg); border: 1px solid var(--border);
-    min-width: 200px;
-}
-.spinner { width: 48px; height: 48px; border: 3.5px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 1rem; }
+.loading-box { background: var(--surface); border-radius: var(--radius-lg); padding: 2.5rem 2rem; text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--border); min-width: 200px; }
+.spinner { width: 46px; height: 46px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 1rem; }
 @keyframes spin { to{transform:rotate(360deg);} }
-.loading-text-label { font-size: 0.92rem; color: var(--text-2); font-weight: 500; }
+.loading-label { font-size: 0.9rem; color: var(--text-2); font-weight: 500; }
 
-/* Skeleton */
-.loading-skeleton {
-    background: linear-gradient(90deg, #ede8f8 25%, #f5f2fc 50%, #ede8f8 75%);
-    background-size: 200% 100%; animation: shimmer 1.5s infinite;
-    border-radius: var(--radius-sm); height: 100px; width: 100%;
-}
+/* ===== SKELETON ===== */
+.skeleton { background: linear-gradient(90deg,#ede8f8 25%,#f5f2fc 50%,#ede8f8 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius-sm); }
 @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 
-/* form-text */
-.form-text { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; }
+/* ===== FOOTER CONTACT ===== */
+.footer-contact { display: flex; align-items: center; gap: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.9rem 1rem; margin-top: 1.2rem; }
+.footer-contact-icon { width: 36px; height: 36px; background: var(--primary-soft); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.footer-contact-icon i { color: var(--primary); font-size: 0.95rem; }
+.footer-contact-label { font-size: 0.72rem; color: var(--muted); }
+.footer-contact-val { font-size: 0.88rem; font-weight: 700; color: var(--text); }
 
-/* Footer */
-.footer-contact {
-    display: flex; align-items: center; gap: 0.85rem;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 1rem 1.1rem;
+/* ===== DESKTOP SIDEBAR ===== */
+.desktop-sidebar { display: none; }
+.desktop-main { flex: 1; }
+
+@media (min-width: 768px) {
+    body { background: linear-gradient(135deg, #f0edfb 0%, #e8e4f5 100%); }
+    .app-container { max-width: 100%; display: flex; min-height: 100vh; background: transparent; }
+    .desktop-sidebar {
+        display: flex; flex-direction: column;
+        width: 360px;
+        background: linear-gradient(180deg, #6C48C5 0%, #4E32A0 100%);
+        padding: 2.5rem 2rem; position: relative; overflow: hidden;
+    }
+    .desktop-sidebar::before { content: ''; position: absolute; top: -80px; right: -60px; width: 280px; height: 280px; background: rgba(255,255,255,0.07); border-radius: 50%; }
+    .sidebar-content { position: relative; z-index: 2; }
+    .sidebar-logo { width: 68px; height: 68px; background: rgba(255,255,255,0.15); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.2); }
+    .sidebar-logo i { font-size: 2.1rem; color: #fff; }
+    .sidebar-title { font-size: 1.65rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; letter-spacing: -0.3px; }
+    .sidebar-subtitle { font-size: 0.88rem; color: rgba(255,255,255,0.72); margin-bottom: 2.5rem; line-height: 1.6; }
+    .sidebar-steps { display: flex; flex-direction: column; gap: 2rem; position: relative; }
+    .sidebar-step { display: flex; align-items: flex-start; gap: 1.2rem; position: relative; }
+    .sidebar-step:not(:last-child)::after { content: ''; position: absolute; left: 23px; top: 50px; width: 2px; height: calc(100% + 2rem - 50px); background: rgba(255,255,255,0.2); border-radius: 2px; }
+    .sidebar-step-circle { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; color: rgba(255,255,255,0.55); flex-shrink: 0; transition: all 0.35s ease; }
+    .sidebar-step.active .sidebar-step-circle { background: #fff; border-color: #fff; color: var(--primary); box-shadow: 0 0 0 8px rgba(255,255,255,0.18); }
+    .sidebar-step.done .sidebar-step-circle { background: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.85); color: var(--success); }
+    .sidebar-step-title { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-bottom: 0.25rem; padding-top: 0.7rem; transition: color 0.3s; }
+    .sidebar-step.active .sidebar-step-title { color: #fff; }
+    .sidebar-step.done .sidebar-step-title { color: rgba(255,255,255,0.88); }
+    .sidebar-step-desc { font-size: 0.8rem; color: rgba(255,255,255,0.48); line-height: 1.5; }
+    .sidebar-footer { margin-top: auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.15); }
+    .sidebar-contact { display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.1); border-radius: 14px; padding: 1rem; border: 1px solid rgba(255,255,255,0.15); }
+    .sidebar-contact i { font-size: 1.4rem; color: rgba(255,255,255,0.9); }
+    .sidebar-contact-label { font-size: 0.77rem; color: rgba(255,255,255,0.58); }
+    .sidebar-contact-val { font-size: 0.9rem; color: #fff; font-weight: 700; }
+    .desktop-main { flex: 1; padding: 3rem; overflow-y: auto; }
+    .app-header { display: none; }
+    .main-section { padding: 0; max-width: 780px; margin: 0 auto; }
+    .desktop-welcome { background: var(--surface); border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+    .welcome-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .welcome-icon { width: 65px; height: 65px; background: var(--primary-soft); border-radius: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .welcome-icon i { font-size: 1.9rem; color: var(--primary); }
+    .welcome-title { font-size: 1.45rem; font-weight: 800; color: var(--text); margin-bottom: 0.25rem; }
+    .welcome-sub { font-size: 0.88rem; color: var(--muted); }
+    .welcome-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; padding-top: 1.4rem; border-top: 1.5px solid var(--border); }
+    .ws-item { text-align: center; }
+    .ws-num { font-size: 1.75rem; font-weight: 800; color: var(--primary); display: block; }
+    .ws-label { font-size: 0.8rem; color: var(--muted); }
+    .card-block { border-radius: 20px; padding: 2rem; }
+    .btn-submit, .btn-search, .btn-proceed { max-width: 360px; margin: 1rem auto 0; }
+    .footer-contact { display: none; }
 }
-.footer-contact-icon { width: 38px; height: 38px; background: var(--primary-soft); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.footer-contact-icon i { color: var(--primary); font-size: 1rem; }
-.footer-contact-label { font-size: 0.75rem; color: var(--muted); }
-.footer-contact-value { font-size: 0.9rem; font-weight: 700; color: var(--text); }
 
-/* Swal */
+/* SweetAlert font override */
 .swal2-popup { font-family: 'Sarabun', sans-serif !important; border-radius: 20px !important; }
 .swal2-confirm { background: var(--primary) !important; border-radius: 10px !important; }
-
-/* Searching state */
-.searching-state {
-    padding: 3rem 2rem; text-align: center;
-    display: flex; flex-direction: column; align-items: center; gap: 1rem;
-}
-.search-spinner {
-    width: 52px; height: 52px; border: 4px solid var(--border); border-top-color: var(--primary);
-    border-radius: 50%; animation: spin 0.9s linear infinite;
-}
-.searching-text { font-size: 0.95rem; color: var(--text-2); font-weight: 600; }
-.searching-sub { font-size: 0.82rem; color: var(--muted); }
-
-/* Page 2 section padding */
-.p2-content { padding-bottom: 80px; }
-
-/* Form row */
-.form-row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 </style>
 </head>
 <body>
-<div class="app-wrap">
+<div class="app-container">
 
-    <!-- STEP BAR -->
-    <div class="step-bar">
-        <div class="step-bar-inner">
-            <div class="step-tab active" id="stab1">
-                <div class="step-num">1</div>
-                <span class="step-name">ค้นหา</span>
+    <!-- DESKTOP SIDEBAR -->
+    <div class="desktop-sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-logo"><i class="fas fa-bolt"></i></div>
+            <h1 class="sidebar-title">ระบบจองห้องประชุม</h1>
+            <p class="sidebar-subtitle">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
+            <div class="sidebar-steps">
+                <div class="sidebar-step active" id="dstep1">
+                    <div class="sidebar-step-circle"><span>1</span></div>
+                    <div>
+                        <div class="sidebar-step-title">ค้นหาห้องว่าง</div>
+                        <div class="sidebar-step-desc">เลือกเดือน จำนวนวัน ผู้เข้าร่วม และห้องพัก</div>
+                    </div>
+                </div>
+                <div class="sidebar-step" id="dstep2">
+                    <div class="sidebar-step-circle"><span>2</span></div>
+                    <div>
+                        <div class="sidebar-step-title">เลือกวันและห้อง</div>
+                        <div class="sidebar-step-desc">ปฏิทิน ช่วงเวลา และห้องประชุมที่ต้องการ</div>
+                    </div>
+                </div>
+                <div class="sidebar-step" id="dstep3">
+                    <div class="sidebar-step-circle"><span>3</span></div>
+                    <div>
+                        <div class="sidebar-step-title">กรอกข้อมูลผู้จอง</div>
+                        <div class="sidebar-step-desc">ข้อมูลส่วนตัว หลักสูตร และยืนยัน PDPA</div>
+                    </div>
+                </div>
             </div>
-            <div class="step-tab" id="stab2">
-                <div class="step-num">2</div>
-                <span class="step-name">เลือกวัน</span>
-            </div>
-            <div class="step-tab" id="stab3">
-                <div class="step-num">3</div>
-                <span class="step-name">กรอกข้อมูล</span>
+        </div>
+        <div class="sidebar-footer">
+            <div class="sidebar-contact">
+                <i class="fas fa-phone-alt"></i>
+                <div>
+                    <div class="sidebar-contact-label">ติดต่อสอบถาม</div>
+                    <div class="sidebar-contact-val">034-339-224 และ (33)15619</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ====== STEP 1: SMART SEARCH ====== -->
-    <div class="page active" id="page1">
-        <div class="hero">
-            <div class="hero-dots"></div>
-            <div class="hero-blob"></div>
-            <div class="hero-blob2"></div>
-            <div class="hero-content">
+    <!-- MAIN CONTENT -->
+    <div class="desktop-main">
+
+        <!-- Mobile Header -->
+        <div class="app-header">
+            <div class="header-dots"></div>
+            <div class="header-blob"></div>
+            <div class="header-content">
                 <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> หน้าหลัก</a>
-                <div class="hero-icon"><i class="fas fa-search"></i></div>
-                <h1 class="hero-title">ค้นหาห้องว่าง</h1>
-                <p class="hero-sub">ระบบจะแสดงช่วงวันที่สามารถจองได้ทันที</p>
+                <div class="header-icon"><i class="fas fa-calendar-search"></i></div>
+                <h1 class="header-title">จองห้องประชุม</h1>
+                <p class="header-subtitle">ค้นหาห้องว่าง เลือกวันที่ และยืนยัน</p>
+                <!-- Step indicator -->
+                <div class="step-indicator" id="stepIndicator">
+                    <div class="step-pip active" id="pip1">1</div>
+                    <div class="step-line" id="line12"></div>
+                    <div class="step-pip" id="pip2">2</div>
+                    <div class="step-line" id="line23"></div>
+                    <div class="step-pip" id="pip3">3</div>
+                </div>
+                <div class="step-labels">
+                    <span class="step-label-text active" id="slabel1">ค้นหา</span>
+                    <span class="step-label-text" id="slabel2">เลือกวัน&ห้อง</span>
+                    <span class="step-label-text" id="slabel3">ข้อมูลผู้จอง</span>
+                </div>
             </div>
         </div>
 
-        <div class="search-card">
-            <div class="search-card-title">
-                <i class="fas fa-sliders-h"></i> กำหนดเงื่อนไขการค้นหา
-            </div>
-
-            <!-- เดือนที่ต้องการ -->
-            <div class="mb-3">
-                <label class="form-label required">เดือนที่ต้องการจัดประชุม</label>
-                <div class="month-grid" id="monthGrid"></div>
-                <div class="form-text mt-2"><i class="fas fa-info-circle"></i> เลือกได้หลายเดือน</div>
-            </div>
-
-            <!-- จำนวนวันและผู้เข้าอบรม -->
-            <div class="num-row mb-3">
-                <div>
-                    <label class="form-label required">จำนวนวันอบรม</label>
-                    <div class="num-input-group">
-                        <input type="number" class="form-control" id="srchDays" min="1" max="30" placeholder="0" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-                        <span class="num-suffix">วัน</span>
+        <!-- ======================== STEP 1: SMART SEARCH ======================== -->
+        <div id="step1Section" class="main-section">
+            <div class="desktop-welcome d-none d-md-block">
+                <div class="welcome-row">
+                    <div class="welcome-icon"><i class="fas fa-calendar-search"></i></div>
+                    <div>
+                        <div class="welcome-title">ค้นหาห้องประชุมที่ว่าง</div>
+                        <div class="welcome-sub">กรอกข้อมูลเบื้องต้น ระบบจะค้นหาช่วงเวลาและห้องที่เหมาะสมให้</div>
                     </div>
                 </div>
-                <div>
-                    <label class="form-label required">จำนวนผู้เข้าอบรม</label>
-                    <div class="num-input-group">
-                        <input type="number" class="form-control" id="srchAttendees" min="1" placeholder="0" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-                        <span class="num-suffix">คน</span>
+                <div class="welcome-stats">
+                    <div class="ws-item"><span class="ws-num">13</span><span class="ws-label">ห้องประชุมทั้งหมด</span></div>
+                    <div class="ws-item"><span class="ws-num">90</span><span class="ws-label">ห้องพักทั้งหมด</span></div>
+                    <div class="ws-item"><span class="ws-num">9</span><span class="ws-label">ห้อง VIP</span></div>
+                </div>
+            </div>
+
+            <!-- Month Selection -->
+            <div class="card-block">
+                <div class="card-title">
+                    <div class="card-title-icon"><i class="fas fa-calendar-alt"></i></div>
+                    เดือนที่ต้องการจัดประชุม
+                </div>
+                <p class="form-hint mb-3"><i class="fas fa-info-circle"></i> เลือกได้หลายเดือน (multi-select)</p>
+                <div class="months-grid" id="monthsGrid"></div>
+            </div>
+
+            <!-- Numbers -->
+            <div class="card-block">
+                <div class="card-title">
+                    <div class="card-title-icon accent"><i class="fas fa-sliders-h"></i></div>
+                    รายละเอียดการจัด
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">จำนวนวันที่อบรม <span class="req">*</span></label>
+                    <div class="stepper-row">
+                        <button class="stepper-btn" onclick="changeStepper('days',-1)">−</button>
+                        <div class="stepper-val" id="daysVal">1</div>
+                        <button class="stepper-btn" onclick="changeStepper('days',1)">+</button>
+                        <span class="stepper-unit">วัน</span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">จำนวนผู้เข้าอบรม <span class="req">*</span></label>
+                    <div class="stepper-row">
+                        <button class="stepper-btn" onclick="changeStepper('attendees',-5)">−</button>
+                        <div class="stepper-val" id="attendeesVal">10</div>
+                        <button class="stepper-btn" onclick="changeStepper('attendees',5)">+</button>
+                        <span class="stepper-unit">คน</span>
+                    </div>
+                    <div class="form-hint mt-2"><i class="fas fa-info-circle"></i> กด − หรือ + ทีละ 5 คน</div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">จำนวนห้องพักที่ต้องการ</label>
+                    <div class="stepper-row">
+                        <button class="stepper-btn" onclick="changeStepper('rooms',-1)">−</button>
+                        <div class="stepper-val" id="roomsVal">0</div>
+                        <button class="stepper-btn" onclick="changeStepper('rooms',1)">+</button>
+                        <span class="stepper-unit">ห้อง <span style="font-size:0.75rem;color:var(--muted);">(0 = ไม่ต้องการ)</span></span>
                     </div>
                 </div>
             </div>
 
-            <!-- จำนวนห้องพัก -->
-            <div class="mb-1">
-                <label class="form-label">จำนวนห้องพักที่ต้องการ</label>
-                <div class="num-input-group">
-                    <input type="number" class="form-control" id="srchRooms" min="0" placeholder="0 = ไม่ต้องการ" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-                    <span class="num-suffix">ห้อง</span>
-                </div>
-                <div class="form-text"><i class="fas fa-info-circle"></i> ใส่ 0 หรือเว้นว่างหากไม่ต้องการที่พัก</div>
-            </div>
-
-            <button class="btn-search" id="btnSearch" disabled onclick="doSearch()">
-                <i class="fas fa-search"></i> ค้นหาวันที่ว่าง
+            <button class="btn-search" id="btnSearch" onclick="doSearch()">
+                <i class="fas fa-search"></i> ค้นหาห้องว่าง
             </button>
-        </div>
 
-        <!-- Stats -->
-        <div style="padding: 0 1rem 1.5rem;">
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;">
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.9rem;text-align:center;">
-                    <div style="font-size:1.6rem;font-weight:800;color:var(--primary);">13</div>
-                    <div style="font-size:0.72rem;color:var(--muted);font-weight:600;">ห้องประชุม</div>
-                </div>
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.9rem;text-align:center;">
-                    <div style="font-size:1.6rem;font-weight:800;color:var(--primary);">90</div>
-                    <div style="font-size:0.72rem;color:var(--muted);font-weight:600;">ห้องพัก</div>
-                </div>
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.9rem;text-align:center;">
-                    <div style="font-size:1.6rem;font-weight:800;color:var(--primary);">9</div>
-                    <div style="font-size:0.72rem;color:var(--muted);font-weight:600;">ห้อง VIP</div>
-                </div>
-            </div>
-        </div>
-
-        <div style="padding: 0 1rem 2rem;">
-            <div class="footer-contact">
+            <div class="footer-contact d-md-none mt-3">
                 <div class="footer-contact-icon"><i class="fas fa-phone-alt"></i></div>
                 <div>
                     <div class="footer-contact-label">ติดต่อสอบถาม</div>
-                    <div class="footer-contact-value">034-339-224 และ (33)15619</div>
+                    <div class="footer-contact-val">034-339-224 และ (33)15619</div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ====== STEP 2: DATE RESULTS ====== -->
-    <div class="page" id="page2">
-        <div class="p2-content">
-            <div class="results-header">
-                <div>
-                    <div class="results-title">เลือกช่วงวันที่ต้องการ</div>
-                    <div class="results-sub">กดเลือกช่วงวันที่ว่างและเหมาะสม</div>
-                </div>
-                <button class="edit-search-btn" onclick="goToPage(1)">
-                    <i class="fas fa-pen"></i> แก้ไข
-                </button>
+        <!-- ======================== STEP 2: CALENDAR + RESULTS ======================== -->
+        <div id="step2Section" class="main-section" style="display:none;">
+
+            <span class="step-back-link" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> แก้ไขข้อมูลค้นหา</span>
+
+            <!-- Search Summary Chip -->
+            <div class="alert-ota info mb-3" id="searchSummaryAlert">
+                <i class="fas fa-info-circle"></i>
+                <span id="searchSummaryText">กำลังโหลด...</span>
             </div>
 
-            <!-- Summary chips -->
-            <div class="search-summary" id="searchSummaryChips"></div>
+            <!-- Calendar -->
+            <div class="card-block">
+                <div class="card-title">
+                    <div class="card-title-icon"><i class="fas fa-calendar-days"></i></div>
+                    เลือกวันที่ต้องการจอง
+                </div>
+                <div class="calendar-wrap">
+                    <div class="cal-header">
+                        <button class="cal-nav" id="calPrev" onclick="changeCalMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <div class="cal-month-label" id="calMonthLabel">-</div>
+                        <button class="cal-nav" id="calNext" onclick="changeCalMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="cal-grid" id="calGrid"></div>
+                    <div class="cal-legend">
+                        <div class="legend-item"><div class="legend-dot" style="background:var(--primary);"></div> วันที่เลือก</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:var(--primary-soft);border:1px solid var(--primary-light);"></div> ช่วงที่เลือก</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:var(--accent-soft);border:1px solid var(--accent-dark);"></div> เดือนที่เลือกไว้</div>
+                    </div>
+                </div>
+                <!-- Date summary strip -->
+                <div id="dateSummaryStrip" style="display:none;" class="date-summary-strip">
+                    <div class="date-summary-label"><i class="fas fa-calendar-check"></i> <span id="dateSummaryText">-</span></div>
+                    <span class="date-clear-btn" onclick="clearDateSelection()">ล้าง</span>
+                </div>
+            </div>
 
-            <!-- Results container -->
-            <div id="dateResultsContainer"></div>
-        </div>
+            <!-- Meeting Room Results -->
+            <div id="meetingRoomResults" style="display:none;">
+                <div class="result-section-title"><i class="fas fa-door-open me-1"></i> ห้องประชุมที่ว่าง</div>
+                <div id="roomListContainer"></div>
+            </div>
 
-        <div class="sticky-next">
-            <button class="btn-next" id="btnNextToStep3" disabled onclick="goToBookingForm()">
-                <i class="fas fa-arrow-right"></i> ดำเนินการจอง
+            <!-- Accommodation Results -->
+            <div id="accommodationResults" style="display:none;"></div>
+
+            <button class="btn-proceed" id="btnProceed" onclick="goToStep(3)" disabled>
+                <i class="fas fa-arrow-right"></i> ดำเนินการต่อ – กรอกข้อมูลผู้จอง
             </button>
         </div>
-    </div>
 
-    <!-- ====== STEP 3: BOOKING DETAILS ====== -->
-    <div class="page" id="page3">
-        <div class="form-section">
+        <!-- ======================== STEP 3: BOOKING DETAILS ======================== -->
+        <div id="step3Section" class="main-section" style="display:none;">
 
-            <!-- Selected date banner -->
-            <div class="booking-summary-banner" id="bookingSummaryBanner">
-                <div class="bsb-icon"><i class="fas fa-calendar-check"></i></div>
-                <div>
-                    <div class="bsb-title" id="bsbTitle">—</div>
-                    <div class="bsb-sub" id="bsbSub">—</div>
+            <span class="step-back-link" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> กลับไปเลือกวันและห้อง</span>
+
+            <!-- Summary box -->
+            <div class="card-block">
+                <div class="card-title">
+                    <div class="card-title-icon"><i class="fas fa-clipboard-list"></i></div>
+                    สรุปรายการที่เลือก
                 </div>
-                <button class="bsb-edit" onclick="goToPage(2)">เปลี่ยน</button>
+                <div class="booking-summary-box" id="bookingSummaryBox"></div>
             </div>
 
-            <form id="bookingForm">
-                <!-- CARD 1: ข้อมูลผู้จอง -->
-                <div class="form-card">
-                    <div class="form-card-title">
-                        <div class="title-icon"><i class="fas fa-user"></i></div>
-                        ข้อมูลผู้จอง
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="employeeId" class="form-label required">รหัสพนักงาน</label>
-                        <div class="input-with-icon">
-                            <input type="tel" class="form-control" id="employeeId" name="employeeId"
-                                   placeholder="กรอกรหัสพนักงาน 6 หลัก" maxlength="6"
-                                   oninput="this.value=this.value.replace(/[^0-9]/g,'');onEmpIdInput(this.value)">
-                            <div class="input-suffix" id="empSearchIcon"><i class="fas fa-id-badge"></i></div>
-                        </div>
-                        <div class="form-text" id="empHintText"><i class="fas fa-info-circle"></i> ระบบจะค้นหาอัตโนมัติเมื่อกรอกครบ 6 หลัก</div>
-                    </div>
-
-                    <div class="form-row-2col mb-3">
-                        <div>
-                            <label for="fullName" class="form-label required">ชื่อ-นามสกุล</label>
-                            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="ชื่อ-นามสกุล" required>
-                        </div>
-                        <div>
-                            <label for="department" class="form-label required">สังกัด/หน่วยงาน</label>
-                            <input type="text" class="form-control" id="department" name="department" placeholder="รอการตรวจสอบ..." required readonly style="background:var(--bg);">
-                        </div>
-                    </div>
-
-                    <div class="mb-0">
-                        <label for="phone" class="form-label required">เบอร์โทรศัพท์</label>
-                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="กรอกเบอร์โทรศัพท์" required>
-                    </div>
+            <!-- ข้อมูลผู้จอง -->
+            <div class="card-block">
+                <div class="card-title">
+                    <div class="card-title-icon"><i class="fas fa-user"></i></div>
+                    ข้อมูลผู้จอง
                 </div>
 
-                <!-- CARD 2: รายละเอียดการจอง -->
-                <div class="form-card">
-                    <div class="form-card-title">
-                        <div class="title-icon"><i class="fas fa-calendar-alt"></i></div>
-                        รายละเอียดการจอง
+                <div class="mb-3">
+                    <label class="form-label">รหัสพนักงาน <span class="req">*</span></label>
+                    <div class="input-wrap">
+                        <input type="tel" class="form-control" id="employeeId" placeholder="กรอกรหัส 6 หลัก" maxlength="6"
+                               oninput="this.value=this.value.replace(/[^0-9]/g,'');onEmpIdInput(this.value)">
+                        <div class="input-suffix" id="empIcon"><i class="fas fa-id-badge"></i></div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="courseName" class="form-label required">ชื่อหลักสูตร / หัวข้อประชุม</label>
-                        <input type="text" class="form-control" id="courseName" name="courseName" placeholder="กรุณากรอกชื่อหลักสูตร/กิจกรรม" required>
-                    </div>
-
-                    <!-- Hidden date fields (auto-filled from selection) -->
-                    <input type="hidden" id="startDate" name="startDate">
-                    <input type="hidden" id="endDate" name="endDate">
-
-                    <div class="mb-3">
-                        <label class="form-label required">เลือกห้องประชุม</label>
-                        <div class="custom-select-container">
-                            <div class="custom-select-selected" id="customMeetingRoomSelect">
-                                <span style="color:var(--muted);">กรุณาเลือกห้องประชุม</span>
-                                <i class="fas fa-chevron-down select-arrow"></i>
-                            </div>
-                            <ul class="custom-select-options" id="meetingRoomOptions"></ul>
-                            <input type="hidden" id="meetingRoom" name="meetingRoom" required>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="attendees" class="form-label required">จำนวนผู้เข้าอบรม (คน)</label>
-                        <div class="num-input-group">
-                            <input type="number" class="form-control" id="attendees" name="attendees"
-                                   placeholder="คน" required min="1"
-                                   oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-                            <span class="num-suffix">คน</span>
-                        </div>
-                    </div>
-
-                    <!-- Accommodation section -->
-                    <div class="mb-3">
-                        <label class="form-label required">ต้องการที่พัก</label>
-                        <div class="radio-grid mt-1">
-                            <div class="radio-card" data-value="ต้องการ">
-                                <div class="check-indicator"><i class="fas fa-check"></i></div>
-                                <input type="radio" name="accommodation" value="ต้องการ" required>
-                                <div class="radio-icon"><i class="fas fa-bed"></i></div>
-                                <div class="radio-text">ต้องการ</div>
-                            </div>
-                            <div class="radio-card" data-value="ไม่ต้องการ">
-                                <div class="check-indicator"><i class="fas fa-check"></i></div>
-                                <input type="radio" name="accommodation" value="ไม่ต้องการ">
-                                <div class="radio-icon"><i class="fas fa-home"></i></div>
-                                <div class="radio-text">ไม่ต้องการ</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="accommodationStatus" style="display:none;"></div>
+                    <div class="form-hint" id="empHint"><i class="fas fa-info-circle"></i> ระบบจะค้นหาอัตโนมัติเมื่อกรอกครบ 6 หลัก</div>
                 </div>
 
-                <!-- PDPA -->
-                <div class="pdpa-card mb-3">
-                    <div class="pdpa-inner">
-                        <input class="pdpa-check" type="checkbox" id="pdpaConsent" required>
-                        <label class="pdpa-text" for="pdpaConsent">
-                            ข้าพเจ้ายินยอมให้เก็บรวบรวม และเปิดเผยข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ในการจองห้องพักและห้องประชุมของศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง ตาม
-                            <a href="#" onclick="showPDPADetail(event)" class="pdpa-link">พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)</a>
-                        </label>
+                <div class="mb-3">
+                    <label class="form-label">ชื่อ-นามสกุล <span class="req">*</span></label>
+                    <input type="text" class="form-control" id="fullName" placeholder="กรุณากรอกชื่อ-นามสกุล" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">สังกัด/หน่วยงาน <span class="req">*</span></label>
+                    <input type="text" class="form-control" id="department" placeholder="รอการตรวจสอบ..." readonly style="background:var(--bg);">
+                </div>
+
+                <div class="mb-1">
+                    <label class="form-label">เบอร์โทรศัพท์ <span class="req">*</span></label>
+                    <input type="tel" class="form-control" id="phone" placeholder="กรุณากรอกเบอร์โทรศัพท์" required>
+                </div>
+            </div>
+
+            <!-- ชื่อหลักสูตร -->
+            <div class="card-block">
+                <div class="card-title">
+                    <div class="card-title-icon accent"><i class="fas fa-book"></i></div>
+                    ข้อมูลการจอง
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">ชื่อหลักสูตร / หัวข้อประชุม <span class="req">*</span></label>
+                    <input type="text" class="form-control" id="courseName" placeholder="กรุณากรอกชื่อหลักสูตร/กิจกรรม" required>
+                </div>
+                <div class="mb-1">
+                    <label class="form-label">ต้องการที่พัก</label>
+                    <div class="radio-grid mt-1" id="accommodationRadioSection">
+                        <div class="radio-card active" data-value="ต้องการ" id="accRadioYes">
+                            <div class="radio-check"><i class="fas fa-check"></i></div>
+                            <input type="radio" name="accommodation" value="ต้องการ" checked>
+                            <div class="radio-card-icon"><i class="fas fa-bed"></i></div>
+                            <div class="radio-card-text">ต้องการ</div>
+                        </div>
+                        <div class="radio-card" data-value="ไม่ต้องการ" id="accRadioNo">
+                            <div class="radio-check"><i class="fas fa-check"></i></div>
+                            <input type="radio" name="accommodation" value="ไม่ต้องการ">
+                            <div class="radio-card-icon"><i class="fas fa-home"></i></div>
+                            <div class="radio-card-text">ไม่ต้องการ</div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Submit -->
-                <div style="margin-bottom: 2rem;">
-                    <button type="submit" class="btn-submit" id="submitBtn" disabled>
-                        <i class="fas fa-paper-plane"></i> ส่งข้อมูลการจอง
-                    </button>
+            <!-- PDPA -->
+            <div class="pdpa-card mb-3">
+                <div class="pdpa-inner">
+                    <input class="pdpa-check" type="checkbox" id="pdpaConsent" onchange="checkSubmitReady()">
+                    <label class="pdpa-text" for="pdpaConsent">
+                        ข้าพเจ้ายินยอมให้เก็บรวบรวม และเปิดเผยข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ในการจองห้องพักและห้องประชุมของศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง ตาม
+                        <a href="#" onclick="showPDPA(event)" class="pdpa-link">พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)</a>
+                    </label>
                 </div>
-            </form>
+            </div>
 
-            <div class="footer-contact mb-4">
+            <button class="btn-submit" id="btnSubmit" disabled onclick="submitBooking()">
+                <i class="fas fa-paper-plane"></i> ส่งข้อมูลการจอง
+            </button>
+
+            <div class="footer-contact d-md-none mt-3">
                 <div class="footer-contact-icon"><i class="fas fa-phone-alt"></i></div>
                 <div>
                     <div class="footer-contact-label">ติดต่อสอบถาม</div>
-                    <div class="footer-contact-value">034-339-224 และ (33)15619</div>
+                    <div class="footer-contact-val">034-339-224 และ (33)15619</div>
                 </div>
             </div>
-
-            <div id="messageContainer"></div>
         </div>
-    </div>
 
-</div>
+    </div><!-- end desktop-main -->
+</div><!-- end app-container -->
 
 <!-- Loading -->
-<div id="loading" class="loading-overlay">
+<div id="loadingOverlay" class="loading-overlay">
     <div class="loading-box">
         <div class="spinner"></div>
-        <div class="loading-text-label">กำลังส่งข้อมูลการจอง...</div>
+        <div class="loading-label" id="loadingLabel">กำลังโหลด...</div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// ========== CONFIG ==========
+// ===================================================================
+//  CONFIG
+// ===================================================================
 const LIFF_ID = "2007138631-Ono58j50";
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
+const TOTAL_ROOMS = 90;
 
-// ========== STATE ==========
+const MONTHS_TH = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+                   "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const MONTHS_SHORT = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const DAY_LABELS = ["อา","จ","อ","พ","พฤ","ศ","ส"];
+
+// ===================================================================
+//  STATE
+// ===================================================================
 let userId = '', displayName = '';
 let isEmployeeVerified = false;
+let empDebounce = null;
+
+// Step 1
+let selectedMonths = [];       // [0..11]
+let searchDays = 1;
+let searchAttendees = 10;
+let searchRooms = 0;           // 0 = no accommodation
+
+// Step 2 - calendar
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let rangeStart = null, rangeEnd = null;
+let pickingMode = 'start';     // 'start' | 'end'
+
+// Step 2 - rooms
 let roomData = [];
-let maxAvailableRooms = 0;
-let accommodationAvailable = true;
+let selectedRoom = null;
+let maxAccAvail = 0;
+let accAvailable = true;
 let checkTimeout = null;
-let empSearchDebounce = null;
 
-// Search state
-let selectedMonths = [];
-let selectedSlot = null; // { startDate, endDate, label }
-let searchParams = {};
-
-// DOM refs
-const hiddenMeetingRoomInput = document.getElementById('meetingRoom');
-const customMeetingRoomSelect = document.getElementById('customMeetingRoomSelect');
-const meetingRoomOptions = document.getElementById('meetingRoomOptions');
-const submitBtn = document.getElementById('submitBtn');
-
-// ========== INIT MONTHS ==========
-function initMonthGrid() {
-    const grid = document.getElementById('monthGrid');
-    const now = new Date();
-    const thMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-    grid.innerHTML = '';
-    for (let i = 0; i < 12; i++) {
-        const year = now.getFullYear();
-        const monthIdx = (now.getMonth() + i) % 12;
-        const yearOffset = Math.floor((now.getMonth() + i) / 12);
-        const chip = document.createElement('div');
-        chip.className = 'month-chip';
-        chip.dataset.month = monthIdx + 1;
-        chip.dataset.year = year + yearOffset;
-        chip.textContent = thMonths[monthIdx];
-        chip.addEventListener('click', () => toggleMonth(chip, monthIdx + 1, year + yearOffset));
-        grid.appendChild(chip);
-    }
-    validateSearch();
-}
-
-function toggleMonth(chip, month, year) {
-    const key = `${year}-${String(month).padStart(2,'0')}`;
-    const idx = selectedMonths.findIndex(m => m.key === key);
-    if (idx >= 0) {
-        selectedMonths.splice(idx, 1);
-        chip.classList.remove('selected');
-    } else {
-        selectedMonths.push({ key, month, year });
-        chip.classList.add('selected');
-    }
-    validateSearch();
-}
-
-function validateSearch() {
-    const days = parseInt(document.getElementById('srchDays').value) || 0;
-    const attendees = parseInt(document.getElementById('srchAttendees').value) || 0;
-    const ok = selectedMonths.length > 0 && days > 0 && attendees > 0;
-    document.getElementById('btnSearch').disabled = !ok;
-}
-
-document.getElementById('srchDays').addEventListener('input', validateSearch);
-document.getElementById('srchAttendees').addEventListener('input', validateSearch);
-
-// ========== SEARCH ==========
-async function doSearch() {
-    const days = parseInt(document.getElementById('srchDays').value);
-    const attendees = parseInt(document.getElementById('srchAttendees').value);
-    const rooms = parseInt(document.getElementById('srchRooms').value) || 0;
-
-    searchParams = { days, attendees, rooms, months: [...selectedMonths] };
-
-    goToPage(2);
-    renderSearching();
-    buildSummaryChips();
-
-    // Generate candidate date slots from selected months
-    const slots = generateSlots(selectedMonths, days);
-
-    // Check availability for each slot
-    await checkSlotsAvailability(slots, attendees, rooms);
-}
-
-function generateSlots(months, days) {
-    const slots = [];
-    const today = new Date(); today.setHours(0,0,0,0);
-
-    months.sort((a,b) => a.key.localeCompare(b.key));
-
-    for (const { month, year } of months) {
-        // Get first and last day of month
-        const firstDay = new Date(year, month - 1, 1);
-        const lastDay = new Date(year, month, 0);
-
-        // Generate weekly slots within the month
-        let cursor = new Date(firstDay);
-        // Start from today if month is current
-        if (cursor < today) cursor = new Date(today);
-
-        while (cursor <= lastDay) {
-            const start = new Date(cursor);
-            const end = new Date(cursor);
-            end.setDate(end.getDate() + days - 1);
-            if (end <= lastDay) {
-                slots.push({
-                    startDate: toDateStr(start),
-                    endDate: toDateStr(end),
-                    monthKey: `${year}-${String(month).padStart(2,'0')}`,
-                    monthLabel: getThMonthLabel(month, year)
-                });
-            }
-            cursor.setDate(cursor.getDate() + 7);
-        }
-    }
-    return slots;
-}
-
-function toDateStr(d) {
-    return d.toISOString().split('T')[0];
-}
-
-function getThMonthLabel(month, year) {
-    const thMonths = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-    const buddhistYear = year + 543;
-    return `${thMonths[month-1]} ${buddhistYear}`;
-}
-
-function renderSearching() {
-    document.getElementById('dateResultsContainer').innerHTML = `
-    <div class="searching-state">
-        <div class="search-spinner"></div>
-        <div class="searching-text">กำลังตรวจสอบห้องว่าง...</div>
-        <div class="searching-sub">ระบบกำลังคำนวณช่วงวันที่เหมาะสม</div>
-    </div>`;
-}
-
-function buildSummaryChips() {
-    const thMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-    const monthNames = searchParams.months.map(m => thMonths[m.month-1]).join(', ');
-    const chips = document.getElementById('searchSummaryChips');
-    chips.innerHTML = `
-        <div class="summary-chip"><i class="fas fa-calendar-alt"></i> ${monthNames}</div>
-        <div class="summary-chip"><i class="fas fa-clock"></i> ${searchParams.days} วัน</div>
-        <div class="summary-chip"><i class="fas fa-users"></i> ${searchParams.attendees} คน</div>
-        ${searchParams.rooms > 0 ? `<div class="summary-chip"><i class="fas fa-bed"></i> ${searchParams.rooms} ห้องพัก</div>` : ''}
-    `;
-}
-
-async function checkSlotsAvailability(slots, attendees, rooms) {
-    const results = {}; // monthKey -> [{slot, meetingAvail, roomAvail}]
-
-    // Batch check: For efficiency, check meeting rooms for each slot
-    // We'll do parallel fetches with a limit
-    const MAX_PARALLEL = 4;
-    const chunks = [];
-    for (let i = 0; i < slots.length; i += MAX_PARALLEL) {
-        chunks.push(slots.slice(i, i + MAX_PARALLEL));
-    }
-
-    const slotResults = [];
-    for (const chunk of chunks) {
-        const promises = chunk.map(slot => checkSlot(slot, attendees, rooms));
-        const res = await Promise.all(promises);
-        slotResults.push(...res);
-    }
-
-    // Group by month
-    const byMonth = {};
-    for (const sr of slotResults) {
-        if (!byMonth[sr.monthLabel]) byMonth[sr.monthLabel] = [];
-        byMonth[sr.monthLabel].push(sr);
-    }
-
-    renderDateResults(byMonth);
-}
-
-async function checkSlot(slot, attendees, rooms) {
-    const result = { ...slot, meetingRoomCount: 0, availableRooms: 0, status: 'ok' };
-    try {
-        // Check meeting rooms
-        const mrRes = await fetch(`${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${slot.startDate}&endDate=${slot.endDate}`);
-        const mrData = await mrRes.json();
-        const availMR = (mrData.rooms || []).filter(r => r.isAvailable).length;
-        result.meetingRoomCount = availMR;
-
-        // Check accommodation if needed
-        if (rooms > 0) {
-            const accRes = await fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${slot.startDate}&endDate=${slot.endDate}`);
-            const accData = await accRes.json();
-            result.availableRooms = accData.availableRooms || 0;
-            if (result.availableRooms < rooms) result.status = 'room_warn';
-            if (result.availableRooms === 0 && rooms > 0) result.status = 'room_full';
-        }
-        if (availMR === 0) result.status = 'meeting_full';
-    } catch(e) {
-        result.status = 'error';
-    }
-    return result;
-}
-
-function renderDateResults(byMonth) {
-    const container = document.getElementById('dateResultsContainer');
-    if (Object.keys(byMonth).length === 0) {
-        container.innerHTML = `<div style="padding:1rem;"><div class="no-slots"><i class="fas fa-calendar-times"></i>ไม่พบช่วงวันที่ว่างในเดือนที่เลือก</div></div>`;
-        return;
-    }
-
-    let html = '';
-    for (const [monthLabel, slots] of Object.entries(byMonth)) {
-        html += `<div class="month-section">
-            <div class="month-label"><i class="fas fa-calendar"></i> ${monthLabel}</div>
-            <div class="date-slots">`;
-
-        for (const slot of slots) {
-            const startD = new Date(slot.startDate + 'T00:00:00');
-            const endD = new Date(slot.endDate + 'T00:00:00');
-            const thOpts = { day: 'numeric', month: 'short' };
-            const startTh = startD.toLocaleDateString('th-TH', thOpts);
-            const endTh = endD.toLocaleDateString('th-TH', thOpts);
-            const dow = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
-            const startDow = dow[startD.getDay()];
-            const endDow = dow[endD.getDay()];
-
-            let pillClass = 'ok', pillText = 'ห้องประชุมว่าง', pillIcon = 'fa-check-circle';
-            let slotClass = '', roomInfo = '';
-            if (slot.status === 'meeting_full') { pillClass = 'full'; pillText = 'ไม่มีห้องว่าง'; pillIcon = 'fa-times-circle'; slotClass = 'full'; }
-            else if (slot.status === 'room_warn') { pillClass = 'warn'; pillText = 'ห้องพักไม่พอ'; pillIcon = 'fa-exclamation-triangle'; }
-            else if (slot.status === 'error') { pillClass = 'warn'; pillText = 'ตรวจสอบไม่ได้'; pillIcon = 'fa-exclamation-circle'; }
-
-            if (slot.availableRooms > 0) {
-                roomInfo = `<span><i class="fas fa-bed"></i> ห้องพักว่าง ${slot.availableRooms} ห้อง</span>`;
-            }
-
-            const clickAttr = slotClass === 'full' ? '' : `onclick="selectSlot('${slot.startDate}','${slot.endDate}','${startDow} ${startTh} – ${endDow} ${endTh}',${slot.meetingRoomCount},${slot.availableRooms})"`;
-
-            html += `
-            <div class="date-slot ${slotClass}" id="slot-${slot.startDate}" ${clickAttr}>
-                <div class="slot-left">
-                    <div class="slot-dates">${startDow} ${startTh} – ${endDow} ${endTh}</div>
-                    <div class="slot-meta">
-                        <span><i class="fas fa-door-open"></i> ${slot.meetingRoomCount} ห้องประชุมว่าง</span>
-                        ${roomInfo}
-                    </div>
-                </div>
-                <div class="slot-right">
-                    <span class="avail-pill ${pillClass}"><i class="fas ${pillIcon}"></i> ${pillText}</span>
-                    <div class="select-indicator" id="selind-${slot.startDate}"><i class="fas fa-check"></i></div>
-                </div>
-            </div>`;
-        }
-
-        html += `</div></div>`;
-    }
-
-    container.innerHTML = html;
-}
-
-function selectSlot(startDate, endDate, label, meetingRoomCount, availableRooms) {
-    // Deselect previous
-    document.querySelectorAll('.date-slot.selected').forEach(el => el.classList.remove('selected'));
-
-    selectedSlot = { startDate, endDate, label, meetingRoomCount, availableRooms };
-
-    const el = document.getElementById('slot-' + startDate);
-    if (el) el.classList.add('selected');
-
-    document.getElementById('btnNextToStep3').disabled = false;
-    updateStepBar(2);
-}
-
-function goToBookingForm() {
-    if (!selectedSlot) return;
-
-    // Fill hidden date fields
-    document.getElementById('startDate').value = selectedSlot.startDate;
-    document.getElementById('endDate').value = selectedSlot.endDate;
-
-    // Update attendees from search
-    document.getElementById('attendees').value = searchParams.attendees;
-
-    // Update banner
-    const startD = new Date(selectedSlot.startDate + 'T00:00:00');
-    const endD = new Date(selectedSlot.endDate + 'T00:00:00');
-    const thOpts = { day: 'numeric', month: 'long', year: 'numeric' };
-    document.getElementById('bsbTitle').textContent = selectedSlot.label;
-    document.getElementById('bsbSub').textContent = `${searchParams.days} วัน • ${searchParams.attendees} คน • ห้องประชุมว่าง ${selectedSlot.meetingRoomCount} ห้อง`;
-
-    // Load meeting rooms
-    checkMeetingRoomAvailability();
-
-    // Pre-fill rooms if needed
-    if (searchParams.rooms > 0) {
-        // Auto select "ต้องการ"
-        const card = document.querySelector('.radio-card[data-value="ต้องการ"]');
-        if (card) {
-            card.classList.add('active');
-            card.querySelector('input').checked = true;
-        }
-        checkAccommodation();
-    }
-
-    goToPage(3);
-    updateStepBar(3);
-}
-
-// ========== PAGE NAVIGATION ==========
-function goToPage(n) {
-    document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i + 1 === n));
-    updateStepBar(n);
-    window.scrollTo(0, 0);
-}
-
-function updateStepBar(active) {
-    [1,2,3].forEach(i => {
-        const tab = document.getElementById('stab' + i);
-        tab.classList.remove('active', 'done');
-        if (i < active) tab.classList.add('done');
-        else if (i === active) tab.classList.add('active');
-    });
-    // Update step num to checkmark for done
-    [1,2,3].forEach(i => {
-        const numEl = document.querySelector(`#stab${i} .step-num`);
-        if (i < active) numEl.innerHTML = '<i class="fas fa-check" style="font-size:0.6rem;"></i>';
-        else numEl.textContent = i;
-    });
-}
-
-// ========== LIFF & EMPLOYEE ==========
+// ===================================================================
+//  INIT
+// ===================================================================
 async function initializeLiff() {
     try {
-        const storedUserId = sessionStorage.getItem('userId');
-        const storedName = sessionStorage.getItem('displayName');
+        const storedId = sessionStorage.getItem('userId');
         const liffReady = sessionStorage.getItem('liffReady');
-        if (liffReady && storedUserId) {
-            userId = storedUserId;
-            displayName = storedName || '';
-            await autofillUserData();
+        if (liffReady && storedId) {
+            userId = storedId;
+            displayName = sessionStorage.getItem('displayName') || '';
+            await autofillPhone();
             return;
         }
         await liff.init({ liffId: LIFF_ID });
@@ -1192,404 +804,702 @@ async function initializeLiff() {
         sessionStorage.setItem('userId', userId);
         sessionStorage.setItem('displayName', displayName);
         sessionStorage.setItem('liffReady', 'true');
-        await autofillUserData();
-    } catch (err) { console.error('LIFF init error:', err); }
+        await autofillPhone();
+    } catch(err) { console.error('LIFF error:', err); }
 }
 
-function onEmpIdInput(val) {
-    const icon = document.getElementById('empSearchIcon');
-    const hint = document.getElementById('empHintText');
-    if (isEmployeeVerified) resetEmployeeData();
-    if (val.length === 6) {
-        clearTimeout(empSearchDebounce);
-        empSearchDebounce = setTimeout(() => checkEmployeeData(), 300);
-    } else {
-        icon.innerHTML = '<i class="fas fa-id-badge"></i>';
-        icon.style.color = 'var(--muted)';
-        hint.innerHTML = `<i class="fas fa-info-circle"></i> ระบบจะค้นหาอัตโนมัติเมื่อกรอกครบ 6 หลัก (${val.length}/6)`;
-        hint.style.color = 'var(--muted)';
+async function autofillPhone() {
+    if (!userId) return;
+    try {
+        const res = await fetch(`${GAS_WEB_APP_URL}?userId=${userId}`);
+        const data = await res.json();
+        if (data && data.phone) document.getElementById('phone').value = data.phone;
+    } catch(e) {}
+}
+
+// ===================================================================
+//  STEP NAVIGATION
+// ===================================================================
+function goToStep(n) {
+    document.getElementById('step1Section').style.display = (n === 1) ? 'block' : 'none';
+    document.getElementById('step2Section').style.display = (n === 2) ? 'block' : 'none';
+    document.getElementById('step3Section').style.display = (n === 3) ? 'block' : 'none';
+    updateStepUI(n);
+    window.scrollTo(0,0);
+}
+
+function updateStepUI(n) {
+    // Mobile pips
+    [1,2,3].forEach(i => {
+        const pip = document.getElementById(`pip${i}`);
+        const lbl = document.getElementById(`slabel${i}`);
+        if (!pip) return;
+        pip.classList.remove('active','done');
+        lbl.classList.remove('active');
+        if (i < n) { pip.classList.add('done'); pip.innerHTML = '<i class="fas fa-check" style="font-size:0.65rem;"></i>'; }
+        else if (i === n) { pip.classList.add('active'); pip.textContent = i; lbl.classList.add('active'); }
+        else { pip.textContent = i; }
+    });
+    const line12 = document.getElementById('line12');
+    const line23 = document.getElementById('line23');
+    if (line12) line12.className = 'step-line' + (n >= 2 ? ' done' : '');
+    if (line23) line23.className = 'step-line' + (n >= 3 ? ' done' : '');
+
+    // Desktop sidebar steps
+    [1,2,3].forEach(i => {
+        const step = document.getElementById(`dstep${i}`);
+        if (!step) return;
+        step.classList.remove('active','done');
+        if (i < n) step.classList.add('done');
+        else if (i === n) step.classList.add('active');
+    });
+}
+
+// ===================================================================
+//  STEP 1: MONTHS & STEPPERS
+// ===================================================================
+function buildMonthGrid() {
+    const grid = document.getElementById('monthsGrid');
+    const now = new Date();
+    const curMonth = now.getMonth();
+    const curYear = now.getFullYear();
+    grid.innerHTML = '';
+    for (let i = 0; i < 12; i++) {
+        // Compute actual month/year: start from current month
+        const mIdx = (curMonth + i) % 12;
+        const yr = curYear + Math.floor((curMonth + i) / 12);
+        const chip = document.createElement('div');
+        chip.className = 'month-chip';
+        chip.dataset.month = mIdx;
+        chip.dataset.year = yr;
+        chip.innerHTML = `<div style="font-size:0.78rem;color:var(--muted);">${yr + 543}</div><div>${MONTHS_SHORT[mIdx]}</div>`;
+        chip.onclick = () => toggleMonth(chip, mIdx, yr);
+        grid.appendChild(chip);
     }
 }
 
-async function checkEmployeeData() {
+function toggleMonth(el, month, year) {
+    const key = `${year}-${month}`;
+    const idx = selectedMonths.findIndex(m => m.key === key);
+    if (idx >= 0) {
+        selectedMonths.splice(idx, 1);
+        el.classList.remove('selected');
+    } else {
+        selectedMonths.push({ key, month, year });
+        el.classList.add('selected');
+    }
+}
+
+function changeStepper(type, delta) {
+    if (type === 'days') {
+        searchDays = Math.max(1, Math.min(30, searchDays + delta));
+        document.getElementById('daysVal').textContent = searchDays;
+    } else if (type === 'attendees') {
+        searchAttendees = Math.max(1, Math.min(500, searchAttendees + delta));
+        document.getElementById('attendeesVal').textContent = searchAttendees;
+    } else if (type === 'rooms') {
+        searchRooms = Math.max(0, Math.min(90, searchRooms + delta));
+        document.getElementById('roomsVal').textContent = searchRooms;
+    }
+}
+
+function doSearch() {
+    if (selectedMonths.length === 0) {
+        Swal.fire({ title: 'กรุณาเลือกเดือน', text: 'เลือกอย่างน้อย 1 เดือนที่ต้องการจัด', icon: 'warning', confirmButtonText: 'ตกลง' });
+        return;
+    }
+    // Navigate to step 2
+    // Set calendar to first selected month
+    const first = selectedMonths.slice().sort((a,b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        return a.month - b.month;
+    })[0];
+    calYear = first.year;
+    calMonth = first.month;
+    rangeStart = null; rangeEnd = null; pickingMode = 'start';
+    selectedRoom = null;
+    roomData = [];
+    document.getElementById('meetingRoomResults').style.display = 'none';
+    document.getElementById('accommodationResults').style.display = 'none';
+    document.getElementById('dateSummaryStrip').style.display = 'none';
+    document.getElementById('btnProceed').disabled = true;
+
+    // Update search summary
+    const monthNames = selectedMonths.map(m => `${MONTHS_SHORT[m.month]} ${m.year + 543}`).join(', ');
+    document.getElementById('searchSummaryText').innerHTML =
+        `<strong>ค้นหา:</strong> ${monthNames} | ${searchDays} วัน | ${searchAttendees} คน` +
+        (searchRooms > 0 ? ` | ห้องพัก ${searchRooms} ห้อง` : '');
+
+    // Sync accommodation radio in step 3
+    if (searchRooms > 0) {
+        selectAccRadio('ต้องการ');
+    } else {
+        selectAccRadio('ไม่ต้องการ');
+    }
+
+    renderCalendar();
+    goToStep(2);
+}
+
+// ===================================================================
+//  STEP 2: CALENDAR
+// ===================================================================
+function renderCalendar() {
+    const label = document.getElementById('calMonthLabel');
+    label.textContent = `${MONTHS_TH[calMonth]} ${calYear + 543}`;
+
+    const grid = document.getElementById('calGrid');
+    // Day headers
+    grid.innerHTML = DAY_LABELS.map(d => `<div class="cal-day-label">${d}</div>`).join('');
+
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    const today = new Date(); today.setHours(0,0,0,0);
+
+    // Empty cells
+    for (let e = 0; e < firstDay; e++) {
+        grid.insertAdjacentHTML('beforeend', '<div class="cal-day empty"></div>');
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(calYear, calMonth, d);
+        const isPast = date < today;
+        const isToday = date.getTime() === today.getTime();
+
+        // Check if this month is in selectedMonths
+        const isHighlighted = selectedMonths.some(m => m.month === calMonth && m.year === calYear);
+
+        // Classes
+        let cls = 'cal-day';
+        if (isPast) cls += ' disabled';
+        if (isToday) cls += ' today';
+        if (isHighlighted && !isPast) cls += ' highlight-month';
+
+        // Range highlighting
+        const ts = date.getTime();
+        if (rangeStart && rangeEnd) {
+            const s = rangeStart.getTime(), en = rangeEnd.getTime();
+            if (ts === s && ts === en) cls += ' range-start range-end';
+            else if (ts === s) cls += ' range-start';
+            else if (ts === en) cls += ' range-end';
+            else if (ts > s && ts < en) cls += ' in-range';
+        } else if (rangeStart && ts === rangeStart.getTime()) {
+            cls += ' range-start range-end';
+        }
+
+        const clickable = !isPast ? `onclick="onCalDayClick(${calYear},${calMonth},${d})"` : '';
+        grid.insertAdjacentHTML('beforeend', `<div class="${cls}" ${clickable}>${d}</div>`);
+    }
+
+    // Nav buttons
+    document.getElementById('calPrev').disabled = (calYear === today.getFullYear() && calMonth === today.getMonth());
+}
+
+function changeCalMonth(delta) {
+    calMonth += delta;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    if (calMonth < 0) { calMonth = 11; calYear--; }
+    renderCalendar();
+}
+
+function onCalDayClick(year, month, day) {
+    const clicked = new Date(year, month, day);
+    const today = new Date(); today.setHours(0,0,0,0);
+    if (clicked < today) return;
+
+    if (pickingMode === 'start' || !rangeStart) {
+        rangeStart = clicked;
+        rangeEnd = null;
+        pickingMode = 'end';
+    } else {
+        if (clicked < rangeStart) {
+            rangeEnd = rangeStart;
+            rangeStart = clicked;
+        } else {
+            rangeEnd = clicked;
+        }
+        // Enforce duration = searchDays
+        const diff = Math.round((rangeEnd - rangeStart) / 86400000) + 1;
+        if (diff !== searchDays) {
+            // Auto-set end = start + searchDays-1
+            rangeEnd = new Date(rangeStart.getTime() + (searchDays - 1) * 86400000);
+        }
+        pickingMode = 'start';
+        // Trigger room + acc check
+        onDateRangeSelected();
+    }
+    renderCalendar();
+    updateDateSummary();
+}
+
+function clearDateSelection() {
+    rangeStart = null; rangeEnd = null; pickingMode = 'start';
+    selectedRoom = null;
+    document.getElementById('meetingRoomResults').style.display = 'none';
+    document.getElementById('accommodationResults').style.display = 'none';
+    document.getElementById('dateSummaryStrip').style.display = 'none';
+    document.getElementById('btnProceed').disabled = true;
+    roomData = [];
+    renderCalendar();
+}
+
+function updateDateSummary() {
+    const strip = document.getElementById('dateSummaryStrip');
+    const txt = document.getElementById('dateSummaryText');
+    if (rangeStart) {
+        strip.style.display = 'flex';
+        const sd = formatDateTH(rangeStart);
+        if (rangeEnd && rangeEnd.getTime() !== rangeStart.getTime()) {
+            const ed = formatDateTH(rangeEnd);
+            const diff = Math.round((rangeEnd - rangeStart) / 86400000) + 1;
+            txt.textContent = `${sd} – ${ed} (${diff} วัน)`;
+        } else {
+            txt.textContent = `${sd} (เลือกวันสิ้นสุด)`;
+        }
+    } else {
+        strip.style.display = 'none';
+    }
+}
+
+async function onDateRangeSelected() {
+    if (!rangeStart || !rangeEnd) return;
+    const startStr = toYMD(rangeStart);
+    const endStr = toYMD(rangeEnd);
+
+    // Load meeting rooms
+    document.getElementById('meetingRoomResults').style.display = 'block';
+    document.getElementById('roomListContainer').innerHTML = `
+        <div class="skeleton" style="height:80px;margin-bottom:0.75rem;border-radius:var(--radius);"></div>
+        <div class="skeleton" style="height:80px;margin-bottom:0.75rem;border-radius:var(--radius);"></div>`;
+
+    try {
+        const res = await fetch(`${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${startStr}&endDate=${endStr}`);
+        const result = await res.json();
+        roomData = result.rooms || [];
+        renderRoomList(roomData);
+    } catch(e) {
+        document.getElementById('roomListContainer').innerHTML = `<div class="alert-ota warning"><i class="fas fa-exclamation-triangle"></i><span>ไม่สามารถตรวจสอบห้องว่างได้</span></div>`;
+    }
+
+    // Load accommodation if requested
+    if (searchRooms > 0) {
+        await checkAccommodation(startStr, endStr);
+    }
+    checkProceedReady();
+}
+
+// ===================================================================
+//  STEP 2: ROOM LIST
+// ===================================================================
+function renderRoomList(rooms) {
+    const container = document.getElementById('roomListContainer');
+    if (!rooms || rooms.length === 0) {
+        container.innerHTML = `<div class="alert-ota info"><i class="fas fa-info-circle"></i><span>ไม่พบข้อมูลห้องประชุม</span></div>`;
+        return;
+    }
+    // Sort: available first
+    const sorted = [...rooms].sort((a,b) => (b.isAvailable ? 1 : 0) - (a.isAvailable ? 1 : 0));
+
+    container.innerHTML = sorted.map(room => {
+        const availCls = room.isAvailable ? 'avail' : 'full';
+        const availTxt = room.isAvailable ? '<i class="fas fa-check-circle"></i> ว่าง' : '<i class="fas fa-times-circle"></i> ไม่ว่าง';
+        const cardCls = room.isAvailable ? '' : 'unavailable-card';
+        return `
+        <div class="room-result-card ${cardCls}" id="roomCard_${room.name.replace(/[^a-zA-Z0-9]/g,'_')}"
+             onclick="${room.isAvailable ? `selectRoom(${JSON.stringify(room)})` : ''}">
+            <div class="room-card-body">
+                <div class="room-card-top">
+                    <div class="room-name">${room.name}</div>
+                    <span class="room-avail-tag ${availCls}">${availTxt}</span>
+                </div>
+                <div class="room-meta-row">
+                    <div class="room-meta-item"><i class="fas fa-users"></i> ${room.category}</div>
+                    <div class="room-meta-item"><i class="fas fa-person-seat"></i> รองรับ ${room.capacity} คน</div>
+                </div>
+            </div>
+            <div class="room-selected-check"><i class="fas fa-check"></i></div>
+        </div>`;
+    }).join('');
+}
+
+function selectRoom(room) {
+    selectedRoom = room;
+    // Update visual selection
+    document.querySelectorAll('.room-result-card').forEach(c => c.classList.remove('selected'));
+    const id = `roomCard_${room.name.replace(/[^a-zA-Z0-9]/g,'_')}`;
+    const el = document.getElementById(id);
+    if (el) el.classList.add('selected');
+    checkProceedReady();
+}
+
+// ===================================================================
+//  STEP 2: ACCOMMODATION
+// ===================================================================
+async function checkAccommodation(startStr, endStr) {
+    const accDiv = document.getElementById('accommodationResults');
+    accDiv.style.display = 'block';
+    accDiv.innerHTML = `
+        <div class="result-section-title"><i class="fas fa-bed me-1"></i> ห้องพัก</div>
+        <div class="skeleton" style="height:160px;border-radius:var(--radius);"></div>`;
+
+    try {
+        const startObj = new Date(startStr);
+        const endObj = new Date(endStr);
+        const checkin = new Date(startObj); checkin.setDate(startObj.getDate() - 1);
+        const checkout = new Date(endObj);
+        const nights = Math.ceil((checkout - checkin) / 86400000);
+        const showCI = formatDateTH(checkin), showCO = formatDateTH(checkout);
+
+        const res = await fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${startStr}&endDate=${endStr}`);
+        const result = await res.json();
+        if (result.error) throw new Error(result.error);
+
+        const avail = result.availableRooms;
+        maxAccAvail = avail;
+        const suggested = Math.ceil(searchAttendees / 2);
+        const quotaLimit = suggested + 5;
+
+        accDiv.innerHTML = `<div class="result-section-title"><i class="fas fa-bed me-1"></i> ห้องพัก</div>`;
+
+        if (avail > 0) {
+            accAvailable = true;
+            accDiv.insertAdjacentHTML('beforeend', `
+            <div class="acc-avail-card">
+                <div class="acc-avail-header">
+                    <div class="acc-avail-title"><i class="fas fa-bed"></i> ข้อมูลห้องพัก</div>
+                    <span class="acc-nights-chip">${nights} คืน</span>
+                </div>
+                <div class="acc-avail-body">
+                    <div class="acc-info-grid">
+                        <div class="acc-info-box">
+                            <span class="acc-info-label">Check-in</span>
+                            <span class="acc-info-val">${showCI}</span>
+                            <span class="acc-info-sub">เวลา 14:00 น.</span>
+                            <i class="fas fa-calendar-check acc-info-decor"></i>
+                        </div>
+                        <div class="acc-info-box">
+                            <span class="acc-info-label">Check-out</span>
+                            <span class="acc-info-val">${showCO}</span>
+                            <span class="acc-info-sub">เวลา 10:00 น.</span>
+                            <i class="fas fa-calendar-times acc-info-decor"></i>
+                        </div>
+                    </div>
+                    <div class="avail-bar">
+                        <div class="avail-bar-label"><i class="fas fa-check-circle"></i> ห้องพักว่าง</div>
+                        <span class="avail-bar-count">${avail} ห้อง</span>
+                    </div>
+                    <div class="room-count-wrap">
+                        <label class="form-label">จำนวนห้องพักที่ต้องการ <span class="req">*</span></label>
+                        <div class="room-count-row">
+                            <div class="room-count-input">
+                                <input type="number" class="form-control" id="numRoomsInput"
+                                       min="1" max="${avail}" value="${Math.min(searchRooms, avail)}"
+                                       oninput="validateRoomCount(this, ${avail}, ${quotaLimit})">
+                            </div>
+                            <div class="room-count-hint-col">
+                                <div class="room-count-hint green"><i class="fas fa-user-friends"></i> แนะนำ ${suggested} ห้อง (${searchAttendees} ท่าน)</div>
+                                <div class="room-count-hint"><i class="fas fa-info-circle"></i> Standard พัก 2 ท่าน/ห้อง</div>
+                            </div>
+                        </div>
+                        <div class="alert-ota danger mt-2" id="roomCountAlert" style="display:none;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span id="roomCountAlertMsg">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`);
+        } else {
+            accAvailable = false;
+            accDiv.insertAdjacentHTML('beforeend', `
+            <div class="unavail-card">
+                <div class="unavail-top">
+                    <div class="unavail-icon-wrap"><i class="fas fa-times" style="color:#fff;"></i></div>
+                    <div>
+                        <div class="unavail-title">ห้องพักเต็ม</div>
+                        <div class="unavail-sub">${showCI} – ${showCO} (${nights} คืน)</div>
+                    </div>
+                </div>
+                <div class="alert-ota danger mb-0">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>ไม่มีห้องพักว่างในช่วงเวลานี้ กรุณาเลือกช่วงเวลาอื่น</span>
+                </div>
+            </div>`);
+        }
+    } catch(e) {
+        accAvailable = true;
+        document.getElementById('accommodationResults').insertAdjacentHTML('beforeend',
+            `<div class="alert-ota warning"><i class="fas fa-exclamation-triangle"></i><span>ไม่สามารถตรวจสอบห้องพักได้ในขณะนี้</span></div>`);
+    }
+    checkProceedReady();
+}
+
+function validateRoomCount(input, maxAvail, quotaLimit) {
+    const val = parseInt(input.value) || 0;
+    const alert = document.getElementById('roomCountAlert');
+    const msg = document.getElementById('roomCountAlertMsg');
+    if (!alert) return;
+    if (val <= 0) { alert.style.display = 'flex'; msg.textContent = 'กรุณาระบุอย่างน้อย 1 ห้อง'; }
+    else if (val > maxAvail) { alert.style.display = 'flex'; msg.textContent = `ห้องว่างเหลือเพียง ${maxAvail} ห้อง`; }
+    else if (val > quotaLimit) { alert.style.display = 'flex'; msg.textContent = 'เกินโควต้า โปรดติดต่อ admin ผ่าน Line OA'; }
+    else { alert.style.display = 'none'; }
+}
+
+function checkProceedReady() {
+    const hasDate = rangeStart && rangeEnd;
+    const hasRoom = selectedRoom !== null;
+    const accOk = searchRooms === 0 || accAvailable;
+    document.getElementById('btnProceed').disabled = !(hasDate && hasRoom && accOk);
+}
+
+// ===================================================================
+//  STEP 3: BOOKING DETAILS
+// ===================================================================
+function buildBookingSummary() {
+    const box = document.getElementById('bookingSummaryBox');
+    if (!rangeStart || !rangeEnd || !selectedRoom) return;
+    const startStr = formatDateTH(rangeStart), endStr = formatDateTH(rangeEnd);
+    const diff = Math.round((rangeEnd - rangeStart) / 86400000) + 1;
+    let html = `
+        <div class="summary-row"><span class="summary-label">ห้องประชุม</span><span class="summary-val">${selectedRoom.name}</span></div>
+        <div class="summary-row"><span class="summary-label">วันที่</span><span class="summary-val">${startStr} – ${endStr} (${diff} วัน)</span></div>
+        <div class="summary-row"><span class="summary-label">จำนวนผู้เข้าร่วม</span><span class="summary-val">${searchAttendees} คน</span></div>`;
+    if (searchRooms > 0) {
+        const checkin = new Date(rangeStart); checkin.setDate(rangeStart.getDate() - 1);
+        html += `<div class="summary-row"><span class="summary-label">ห้องพัก Check-in</span><span class="summary-val">${formatDateTH(checkin)}</span></div>`;
+        html += `<div class="summary-row"><span class="summary-label">ห้องพัก Check-out</span><span class="summary-val">${formatDateTH(rangeEnd)}</span></div>`;
+    }
+    box.innerHTML = html;
+
+    // Set accommodation radio
+    if (searchRooms > 0 && accAvailable) {
+        selectAccRadio('ต้องการ');
+    } else {
+        selectAccRadio('ไม่ต้องการ');
+    }
+}
+
+function selectAccRadio(val) {
+    const yes = document.getElementById('accRadioYes');
+    const no = document.getElementById('accRadioNo');
+    yes.classList.remove('active'); no.classList.remove('active');
+    yes.querySelector('input').checked = false;
+    no.querySelector('input').checked = false;
+    if (val === 'ต้องการ') { yes.classList.add('active'); yes.querySelector('input').checked = true; }
+    else { no.classList.add('active'); no.querySelector('input').checked = true; }
+}
+
+// Radio cards interaction
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#step3Section .radio-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('#step3Section .radio-card').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            this.querySelector('input[type="radio"]').checked = true;
+            checkSubmitReady();
+        });
+    });
+    document.querySelectorAll('#step3Section .form-control, #step3Section .form-select').forEach(el => {
+        el.addEventListener('input', checkSubmitReady);
+        el.addEventListener('change', checkSubmitReady);
+    });
+});
+
+function checkSubmitReady() {
+    const empOk = isEmployeeVerified;
+    const nameOk = document.getElementById('fullName').value.trim() !== '';
+    const deptOk = document.getElementById('department').value.trim() !== '';
+    const phoneOk = document.getElementById('phone').value.trim() !== '';
+    const courseOk = document.getElementById('courseName').value.trim() !== '';
+    const pdpaOk = document.getElementById('pdpaConsent').checked;
+    document.getElementById('btnSubmit').disabled = !(empOk && nameOk && deptOk && phoneOk && courseOk && pdpaOk);
+}
+
+// ===================================================================
+//  EMPLOYEE LOOKUP
+// ===================================================================
+function onEmpIdInput(val) {
+    const icon = document.getElementById('empIcon');
+    const hint = document.getElementById('empHint');
+    if (isEmployeeVerified) resetEmployee();
+    clearTimeout(empDebounce);
+    if (val.length === 6) {
+        empDebounce = setTimeout(lookupEmployee, 300);
+    } else {
+        icon.innerHTML = '<i class="fas fa-id-badge"></i>';
+        hint.innerHTML = `<i class="fas fa-info-circle"></i> ระบบจะค้นหาอัตโนมัติเมื่อกรอกครบ 6 หลัก (${val.length}/6)`;
+    }
+}
+
+async function lookupEmployee() {
     const empId = document.getElementById('employeeId').value;
-    const icon = document.getElementById('empSearchIcon');
-    const hint = document.getElementById('empHintText');
-    if (!empId || empId.length !== 6) return;
+    const icon = document.getElementById('empIcon');
+    const hint = document.getElementById('empHint');
+    if (empId.length !== 6) return;
     icon.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    icon.style.color = 'var(--primary)';
     hint.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบ...';
     try {
-        const url = `${GAS_WEB_APP_URL}?action=checkEmployee&empId=${empId}`;
-        const response = await fetch(url);
-        const result = await response.json();
+        const res = await fetch(`${GAS_WEB_APP_URL}?action=checkEmployee&empId=${empId}`);
+        const result = await res.json();
         if (result.found) {
             document.getElementById('fullName').value = result.data.name;
             document.getElementById('department').value = result.data.dept;
             isEmployeeVerified = true;
-            icon.innerHTML = '<i class="fas fa-check-circle"></i>';
-            icon.style.color = 'var(--success)';
-            hint.innerHTML = `<i class="fas fa-check-circle"></i> พบข้อมูล: <strong>${result.data.name}</strong>`;
-            hint.style.color = 'var(--success)';
-            updateStep3Progress();
+            icon.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success);"></i>';
+            hint.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success);"></i> <span style="color:var(--success);">พบข้อมูล: <strong>${result.data.name}</strong></span>`;
         } else {
-            resetEmployeeData();
-            icon.innerHTML = '<i class="fas fa-times-circle"></i>';
-            icon.style.color = 'var(--danger)';
-            hint.innerHTML = `<i class="fas fa-times-circle"></i> ไม่พบรหัสพนักงานนี้ในระบบ`;
-            hint.style.color = 'var(--danger)';
+            resetEmployee();
+            icon.innerHTML = '<i class="fas fa-times-circle" style="color:var(--danger);"></i>';
+            hint.innerHTML = `<i class="fas fa-times-circle" style="color:var(--danger);"></i> <span style="color:var(--danger);">ไม่พบรหัสพนักงานนี้ในระบบ</span>`;
         }
-    } catch (error) {
-        icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-        icon.style.color = 'var(--warning)';
-        hint.innerHTML = '<i class="fas fa-exclamation-circle"></i> ไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่';
-        hint.style.color = 'var(--warning)';
-        resetEmployeeData();
+    } catch(e) {
+        icon.innerHTML = '<i class="fas fa-exclamation-circle" style="color:var(--warning);"></i>';
+        hint.innerHTML = `<i class="fas fa-exclamation-circle" style="color:var(--warning);"></i> <span style="color:var(--warning);">ไม่สามารถเชื่อมต่อได้</span>`;
     }
+    checkSubmitReady();
 }
 
-function resetEmployeeData() {
+function resetEmployee() {
     document.getElementById('fullName').value = '';
     document.getElementById('department').value = '';
     isEmployeeVerified = false;
-    updateStep3Progress();
+    checkSubmitReady();
 }
 
-async function autofillUserData() {
-    if (!userId) return;
-    try {
-        const response = await fetch(`${GAS_WEB_APP_URL}?userId=${userId}`);
-        const userData = await response.json();
-        if (userData && userData.phone) {
-            document.getElementById('phone').value = userData.phone;
-            updateStep3Progress();
-        }
-    } catch (error) { console.error('Autofill error:', error); }
-}
-
-function updateStep3Progress() {
-    const step1Fields = ['employeeId', 'fullName', 'department', 'phone'];
-    const step2Fields = ['courseName', 'startDate', 'endDate', 'meetingRoom', 'attendees'];
-    const accommodationChecked = document.querySelector('input[name="accommodation"]:checked') !== null;
-    const step1Filled = step1Fields.every(f => document.getElementById(f).value.trim() !== '');
-    const step1Complete = step1Filled && isEmployeeVerified;
-    const step2Complete = step2Fields.every(f => document.getElementById(f).value.trim() !== '') && accommodationChecked;
-    const pdpaChecked = document.getElementById('pdpaConsent') ? document.getElementById('pdpaConsent').checked : false;
-    if (submitBtn) submitBtn.disabled = !(step1Complete && step2Complete && pdpaChecked);
-}
-
-// ========== MEETING ROOM CHECK ==========
-async function checkMeetingRoomAvailability() {
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-    if (!startDate || !endDate) { updateCustomMeetingRoomSelect([]); return; }
-    try {
-        const res = await fetch(`${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${startDate}&endDate=${endDate}`);
-        const result = await res.json();
-        if (result.error) throw new Error(result.error);
-        roomData = result.rooms || [];
-        updateCustomMeetingRoomSelect(roomData);
-    } catch (error) { updateCustomMeetingRoomSelect([]); }
-}
-
-function updateCustomMeetingRoomSelect(rooms) {
-    meetingRoomOptions.innerHTML = '';
-    const span = customMeetingRoomSelect.querySelector('span');
-    if (rooms.length === 0) {
-        span.textContent = 'กรุณาเลือกวันที่'; span.style.color = 'var(--muted)'; return;
+// ===================================================================
+//  SUBMIT
+// ===================================================================
+async function submitBooking() {
+    const pdpa = document.getElementById('pdpaConsent');
+    if (!pdpa.checked) {
+        await Swal.fire({ title: 'กรุณายอมรับเงื่อนไข', text: 'ยอมรับนโยบาย PDPA ก่อนทำการจอง', icon: 'warning', confirmButtonText: 'ตกลง' });
+        return;
     }
-    rooms.forEach(room => {
-        const li = document.createElement('li');
-        li.classList.add('custom-select-option');
-        li.dataset.value = room.name;
-        li.innerHTML = `
-            <div>
-                <div class="option-name">${room.name}</div>
-                <div class="option-capacity"><i class="fas fa-users me-1"></i>${room.category}</div>
-            </div>
-            <span class="avail-tag ${room.isAvailable ? 'yes' : 'no'}">
-                <i class="fas ${room.isAvailable ? 'fa-check-circle' : 'fa-times-circle'}"></i>
-                ${room.isAvailable ? 'ว่าง' : 'ไม่ว่าง'}
-            </span>`;
-        if (!room.isAvailable) {
-            li.classList.add('disabled');
-        } else {
-            li.addEventListener('click', () => {
-                span.textContent = room.name; span.style.color = 'var(--text)';
-                hiddenMeetingRoomInput.value = room.name;
-                meetingRoomOptions.classList.remove('show');
-                customMeetingRoomSelect.classList.remove('open');
-                hiddenMeetingRoomInput.dispatchEvent(new Event('change'));
-                updateStep3Progress();
-            });
-        }
-        meetingRoomOptions.appendChild(li);
-    });
-    const selected = hiddenMeetingRoomInput.value;
-    if (selected) {
-        const found = rooms.find(r => r.name === selected);
-        if (!found || !found.isAvailable) {
-            hiddenMeetingRoomInput.value = ''; span.textContent = 'กรุณาเลือกห้องประชุม'; span.style.color = 'var(--muted)';
-            updateStep3Progress();
-        }
-    }
-}
 
-// ========== ACCOMMODATION CHECK ==========
-async function checkAccommodation() {
-    clearTimeout(checkTimeout);
-    checkTimeout = setTimeout(async () => {
-        const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
-        const startDate = document.getElementById('startDate').value;
-        const endDate = document.getElementById('endDate').value;
-        const attendeesInput = document.getElementById('attendees').value;
-        const attendees = parseInt(attendeesInput) || 0;
-        const container = document.getElementById('accommodationStatus');
-        maxAvailableRooms = 0; accommodationAvailable = true;
+    const accommodation = document.querySelector('input[name="accommodation"]:checked')?.value || 'ไม่ต้องการ';
+    let numRooms = 0;
 
-        if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
-            container.innerHTML = ''; container.style.display = 'none'; return;
-        }
-        if (!startDate || !endDate || !attendeesInput || attendees <= 0) {
-            container.innerHTML = ''; container.style.display = 'none'; return;
-        }
-
-        container.style.display = 'block';
-        container.innerHTML = `
-            <div class="acc-result-card">
-                <div class="acc-header"><div class="acc-header-title"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...</div></div>
-                <div class="acc-body"><div class="loading-skeleton"></div></div>
-            </div>`;
-
-        try {
-            const startDateObj = new Date(startDate);
-            const endDateObj = new Date(endDate);
-            const checkin = new Date(startDateObj); checkin.setDate(startDateObj.getDate() - 1);
-            const checkout = new Date(endDateObj);
-            const nights = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
-            const dateOptions = { day: 'numeric', month: 'short', year: '2-digit' };
-            const showCheckin = checkin.toLocaleDateString('th-TH', dateOptions);
-            const showCheckout = checkout.toLocaleDateString('th-TH', dateOptions);
-            const startDateStr = startDateObj.toISOString().split('T')[0];
-            const endDateStr = endDateObj.toISOString().split('T')[0];
-
-            const res = await fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${startDateStr}&endDate=${endDateStr}`);
-            const result = await res.json();
-            if (result.error) throw new Error(result.error);
-
-            const available = result.availableRooms;
-            maxAvailableRooms = available;
-            const suggestedRooms = searchParams.rooms > 0 ? searchParams.rooms : Math.ceil(attendees / 2);
-
-            if (available > 0 && available >= suggestedRooms) {
-                accommodationAvailable = true;
-                const quotaLimit = suggestedRooms + 5;
-                container.innerHTML = `
-                <div class="acc-result-card">
-                    <div class="acc-header">
-                        <div class="acc-header-title"><i class="fas fa-bed-pulse"></i> ข้อมูลการจองที่พัก</div>
-                        <span class="acc-nights-badge">${nights} คืน</span>
-                    </div>
-                    <div class="acc-body">
-                        <div class="acc-info-row">
-                            <div class="acc-info-box">
-                                <span class="acc-label">Check-in</span>
-                                <span class="acc-value">${showCheckin}</span>
-                                <span class="acc-sub">เวลา 14:00 น.</span>
-                                <i class="fas fa-calendar-check acc-icon-decor"></i>
-                            </div>
-                            <div class="acc-info-box">
-                                <span class="acc-label">Check-out</span>
-                                <span class="acc-value">${showCheckout}</span>
-                                <span class="acc-sub">เวลา 10:00 น.</span>
-                                <i class="fas fa-calendar-times acc-icon-decor"></i>
-                            </div>
-                        </div>
-                        <div class="avail-bar">
-                            <div class="avail-bar-label"><i class="fas fa-check-circle"></i> ห้องพักว่าง</div>
-                            <span class="avail-count">${available} ห้อง</span>
-                        </div>
-                        <div class="room-input-wrap">
-                            <label for="numRooms" class="form-label required" style="font-weight:700;">จำนวนห้องพักที่ต้องการ</label>
-                            <div class="room-input-row">
-                                <div class="room-input-num">
-                                    <input type="number" class="form-control" id="numRooms" name="numRooms"
-                                           min="1" max="${available}" value="${suggestedRooms}" required>
-                                </div>
-                                <div class="room-hint-col">
-                                    <div class="room-hint green"><i class="fas fa-user-friends"></i>แนะนำ ${suggestedRooms} ห้อง (${attendees} ท่าน)</div>
-                                    <div class="room-hint"><i class="fas fa-info-circle"></i>ห้อง standard พัก 2 ท่าน/ห้อง</div>
-                                </div>
-                            </div>
-                            <div class="alert-ota danger mt-2" id="roomAlert" style="display:none;">
-                                <i class="fas fa-exclamation-circle"></i>
-                                <span id="roomAlertMsg">จำนวนห้องเกินกว่าที่ว่าง</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-                document.getElementById('numRooms').addEventListener('input', function() {
-                    const val = parseInt(this.value);
-                    const roomAlert = document.getElementById('roomAlert');
-                    const roomAlertMsg = document.getElementById('roomAlertMsg');
-                    if (isNaN(val) || val <= 0) {
-                        roomAlert.style.display = 'flex'; roomAlertMsg.textContent = 'กรุณาระบุอย่างน้อย 1 ห้อง';
-                    } else if (val > maxAvailableRooms) {
-                        roomAlert.style.display = 'flex'; roomAlertMsg.textContent = `ห้องว่างเหลือเพียง ${maxAvailableRooms} ห้อง`;
-                    } else if (val > quotaLimit) {
-                        roomAlert.style.display = 'flex'; roomAlertMsg.textContent = 'เกินโควต้า โปรดติดต่อ admin ผ่าน Line OA';
-                    } else { roomAlert.style.display = 'none'; }
-                });
-            } else {
-                accommodationAvailable = false;
-                const title = available === 0 ? 'ห้องพักเต็ม' : 'ห้องพักไม่เพียงพอ';
-                const desc = available === 0 ? 'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว' : `ต้องการ ${suggestedRooms} ห้อง แต่มีว่างเพียง ${available} ห้อง`;
-                container.innerHTML = `
-                <div class="unavail-card">
-                    <div class="unavail-top">
-                        <div class="unavail-icon"><i class="fas fa-times"></i></div>
-                        <div>
-                            <div class="unavail-title">${title}</div>
-                            <div class="unavail-sub">${showCheckin} – ${showCheckout} (${nights} คืน)</div>
-                        </div>
-                    </div>
-                    <div class="alert-ota danger mb-0">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>${desc} โปรดเลือกช่วงเวลาอื่น</span>
-                    </div>
-                </div>`;
-            }
-        } catch (error) {
-            accommodationAvailable = true;
-            container.innerHTML = `<div class="alert-ota warning"><i class="fas fa-exclamation-triangle"></i><span>ไม่สามารถตรวจสอบสถานะห้องพักได้ในขณะนี้</span></div>`;
-        }
-    }, 600);
-}
-
-// ========== RADIO CARDS ==========
-document.querySelectorAll('.radio-card').forEach(card => {
-    card.addEventListener('click', function() {
-        document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
-        this.classList.add('active');
-        const radio = this.querySelector('input[type="radio"]');
-        radio.checked = true;
-        radio.dispatchEvent(new Event('change'));
-        updateStep3Progress();
-        checkAccommodation();
-    });
-});
-
-// ========== CUSTOM SELECT ==========
-customMeetingRoomSelect.addEventListener('click', () => {
-    meetingRoomOptions.classList.toggle('show');
-    customMeetingRoomSelect.classList.toggle('open');
-});
-document.addEventListener('click', (e) => {
-    if (!customMeetingRoomSelect.contains(e.target)) {
-        meetingRoomOptions.classList.remove('show');
-        customMeetingRoomSelect.classList.remove('open');
-    }
-});
-
-// Step 3 inputs
-document.querySelectorAll('#bookingForm input, #bookingForm select').forEach(input => {
-    input.addEventListener('input', updateStep3Progress);
-    input.addEventListener('change', updateStep3Progress);
-});
-document.getElementById('pdpaConsent').addEventListener('change', updateStep3Progress);
-document.getElementById('attendees').addEventListener('input', checkAccommodation);
-
-// ========== SUBMIT ==========
-document.getElementById('bookingForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    const pdpaCheckbox = document.getElementById('pdpaConsent');
-    if (!pdpaCheckbox.checked) {
-        await Swal.fire({ title: 'กรุณายอมรับเงื่อนไข', text: 'ท่านต้องยอมรับนโยบาย PDPA ก่อนทำการจอง', icon: 'warning', confirmButtonText: 'ตกลง' });
-        pdpaCheckbox.scrollIntoView({ behavior: 'smooth', block: 'center' }); return;
-    }
-    const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
-    let numRoomsValue = 0;
-    if (accommodationChoice && accommodationChoice.value === 'ต้องการ') {
-        const numRoomsInput = document.getElementById('numRooms');
-        if (numRoomsInput) {
-            numRoomsValue = parseInt(numRoomsInput.value) || 0;
-            const currentAttendees = parseInt(document.getElementById('attendees').value) || 0;
-            const suggested = Math.ceil(currentAttendees / 2);
+    if (accommodation === 'ต้องการ') {
+        const numEl = document.getElementById('numRoomsInput');
+        if (numEl) {
+            numRooms = parseInt(numEl.value) || 0;
+            const suggested = Math.ceil(searchAttendees / 2);
             const quotaLimit = suggested + 5;
-            if (numRoomsValue > maxAvailableRooms) {
-                await Swal.fire({ title: 'ห้องพักไม่เพียงพอ!', html: `ห้องพักว่างเพียง <b>${maxAvailableRooms}</b> ห้อง`, icon: 'warning', confirmButtonText: 'แก้ไขข้อมูล' });
-                numRoomsInput.focus(); return;
-            }
-            if (numRoomsValue > quotaLimit) {
-                await Swal.fire({ title: 'เกินโควต้าที่กำหนด', text: 'ไม่สามารถจองเกินโควต้า โปรดติดต่อ admin ผ่าน Line OA', icon: 'warning', confirmButtonText: 'ตกลง' });
-                numRoomsInput.focus(); return;
-            }
-            if (numRoomsValue <= 0) { await Swal.fire({ title: 'ข้อมูลไม่ถูกต้อง', text: 'กรุณาระบุจำนวนห้องพักอย่างน้อย 1 ห้อง', icon: 'warning', confirmButtonText: 'ตกลง' }); return; }
-        } else if (!accommodationAvailable) {
-            await Swal.fire({ title: 'ที่พักไม่เพียงพอ!', text: 'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว', icon: 'error', confirmButtonText: 'ตกลง' }); return;
+            if (numRooms <= 0) { await Swal.fire({ title: 'ข้อมูลไม่ถูกต้อง', text: 'กรุณาระบุจำนวนห้องพักอย่างน้อย 1 ห้อง', icon: 'warning', confirmButtonText: 'ตกลง' }); return; }
+            if (numRooms > maxAccAvail) { await Swal.fire({ title: 'ห้องพักไม่เพียงพอ!', html: `ห้องพักว่างเพียง <b>${maxAccAvail}</b> ห้อง`, icon: 'warning', confirmButtonText: 'แก้ไข' }); return; }
+            if (numRooms > quotaLimit) { await Swal.fire({ title: 'เกินโควต้า', text: 'โปรดติดต่อ admin ผ่าน Line OA', icon: 'warning', confirmButtonText: 'ตกลง' }); return; }
         }
     }
 
-    const selectedRoomName = hiddenMeetingRoomInput.value;
-    const attendees = parseInt(document.getElementById('attendees').value) || 0;
-    const roomConfig = roomData.find(r => r.name === selectedRoomName);
-    if (roomConfig && attendees > roomConfig.capacity) {
-        await Swal.fire({ title: 'จำนวนผู้เข้าร่วมเกินความจุห้อง!', text: `ห้อง ${selectedRoomName} รองรับได้ ${roomConfig.capacity} คน`, icon: 'error', confirmButtonText: 'ตกลง' }); return;
-    }
-    if (roomConfig && !roomConfig.isAvailable) {
-        await Swal.fire({ title: 'ห้องประชุมไม่ว่าง!', text: 'กรุณาเลือกห้องอื่น', icon: 'error', confirmButtonText: 'ตกลง' }); return;
+    if (!selectedRoom) { await Swal.fire({ title: 'กรุณาเลือกห้องประชุม', icon: 'warning' }); return; }
+
+    // Validate capacity
+    if (selectedRoom && searchAttendees > selectedRoom.capacity) {
+        const ok = await Swal.fire({
+            title: 'จำนวนผู้เข้าร่วมเกินความจุ',
+            text: `ห้อง ${selectedRoom.name} รองรับ ${selectedRoom.capacity} คน (ต้องการ ${searchAttendees} คน)`,
+            icon: 'warning', showCancelButton: true, confirmButtonText: 'ดำเนินการต่อ', cancelButtonText: 'ยกเลิก'
+        });
+        if (!ok.isConfirmed) return;
     }
 
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
-    document.getElementById('loading').classList.add('show');
+    document.getElementById('btnSubmit').disabled = true;
+    document.getElementById('btnSubmit').innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังส่งข้อมูล...';
+    showLoading('กำลังส่งข้อมูลการจอง...');
 
-    const formData = new FormData(event.target);
     const data = {
         userId, displayName,
-        employeeId: formData.get('employeeId'),
-        fullName: formData.get('fullName'),
-        department: formData.get('department'),
-        phone: formData.get('phone'),
-        courseName: formData.get('courseName'),
-        startDate: formData.get('startDate'),
-        endDate: formData.get('endDate'),
-        meetingRoom: formData.get('meetingRoom'),
-        accommodation: formData.get('accommodation'),
-        attendees: formData.get('attendees'),
-        numRooms: numRoomsValue,
+        employeeId: document.getElementById('employeeId').value,
+        fullName: document.getElementById('fullName').value,
+        department: document.getElementById('department').value,
+        phone: document.getElementById('phone').value,
+        courseName: document.getElementById('courseName').value,
+        startDate: toYMD(rangeStart),
+        endDate: toYMD(rangeEnd),
+        meetingRoom: selectedRoom.name,
+        accommodation,
+        attendees: searchAttendees,
+        numRooms,
         timestamp: new Date().toISOString()
     };
 
     try {
-        await fetch(GAS_WEB_APP_URL, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), redirect: 'follow' });
-        document.getElementById('loading').classList.remove('show');
-        await Swal.fire({ title: 'บันทึกข้อมูลสำเร็จ!', text: 'ระบบได้บันทึกข้อมูลการจองและจะส่งสรุปให้ทาง LINE', icon: 'success', confirmButtonText: 'ตกลง', allowOutsideClick: false })
-            .then((result) => { if (result.isConfirmed) { if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); } } });
-    } catch (error) {
-        document.getElementById('loading').classList.remove('show');
-        await Swal.fire({ title: 'เกิดข้อผิดพลาด!', text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่', icon: 'error', confirmButtonText: 'ลองอีกครั้ง' });
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>ส่งข้อมูลการจอง';
+        await fetch(GAS_WEB_APP_URL, {
+            method: 'POST', mode: 'no-cors', cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data), redirect: 'follow'
+        });
+        hideLoading();
+        await Swal.fire({
+            title: 'บันทึกข้อมูลสำเร็จ!',
+            text: 'ระบบได้บันทึกข้อมูลการจองและจะส่งสรุปให้ทาง LINE',
+            icon: 'success', confirmButtonText: 'ตกลง', allowOutsideClick: false
+        });
+        if (typeof liff !== 'undefined' && liff.isInClient()) liff.closeWindow();
+        else window.close();
+    } catch(e) {
+        hideLoading();
+        document.getElementById('btnSubmit').disabled = false;
+        document.getElementById('btnSubmit').innerHTML = '<i class="fas fa-paper-plane"></i> ส่งข้อมูลการจอง';
+        await Swal.fire({ title: 'เกิดข้อผิดพลาด', text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่', icon: 'error', confirmButtonText: 'ลองอีกครั้ง' });
     }
-});
+}
 
-function showPDPADetail(e) {
+// ===================================================================
+//  PDPA MODAL
+// ===================================================================
+function showPDPA(e) {
     e.preventDefault();
     Swal.fire({
         title: 'นโยบายการคุ้มครองข้อมูลส่วนบุคคล (PDPA)',
         html: '<div style="text-align:left;font-size:0.9rem;line-height:1.7;">' +
-            '<p>ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง จะเก็บรวบรวมข้อมูลส่วนบุคคลได้แก่ อีเมล บัญชี LINE และหมายเลขโทรศัพท์ เพื่อใช้ในการติดต่อสื่อสารเกี่ยวกับการจองห้องพักและห้องประชุมเท่านั้น</p>' +
-            '<p><b>ระยะเวลาการเก็บรักษา:</b> เก็บรักษาเท่าที่จำเป็นตามวัตถุประสงค์และกฎหมายกำหนด</p>' +
-            '<p>ท่านมีสิทธิ์เข้าถึง แก้ไข หรือเพิกถอนความยินยอมได้ภายใต้หลักเกณฑ์ที่กฎหมายกำหนด</p>' +
-            '</div>',
+              '<p>ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง จะเก็บรวบรวมข้อมูลส่วนบุคคลได้แก่ อีเมล บัญชี LINE และหมายเลขโทรศัพท์ เพื่อใช้ในการติดต่อสื่อสารเกี่ยวกับการจองห้องพักและห้องประชุมเท่านั้น</p>' +
+              '<p><b>ระยะเวลาการเก็บรักษา:</b> เก็บรักษาเท่าที่จำเป็นตามวัตถุประสงค์และกฎหมายกำหนด</p>' +
+              '<p>ท่านมีสิทธิ์เข้าถึง แก้ไข หรือเพิกถอนความยินยอมได้ภายใต้หลักเกณฑ์ที่กฎหมายกำหนด</p>' +
+              '</div>',
         icon: 'info', confirmButtonText: 'รับทราบ'
     });
 }
 
-// ========== START ==========
-initMonthGrid();
-initializeLiff();
+// ===================================================================
+//  UTILITIES
+// ===================================================================
+function showLoading(msg) {
+    document.getElementById('loadingOverlay').classList.add('show');
+    document.getElementById('loadingLabel').textContent = msg || 'กำลังโหลด...';
+}
+function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('show');
+}
+
+function toYMD(d) {
+    if (!d) return '';
+    const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), dd = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${dd}`;
+}
+
+function formatDateTH(d) {
+    if (!d) return '-';
+    return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+}
+
+// ===================================================================
+//  BOOT
+// ===================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    buildMonthGrid();
+    updateStepUI(1);
+    initializeLiff();
+
+    // Wire step3 proceed → build summary
+    document.getElementById('step3Section'); // ensure exists
+});
+
+// Override goToStep to build summary on step 3
+const _origGoToStep = goToStep;
+window.goToStep = function(n) {
+    if (n === 3) buildBookingSummary();
+    _origGoToStep(n);
+};
 </script>
 </body>
 </html>
