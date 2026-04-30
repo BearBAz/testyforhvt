@@ -226,8 +226,26 @@
     /* list count badge */
     .list-count { font-size:0.78rem; background:var(--accent-soft); color:var(--accent-dark); font-weight:700; padding:0.2rem 0.65rem; border-radius:10px; }
 
+    /* room total badge */
+    .room-total-badge { display:inline-flex; align-items:center; gap:0.3rem; background:var(--primary-soft); color:var(--primary); font-size:0.8rem; font-weight:700; padding:0.28rem 0.75rem; border-radius:10px; border:1.5px solid rgba(108,72,197,0.2); }
+
     /* required star */
     .req { color:var(--danger); }
+
+    /* ===== UX check-row fix: ทำ touch target ใหญ่ขึ้น ===== */
+    .check-row { min-height:44px; padding:0.6rem 0.9rem; }
+    .check-row label { flex:1; line-height:1.4; }
+
+    /* เมนูอาหาร download btn */
+    .food-menu-btn {
+        display:inline-flex; align-items:center; gap:0.5rem;
+        background:linear-gradient(135deg,#22c55e,#16a34a);
+        color:#fff; font-size:0.88rem; font-weight:700;
+        border:none; border-radius:var(--radius-sm); padding:0.65rem 1.1rem;
+        cursor:pointer; text-decoration:none; transition:all 0.2s;
+        box-shadow:0 3px 10px rgba(34,197,94,0.3);
+    }
+    .food-menu-btn:hover { transform:translateY(-1px); box-shadow:0 5px 16px rgba(34,197,94,0.4); color:#fff; }
 </style>
 </head>
 <body>
@@ -325,6 +343,7 @@
             <div class="section-card">
                 <div class="section-head">
                     <div class="section-title-text violet"><i class="fas fa-bed"></i> ข้อมูลห้องพัก</div>
+                    <span class="room-total-badge" id="roomTotalBadge"><i class="fas fa-door-open"></i> รวม 0/0 ห้อง</span>
                 </div>
                 <div id="roomCounterWrap">
                     <div class="room-type-box">
@@ -336,7 +355,6 @@
                             <div class="counter-val" id="stdDisplay">0</div>
                             <button class="counter-btn" id="stdPlus" onclick="changeRoom('std',1)">+</button>
                         </div>
-                        <div class="room-info-text" id="stdInfo">คำนวณจากจำนวนผู้เข้าร่วม</div>
                     </div>
                     <div class="room-type-box vip-box">
                         <div class="room-type-top">
@@ -407,7 +425,9 @@
                 <div class="section-head">
                     <div class="section-title-text green"><i class="fas fa-utensils"></i> จองอาหารและอาหารว่าง</div>
                 </div>
-                <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.75rem;">กรุณาระบุความต้องการจองอาหารและอาหารว่างสำหรับการอบรม</p>
+                <a href="https://drive.google.com/drive/folders/1HmUtWF2_J6cuFUZXmLBKFZwFoQsAaoDH?usp=sharing" target="_blank" class="food-menu-btn" style="margin-bottom:1rem; display:inline-flex;">
+                    <i class="fas fa-download"></i> ดาวน์โหลดเมนูอาหาร
+                </a>
                 <div class="food-radio-grid">
                     <div class="food-card" id="foodCardYes">
                         <span class="food-check-mark" id="checkYes"><i class="fas fa-check-circle"></i></span>
@@ -451,8 +471,9 @@
                     </div>
                     <input type="file" id="file_attendee" accept=".pdf,.doc,.docx,.xls,.xlsx">
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">รายการอาหารและอาหารว่าง</label>
+                <!-- ข้อ 2: แสดงเฉพาะเมื่อต้องการอาหาร -->
+                <div class="mb-3" id="foodUploadSection" style="display:none;">
+                    <label class="form-label">รายการอาหารและอาหารว่าง <span class="req">*</span></label>
                     <div class="upload-zone" id="zone_food" onclick="document.getElementById('file_food').click()">
                         <span class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
                         <div class="upload-text">แตะเพื่อเลือกไฟล์</div>
@@ -512,8 +533,10 @@ function onFoodBookingChange(value) {
     checkY.style.display = 'none'; checkN.style.display = 'none';
     if (value === 'ต้องการ') {
         cardYes.classList.add('sel-yes'); cardNo.classList.add('sel-no'); checkY.style.display = 'block';
+        document.getElementById('foodUploadSection').style.display = 'block';
     } else {
         cardNo.classList.add('sel-yes'); cardYes.classList.add('sel-no'); checkN.style.display = 'block';
+        document.getElementById('foodUploadSection').style.display = 'none';
     }
 }
 
@@ -626,7 +649,8 @@ function updateRoomDisplay() {
     document.getElementById('f_stdRooms').value = curStd;
     document.getElementById('f_vipRooms').value = curVip;
     const total = curStd + curVip;
-    document.getElementById('stdInfo').textContent = `รวม ${total}/${origStd} ห้อง`;
+    // อัปเดต badge ด้านบน section ห้องพัก
+    document.getElementById('roomTotalBadge').innerHTML = `<i class="fas fa-door-open"></i> รวม ${total}/${origStd} ห้อง`;
     updateRoomButtons();
 }
 
