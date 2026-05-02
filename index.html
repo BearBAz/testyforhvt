@@ -5,392 +5,326 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ระบบจองห้องประชุม ศฝฟ.</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Prompt:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --brand: #7061bd;
-            --brand-dark: #5649a0;
-            --brand-deeper: #3d3480;
-            --brand-light: #9585d4;
+            --brand-dark: #5a4da0;
+            --brand-deep: #42368a;
+            --brand-light: #8f82cc;
             --brand-soft: #f0eeff;
             --brand-xsoft: #f8f7ff;
             --gold: #f5a623;
-            --gold-dark: #d4891a;
-            --gold-soft: #fff8ed;
-            --teal: #00b8a9;
-            --teal-soft: #e6f9f8;
-            --red: #f04f5f;
-            --red-soft: #fef0f1;
-            --green: #00c08b;
-            --green-soft: #e5f9f4;
-            --bg: #f5f4fc;
+            --gold-soft: #fff8ec;
+            --success: #22c55e;
+            --success-soft: #f0fdf4;
+            --danger: #ef4444;
+            --teal: #06b6d4;
+            --bg: #f4f3fb;
             --surface: #ffffff;
             --text: #1a1535;
-            --text-2: #4a4469;
-            --muted: #9490b8;
-            --border: #e5e3f5;
-            --border-strong: #ccc9e8;
-            --shadow-sm: 0 2px 8px rgba(112,97,189,0.10);
-            --shadow-md: 0 6px 20px rgba(112,97,189,0.13);
-            --shadow-lg: 0 16px 48px rgba(112,97,189,0.16);
+            --text2: #4b4875;
+            --muted: #9896b8;
+            --border: #e8e4f8;
+            --r: 16px;
+            --r-sm: 10px;
+            --r-lg: 24px;
+            --r-xl: 32px;
+            --sh: 0 4px 24px rgba(112,97,189,0.10);
+            --sh-lg: 0 12px 48px rgba(112,97,189,0.16);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif;
+            font-family: 'Noto Sans Thai', sans-serif;
             background: var(--bg);
             min-height: 100vh;
             color: var(--text);
             -webkit-font-smoothing: antialiased;
         }
-        .app-wrap {
-            max-width: 480px; margin: 0 auto;
-            min-height: 100vh; display: flex;
-            flex-direction: column; background: var(--bg);
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
         }
 
-        /* ── LOADING ── */
-        .loading-screen {
+        /* === LOADING === */
+        .splash {
             position: fixed; inset: 0;
-            background: linear-gradient(145deg, #7061bd 0%, #5649a0 50%, #3d3480 100%);
+            background: linear-gradient(145deg, #7061bd 0%, #5a4da0 50%, #42368a 100%);
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             z-index: 9999; transition: opacity 0.5s ease;
         }
-        .loading-screen.hide { opacity: 0; pointer-events: none; }
-        .loading-logo-wrap {
+        .splash.out { opacity: 0; pointer-events: none; }
+        .splash-logo {
             width: 88px; height: 88px;
-            background: rgba(255,255,255,0.12);
-            border: 1.5px solid rgba(255,255,255,0.22);
-            border-radius: 24px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 26px;
             display: flex; align-items: center; justify-content: center;
-            margin-bottom: 1.6rem;
-            animation: floatPulse 2s ease-in-out infinite;
-            backdrop-filter: blur(10px);
+            margin-bottom: 1.5rem;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            animation: splashPulse 2s ease-in-out infinite;
         }
-        .loading-logo-wrap i { font-size: 2.4rem; color: #fff; }
-        @keyframes floatPulse {
-            0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-6px) scale(1.04);}
-        }
-        .loading-brand { color: #fff; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.2px; }
-        .loading-sub-text { color: rgba(255,255,255,0.55); font-size: 0.78rem; margin-top: 0.35rem; }
-        .loading-bar-wrap {
-            margin-top: 2.5rem; width: 120px; height: 3px;
-            background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden;
-        }
-        .loading-bar-fill {
-            height: 100%; background: #fff; border-radius: 4px;
-            animation: loadBar 1.5s ease-in-out infinite;
-        }
-        @keyframes loadBar { 0%{width:0%;margin-left:0;} 50%{width:80%;margin-left:0;} 100%{width:0%;margin-left:100%;} }
+        .splash-logo i { font-size: 2.5rem; color: #fff; }
+        @keyframes splashPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.06);} }
+        .splash-name { color: #fff; font-size: 1.2rem; font-weight: 700; letter-spacing: -0.3px; }
+        .splash-sub { color: rgba(255,255,255,0.6); font-size: 0.82rem; margin-top: 0.3rem; }
+        .splash-dots { display: flex; gap: 6px; margin-top: 2rem; }
+        .splash-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); animation: dotPop 1.2s ease-in-out infinite; }
+        .splash-dot:nth-child(2) { animation-delay: 0.2s; }
+        .splash-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dotPop { 0%,80%,100%{transform:scale(1);opacity:0.4;} 40%{transform:scale(1.4);opacity:1;} }
 
-        /* ── HERO HEADER ── */
+        /* === HERO === */
         .hero {
-            background: linear-gradient(145deg, #7061bd 0%, #5649a0 55%, #3d3480 100%);
-            padding: 0;
+            background: linear-gradient(145deg, #7061bd 0%, #5a4da0 55%, #42368a 100%);
+            padding: 2.5rem 1.5rem 7rem;
             position: relative; overflow: hidden;
         }
-        .hero-pattern {
-            position: absolute; inset: 0; opacity: 0.06;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
-            background-size: 32px 32px;
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
+            background-size: 28px 28px;
         }
         .hero-orb1 {
-            position: absolute; top: -80px; right: -60px;
-            width: 280px; height: 280px;
-            background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
-            border-radius: 50%;
+            position: absolute; top: -70px; right: -50px;
+            width: 240px; height: 240px;
+            background: rgba(255,255,255,0.06); border-radius: 50%;
         }
         .hero-orb2 {
-            position: absolute; bottom: -40px; left: -60px;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(245,166,35,0.18), transparent 70%);
-            border-radius: 50%;
+            position: absolute; bottom: -20px; left: -40px;
+            width: 180px; height: 180px;
+            background: rgba(245,166,35,0.10); border-radius: 50%;
         }
-        .hero-inner {
-            position: relative; z-index: 2;
-            padding: 2.2rem 1.5rem 5.5rem;
+        .hero-orb3 {
+            position: absolute; top: 40px; left: 50%;
+            width: 120px; height: 120px;
+            background: rgba(255,255,255,0.04); border-radius: 50%;
         }
+        .hero-in { position: relative; z-index: 2; }
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 30px; padding: 0.32rem 0.9rem;
+            font-size: 0.78rem; color: rgba(255,255,255,0.88);
+            margin-bottom: 1.2rem; backdrop-filter: blur(8px);
+        }
+        .hero-tag span { color: var(--gold); }
+        .hero-icon-wrap {
+            width: 76px; height: 76px;
+            background: rgba(255,255,255,0.14);
+            border-radius: 22px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.1rem;
+            border: 1.5px solid rgba(255,255,255,0.22);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+        }
+        .hero-icon-wrap i { font-size: 2rem; color: #fff; }
+        .hero-title { font-size: 2rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 0.35rem; font-family: 'Prompt', sans-serif; }
+        .hero-sub { font-size: 0.88rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
 
-        /* Topbar inside hero */
-        .hero-topbar {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 2rem;
+        .user-chip {
+            display: inline-flex; align-items: center; gap: 0.7rem;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.24);
+            border-radius: 50px; padding: 0.4rem 1rem 0.4rem 0.5rem;
+            margin-top: 1.5rem; backdrop-filter: blur(10px);
         }
-        .hero-brand-label {
-            display: flex; align-items: center; gap: 0.5rem;
-            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 30px; padding: 0.35rem 0.9rem;
-            font-size: 0.72rem; color: rgba(255,255,255,0.85); font-weight: 600;
-            letter-spacing: 0.03em;
+        .user-av {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-        .hero-brand-label i { color: var(--gold); font-size: 0.65rem; }
-        .profile-chip {
-            display: flex; align-items: center; gap: 0.5rem;
-            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
-            border-radius: 30px; padding: 0.3rem 0.75rem 0.3rem 0.35rem;
-        }
-        .profile-avatar {
-            width: 28px; height: 28px; border-radius: 50%; overflow: hidden;
-            background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-avatar i { color: #fff; font-size: 0.8rem; }
-        .profile-name-text { font-size: 0.78rem; color: #fff; font-weight: 600; max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-av img { width:100%; height:100%; object-fit:cover; }
+        .user-av i { color:#fff; font-size:0.95rem; }
+        .user-name { font-size: 0.88rem; color:#fff; font-weight:600; }
 
-        /* Hero headline */
-        .hero-eyebrow {
-            font-size: 0.72rem; color: rgba(255,255,255,0.65); font-weight: 500;
-            letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem;
-        }
-        .hero-title {
-            font-size: 2.1rem; font-weight: 900;
-            color: #fff; letter-spacing: -1px; line-height: 1.1;
-            margin-bottom: 0.5rem;
-        }
-        .hero-title span { color: rgba(255,255,255,0.55); font-weight: 300; }
-        .hero-desc { font-size: 0.85rem; color: rgba(255,255,255,0.65); line-height: 1.5; }
-
-        /* ── FLOATING STATS CARD ── */
-        .main-content { flex: 1; padding: 0 1rem 2.5rem; margin-top: -4rem; position: relative; z-index: 3; }
-
+        /* === STATS FLOAT === */
+        .float-section { flex:1; padding: 0 1rem 3rem; margin-top: -5rem; position:relative; z-index:3; }
+        
         .stats-card {
             background: var(--surface);
-            border-radius: 20px;
-            padding: 0;
-            box-shadow: var(--shadow-lg);
+            border-radius: var(--r-lg);
+            padding: 1.1rem 1.2rem;
+            box-shadow: var(--sh-lg);
             border: 1px solid var(--border);
-            overflow: hidden;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.2rem;
+            display: flex;
         }
-        .stats-header {
-            background: linear-gradient(135deg, #fafafe, #f5f4fc);
-            padding: 0.9rem 1.25rem 0.75rem;
-            border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .stats-header-label { font-size: 0.75rem; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
-        .live-dot {
-            display: flex; align-items: center; gap: 0.35rem;
-            font-size: 0.7rem; color: var(--green); font-weight: 600;
-        }
-        .live-dot::before {
-            content: ''; width: 7px; height: 7px; background: var(--green);
-            border-radius: 50%; animation: livePulse 1.8s ease-in-out infinite;
-        }
-        @keyframes livePulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(0.85);} }
-        .stats-body { display: flex; }
-        .stat-col {
-            flex: 1; padding: 1.1rem 0.75rem; text-align: center; position: relative;
-        }
-        .stat-col + .stat-col::before {
-            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
-            width: 1px; background: var(--border);
-        }
-        .stat-num {
-            font-size: 1.65rem; font-weight: 900; color: var(--brand);
-            display: block; line-height: 1; margin-bottom: 0.25rem;
-            font-variant-numeric: tabular-nums;
-        }
-        .stat-num.loading-skel {
-            background: linear-gradient(90deg, #e8e6f5 25%, #f5f4fc 50%, #e8e6f5 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 6px; width: 44px; height: 28px; display: inline-block; color: transparent;
-        }
-        @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
-        .stat-label { font-size: 0.73rem; color: var(--muted); font-weight: 500; }
-        .stat-sub { font-size: 0.68rem; color: var(--brand-light); margin-top: 0.15rem; }
+        .stat-col { flex:1; text-align:center; padding: 0.5rem 0; }
+        .stat-col + .stat-col { border-left: 1.5px solid var(--border); }
+        .stat-val { font-size: 1.5rem; font-weight: 800; color: var(--brand); display:block; font-family:'Prompt',sans-serif; }
+        .stat-tag { font-size: 0.75rem; color: var(--muted); display:block; margin-top: 0.15rem; }
 
-        /* ── SERVICE CARDS (OTA style) ── */
-        .section-label {
-            font-size: 0.72rem; font-weight: 700; color: var(--muted);
-            letter-spacing: 0.08em; text-transform: uppercase;
-            margin: 0.25rem 0.25rem 0.85rem;
-        }
+        /* === SECTION LABEL === */
+        .sec-lbl { font-size: 0.72rem; font-weight: 700; color: var(--muted); letter-spacing: 0.09em; text-transform: uppercase; margin: 0 0.3rem 0.75rem; }
 
-        .service-grid { display: flex; flex-direction: column; gap: 0.75rem; }
-
-        .service-card {
+        /* === MENU CARDS === */
+        .menu-item {
             background: var(--surface);
-            border-radius: 18px;
-            border: 1.5px solid var(--border);
-            padding: 1.1rem 1.1rem 1.1rem 1.2rem;
+            border-radius: var(--r-lg);
+            padding: 1.25rem;
             display: flex; align-items: center; gap: 1rem;
+            box-shadow: 0 2px 12px rgba(112,97,189,0.07);
+            border: 1px solid var(--border);
             cursor: pointer;
+            transition: all 0.28s cubic-bezier(0.34,1.56,0.64,1);
             text-decoration: none; color: inherit;
-            box-shadow: var(--shadow-xs);
-            transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
             position: relative; overflow: hidden;
+            margin-bottom: 0.9rem;
         }
-        .service-card::before {
-            content: ''; position: absolute;
-            top: 0; left: 0; bottom: 0; width: 4px;
-            border-radius: 18px 0 0 18px;
-            background: var(--card-accent, var(--brand));
+        .menu-item:last-child { margin-bottom: 0; }
+        .menu-item:hover, .menu-item:active {
+            transform: translateY(-4px);
+            box-shadow: var(--sh-lg);
+            border-color: rgba(112,97,189,0.25);
+            color: inherit;
         }
-        .service-card:hover { transform: translateY(-3px) scale(1.015); box-shadow: var(--shadow-md); border-color: var(--border-strong); color: inherit; }
-        .service-card:active { transform: scale(0.99); }
+        .menu-glow {
+            position: absolute; right: -24px; top: 50%; transform: translateY(-50%);
+            width: 110px; height: 110px; border-radius: 50%; opacity: 0.06;
+        }
+        .menu-item.violet .menu-glow { background: var(--brand); }
+        .menu-item.amber .menu-glow { background: var(--gold); }
+        .menu-item.teal .menu-glow { background: var(--teal); }
 
-        .service-icon-wrap {
-            width: 54px; height: 54px; border-radius: 15px;
+        .menu-ico {
+            width: 58px; height: 58px; border-radius: 18px;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
-            background: var(--icon-bg, var(--brand-soft));
         }
-        .service-icon-wrap i { font-size: 1.3rem; color: var(--icon-color, var(--brand)); }
+        .menu-ico.violet { background: linear-gradient(140deg, #7061bd, #9080d8); box-shadow: 0 6px 18px rgba(112,97,189,0.32); }
+        .menu-ico.amber { background: linear-gradient(140deg, #f5a623, #e8920a); box-shadow: 0 6px 18px rgba(245,166,35,0.35); }
+        .menu-ico.teal { background: linear-gradient(140deg, #06b6d4, #0891b2); box-shadow: 0 6px 18px rgba(6,182,212,0.32); }
+        .menu-ico i { font-size: 1.5rem; color:#fff; }
 
-        .service-info { flex: 1; min-width: 0; }
-        .service-title { font-size: 0.98rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
-        .service-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.45; }
+        .menu-body { flex:1; min-width:0; }
+        .menu-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.2rem; font-family:'Prompt',sans-serif; }
+        .menu-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
+        .menu-right { display:flex; align-items:center; gap:0.5rem; flex-shrink:0; }
+        .menu-chevron { color: var(--border); font-size: 1rem; transition: all 0.2s; }
+        .menu-item:hover .menu-chevron { transform: translateX(4px); color: var(--brand); }
 
-        .service-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; flex-shrink: 0; }
-        .service-arrow { color: var(--border-strong); font-size: 0.85rem; transition: all 0.2s; }
-        .service-card:hover .service-arrow { color: var(--brand); transform: translateX(3px); }
-
-        .badge-count {
-            background: var(--red); color: #fff;
-            font-size: 0.68rem; font-weight: 800;
-            padding: 0.18rem 0.5rem; border-radius: 30px;
-            min-width: 20px; text-align: center;
-            box-shadow: 0 2px 8px rgba(240,79,95,0.4);
+        .notif-badge {
+            background: var(--danger); color: #fff;
+            font-size: 0.7rem; font-weight: 800;
+            padding: 0.18rem 0.55rem; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(239,68,68,0.4);
         }
 
-        /* card variants */
-        .service-card.variant-brand { --card-accent: var(--brand); }
-        .service-card.variant-brand .service-icon-wrap { background: linear-gradient(135deg, #7061bd, #9585d4); }
-        .service-card.variant-brand .service-icon-wrap i { color: #fff; }
-
-        .service-card.variant-gold { --card-accent: var(--gold); }
-        .service-card.variant-gold .service-icon-wrap { background: linear-gradient(135deg, #f5a623, #f7bc59); }
-        .service-card.variant-gold .service-icon-wrap i { color: #fff; }
-
-        .service-card.variant-teal { --card-accent: var(--teal); }
-        .service-card.variant-teal .service-icon-wrap { background: linear-gradient(135deg, #00b8a9, #34cec0); }
-        .service-card.variant-teal .service-icon-wrap i { color: #fff; }
-
-        /* ── FOOTER ── */
+        /* === FOOTER === */
         .app-footer {
-            padding: 1rem 1rem 2.5rem; text-align: center;
+            text-align:center; padding: 1rem 1rem 2.5rem;
         }
-        .footer-pill {
-            display: inline-flex; align-items: center; gap: 0.5rem;
+        .footer-chip {
+            display: inline-flex; align-items: center; gap: 0.45rem;
             background: var(--surface); border: 1px solid var(--border);
-            border-radius: 30px; padding: 0.5rem 1.1rem;
-            font-size: 0.78rem; color: var(--muted);
-            box-shadow: var(--shadow-xs);
+            border-radius: 50px; padding: 0.5rem 1.1rem;
+            font-size: 0.8rem; color: var(--muted);
         }
-        .footer-pill i { color: var(--brand); }
+        .footer-chip i { color: var(--brand); }
     </style>
 </head>
 <body>
 
-<!-- LOADING -->
-<div class="loading-screen" id="loadingScreen">
-    <div class="loading-logo-wrap"><i class="fas fa-building-columns"></i></div>
-    <div class="loading-brand">ระบบจองห้องประชุม ศฝฟ.</div>
-    <div class="loading-sub-text">กำลังเข้าสู่ระบบ กรุณารอสักครู่</div>
-    <div class="loading-bar-wrap"><div class="loading-bar-fill"></div></div>
+<div class="splash" id="splash">
+    <div class="splash-logo"><i class="fas fa-door-open"></i></div>
+    <div class="splash-name">ระบบจองห้องประชุม</div>
+    <div class="splash-sub">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง</div>
+    <div class="splash-dots">
+        <div class="splash-dot"></div>
+        <div class="splash-dot"></div>
+        <div class="splash-dot"></div>
+    </div>
 </div>
 
-<div class="app-wrap" id="mainApp" style="display:none;">
-    <!-- HERO -->
+<div class="app" id="mainApp" style="display:none;">
     <div class="hero">
-        <div class="hero-pattern"></div>
+        <div class="hero-grid"></div>
         <div class="hero-orb1"></div>
         <div class="hero-orb2"></div>
-        <div class="hero-inner">
-            <div class="hero-topbar">
-                <div class="hero-brand-label">
-                    <i class="fas fa-bolt"></i>
-                    PEA Training Center
-                </div>
-                <div class="profile-chip" id="profileChip" style="display:none;">
-                    <div class="profile-avatar" id="profileAvatar"><i class="fas fa-user"></i></div>
-                    <span class="profile-name-text" id="profileName">...</span>
-                </div>
+        <div class="hero-orb3"></div>
+        <div class="hero-in">
+            <div class="hero-tag">
+                <i class="fas fa-bolt" style="font-size:0.7rem;"></i>
+                <span>PEA</span> High Voltage Training Center
             </div>
-            <div class="hero-eyebrow">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง</div>
-            <div class="hero-title">จอง<span>ห้อง</span><br>ประชุม</div>
-            <div class="hero-desc">เลือกห้อง เลือกวัน จองง่าย รวดเร็ว ทุกที่</div>
+            <div class="hero-icon-wrap"><i class="fas fa-door-open"></i></div>
+            <div class="hero-title">ระบบจอง<br>ห้องประชุม</div>
+            <div class="hero-sub">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง (ศฝฟ.)</div>
+            <div class="user-chip" id="userChip" style="display:none;">
+                <div class="user-av" id="userAv"><i class="fas fa-user"></i></div>
+                <span class="user-name" id="userName">กำลังโหลด...</span>
+            </div>
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-
-        <!-- Stats card – data from AppScript -->
+    <div class="float-section">
         <div class="stats-card">
-            <div class="stats-header">
-                <span class="stats-header-label">ภาพรวมสิ่งอำนวยความสะดวก</span>
-                <span class="live-dot">ข้อมูลสด</span>
+            <div class="stat-col">
+                <span class="stat-val">13</span>
+                <span class="stat-tag">ห้องประชุม</span>
             </div>
-            <div class="stats-body">
-                <div class="stat-col">
-                    <span class="stat-num" id="statMeeting">13</span>
-                    <div class="stat-label">ห้องประชุม</div>
-                    <div class="stat-sub">Meeting Rooms</div>
-                </div>
-                <div class="stat-col">
-                    <span class="stat-num loading-skel" id="statStd">—</span>
-                    <div class="stat-label">ห้องพัก Standard</div>
-                    <div class="stat-sub" id="statStdSub">กำลังโหลด...</div>
-                </div>
-                <div class="stat-col">
-                    <span class="stat-num loading-skel" id="statVip">—</span>
-                    <div class="stat-label">ห้อง VIP</div>
-                    <div class="stat-sub" id="statVipSub">กำลังโหลด...</div>
-                </div>
+            <div class="stat-col">
+                <span class="stat-val">90</span>
+                <span class="stat-tag">ห้องพัก</span>
+            </div>
+            <div class="stat-col">
+                <span class="stat-val">9</span>
+                <span class="stat-tag">ห้อง VIP</span>
             </div>
         </div>
 
-        <div class="section-label">บริการทั้งหมด</div>
+        <div class="sec-lbl">บริการ</div>
 
-        <div class="service-grid">
-            <a href="booking.html" class="service-card variant-brand">
-                <div class="service-icon-wrap"><i class="fas fa-calendar-plus"></i></div>
-                <div class="service-info">
-                    <div class="service-title">จองห้องประชุม</div>
-                    <div class="service-desc">เลือกห้อง วันที่ และรายละเอียดการใช้งาน</div>
-                </div>
-                <div class="service-right">
-                    <i class="fas fa-chevron-right service-arrow"></i>
-                </div>
-            </a>
+        <a href="booking.html" class="menu-item violet">
+            <div class="menu-glow"></div>
+            <div class="menu-ico violet"><i class="fas fa-calendar-plus"></i></div>
+            <div class="menu-body">
+                <div class="menu-name">จองห้องประชุม</div>
+                <div class="menu-desc">เลือกห้อง วันที่ และรายละเอียดการใช้งาน</div>
+            </div>
+            <div class="menu-right">
+                <i class="fas fa-chevron-right menu-chevron"></i>
+            </div>
+        </a>
 
-            <a href="confirm.html" class="service-card variant-gold">
-                <div class="service-icon-wrap"><i class="fas fa-clipboard-check"></i></div>
-                <div class="service-info">
-                    <div class="service-title">ยืนยันการจอง</div>
-                    <div class="service-desc">ยืนยันรายการที่ได้รับการอนุมัติแล้ว</div>
-                </div>
-                <div class="service-right">
-                    <span class="badge-count" id="pendingBadge" style="display:none;">0</span>
-                    <i class="fas fa-chevron-right service-arrow"></i>
-                </div>
-            </a>
+        <a href="confirm.html" class="menu-item amber">
+            <div class="menu-glow"></div>
+            <div class="menu-ico amber"><i class="fas fa-clipboard-check"></i></div>
+            <div class="menu-body">
+                <div class="menu-name">ยืนยันการจอง</div>
+                <div class="menu-desc">ยืนยันรายการที่ได้รับการอนุมัติแล้ว</div>
+            </div>
+            <div class="menu-right">
+                <span class="notif-badge" id="pendingBadge" style="display:none;">0</span>
+                <i class="fas fa-chevron-right menu-chevron"></i>
+            </div>
+        </a>
 
-            <a href="status.html" class="service-card variant-teal">
-                <div class="service-icon-wrap"><i class="fas fa-magnifying-glass"></i></div>
-                <div class="service-info">
-                    <div class="service-title">ตรวจสอบสถานะ</div>
-                    <div class="service-desc">ดูรายการจองที่อนุมัติและยืนยันแล้ว</div>
-                </div>
-                <div class="service-right">
-                    <i class="fas fa-chevron-right service-arrow"></i>
-                </div>
-            </a>
-        </div>
+        <a href="status.html" class="menu-item teal">
+            <div class="menu-glow"></div>
+            <div class="menu-ico teal"><i class="fas fa-search"></i></div>
+            <div class="menu-body">
+                <div class="menu-name">ตรวจสอบสถานะ</div>
+                <div class="menu-desc">ดูรายการจองที่อนุมัติและยืนยันแล้ว</div>
+            </div>
+            <div class="menu-right">
+                <i class="fas fa-chevron-right menu-chevron"></i>
+            </div>
+        </a>
     </div>
 
     <div class="app-footer">
-        <div class="footer-pill">
+        <div class="footer-chip">
             <i class="fas fa-headset"></i>
-            ติดต่อสอบถาม โทร. 034-339-224 ต่อ (33)15619
+            ติดต่อสอบถาม โทร. 034-339-224 และ (33)15619
         </div>
     </div>
 </div>
@@ -408,57 +342,18 @@ async function init() {
         sessionStorage.setItem('displayName', profile.displayName);
         sessionStorage.setItem('pictureUrl', profile.pictureUrl || '');
         sessionStorage.setItem('liffReady', 'true');
-        document.getElementById('profileName').textContent = profile.displayName;
+        document.getElementById('userName').textContent = profile.displayName;
         if (profile.pictureUrl) {
-            document.getElementById('profileAvatar').innerHTML = `<img src="${profile.pictureUrl}" alt="">`;
+            document.getElementById('userAv').innerHTML = `<img src="${profile.pictureUrl}" alt="avatar">`;
         }
-        document.getElementById('profileChip').style.display = 'flex';
-        loadRoomStats();
+        document.getElementById('userChip').style.display = 'flex';
         loadPendingCount(profile.userId);
         setTimeout(() => {
-            document.getElementById('loadingScreen').classList.add('hide');
+            document.getElementById('splash').classList.add('out');
             document.getElementById('mainApp').style.display = 'flex';
         }, 900);
     } catch(err) {
         console.error('LIFF init error:', err);
-    }
-}
-
-async function loadRoomStats() {
-    try {
-        // ดึงข้อมูลจำนวนห้องพักว่างจาก AppScript
-        const res = await fetch(`${GAS_WEB_APP_URL}?action=getRoomStats`);
-        const data = await res.json();
-        // data คาดว่าจะมี: totalStd, availableStd, totalVip, availableVip
-        const stdEl = document.getElementById('statStd');
-        const vipEl = document.getElementById('statVip');
-        const stdSub = document.getElementById('statStdSub');
-        const vipSub = document.getElementById('statVipSub');
-
-        stdEl.classList.remove('loading-skel');
-        vipEl.classList.remove('loading-skel');
-
-        const totalStd = data.totalStd ?? 81; // Standard = 90 total - 9 VIP
-        const availStd = data.availableStd ?? totalStd;
-        const totalVip = data.totalVip ?? 9;
-        const availVip = data.availableVip ?? totalVip;
-
-        stdEl.textContent = availStd;
-        vipEl.textContent = availVip;
-        stdSub.textContent = `ว่าง/${totalStd} ห้อง`;
-        vipSub.textContent = `ว่าง/${totalVip} ห้อง`;
-
-        // เปลี่ยนสีถ้าห้องเต็มมาก
-        if (availStd / totalStd < 0.2) stdEl.style.color = 'var(--red)';
-        if (availVip / totalVip < 0.2) vipEl.style.color = 'var(--red)';
-    } catch(e) {
-        // fallback: แสดงค่า default จาก GAS config
-        document.getElementById('statStd').classList.remove('loading-skel');
-        document.getElementById('statVip').classList.remove('loading-skel');
-        document.getElementById('statStd').textContent = '81';
-        document.getElementById('statVip').textContent = '9';
-        document.getElementById('statStdSub').textContent = 'Standard';
-        document.getElementById('statVipSub').textContent = 'VIP';
     }
 }
 
