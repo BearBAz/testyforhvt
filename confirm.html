@@ -6,817 +6,350 @@
     <title>ยืนยันการจองห้องประชุม ศฝฟ.</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7061bd;
+            --primary-dark: #5a4fa0;
+            --primary-deeper: #3f3880;
+            --primary-light: #9585d4;
+            --primary-soft: #eeecf8;
+            --primary-xsoft: #f7f6fd;
+            --accent: #ff6b35;
+            --accent-dark: #e05c28;
+            --accent-soft: #fff1ec;
+            --gold: #f5a623;
+            --gold-soft: #fff8ec;
+            --success: #00a67e;
+            --success-soft: #e6f7f3;
+            --danger: #e53e3e;
+            --danger-soft: #fef2f2;
+            --warning: #d97706;
+            --warning-soft: #fef3c7;
+            --vip: #8b5cf6;
+            --vip-soft: #f5f3ff;
+            --bg: #f4f3fb;
+            --surface: #ffffff;
+            --text: #1a1535;
+            --text-2: #4a4569;
+            --muted: #9490b0;
+            --border: #e5e2f3;
+            --border-strong: #ccc8e8;
+            --shadow-sm: 0 1px 4px rgba(112,97,189,0.07);
+            --shadow-md: 0 4px 20px rgba(112,97,189,0.12);
+            --shadow-lg: 0 12px 48px rgba(112,97,189,0.18);
+            --radius: 14px;
+            --radius-sm: 10px;
+            --radius-lg: 22px;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Sarabun',sans-serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; }
+        .app-wrap { max-width:480px; margin:0 auto; min-height:100vh; background:var(--bg); padding-bottom:3rem; }
 
-<style>
-/* ─────────────────────────────────────
-   DESIGN TOKENS
-   ───────────────────────────────────── */
-:root {
-    --brand:        #7061bd;
-    --brand-d:      #5a4da6;
-    --brand-dd:     #43398a;
-    --brand-l:      #8f82cc;
-    --brand-soft:   #f0eeff;
-    --brand-xsoft:  #f8f7ff;
-    --gold:         #f5a623;
-    --gold-d:       #d97706;
-    --gold-soft:    #fff8ec;
-    --gold-border:  rgba(245,166,35,.3);
-    --success:      #16a34a;
-    --success-soft: #f0fdf4;
-    --danger:       #e5484d;
-    --danger-soft:  #fff0f0;
-    --warn:         #d97706;
-    --warn-soft:    #fffbeb;
-    --vip:          #a855f7;
-    --vip-soft:     #fdf4ff;
-    --bg:           #f5f4fc;
-    --surf:         #ffffff;
-    --text:         #1a1535;
-    --text2:        #4b4270;
-    --muted:        #8b87a8;
-    --border:       #e4e0f5;
-    --border-s:     #cec9eb;
-    --sh-sm:        0 1px 4px rgba(112,97,189,.07);
-    --sh-md:        0 4px 20px rgba(112,97,189,.11);
-    --sh-lg:        0 12px 48px rgba(112,97,189,.16);
-    --r:            14px;
-    --r-sm:         10px;
-    --r-lg:         22px;
-}
+        /* ===== HEADER ===== */
+        .page-header {
+            background: linear-gradient(145deg, #7061bd 0%, #5a4fa0 45%, #3f3880 100%);
+            padding: 1.6rem 1.5rem 2.2rem;
+            position: relative; overflow: hidden;
+        }
+        .page-header::before {
+            content:''; position:absolute; inset:0;
+            background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .header-orb { position:absolute; top:-60px; right:-50px; width:220px; height:220px; background:radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius:50%; }
+        .header-inner { position:relative; z-index:2; }
+        .back-btn {
+            display:inline-flex; align-items:center; gap:0.45rem;
+            color:rgba(255,255,255,0.88); font-size:0.85rem; text-decoration:none;
+            margin-bottom:1.2rem; background:rgba(255,255,255,0.13);
+            border:1px solid rgba(255,255,255,0.22); border-radius:20px; padding:0.35rem 0.85rem;
+            transition:all 0.2s;
+        }
+        .back-btn:hover { color:#fff; background:rgba(255,255,255,0.2); }
+        .page-title { font-size:1.5rem; font-weight:800; color:#fff; margin-bottom:0.25rem; letter-spacing:-0.3px; }
+        .page-sub { font-size:0.83rem; color:rgba(255,255,255,0.72); }
 
-/* ─────────────────────────────────────
-   RESET & BASE
-   ───────────────────────────────────── */
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
-    font-family:'Sarabun',sans-serif;
-    background:var(--bg); 
-    color:var(--text);
-    line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-}
-.app-wrap {
-    max-width:480px;
-    margin:0 auto;
-    min-height:100vh;
-    background:var(--bg);
-    padding-bottom:4rem;
-}
+        /* ===== CONTENT ===== */
+        .content { padding:0 1rem; margin-top:1rem; }
 
-/* ─────────────────────────────────────
-   HEADER  — gold gradient (confirm page)
-   ───────────────────────────────────── */
-.page-header {
-    background: linear-gradient(150deg, #e8920a 0%, #d97706 50%, #b45309 100%);
-    padding: 1.6rem 1.5rem 2.2rem;
-    position:relative; overflow:hidden;
-}
-.page-header::before {
-    content:'';
-    position:absolute; inset:0;
-    background-image:radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px);
-    background-size:24px 24px;
-}
-.hdr-blob1 {
-    position:absolute; top:-50px; right:-50px;
-    width:190px; height:190px;
-    background:rgba(255,255,255,.1); border-radius:50%;
-    pointer-events:none;
-}
-.hdr-blob2 {
-    position:absolute; bottom:-30px; left:-40px;
-    width:130px; height:130px;
-    background:rgba(255,255,255,.06); border-radius:50%;
-    pointer-events:none;
-}
-.hdr-inner { position:relative; z-index:2; }
+        .section-card {
+            background:var(--surface); border-radius:var(--radius-lg);
+            padding:1.25rem; margin-bottom:1rem;
+            box-shadow:var(--shadow-md); border:1px solid var(--border);
+            animation:fadeUp 0.38s ease-out;
+        }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+        .section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; }
+        .section-title-text { font-size:0.95rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:0.5rem; }
+        .section-title-text i { color:var(--primary); }
+        .section-title-text.orange i { color:var(--accent); }
+        .section-title-text.green i { color:var(--success); }
 
-.back-btn {
-    display:inline-flex; align-items:center; gap:.45rem;
-    color:rgba(255,255,255,.9); font-size:.86rem; font-weight:600;
-    text-decoration:none;
-    background:rgba(255,255,255,.15);
-    border:1px solid rgba(255,255,255,.25);
-    border-radius:50px; padding:.3rem .85rem;
-    margin-bottom:1.1rem;
-    transition:background .2s;
-}
-.back-btn:hover { background:rgba(255,255,255,.22); color:#fff; }
+        /* ===== BOOKING LIST ===== */
+        .booking-item {
+            background:var(--surface); border:1.5px solid var(--border);
+            border-radius:var(--radius); padding:1rem; margin-bottom:0.75rem;
+            cursor:pointer; transition:all 0.22s ease; position:relative; overflow:hidden;
+        }
+        .booking-item:last-child { margin-bottom:0; }
+        .booking-item:hover { border-color:var(--primary-light); box-shadow:0 4px 18px rgba(112,97,189,0.2); transform:translateY(-2px); }
+        .booking-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:linear-gradient(180deg, var(--primary), var(--primary-light)); border-radius:4px 0 0 4px; }
+        .booking-id-tag { display:inline-flex; align-items:center; gap:0.3rem; background:var(--primary-soft); color:var(--primary-dark); font-size:0.75rem; font-weight:700; padding:0.22rem 0.65rem; border-radius:8px; margin-bottom:0.5rem; }
+        .booking-course-name { font-size:1rem; font-weight:700; margin-bottom:0.5rem; color:var(--text); line-height:1.4; padding-left:0.1rem; }
+        .booking-meta { display:flex; gap:0.5rem 0.9rem; flex-wrap:wrap; }
+        .booking-meta-item { font-size:0.8rem; color:var(--text-2); display:flex; align-items:center; gap:0.3rem; }
+        .booking-meta-item i { color:var(--primary-light); width:13px; text-align:center; font-size:0.75rem; }
+        .item-arrow { position:absolute; right:1rem; top:50%; transform:translateY(-50%); color:var(--border-strong); font-size:1rem; transition:all 0.2s; }
+        .booking-item:hover .item-arrow { color:var(--primary); transform:translateY(-50%) translateX(3px); }
 
-.page-title-row { display:flex; align-items:center; gap:.8rem; }
-.page-icon {
-    width:50px; height:50px;
-    background:rgba(255,255,255,.18);
-    border-radius:14px;
-    display:flex; align-items:center; justify-content:center;
-    border:1.5px solid rgba(255,255,255,.28);
-    box-shadow:0 6px 18px rgba(0,0,0,.18);
-    flex-shrink:0;
-}
-.page-icon i { font-size:1.4rem; color:#fff; }
-.page-title { font-size:1.5rem; font-weight:800; color:#fff; letter-spacing:-.3px; }
-.page-sub   { font-size:.83rem; color:rgba(255,255,255,.8); margin-top:.2rem; }
+        /* ===== EMPTY STATE ===== */
+        .empty-state { text-align:center; padding:3rem 1.5rem; color:var(--muted); }
+        .empty-icon { width:72px; height:72px; background:var(--primary-soft); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1.2rem; }
+        .empty-icon i { font-size:2rem; color:var(--primary); opacity:0.5; }
+        .empty-title { font-size:1.05rem; font-weight:700; color:var(--text-2); margin-bottom:0.4rem; }
+        .empty-sub { font-size:0.85rem; line-height:1.5; }
 
-/* progress bar under header */
-.header-progress {
-    height:4px;
-    background:rgba(255,255,255,.2);
-    position:relative; overflow:hidden;
-}
-.header-progress-fill {
-    height:100%;
-    background:rgba(255,255,255,.7);
-    width:50%;
-    border-radius:2px;
-    animation:pulse-bar 2s ease-in-out infinite;
-}
-@keyframes pulse-bar {
-    0%,100% { opacity:.7; }
-    50%      { opacity:1; }
-}
+        /* ===== FORM SECTION ===== */
+        #formSection { display:none; }
 
-/* ─────────────────────────────────────
-   CONTENT WRAPPER
-   ───────────────────────────────────── */
-.content { padding:1rem 1rem 0; }
+        .selected-badge {
+            background:linear-gradient(135deg, var(--primary-soft), rgba(112,97,189,0.07));
+            border:1.5px solid rgba(112,97,189,0.25);
+            border-radius:var(--radius); padding:1rem;
+        }
+        .selected-id { font-size:0.78rem; color:var(--primary-dark); font-weight:700; margin-bottom:0.35rem; display:flex; align-items:center; gap:0.35rem; }
+        .selected-course { font-size:1.02rem; font-weight:700; color:var(--text); }
+        .change-link { font-size:0.82rem; color:var(--primary); font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem; margin-top:0.5rem; }
 
-/* ─────────────────────────────────────
-   SECTION CARDS  — Agoda card style
-   ───────────────────────────────────── */
-.section-card {
-    background:var(--surf);
-    border-radius:var(--r-lg);
-    padding:1.3rem;
-    margin-bottom:.9rem;
-    box-shadow:var(--sh-sm);
-    border:1px solid var(--border);
-    animation:fadeUp .38s ease-out both;
-}
-@keyframes fadeUp {
-    from { opacity:0; transform:translateY(12px); }
-    to   { opacity:1; transform:translateY(0); }
-}
-.section-card:nth-child(2)  { animation-delay:.05s; }
-.section-card:nth-child(3)  { animation-delay:.10s; }
-.section-card:nth-child(4)  { animation-delay:.15s; }
-.section-card:nth-child(5)  { animation-delay:.20s; }
-.section-card:nth-child(6)  { animation-delay:.25s; }
-.section-card:nth-child(7)  { animation-delay:.30s; }
+        /* ===== FORM INPUTS ===== */
+        .form-label { font-weight:600; color:var(--text-2); margin-bottom:0.4rem; font-size:0.87rem; display:block; }
+        .req { color:var(--danger); }
+        .form-control, .form-select {
+            border:1.5px solid var(--border); border-radius:var(--radius-sm);
+            padding:0.75rem 1rem; font-size:0.93rem;
+            font-family:'Sarabun',sans-serif; transition:all 0.2s;
+            background:var(--surface); color:var(--text); width:100%;
+        }
+        .form-control:focus, .form-select:focus { border-color:var(--primary); box-shadow:0 0 0 3.5px rgba(112,97,189,0.14); outline:none; }
+        .form-control:disabled { background:var(--bg); color:var(--muted); }
 
-/* card header row */
-.section-head {
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:1.1rem;
-    padding-bottom:.85rem;
-    border-bottom:1.5px solid var(--border);
-}
-.section-title-text {
-    font-size:.95rem; font-weight:700; color:var(--text);
-    display:flex; align-items:center; gap:.55rem;
-}
-.title-ico {
-    width:34px; height:34px; border-radius:10px;
-    display:flex; align-items:center; justify-content:center;
-    flex-shrink:0;
-}
-.title-ico.gold   { background:var(--gold-soft); }
-.title-ico.gold i { color:var(--gold-d); }
-.title-ico.violet   { background:var(--brand-soft); }
-.title-ico.violet i { color:var(--brand); }
-.title-ico.green   { background:var(--success-soft); }
-.title-ico.green i { color:var(--success); }
+        /* ===== ROOM COUNTER ===== */
+        .room-type-box {
+            background:var(--bg); border:1.5px solid var(--border);
+            border-radius:var(--radius); padding:1.1rem; margin-bottom:0.75rem;
+        }
+        .room-type-box.vip-box { border-color:rgba(139,92,246,0.28); background:var(--vip-soft); }
+        .room-type-box:last-child { margin-bottom:0; }
+        .room-type-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; }
+        .room-type-name { font-weight:700; display:flex; align-items:center; gap:0.5rem; font-size:0.9rem; color:var(--text); }
+        .vip-tag { background:var(--vip); color:#fff; font-size:0.68rem; font-weight:800; padding:0.15rem 0.55rem; border-radius:10px; letter-spacing:0.03em; }
+        .counter-row { display:flex; align-items:center; gap:1.2rem; }
+        .counter-btn {
+            width:40px; height:40px; border-radius:var(--radius-sm);
+            border:1.5px solid var(--border); background:var(--surface);
+            font-size:1.3rem; display:flex; align-items:center; justify-content:center;
+            cursor:pointer; transition:all 0.2s; font-weight:700; color:var(--text-2); line-height:1;
+        }
+        .counter-btn:hover:not(:disabled) { background:var(--primary); color:#fff; border-color:var(--primary); }
+        .counter-btn.vip-btn:hover:not(:disabled) { background:var(--vip); border-color:var(--vip); }
+        .counter-btn:disabled { opacity:0.3; cursor:not-allowed; }
+        .counter-val { font-size:1.35rem; font-weight:800; min-width:44px; text-align:center; color:var(--text); }
+        .avail-pill { display:inline-flex; align-items:center; gap:0.3rem; padding:0.22rem 0.65rem; border-radius:10px; font-size:0.76rem; font-weight:700; }
+        .avail-pill.ok { background:var(--success-soft); color:var(--success); }
+        .avail-pill.warn { background:var(--warning-soft); color:var(--warning); }
+        .avail-pill.full { background:var(--danger-soft); color:var(--danger); }
+        .room-total-badge { display:inline-flex; align-items:center; gap:0.3rem; background:var(--primary-soft); color:var(--primary); font-size:0.8rem; font-weight:700; padding:0.28rem 0.75rem; border-radius:10px; border:1.5px solid rgba(112,97,189,0.2); }
 
-/* ─────────────────────────────────────
-   BOOKING LIST  — Booking.com card style
-   ───────────────────────────────────── */
-.booking-item {
-    background:var(--surf);
-    border:1.5px solid var(--border);
-    border-radius:var(--r);
-    padding:1rem 1rem 1rem 1rem;
-    margin-bottom:.7rem;
-    cursor:pointer;
-    transition:all .22s ease;
-    position:relative; overflow:hidden;
-}
-.booking-item:last-child { margin-bottom:0; }
+        /* ===== UPLOAD ZONES ===== */
+        .upload-zone {
+            border:2px dashed var(--border-strong); border-radius:var(--radius-sm);
+            padding:1.25rem 1rem; text-align:center; cursor:pointer;
+            transition:all 0.22s; background:var(--bg);
+        }
+        .upload-zone:hover { border-color:var(--primary); background:var(--primary-xsoft); }
+        .upload-zone.has-file { border-color:var(--success); background:var(--success-soft); border-style:solid; }
+        .upload-icon { font-size:1.85rem; color:var(--muted); margin-bottom:0.4rem; display:block; }
+        .upload-zone.has-file .upload-icon { color:var(--success); }
+        .upload-text { font-size:0.85rem; color:var(--muted); font-weight:500; }
+        .upload-zone.has-file .upload-text { color:var(--success); font-weight:600; }
+        .file-name { font-size:0.78rem; color:var(--success); margin-top:0.35rem; font-weight:600; }
+        input[type="file"] { display:none; }
 
-/* shimmer effect strip at left */
-.booking-item::before {
-    content:'';
-    position:absolute; left:0; top:0; bottom:0;
-    width:4px;
-    background:linear-gradient(180deg, var(--gold), var(--gold-d));
-    border-radius:4px 0 0 4px;
-    opacity:0; transition:opacity .2s;
-}
-.booking-item:hover::before { opacity:1; }
-.booking-item:hover {
-    border-color:var(--gold);
-    box-shadow:0 4px 18px rgba(245,166,35,.18);
-    transform:translateY(-2px);
-    padding-left:1.25rem;
-}
+        /* ===== CHECKBOX LIST ===== */
+        .check-list { display:flex; flex-direction:column; gap:0.5rem; }
+        .check-row { display:flex; align-items:center; gap:0.7rem; cursor:pointer; padding:0.55rem 0.75rem; border-radius:var(--radius-sm); border:1.5px solid transparent; transition:all 0.15s; min-height:44px; }
+        .check-row:hover { background:var(--primary-soft); border-color:var(--border); }
+        .check-row input[type="checkbox"] { width:18px; height:18px; accent-color:var(--primary); cursor:pointer; flex-shrink:0; }
+        .check-row label { cursor:pointer; font-size:0.9rem; color:var(--text-2); flex:1; line-height:1.4; }
 
-.booking-id-tag {
-    display:inline-flex; align-items:center; gap:.3rem;
-    background:var(--gold-soft); color:var(--gold-d);
-    font-size:.74rem; font-weight:700;
-    padding:.22rem .65rem; border-radius:8px;
-    margin-bottom:.45rem;
-    border:1px solid var(--gold-border);
-}
-.booking-course-name {
-    font-size:.97rem; font-weight:700; margin-bottom:.45rem;
-    color:var(--text); line-height:1.4;
-    padding-right:1.5rem;
-}
-.booking-meta {
-    display:flex; gap:.4rem .85rem; flex-wrap:wrap;
-}
-.booking-meta-item {
-    font-size:.79rem; color:var(--text2);
-    display:flex; align-items:center; gap:.28rem;
-}
-.booking-meta-item i {
-    color:var(--gold-d); width:13px;
-    text-align:center; font-size:.73rem;
-}
+        /* ===== FOOD RADIO ===== */
+        .food-radio-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-top:0.5rem; }
+        .food-card { position:relative; }
+        .food-card input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+        .food-card label { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem 0.75rem; border:1.5px solid var(--border); border-radius:var(--radius); cursor:pointer; transition:all 0.25s ease; text-align:center; background:#fff; gap:0.4rem; }
+        .food-card label:hover { border-color:var(--primary); background:var(--primary-soft); }
+        .food-card.sel-yes label { border-color:var(--primary); background:var(--primary-soft); box-shadow:0 0 0 3.5px rgba(112,97,189,0.14); }
+        .food-card.sel-no label { border-color:var(--muted); background:var(--bg); }
+        .food-card-icon { font-size:1.8rem; }
+        .food-card.sel-yes .food-card-icon { color:var(--primary); }
+        .food-card.sel-no .food-card-icon { color:var(--muted); }
+        .food-card-text { font-weight:700; font-size:0.95rem; }
+        .food-check-mark { position:absolute; top:0.5rem; right:0.6rem; font-size:0.85rem; display:none; }
+        .food-card.sel-yes .food-check-mark { display:block; color:var(--primary); }
+        .food-card.sel-no .food-check-mark { display:block; color:var(--muted); }
 
-.item-arrow {
-    position:absolute; right:1rem; top:50%;
-    transform:translateY(-50%);
-    color:var(--border-s); font-size:1rem;
-    transition:all .2s;
-}
-.booking-item:hover .item-arrow {
-    color:var(--gold); transform:translateY(-50%) translateX(4px);
-}
+        /* ===== SUBMIT ===== */
+        .submit-btn {
+            width:100%; padding:1.05rem; border:none; border-radius:var(--radius-lg);
+            background:linear-gradient(135deg, #7061bd, #9585d4);
+            color:#fff; font-size:1.05rem; font-weight:700;
+            font-family:'Sarabun',sans-serif; cursor:pointer;
+            transition:all 0.28s; box-shadow:0 8px 24px rgba(112,97,189,0.42);
+            display:flex; align-items:center; justify-content:center; gap:0.55rem;
+        }
+        .submit-btn:hover:not(:disabled) { transform:translateY(-3px); box-shadow:0 14px 36px rgba(112,97,189,0.52); }
+        .submit-btn:disabled { opacity:0.48; cursor:not-allowed; transform:none; box-shadow:none; }
 
-/* ─────────────────────────────────────
-   EMPTY STATE
-   ───────────────────────────────────── */
-.empty-state { text-align:center; padding:3rem 1.5rem; color:var(--muted); }
-.empty-icon {
-    width:76px; height:76px;
-    background:var(--gold-soft); border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    margin:0 auto 1.2rem;
-    border:2px solid var(--gold-border);
-}
-.empty-icon i { font-size:2.1rem; color:var(--gold-d); opacity:.65; }
-.empty-title { font-size:1.05rem; font-weight:700; color:var(--text2); margin-bottom:.4rem; }
-.empty-sub   { font-size:.85rem; line-height:1.55; }
+        /* ===== FOOD MENU BTN ===== */
+        .food-menu-btn {
+            display:inline-flex; align-items:center; gap:0.5rem;
+            background:linear-gradient(135deg,#22c55e,#16a34a);
+            color:#fff; font-size:0.88rem; font-weight:700;
+            border:none; border-radius:var(--radius-sm); padding:0.65rem 1.1rem;
+            cursor:pointer; text-decoration:none; transition:all 0.2s;
+            box-shadow:0 3px 10px rgba(34,197,94,0.3);
+        }
+        .food-menu-btn:hover { transform:translateY(-1px); box-shadow:0 5px 16px rgba(34,197,94,0.4); color:#fff; }
 
-/* ─────────────────────────────────────
-   SELECTED BOOKING BADGE
-   ───────────────────────────────────── */
-.selected-badge {
-    background:linear-gradient(135deg, var(--gold-soft), rgba(245,166,35,.06));
-    border:1.5px solid var(--gold-border);
-    border-radius:var(--r);
-    padding:1rem 1rem .9rem;
-    position:relative; overflow:hidden;
-}
-.selected-badge::before {
-    content:'';
-    position:absolute; left:0; top:0; bottom:0;
-    width:4px;
-    background:linear-gradient(180deg, var(--gold), var(--gold-d));
-    border-radius:4px 0 0 4px;
-}
-.selected-id {
-    font-size:.76rem; color:var(--gold-d);
-    font-weight:700; margin-bottom:.35rem;
-    display:flex; align-items:center; gap:.35rem;
-    padding-left:.2rem;
-}
-.selected-course {
-    font-size:.98rem; font-weight:700; color:var(--text);
-    padding-left:.2rem; margin-bottom:.4rem; line-height:1.4;
-}
-.change-link {
-    font-size:.82rem; color:var(--brand); font-weight:600;
-    cursor:pointer;
-    display:inline-flex; align-items:center; gap:.3rem;
-    padding:.25rem .65rem;
-    background:var(--brand-soft);
-    border-radius:8px;
-    border:1px solid rgba(112,97,189,.2);
-    margin-left:.2rem;
-    transition:all .2s;
-}
-.change-link:hover { background:var(--brand); color:#fff; }
+        /* ===== LOADING OVERLAY ===== */
+        .loading-overlay { position:fixed; inset:0; background:rgba(63,56,128,0.15); backdrop-filter:blur(10px); display:none; align-items:center; justify-content:center; z-index:9999; }
+        .loading-overlay.show { display:flex; }
+        .loading-box { background:var(--surface); border-radius:var(--radius-lg); padding:2.5rem 2rem; text-align:center; box-shadow:var(--shadow-lg); border:1px solid var(--border); min-width:200px; }
+        .spinner { width:50px; height:50px; border:3.5px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin 0.85s linear infinite; margin:0 auto 1rem; }
+        @keyframes spin { to{transform:rotate(360deg);} }
+        .loading-label { font-size:0.9rem; color:var(--text-2); font-weight:500; }
 
-/* ─────────────────────────────────────
-   FORM ELEMENTS
-   ───────────────────────────────────── */
-.form-label {
-    font-weight:600; color:var(--text2);
-    margin-bottom:.42rem; font-size:.87rem; display:block;
-}
-.req { color:var(--danger); }
-.mb-3 { margin-bottom:.95rem; }
+        .list-count { font-size:0.78rem; background:var(--primary-soft); color:var(--primary-dark); font-weight:700; padding:0.2rem 0.65rem; border-radius:10px; }
 
-.form-control, .form-select {
-    width:100%;
-    border:1.5px solid var(--border);
-    border-radius:var(--r-sm);
-    padding:.75rem 1rem;
-    font-size:.93rem; font-family:'Sarabun',sans-serif;
-    background:var(--surf); color:var(--text);
-    transition:border-color .2s, box-shadow .2s;
-    appearance:none;
-}
-.form-control:focus, .form-select:focus {
-    outline:none;
-    border-color:var(--brand);
-    box-shadow:0 0 0 3px rgba(112,97,189,.13);
-}
-.form-control:disabled {
-    background:var(--bg); color:var(--muted); cursor:not-allowed;
-}
-
-/* date grid */
-.date-grid { display:grid; grid-template-columns:1fr 1fr; gap:.65rem; }
-.date-label { font-size:.8rem; font-weight:500; color:var(--muted); display:block; margin-bottom:.3rem; }
-
-/* ─────────────────────────────────────
-   READONLY INFO PILLS (check-in/out)
-   ───────────────────────────────────── */
-.info-pill-row { display:grid; grid-template-columns:1fr 1fr; gap:.65rem; margin-bottom:.95rem; }
-.info-pill {
-    background:var(--bg); border:1.5px solid var(--border);
-    border-radius:var(--r-sm); padding:.7rem .85rem;
-    position:relative; overflow:hidden;
-}
-.info-pill-lbl { font-size:.72rem; color:var(--muted); display:block; margin-bottom:.18rem; }
-.info-pill-val { font-size:.9rem; font-weight:700; color:var(--brand); display:block; }
-.info-pill-ico {
-    position:absolute; right:7px; bottom:5px;
-    font-size:1.2rem; color:var(--brand); opacity:.07;
-}
-
-/* ─────────────────────────────────────
-   ROOM COUNTER  — BluePlus stepper style
-   ───────────────────────────────────── */
-.room-type-box {
-    background:var(--bg);
-    border:1.5px solid var(--border);
-    border-radius:var(--r);
-    padding:1.1rem;
-    margin-bottom:.7rem;
-    transition:border-color .2s;
-}
-.room-type-box.vip-box {
-    border-color:rgba(168,85,247,.25);
-    background:var(--vip-soft);
-}
-.room-type-box:last-child { margin-bottom:0; }
-
-.room-type-top {
-    display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:.9rem;
-}
-.room-type-name {
-    font-weight:700; font-size:.92rem; color:var(--text);
-    display:flex; align-items:center; gap:.45rem;
-}
-.room-type-name i { color:var(--brand); font-size:.9rem; }
-.vip-box .room-type-name i { color:var(--vip); }
-.vip-tag {
-    background:var(--vip); color:#fff;
-    font-size:.67rem; font-weight:800;
-    padding:.15rem .55rem; border-radius:10px; letter-spacing:.03em;
-}
-
-/* stepper counter */
-.counter-row { display:flex; align-items:center; gap:.95rem; }
-.counter-btn {
-    width:40px; height:40px; border-radius:var(--r-sm);
-    border:1.5px solid var(--border); background:var(--surf);
-    font-size:1.35rem; font-weight:700; color:var(--text2);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:all .2s; line-height:1;
-    user-select:none;
-}
-.counter-btn:hover:not(:disabled) {
-    background:var(--brand); color:#fff; border-color:var(--brand);
-    box-shadow:0 3px 10px rgba(112,97,189,.3);
-}
-.counter-btn.vip-btn:hover:not(:disabled) {
-    background:var(--vip); border-color:var(--vip);
-    box-shadow:0 3px 10px rgba(168,85,247,.3);
-}
-.counter-btn:disabled { opacity:.28; cursor:not-allowed; }
-.counter-val {
-    font-size:1.4rem; font-weight:800;
-    min-width:46px; text-align:center; color:var(--text);
-}
-
-.avail-pill {
-    display:inline-flex; align-items:center; gap:.3rem;
-    padding:.22rem .68rem; border-radius:10px;
-    font-size:.75rem; font-weight:700;
-}
-.avail-pill.ok   { background:var(--success-soft); color:var(--success); }
-.avail-pill.warn { background:var(--warn-soft);    color:var(--warn);    }
-.avail-pill.full { background:var(--danger-soft);  color:var(--danger);  }
-
-/* room total badge */
-.room-total-badge {
-    display:inline-flex; align-items:center; gap:.3rem;
-    background:var(--brand-soft); color:var(--brand);
-    font-size:.78rem; font-weight:700;
-    padding:.28rem .75rem; border-radius:10px;
-    border:1.5px solid rgba(112,97,189,.2);
-}
-
-/* ─────────────────────────────────────
-   CHECKBOX LIST  — Lineman style
-   ───────────────────────────────────── */
-.check-list { display:flex; flex-direction:column; gap:.45rem; }
-.check-row {
-    display:flex; align-items:center; gap:.7rem;
-    cursor:pointer;
-    min-height:46px; padding:.6rem .9rem;
-    border-radius:var(--r-sm);
-    border:1.5px solid transparent;
-    transition:all .15s;
-}
-.check-row:hover { background:var(--brand-soft); border-color:var(--border); }
-.check-row input[type="checkbox"] {
-    width:18px; height:18px;
-    accent-color:var(--brand); cursor:pointer; flex-shrink:0;
-}
-.check-row label { cursor:pointer; font-size:.9rem; color:var(--text2); flex:1; line-height:1.4; }
-
-/* ─────────────────────────────────────
-   FOOD RADIO CARDS  — Agoda card style
-   ───────────────────────────────────── */
-.food-radio-grid { display:grid; grid-template-columns:1fr 1fr; gap:.85rem; margin-top:.55rem; }
-.food-card { position:relative; }
-.food-card input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
-.food-card label {
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:1.25rem .75rem;
-    border:1.5px solid var(--border);
-    border-radius:var(--r);
-    cursor:pointer;
-    transition:all .25s ease;
-    text-align:center; background:var(--surf); gap:.4rem;
-}
-.food-card label:hover { border-color:var(--brand); background:var(--brand-soft); }
-.food-card.sel-yes label {
-    border-color:var(--brand); background:var(--brand-soft);
-    box-shadow:0 0 0 3px rgba(112,97,189,.12);
-}
-.food-card.sel-no label { border-color:var(--muted); background:var(--bg); }
-.food-card-icon { font-size:1.85rem; }
-.food-card.sel-yes .food-card-icon { color:var(--brand); }
-.food-card.sel-no  .food-card-icon { color:var(--muted); }
-.food-card-text { font-weight:700; font-size:.95rem; }
-.food-check-mark { position:absolute; top:.48rem; right:.55rem; font-size:.88rem; display:none; }
-.food-card.sel-yes .food-check-mark { display:block; color:var(--brand); }
-.food-card.sel-no  .food-check-mark { display:block; color:var(--muted); }
-
-/* ─────────────────────────────────────
-   UPLOAD ZONES  — drag-drop zone style
-   ───────────────────────────────────── */
-.upload-zone {
-    border:2px dashed var(--border-s);
-    border-radius:var(--r-sm);
-    padding:1.3rem 1rem;
-    text-align:center; cursor:pointer;
-    transition:all .22s; background:var(--bg);
-    position:relative; overflow:hidden;
-}
-.upload-zone::before {
-    content:'';
-    position:absolute; inset:0;
-    background:var(--brand-soft); opacity:0; transition:opacity .2s;
-}
-.upload-zone:hover::before { opacity:1; }
-.upload-zone:hover { border-color:var(--brand); }
-.upload-zone.has-file {
-    border-color:var(--success); background:var(--success-soft);
-    border-style:solid;
-}
-.upload-zone.has-file::before { opacity:0 !important; }
-.upload-icon { font-size:1.85rem; color:var(--muted); margin-bottom:.4rem; display:block; position:relative; z-index:1; }
-.upload-zone:hover .upload-icon { color:var(--brand); }
-.upload-zone.has-file .upload-icon { color:var(--success); }
-.upload-text { font-size:.84rem; color:var(--muted); font-weight:500; position:relative; z-index:1; }
-.upload-zone:hover .upload-text { color:var(--brand); }
-.upload-zone.has-file .upload-text { color:var(--success); font-weight:600; }
-.file-name { font-size:.77rem; color:var(--success); margin-top:.35rem; font-weight:600; position:relative; z-index:1; }
-input[type="file"] { display:none; }
-
-/* ─────────────────────────────────────
-   FOOD DOWNLOAD BUTTON
-   ───────────────────────────────────── */
-.food-menu-btn {
-    display:inline-flex; align-items:center; gap:.5rem;
-    background:linear-gradient(135deg, #22c55e, #16a34a);
-    color:#fff; font-size:.87rem; font-weight:700;
-    border:none; border-radius:var(--r-sm);
-    padding:.65rem 1.1rem;
-    cursor:pointer; text-decoration:none;
-    transition:all .2s;
-    box-shadow:0 3px 10px rgba(34,197,94,.3);
-    margin-bottom:1rem;
-}
-.food-menu-btn:hover {
-    transform:translateY(-1px);
-    box-shadow:0 5px 16px rgba(34,197,94,.42);
-    color:#fff;
-}
-
-/* ─────────────────────────────────────
-   LIST COUNT BADGE
-   ───────────────────────────────────── */
-.list-count {
-    font-size:.76rem;
-    background:var(--gold-soft); color:var(--gold-d);
-    font-weight:700; padding:.2rem .65rem; border-radius:10px;
-    border:1px solid var(--gold-border);
-}
-
-/* ─────────────────────────────────────
-   SUBMIT BUTTON
-   ───────────────────────────────────── */
-.submit-btn {
-    width:100%; padding:1rem 1.5rem;
-    border:none; border-radius:var(--r);
-    background:linear-gradient(135deg, var(--gold), var(--gold-d));
-    color:#fff; font-size:1.05rem; font-weight:700;
-    font-family:'Sarabun',sans-serif;
-    cursor:pointer;
-    transition:all .25s ease;
-    box-shadow:0 6px 22px rgba(245,166,35,.4);
-    display:flex; align-items:center; justify-content:center; gap:.5rem;
-    position:relative; overflow:hidden;
-    margin-top:1rem;
-}
-.submit-btn::after {
-    content:'';
-    position:absolute; inset:0;
-    background:rgba(255,255,255,.1); opacity:0; transition:opacity .2s;
-}
-.submit-btn:hover:not(:disabled)::after { opacity:1; }
-.submit-btn:hover:not(:disabled) {
-    transform:translateY(-2px);
-    box-shadow:0 10px 30px rgba(245,166,35,.52);
-}
-.submit-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; box-shadow:none; }
-
-/* ─────────────────────────────────────
-   LOADING OVERLAY
-   ───────────────────────────────────── */
-.loading-overlay {
-    position:fixed; inset:0;
-    background:rgba(112,97,189,.12);
-    backdrop-filter:blur(10px);
-    display:none; align-items:center; justify-content:center;
-    z-index:9999;
-}
-.loading-overlay.show { display:flex; }
-.loading-box {
-    background:var(--surf);
-    border-radius:var(--r-lg);
-    padding:2.5rem 2rem; text-align:center;
-    box-shadow:var(--sh-lg); border:1px solid var(--border);
-    min-width:210px;
-}
-.spinner {
-    width:48px; height:48px;
-    border:3.5px solid var(--border);
-    border-top-color:var(--gold);
-    border-radius:50%;
-    animation:spin .9s linear infinite;
-    margin:0 auto 1rem;
-}
-@keyframes spin { to { transform:rotate(360deg); } }
-.loading-label { font-size:.92rem; color:var(--text2); font-weight:500; }
-
-/* ─────────────────────────────────────
-   SWEETALERT OVERRIDES
-   ───────────────────────────────────── */
-.swal2-popup { font-family:'Sarabun',sans-serif !important; border-radius:22px !important; }
-.swal2-confirm { background:var(--gold) !important; border-radius:11px !important; }
-.swal2-cancel  { border-radius:11px !important; }
-
-/* ─────────────────────────────────────
-   RESPONSIVE: DESKTOP
-   ───────────────────────────────────── */
-@media (min-width:600px) {
-    body { background:linear-gradient(135deg, #ede9fb 0%, #e4dff7 100%); }
-    .app-wrap { box-shadow:var(--sh-lg); margin:2rem auto; border-radius:var(--r-lg); overflow:hidden; min-height:auto; }
-    .page-header { padding:2rem 2rem 2.5rem; }
-    .content { padding:1.5rem; }
-    .section-card { padding:1.6rem; }
-}
-</style>
+        .swal2-popup { font-family:'Sarabun',sans-serif !important; border-radius:20px !important; }
+        .swal2-confirm { background:var(--primary) !important; border-radius:10px !important; }
+    </style>
 </head>
 <body>
 <div class="app-wrap">
-
-    <!-- ═══════════════════════════════
-         HEADER
-         ═══════════════════════════════ -->
+    <!-- HEADER -->
     <div class="page-header">
-        <div class="hdr-blob1"></div>
-        <div class="hdr-blob2"></div>
-        <div class="hdr-inner">
-            <a href="index.html" class="back-btn">
-                <i class="fas fa-arrow-left"></i> หน้าหลัก
-            </a>
-            <div class="page-title-row">
-                <div class="page-icon"><i class="fas fa-clipboard-check"></i></div>
-                <div>
-                    <div class="page-title">ยืนยันการจอง</div>
-                    <div class="page-sub">เลือกรายการที่ต้องการยืนยัน</div>
-                </div>
-            </div>
+        <div class="header-orb"></div>
+        <div class="header-inner">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> หน้าหลัก</a>
+            <div class="page-title"><i class="fas fa-clipboard-check me-2"></i>ยืนยันการจอง</div>
+            <div class="page-sub">เลือกรายการที่ต้องการยืนยัน</div>
         </div>
     </div>
-    <div class="header-progress"><div class="header-progress-fill"></div></div>
 
-    <!-- ═══════════════════════════════
-         CONTENT
-         ═══════════════════════════════ -->
     <div class="content">
-
-        <!-- ── LIST SECTION ── -->
+        <!-- LIST SECTION -->
         <div id="listSection">
             <div class="section-card">
                 <div class="section-head">
-                    <div class="section-title-text">
-                        <div class="title-ico gold"><i class="fas fa-list-check"></i></div>
-                        รายการรอยืนยัน
-                    </div>
+                    <div class="section-title-text"><i class="fas fa-list-check"></i> รายการรอยืนยัน</div>
                     <span class="list-count" id="listHint">กำลังโหลด...</span>
                 </div>
                 <div id="bookingList">
-                    <div class="empty-state" style="padding:2rem 0;">
-                        <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--border-s);"></i>
-                    </div>
+                    <div class="empty-state"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--border-strong);"></i></div>
                 </div>
             </div>
         </div>
 
-        <!-- ── FORM SECTION ── -->
-        <div id="formSection" style="display:none;">
-
-            <!-- Selected booking badge -->
-            <div class="section-card" style="padding:1rem;">
+        <!-- FORM SECTION -->
+        <div id="formSection">
+            <!-- Selected booking info -->
+            <div class="section-card">
+                <div class="section-head">
+                    <div class="section-title-text orange"><i class="fas fa-bookmark"></i> รายการที่เลือก</div>
+                </div>
                 <div class="selected-badge">
-                    <div class="selected-id">
-                        <i class="fas fa-hashtag"></i>
-                        <span id="selectedId">-</span>
-                    </div>
-                    <div class="selected-course" id="selectedCourse">-</div>
-                    <span class="change-link" onclick="resetToList()">
-                        <i class="fas fa-arrow-left"></i> เลือกรายการอื่น
-                    </span>
+                    <div class="selected-id"><i class="fas fa-hashtag"></i> <span id="f_bookingId">-</span></div>
+                    <div class="selected-course" id="f_courseName_display">-</div>
+                    <div class="change-link" onclick="backToList()"><i class="fas fa-arrow-left"></i> เลือกรายการอื่น</div>
                 </div>
             </div>
 
-            <!-- ── ข้อมูลผู้จอง ── -->
+            <!-- Info summary (read-only) -->
             <div class="section-card">
                 <div class="section-head">
-                    <div class="section-title-text">
-                        <div class="title-ico violet"><i class="fas fa-user"></i></div>
-                        ข้อมูลผู้จอง
+                    <div class="section-title-text"><i class="fas fa-info-circle"></i> ข้อมูลการจอง</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">ชื่อหลักสูตร / หัวข้อ</label>
+                    <input type="text" class="form-control" id="f_courseName" disabled>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">จำนวนผู้เข้าร่วม</label>
+                    <input type="number" class="form-control" id="f_attendees" disabled>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label class="form-label" style="font-size:0.82rem;">วันที่เริ่มต้น</label>
+                        <input type="date" class="form-control" id="f_startDate" disabled>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" style="font-size:0.82rem;">วันที่สิ้นสุด</label>
+                        <input type="date" class="form-control" id="f_endDate" disabled>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">ชื่อ-นามสกุล</label>
-                    <input type="text" class="form-control" id="f_fullName" disabled>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">หน่วยงาน</label>
-                    <input type="text" class="form-control" id="f_department" disabled>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">เบอร์โทรศัพท์</label>
-                    <input type="text" class="form-control" id="f_phone" disabled>
-                </div>
-            </div>
-
-            <!-- ── ข้อมูลการจอง ── -->
-            <div class="section-card">
-                <div class="section-head">
-                    <div class="section-title-text">
-                        <div class="title-ico violet"><i class="fas fa-calendar-alt"></i></div>
-                        ข้อมูลการจอง
+                <div class="row g-2 mt-1">
+                    <div class="col-6">
+                        <label class="form-label" style="font-size:0.82rem;">Check-in</label>
+                        <input type="date" class="form-control" id="f_checkin" disabled>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">ชื่อหลักสูตร/กิจกรรม <span class="req">*</span></label>
-                    <input type="text" class="form-control" id="f_courseName">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">จำนวนผู้เข้าร่วม <span class="req">*</span></label>
-                    <input type="number" class="form-control" id="f_attendees" min="1">
-                </div>
-
-                <!-- วันที่ประชุม -->
-                <div class="mb-3">
-                    <label class="form-label" style="font-size:.83rem;color:var(--muted);margin-bottom:.55rem;">วันที่ประชุม</label>
-                    <div class="date-grid">
-                        <div>
-                            <span class="date-label">วันที่เริ่ม</span>
-                            <input type="date" class="form-control" id="f_startDate" disabled>
-                        </div>
-                        <div>
-                            <span class="date-label">วันที่สิ้นสุด</span>
-                            <input type="date" class="form-control" id="f_endDate" disabled>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Check-in / Check-out info pills -->
-                <div class="info-pill-row">
-                    <div class="info-pill">
-                        <span class="info-pill-lbl"><i class="fas fa-moon" style="margin-right:3px;"></i>Check-in</span>
-                        <input type="date" class="form-control" id="f_checkin" disabled
-                               style="background:transparent;border:none;padding:0;font-size:.9rem;font-weight:700;color:var(--brand);">
-                        <i class="fas fa-calendar-check info-pill-ico"></i>
-                    </div>
-                    <div class="info-pill">
-                        <span class="info-pill-lbl"><i class="fas fa-sun" style="margin-right:3px;"></i>Check-out</span>
-                        <input type="date" class="form-control" id="f_checkout" disabled
-                               style="background:transparent;border:none;padding:0;font-size:.9rem;font-weight:700;color:var(--brand);">
-                        <i class="fas fa-calendar-times info-pill-ico"></i>
+                    <div class="col-6">
+                        <label class="form-label" style="font-size:0.82rem;">Check-out</label>
+                        <input type="date" class="form-control" id="f_checkout" disabled>
                     </div>
                 </div>
             </div>
 
-            <!-- ── ข้อมูลห้องพัก ── -->
+            <!-- ห้องพัก -->
             <div class="section-card">
                 <div class="section-head">
-                    <div class="section-title-text">
-                        <div class="title-ico violet"><i class="fas fa-bed"></i></div>
-                        ข้อมูลห้องพัก
-                    </div>
-                    <span class="room-total-badge" id="roomTotalBadge">
-                        <i class="fas fa-door-open"></i> รวม 0/0 ห้อง
-                    </span>
+                    <div class="section-title-text"><i class="fas fa-bed"></i> ข้อมูลห้องพัก</div>
+                    <span class="room-total-badge" id="roomTotalBadge"><i class="fas fa-door-open"></i> รวม 0/0 ห้อง</span>
                 </div>
-
                 <div id="roomCounterWrap">
-                    <!-- ห้องมาตรฐาน -->
                     <div class="room-type-box">
                         <div class="room-type-top">
-                            <div class="room-type-name">
-                                <i class="fas fa-door-open"></i> ห้องพักมาตรฐาน
-                            </div>
+                            <div class="room-type-name"><i class="fas fa-door-open"></i> ห้องพักมาตรฐาน</div>
                         </div>
                         <div class="counter-row">
-                            <button class="counter-btn" id="stdMinus" onclick="changeRoom('std',-1)" type="button">−</button>
+                            <button class="counter-btn" id="stdMinus" onclick="changeRoom('std',-1)">−</button>
                             <div class="counter-val" id="stdDisplay">0</div>
-                            <button class="counter-btn" id="stdPlus"  onclick="changeRoom('std',1)"  type="button">+</button>
+                            <button class="counter-btn" id="stdPlus" onclick="changeRoom('std',1)">+</button>
                         </div>
                     </div>
-
-                    <!-- ห้อง VIP -->
                     <div class="room-type-box vip-box">
                         <div class="room-type-top">
-                            <div class="room-type-name">
-                                <i class="fas fa-crown"></i> ห้อง VIP
-                                <span class="vip-tag">พิเศษ</span>
-                            </div>
-                            <span class="avail-pill ok" id="vipAvailBadge">
-                                <i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบ
-                            </span>
+                            <div class="room-type-name"><i class="fas fa-crown"></i> ห้อง VIP <span class="vip-tag">พิเศษ</span></div>
+                            <span class="avail-pill ok" id="vipAvailBadge"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบ</span>
                         </div>
                         <div class="counter-row">
-                            <button class="counter-btn vip-btn" id="vipMinus" onclick="changeRoom('vip',-1)" type="button">−</button>
+                            <button class="counter-btn vip-btn" id="vipMinus" onclick="changeRoom('vip',-1)">−</button>
                             <div class="counter-val" id="vipDisplay">0</div>
-                            <button class="counter-btn vip-btn" id="vipPlus"  onclick="changeRoom('vip',1)"  type="button">+</button>
+                            <button class="counter-btn vip-btn" id="vipPlus" onclick="changeRoom('vip',1)">+</button>
                         </div>
                     </div>
                 </div>
-
                 <input type="hidden" id="f_stdRooms" value="0">
                 <input type="hidden" id="f_vipRooms" value="0">
             </div>
 
-            <!-- ── รายละเอียดเพิ่มเติม ── -->
+            <!-- รายละเอียดเพิ่มเติม -->
             <div class="section-card">
                 <div class="section-head">
-                    <div class="section-title-text">
-                        <div class="title-ico violet"><i class="fas fa-cog"></i></div>
-                        รายละเอียดเพิ่มเติม
-                    </div>
+                    <div class="section-title-text"><i class="fas fa-cog"></i> รายละเอียดเพิ่มเติม</div>
                 </div>
-
-                <!-- การจัดห้อง -->
                 <div class="mb-3">
                     <label class="form-label">การจัดห้อง</label>
                     <select class="form-select" id="f_roomSetup">
@@ -831,57 +364,26 @@ input[type="file"] { display:none; }
                 <div class="mb-3" id="roomSetupOtherWrap" style="display:none;">
                     <input type="text" class="form-control" id="f_roomSetupOther" placeholder="โปรดระบุ...">
                 </div>
-
-                <!-- อุปกรณ์ -->
                 <div class="mb-3">
                     <label class="form-label">อุปกรณ์ที่ต้องการ</label>
                     <div class="check-list">
-                        <label class="check-row">
-                            <input type="checkbox" name="equipment" value="แท่นโพเดียม">
-                            <label>แท่นโพเดียม</label>
-                        </label>
-                        <label class="check-row">
-                            <input type="checkbox" name="equipment" value="ชุดไมค์ประชุม">
-                            <label>ชุดไมค์ประชุม</label>
-                        </label>
-                        <label class="check-row">
-                            <input type="checkbox" name="equipment" value="ปลั๊กพ่วง 5 ชุด">
-                            <label>ปลั๊กพ่วง 5 ชุด</label>
-                        </label>
-                        <label class="check-row">
-                            <input type="checkbox" name="equipment" value="จอทีวี">
-                            <label>จอทีวี</label>
-                        </label>
-                        <label class="check-row">
-                            <input type="checkbox" name="equipment" value="อื่นๆ" id="equipOtherCheck">
-                            <label>อื่นๆ</label>
-                        </label>
+                        <label class="check-row"><input type="checkbox" name="equipment" value="แท่นโพเดียม"><label>แท่นโพเดียม</label></label>
+                        <label class="check-row"><input type="checkbox" name="equipment" value="ชุดไมค์ประชุม"><label>ชุดไมค์ประชุม</label></label>
+                        <label class="check-row"><input type="checkbox" name="equipment" value="ปลั๊กพ่วง 5 ชุด"><label>ปลั๊กพ่วง 5 ชุด</label></label>
+                        <label class="check-row"><input type="checkbox" name="equipment" value="จอทีวี"><label>จอทีวี</label></label>
+                        <label class="check-row"><input type="checkbox" name="equipment" value="อื่นๆ" id="equipOtherCheck"><label>อื่นๆ</label></label>
                     </div>
                 </div>
                 <div class="mb-3" id="equipOtherWrap" style="display:none;">
                     <input type="text" class="form-control" id="f_equipOther" placeholder="ระบุอุปกรณ์อื่นๆ...">
                 </div>
-
-                <!-- อุปกรณ์ภาคสนาม -->
                 <div class="mb-3">
                     <label class="form-label">อุปกรณ์เสริมภาคสนาม</label>
                     <div class="check-list">
-                        <label class="check-row">
-                            <input type="checkbox" name="fieldActivity" value="เครื่องขยายเสียงกลางแจ้งเคลื่อนที่ได้ (1 ชุด)">
-                            <label>เครื่องขยายเสียงกลางแจ้ง (1 ชุด)</label>
-                        </label>
-                        <label class="check-row">
-                            <input type="checkbox" name="fieldActivity" value="โทรโข่ง (1 ตัว)">
-                            <label>โทรโข่ง (1 ตัว)</label>
-                        </label>
-                        <label class="check-row">
-                            <input type="checkbox" name="fieldActivity" value="เก้าอี้พลาสติก">
-                            <label>เก้าอี้พลาสติก</label>
-                        </label>
-                        <label class="check-row">
-                            <input type="checkbox" name="fieldActivity" value="อื่นๆ" id="fieldOtherCheck">
-                            <label>อื่นๆ</label>
-                        </label>
+                        <label class="check-row"><input type="checkbox" name="fieldActivity" value="เครื่องขยายเสียงกลางแจ้งเคลื่อนที่ได้ (1 ชุด)"><label>เครื่องขยายเสียงกลางแจ้ง (1 ชุด)</label></label>
+                        <label class="check-row"><input type="checkbox" name="fieldActivity" value="โทรโข่ง (1 ตัว)"><label>โทรโข่ง (1 ตัว)</label></label>
+                        <label class="check-row"><input type="checkbox" name="fieldActivity" value="เก้าอี้พลาสติก"><label>เก้าอี้พลาสติก</label></label>
+                        <label class="check-row"><input type="checkbox" name="fieldActivity" value="อื่นๆ" id="fieldOtherCheck"><label>อื่นๆ</label></label>
                     </div>
                 </div>
                 <div class="mb-3" id="fieldOtherWrap" style="display:none;">
@@ -889,23 +391,18 @@ input[type="file"] { display:none; }
                 </div>
             </div>
 
-            <!-- ── อาหารและอาหารว่าง ── -->
+            <!-- อาหาร -->
             <div class="section-card">
                 <div class="section-head">
-                    <div class="section-title-text">
-                        <div class="title-ico green"><i class="fas fa-utensils"></i></div>
-                        จองอาหารและอาหารว่าง
-                    </div>
+                    <div class="section-title-text green"><i class="fas fa-utensils"></i> จองอาหารและอาหารว่าง</div>
                 </div>
-                <a href="https://drive.google.com/drive/folders/1HmUtWF2_J6cuFUZXmLBKFZwFoQsAaoDH?usp=sharing"
-                   target="_blank" class="food-menu-btn">
+                <a href="https://drive.google.com/drive/folders/1HmUtWF2_J6cuFUZXmLBKFZwFoQsAaoDH?usp=sharing" target="_blank" class="food-menu-btn mb-3" style="display:inline-flex;">
                     <i class="fas fa-download"></i> ดาวน์โหลดเมนูอาหาร
                 </a>
                 <div class="food-radio-grid">
                     <div class="food-card" id="foodCardYes">
                         <span class="food-check-mark" id="checkYes"><i class="fas fa-check-circle"></i></span>
-                        <input type="radio" name="foodBooking" id="foodBookingYes" value="ต้องการ"
-                               onchange="onFoodBookingChange('ต้องการ')">
+                        <input type="radio" name="foodBooking" id="foodBookingYes" value="ต้องการ" onchange="onFoodBookingChange('ต้องการ')">
                         <label for="foodBookingYes">
                             <div class="food-card-icon"><i class="fas fa-utensils"></i></div>
                             <div class="food-card-text">ต้องการ</div>
@@ -913,8 +410,7 @@ input[type="file"] { display:none; }
                     </div>
                     <div class="food-card" id="foodCardNo">
                         <span class="food-check-mark" id="checkNo"><i class="fas fa-check-circle"></i></span>
-                        <input type="radio" name="foodBooking" id="foodBookingNo" value="ไม่ต้องการ"
-                               onchange="onFoodBookingChange('ไม่ต้องการ')">
+                        <input type="radio" name="foodBooking" id="foodBookingNo" value="ไม่ต้องการ" onchange="onFoodBookingChange('ไม่ต้องการ')">
                         <label for="foodBookingNo">
                             <div class="food-card-icon"><i class="fas fa-times-circle"></i></div>
                             <div class="food-card-text">ไม่ต้องการ</div>
@@ -923,64 +419,49 @@ input[type="file"] { display:none; }
                 </div>
             </div>
 
-            <!-- ── อัปโหลดเอกสาร ── -->
+            <!-- เอกสาร -->
             <div class="section-card">
                 <div class="section-head">
-                    <div class="section-title-text">
-                        <div class="title-ico violet"><i class="fas fa-file-upload"></i></div>
-                        อัปโหลดเอกสาร
-                    </div>
+                    <div class="section-title-text"><i class="fas fa-paperclip"></i> อัปโหลดเอกสาร</div>
                 </div>
-
-                <!-- เอกสารอนุมัติ (required) -->
                 <div class="mb-3">
-                    <label class="form-label">
-                        เอกสารอนุมัติจัดฝึกอบรม <span class="req">*</span>
-                    </label>
-                    <div class="upload-zone" id="zone_approval"
-                         onclick="document.getElementById('file_approval').click()">
+                    <label class="form-label">เอกสารอนุมัติจัดฝึกอบรม <span class="req">*</span></label>
+                    <div class="upload-zone" id="zone_approval" onclick="document.getElementById('file_approval').click()">
                         <span class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
-                        <div class="upload-text">แตะเพื่อเลือกไฟล์</div>
+                        <div class="upload-text">แตะเพื่ออัปโหลดไฟล์</div>
                         <div class="file-name" id="fname_approval"></div>
                     </div>
-                    <input type="file" id="file_approval" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    <input type="file" id="file_approval" accept=".pdf,.jpg,.jpeg,.png">
                 </div>
-
-                <!-- รายชื่อผู้เข้าร่วม -->
                 <div class="mb-3">
-                    <label class="form-label">รายชื่อผู้เข้าร่วมประชุม</label>
-                    <div class="upload-zone" id="zone_attendee"
-                         onclick="document.getElementById('file_attendee').click()">
+                    <label class="form-label">รายชื่อผู้เข้าร่วม <span style="color:var(--muted);font-weight:400;">(ถ้ามี)</span></label>
+                    <div class="upload-zone" id="zone_attendee" onclick="document.getElementById('file_attendee').click()">
                         <span class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
-                        <div class="upload-text">แตะเพื่อเลือกไฟล์</div>
+                        <div class="upload-text">แตะเพื่ออัปโหลดไฟล์</div>
                         <div class="file-name" id="fname_attendee"></div>
                     </div>
-                    <input type="file" id="file_attendee" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    <input type="file" id="file_attendee" accept=".pdf,.xlsx,.xls,.jpg,.jpeg,.png">
                 </div>
-
-                <!-- รายการอาหาร (แสดงเมื่อต้องการอาหาร) -->
-                <div class="mb-3" id="foodUploadSection" style="display:none;">
-                    <label class="form-label">รายการอาหารและอาหารว่าง <span class="req">*</span></label>
-                    <div class="upload-zone" id="zone_food"
-                         onclick="document.getElementById('file_food').click()">
+                <div class="mb-3">
+                    <label class="form-label">ใบสั่งอาหาร <span style="color:var(--muted);font-weight:400;">(ถ้ามี)</span></label>
+                    <div class="upload-zone" id="zone_food" onclick="document.getElementById('file_food').click()">
                         <span class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
-                        <div class="upload-text">แตะเพื่อเลือกไฟล์</div>
+                        <div class="upload-text">แตะเพื่ออัปโหลดไฟล์</div>
                         <div class="file-name" id="fname_food"></div>
                     </div>
-                    <input type="file" id="file_food" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    <input type="file" id="file_food" accept=".pdf,.xlsx,.xls,.jpg,.jpeg,.png">
                 </div>
             </div>
 
-            <!-- SUBMIT -->
-            <button class="submit-btn" id="submitBtn" onclick="submitConfirmation()" type="button">
-                <i class="fas fa-paper-plane"></i> ยืนยันการจอง
+            <!-- Submit -->
+            <button class="submit-btn" id="submitBtn" onclick="submitConfirmation()">
+                <i class="fas fa-check-circle"></i> ยืนยันการจอง
             </button>
+        </div>
+    </div>
+</div>
 
-        </div><!-- /formSection -->
-    </div><!-- /content -->
-</div><!-- /app-wrap -->
-
-<!-- Loading Overlay -->
+<!-- Loading -->
 <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-box">
         <div class="spinner"></div>
@@ -988,167 +469,132 @@ input[type="file"] { display:none; }
     </div>
 </div>
 
-<!-- ═══════════════════════════════════
-     JAVASCRIPT  (ไม่เปลี่ยนแปลงตรรกะ)
-     ═══════════════════════════════════ -->
 <script>
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";   // ← ใส่ GAS Web App URL
-const VIP_TOTAL = 5;
+const GAS_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
 
-let userId           = '';
-let selectedBooking  = null;
-let origStd = 0, curStd = 0, curVip = 0;
-let vipCanBook       = 0;
+let selectedBooking = null;
+let curStd = 0, curVip = 0, origStd = 0, vipCanBook = 0;
 let currentFoodBooking = '';
 
-/* ── init ── */
 function init() {
-    userId = sessionStorage.getItem('userId') || '';
+    const userId = sessionStorage.getItem('userId') || '';
     if (!userId) { window.location.href = 'index.html'; return; }
-    loadApprovedBookings();
-    setupListeners();
+    loadBookings(userId);
 }
 
-/* ── load approved bookings ── */
-async function loadApprovedBookings() {
+async function loadBookings(userId) {
     try {
-        const res    = await fetch(`${GAS_URL}?action=getApprovedBookings&userId=${userId}`);
+        const res = await fetch(`${GAS_URL}?action=getApprovedBookings&userId=${userId}`);
         const result = await res.json();
         renderBookingList(result.bookings || []);
     } catch(e) {
-        renderBookingList([]);
+        document.getElementById('bookingList').innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon"><i class="fas fa-exclamation"></i></div>
+                <div class="empty-title">ไม่สามารถโหลดข้อมูลได้</div>
+                <div class="empty-sub">กรุณาลองใหม่อีกครั้ง</div>
+            </div>`;
+        document.getElementById('listHint').textContent = 'ข้อผิดพลาด';
     }
 }
 
-/* ── food booking radio handler ── */
-function onFoodBookingChange(value) {
-    currentFoodBooking = value;
-    const cardYes = document.getElementById('foodCardYes');
-    const cardNo  = document.getElementById('foodCardNo');
-    const checkY  = document.getElementById('checkYes');
-    const checkN  = document.getElementById('checkNo');
-    cardYes.classList.remove('sel-yes','sel-no');
-    cardNo.classList.remove('sel-yes','sel-no');
-    checkY.style.display = 'none';
-    checkN.style.display = 'none';
-    if (value === 'ต้องการ') {
-        cardYes.classList.add('sel-yes');
-        cardNo.classList.add('sel-no');
-        checkY.style.display = 'block';
-        document.getElementById('foodUploadSection').style.display = 'block';
-    } else {
-        cardNo.classList.add('sel-yes');
-        cardYes.classList.add('sel-no');
-        checkN.style.display = 'block';
-        document.getElementById('foodUploadSection').style.display = 'none';
-    }
-}
-
-/* ── render booking list ── */
 function renderBookingList(bookings) {
     const container = document.getElementById('bookingList');
-    const hint      = document.getElementById('listHint');
-    if (bookings.length === 0) {
+    const hint = document.getElementById('listHint');
+    if (!bookings.length) {
         hint.textContent = '0 รายการ';
         container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon"><i class="fas fa-clipboard-check"></i></div>
-                <div class="empty-title">ไม่มีรายการรอยืนยัน</div>
-                <div class="empty-sub">ยังไม่มีการจองที่ได้รับอนุมัติและรอการยืนยัน</div>
+                <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+                <div class="empty-title">ไม่มีรายการรออนุมัติ</div>
+                <div class="empty-sub">ยังไม่มีรายการที่ได้รับการอนุมัติรอการยืนยัน</div>
             </div>`;
         return;
     }
     hint.textContent = `${bookings.length} รายการ`;
-    container.innerHTML = bookings.map(b => {
-        const start = formatDateTH(b.startDate);
-        const end   = formatDateTH(b.endDate);
-        return `
-        <div class="booking-item" onclick='selectBooking(${JSON.stringify(b).replace(/"/g,"&quot;")})'>
-            <div class="booking-id-tag"><i class="fas fa-hashtag"></i>${b.bookingId}</div>
+    container.innerHTML = bookings.map((b, i) => `
+        <div class="booking-item" onclick="selectBooking(${i})" data-index="${i}">
+            <div class="booking-id-tag"><i class="fas fa-hashtag" style="font-size:0.65rem;"></i>${b.bookingId}</div>
             <div class="booking-course-name">${b.courseName || '-'}</div>
             <div class="booking-meta">
-                <span class="booking-meta-item"><i class="fas fa-calendar"></i>${start} – ${end}</span>
+                <span class="booking-meta-item"><i class="fas fa-calendar"></i>${formatDateTH(b.startDate)} – ${formatDateTH(b.endDate)}</span>
                 <span class="booking-meta-item"><i class="fas fa-users"></i>${b.attendees} คน</span>
-                <span class="booking-meta-item"><i class="fas fa-door-open"></i>${b.room || '-'}</span>
+                ${b.numRooms > 0 ? `<span class="booking-meta-item"><i class="fas fa-bed"></i>${b.numRooms} ห้อง</span>` : ''}
             </div>
             <i class="fas fa-chevron-right item-arrow"></i>
-        </div>`;
-    }).join('');
+        </div>
+    `).join('');
+    window._bookings = bookings;
 }
 
-/* ── select a booking ── */
-function selectBooking(b) {
-    selectedBooking = b;
-    document.getElementById('selectedId').textContent     = b.bookingId;
-    document.getElementById('selectedCourse').textContent = b.courseName || '-';
-    document.getElementById('f_fullName').value    = b.fullName    || '';
-    document.getElementById('f_department').value  = b.department  || '';
-    document.getElementById('f_phone').value       = String(b.phone || '').replace("'", '');
-    document.getElementById('f_courseName').value  = b.courseName  || '';
-    document.getElementById('f_attendees').value   = b.attendees   || '';
-    document.getElementById('f_startDate').value   = b.startDate   || '';
-    document.getElementById('f_endDate').value     = b.endDate     || '';
-    document.getElementById('f_checkin').value     = b.checkin     || '';
-    document.getElementById('f_checkout').value    = b.checkout    || '';
+async function selectBooking(idx) {
+    selectedBooking = window._bookings[idx];
+    const b = selectedBooking;
+
+    document.getElementById('f_bookingId').textContent = b.bookingId;
+    document.getElementById('f_courseName_display').textContent = b.courseName;
+    document.getElementById('f_courseName').value = b.courseName || '';
+    document.getElementById('f_attendees').value = b.attendees || '';
+    document.getElementById('f_startDate').value = b.startDate || '';
+    document.getElementById('f_endDate').value = b.endDate || '';
+    document.getElementById('f_checkin').value = b.checkin || b.startDate || '';
+    document.getElementById('f_checkout').value = b.checkout || b.endDate || '';
+
     origStd = parseInt(b.numRooms) || 0;
-    curVip  = parseInt(b.viprooms) || 0;
-    curStd  = origStd - curVip;
-    updateRoomDisplay();
-    checkVipAvailability();
-    document.getElementById('listSection').style.display  = 'none';
-    document.getElementById('formSection').style.display  = 'block';
+    curStd = origStd; curVip = 0;
+
+    if (origStd > 0) {
+        document.getElementById('roomCounterWrap').style.display = 'block';
+        updateRoomDisplay();
+        await loadVipAvailability(b);
+    } else {
+        document.getElementById('roomCounterWrap').style.display = 'none';
+        document.getElementById('roomTotalBadge').textContent = 'ไม่ต้องการห้องพัก';
+    }
+
+    document.getElementById('listSection').style.display = 'none';
+    document.getElementById('formSection').style.display = 'block';
     window.scrollTo(0, 0);
 }
 
-/* ── reset to list ── */
-function resetToList() {
-    selectedBooking = null;
+function backToList() {
     document.getElementById('formSection').style.display = 'none';
     document.getElementById('listSection').style.display = 'block';
+    selectedBooking = null;
 }
 
-/* ── check VIP availability ── */
-async function checkVipAvailability() {
-    if (!selectedBooking) return;
+async function loadVipAvailability(b) {
+    const badge = document.getElementById('vipAvailBadge');
     try {
-        const res    = await fetch(`${GAS_URL}?action=checkVipAvailability&bookingId=${selectedBooking.bookingId}&checkin=${selectedBooking.checkin}&checkout=${selectedBooking.checkout}`);
+        const res = await fetch(`${GAS_URL}?action=checkVipAvailability&checkin=${b.checkin||b.startDate}&checkout=${b.checkout||b.endDate}`);
         const result = await res.json();
-        if (result.success) {
-            vipCanBook = Math.max(0, VIP_TOTAL - (result.usedRooms || 0));
-            const badge = document.getElementById('vipAvailBadge');
-            if (vipCanBook === 0) {
-                badge.className = 'avail-pill full';
-                badge.innerHTML = `<i class="fas fa-times-circle"></i> เต็ม (${result.usedRooms}/${VIP_TOTAL})`;
-            } else if (vipCanBook <= 2) {
-                badge.className = 'avail-pill warn';
-                badge.innerHTML = `<i class="fas fa-exclamation-circle"></i> เหลือ ${vipCanBook} ห้อง`;
-            } else {
-                badge.className = 'avail-pill ok';
-                badge.innerHTML = `<i class="fas fa-check-circle"></i> ว่าง ${vipCanBook} ห้อง`;
-            }
-            updateRoomButtons();
+        vipCanBook = result.available || 0;
+        if (vipCanBook > 0) {
+            badge.className = 'avail-pill ok';
+            badge.innerHTML = `<i class="fas fa-check"></i> ว่าง ${vipCanBook} ห้อง`;
+        } else {
+            badge.className = 'avail-pill full';
+            badge.innerHTML = `<i class="fas fa-times"></i> ไม่ว่าง`;
         }
-    } catch(e) { console.error(e); }
+        updateRoomButtons();
+    } catch(e) {
+        badge.className = 'avail-pill warn';
+        badge.innerHTML = `<i class="fas fa-exclamation"></i> ตรวจสอบไม่ได้`;
+    }
 }
 
-/* ── room counter logic ── */
 function changeRoom(type, delta) {
     const total = curStd + curVip;
     if (type === 'vip') {
         if (delta > 0) {
             if (curVip >= vipCanBook) { alert('ห้อง VIP เต็มแล้ว'); return; }
-            if (total < origStd)      { curVip++; }
-            else if (curStd > 0)      { curStd--; curVip++; }
-        } else {
-            if (curVip > 0) { curVip--; curStd++; }
-        }
+            if (total < origStd) { curVip++; } else if (curStd > 0) { curStd--; curVip++; }
+        } else { if (curVip > 0) { curVip--; curStd++; } }
     } else {
         if (delta > 0) {
-            if (total < origStd)  curStd++;
-            else if (curVip > 0)  { curVip--; curStd++; }
-        } else {
-            if (curStd > 0) curStd--;
-        }
+            if (total < origStd) curStd++;
+            else if (curVip > 0) { curVip--; curStd++; }
+        } else { if (curStd > 0) curStd--; }
     }
     updateRoomDisplay();
 }
@@ -1159,24 +605,32 @@ function updateRoomDisplay() {
     document.getElementById('f_stdRooms').value = curStd;
     document.getElementById('f_vipRooms').value = curVip;
     const total = curStd + curVip;
-    document.getElementById('roomTotalBadge').innerHTML =
-        `<i class="fas fa-door-open"></i> รวม ${total}/${origStd} ห้อง`;
+    document.getElementById('roomTotalBadge').innerHTML = `<i class="fas fa-door-open"></i> รวม ${total}/${origStd} ห้อง`;
     updateRoomButtons();
 }
 
 function updateRoomButtons() {
     const total = curStd + curVip;
     document.getElementById('stdMinus').disabled = curStd <= 0;
-    document.getElementById('stdPlus').disabled  = total >= origStd && curVip === 0;
+    document.getElementById('stdPlus').disabled = total >= origStd && curVip === 0;
     document.getElementById('vipMinus').disabled = curVip <= 0;
-    document.getElementById('vipPlus').disabled  = curVip >= vipCanBook || (total >= origStd && curStd === 0);
+    document.getElementById('vipPlus').disabled = curVip >= vipCanBook || (total >= origStd && curStd === 0);
 }
 
-/* ── file upload setup ── */
+function onFoodBookingChange(val) {
+    currentFoodBooking = val;
+    const yes = document.getElementById('foodCardYes');
+    const no = document.getElementById('foodCardNo');
+    yes.classList.toggle('sel-yes', val === 'ต้องการ');
+    yes.classList.toggle('sel-no', val === 'ไม่ต้องการ');
+    no.classList.toggle('sel-yes', val === 'ไม่ต้องการ');
+    no.classList.toggle('sel-no', val === 'ต้องการ');
+}
+
 function setupFileUpload(inputId, zoneId, nameId) {
     document.getElementById(inputId).addEventListener('change', function(e) {
-        const file   = e.target.files[0];
-        const zone   = document.getElementById(zoneId);
+        const file = e.target.files[0];
+        const zone = document.getElementById(zoneId);
         const nameEl = document.getElementById(nameId);
         if (file) {
             zone.classList.add('has-file');
@@ -1190,125 +644,79 @@ function setupFileUpload(inputId, zoneId, nameId) {
     });
 }
 
-/* ── read file as base64 ── */
 function readFileAsBase64(file) {
     return new Promise((resolve, reject) => {
         if (!file || file.size === 0) { resolve(null); return; }
         const reader = new FileReader();
-        reader.onload = e => resolve({
-            base64:    e.target.result.split(',')[1],
-            mimeType:  file.type,
-            fileName:  file.name
-        });
+        reader.onload = e => resolve({ base64: e.target.result.split(',')[1], mimeType: file.type, fileName: file.name });
         reader.onerror = () => reject(new Error('อ่านไฟล์ไม่ได้'));
         reader.readAsDataURL(file);
     });
 }
 
-/* ── submit confirmation ── */
 async function submitConfirmation() {
     if (!selectedBooking) return;
-
     const approvalFile = document.getElementById('file_approval').files[0];
     if (!approvalFile) {
-        Swal.fire({
-            title:'กรุณาแนบไฟล์',
-            text:'ต้องอัปโหลดเอกสารอนุมัติจัดฝึกอบรม',
-            icon:'warning',
-            confirmButtonColor:'var(--gold)'
-        });
-        return;
+        Swal.fire({ title:'กรุณาแนบไฟล์', text:'ต้องอัปโหลดเอกสารอนุมัติจัดฝึกอบรม', icon:'warning', confirmButtonColor:'var(--primary)' }); return;
     }
     if (curVip > vipCanBook) {
-        Swal.fire({
-            title:'VIP เกิน',
-            text:`เหลือเพียง ${vipCanBook} ห้อง`,
-            icon:'error',
-            confirmButtonColor:'var(--gold)'
-        });
-        return;
+        Swal.fire({ title:'VIP เกิน', text:`เหลือเพียง ${vipCanBook} ห้อง`, icon:'error', confirmButtonColor:'var(--primary)' }); return;
     }
-
     showLoading('กำลังเตรียมไฟล์...');
     document.getElementById('submitBtn').disabled = true;
-
     try {
         const [approvalData, attendeeData, foodData] = await Promise.all([
             readFileAsBase64(document.getElementById('file_approval').files[0]),
             readFileAsBase64(document.getElementById('file_attendee').files[0]),
             readFileAsBase64(document.getElementById('file_food').files[0]),
         ]);
-
         const equipments = [...document.querySelectorAll('input[name="equipment"]:checked')].map(c => c.value);
-        const fields     = [...document.querySelectorAll('input[name="fieldActivity"]:checked')].map(c => c.value);
-
+        const fields = [...document.querySelectorAll('input[name="fieldActivity"]:checked')].map(c => c.value);
         const payload = {
-            bookingId_confirm:  selectedBooking.bookingId,
-            courseName:         document.getElementById('f_courseName').value,
-            attendees:          document.getElementById('f_attendees').value,
-            standardRooms:      curStd,
-            vipRooms:           curVip,
-            roomSetup:          document.getElementById('f_roomSetup').value,
-            roomSetupOther:     document.getElementById('f_roomSetupOther').value,
-            equipment:          equipments,
-            equipmentOther:     document.getElementById('f_equipOther').value,
-            fieldActivity:      fields,
+            bookingId_confirm: selectedBooking.bookingId,
+            courseName: document.getElementById('f_courseName').value,
+            attendees: document.getElementById('f_attendees').value,
+            standardRooms: curStd, vipRooms: curVip,
+            roomSetup: document.getElementById('f_roomSetup').value,
+            roomSetupOther: document.getElementById('f_roomSetupOther').value,
+            equipment: equipments,
+            equipmentOther: document.getElementById('f_equipOther').value,
+            fieldActivity: fields,
             fieldActivityOther: document.getElementById('f_fieldOther').value,
-            foodBooking:        currentFoodBooking,
-            approvalFile:       approvalData,
-            attendeeListFile:   attendeeData,
-            foodOrderFile:      foodData,
+            foodBooking: currentFoodBooking,
+            approvalFile: approvalData, attendeeListFile: attendeeData, foodOrderFile: foodData,
         };
-
         document.getElementById('loadingMsg').textContent = 'กำลังส่งข้อมูล...';
-        await fetch(GAS_URL, {
-            method:  'POST',
-            mode:    'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ action:'submitConfirmationFromWeb', ...payload })
-        });
-
+        await fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ action:'submitConfirmationFromWeb', ...payload }) });
         hideLoading();
         Swal.fire({
-            title: 'ยืนยันสำเร็จ!',
-            html:  `<p>บันทึกข้อมูลการยืนยัน <strong>${selectedBooking.bookingId}</strong> เรียบร้อยแล้ว</p>
-                    <p style="color:var(--muted);font-size:.88rem;margin-top:.5rem;">ระบบแจ้งเตือนไปยัง LINE ของคุณแล้ว</p>`,
-            icon:              'success',
-            confirmButtonText: 'กลับหน้าหลัก',
-            confirmButtonColor:'var(--gold)'
+            title:'ยืนยันสำเร็จ!',
+            html:`<p>บันทึกข้อมูลการยืนยัน <strong>${selectedBooking.bookingId}</strong> เรียบร้อยแล้ว</p><p style="color:var(--muted);font-size:0.88rem;">ระบบแจ้งเตือนไปยัง LINE ของคุณแล้ว</p>`,
+            icon:'success', confirmButtonText:'กลับหน้าหลัก', confirmButtonColor:'var(--primary)'
         }).then(() => window.location.href = 'index.html');
-
     } catch(err) {
         hideLoading();
         document.getElementById('submitBtn').disabled = false;
-        Swal.fire({ title:'เกิดข้อผิดพลาด', text:err.message, icon:'error', confirmButtonColor:'var(--gold)' });
+        Swal.fire({ title:'เกิดข้อผิดพลาด', text: err.message, icon:'error', confirmButtonColor:'var(--danger)' });
     }
 }
 
-/* ── loading helpers ── */
-function showLoading(msg) {
-    document.getElementById('loadingOverlay').classList.add('show');
-    document.getElementById('loadingMsg').textContent = msg;
-}
-function hideLoading() {
-    document.getElementById('loadingOverlay').classList.remove('show');
-}
+function showLoading(msg) { document.getElementById('loadingOverlay').classList.add('show'); document.getElementById('loadingMsg').textContent = msg; }
+function hideLoading() { document.getElementById('loadingOverlay').classList.remove('show'); }
 
-/* ── date formatter ── */
 function formatDateTH(dateStr) {
     if (!dateStr) return '-';
-    return new Date(dateStr).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
 }
 
-/* ── event listeners setup ── */
 function setupListeners() {
-    setupFileUpload('file_approval', 'zone_approval', 'fname_approval');
-    setupFileUpload('file_attendee', 'zone_attendee', 'fname_attendee');
-    setupFileUpload('file_food',     'zone_food',     'fname_food');
-
+    setupFileUpload('file_approval','zone_approval','fname_approval');
+    setupFileUpload('file_attendee','zone_attendee','fname_attendee');
+    setupFileUpload('file_food','zone_food','fname_food');
     document.getElementById('f_roomSetup').addEventListener('change', function() {
-        document.getElementById('roomSetupOtherWrap').style.display =
-            this.value === 'อื่นๆ' ? 'block' : 'none';
+        document.getElementById('roomSetupOtherWrap').style.display = this.value === 'อื่นๆ' ? 'block' : 'none';
     });
     document.getElementById('equipOtherCheck').addEventListener('change', function() {
         document.getElementById('equipOtherWrap').style.display = this.checked ? 'block' : 'none';
@@ -1318,6 +726,7 @@ function setupListeners() {
     });
 }
 
+setupListeners();
 init();
 </script>
 </body>
