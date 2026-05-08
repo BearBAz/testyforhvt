@@ -7,322 +7,697 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6C48C5;
-            --primary-dark: #4E32A0;
-            --primary-soft: #F0EDFB;
-            --primary-xsoft: #FAF8FF;
-            --accent: #F4A836;
-            --accent-soft: #FEF4E4;
-            --teal: #0090C1;
-            --teal-soft: #E3F4FC;
-            --danger: #E5484D;
-            --danger-soft: #FEF0F0;
-            --success: #12A150;
-            --success-soft: #E8F7EE;
-            --warning: #D97706;
-            --warning-soft: #FEF3C7;
-            --bg: #F7F5FF;
-            --surface: #FFFFFF;
-            --text: #1A1033;
-            --text-2: #4A4569;
-            --muted: #8B87A8;
-            --border: #E8E4F5;
-            --border-strong: #D0C9EC;
-            --radius: 16px;
-            --radius-sm: 10px;
-            --radius-lg: 24px;
-            --shadow-sm: 0 1px 4px rgba(108,72,197,0.06);
-            --shadow-md: 0 4px 16px rgba(108,72,197,0.10);
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Sarabun',sans-serif; background:var(--bg); color:var(--text); }
-        .app-wrap { max-width:480px; margin:0 auto; min-height:100vh; background:var(--bg); padding-bottom:3rem; }
 
-        /* ===== HEADER ===== */
-        .page-header {
-            background: linear-gradient(160deg, #6C48C5 0%, #4E32A0 55%, #3B2479 100%);
-            padding: 1.5rem 1.5rem 2rem; /* ลดระยะ padding ด้านล่างลง */
-            position: relative; overflow: hidden;
-        }
-        .header-dots {
-            position: absolute; inset: 0;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-            background-size: 22px 22px;
-        }
-        .header-blob {
-            position: absolute; top: -50px; right: -50px;
-            width: 180px; height: 180px;
-            background: rgba(255,255,255,0.07); border-radius: 50%;
-        }
-        .header-inner { position: relative; z-index: 2; }
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            color: rgba(255,255,255,0.85); font-size: 0.88rem;
-            text-decoration: none; margin-bottom: 1.2rem;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.18);
-            border-radius: 20px; padding: 0.35rem 0.8rem;
-        }
-        .back-btn:hover { color: #fff; }
-        .page-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.25rem; letter-spacing: -0.3px; }
-        .page-sub { font-size: 0.85rem; color: rgba(255,255,255,0.72); }
+<style>
+/* ─────────────────────────────────────────
+   DESIGN TOKENS — เดียวกับ index + booking + confirm
+───────────────────────────────────────── */
+:root {
+    --primary:        #7061bd;
+    --primary-dark:   #5a4da3;
+    --primary-darker: #42398a;
+    --primary-light:  #8f82cc;
+    --primary-soft:   #eeecf8;
+    --primary-xsoft:  #f8f7fd;
+    --gold:           #f5a623;
+    --gold-soft:      #fff8ec;
+    --gold-dark:      #d9871a;
+    --success:        #2e7d32;
+    --success-soft:   #e8f5e9;
+    --success-mid:    #00b894;
+    --danger:         #e53935;
+    --danger-soft:    #fce8e8;
+    --warning:        #f57c00;
+    --warning-soft:   #fff3e0;
+    --teal:           #00b894;
+    --teal-soft:      #e0f7f3;
+    --bg:             #f4f3fb;
+    --surface:        #ffffff;
+    --text:           #1a1535;
+    --text-2:         #4a4470;
+    --muted:          #9590b8;
+    --border:         #e5e2f2;
+    --border-strong:  #ccc8e8;
+    --shadow-sm:      0 2px 8px  rgba(112,97,189,.08);
+    --shadow-md:      0 6px 24px rgba(112,97,189,.12);
+    --shadow-lg:      0 16px 48px rgba(112,97,189,.16);
+    --radius:         16px;
+    --radius-sm:      10px;
+    --radius-lg:      22px;
+    --radius-xl:      28px;
+}
 
-        /* ===== CONTENT ===== */
-        .content { 
-            padding: 0 1rem; 
-            margin-top: 1rem; /* ลบค่าติดลบออก เพื่อให้กล่องเนื้อหาลงมาอยู่ใต้ Header */
-        }
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family:'Sarabun',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+}
 
-        .section-card {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border);
-        }
-        .section-head {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 1.1rem;
-        }
-        .section-title-text {
-            font-size: 0.95rem; font-weight: 700; color: var(--text);
-            display: flex; align-items: center; gap: 0.5rem;
-        }
-        .section-title-text i { color: var(--primary); }
-        .count-pill {
-            background: var(--primary-soft);
-            color: var(--primary);
-            font-size: 0.75rem; font-weight: 700;
-            padding: 0.2rem 0.65rem; border-radius: 12px;
-        }
+.app-wrap {
+    max-width:480px; margin:0 auto;
+    min-height:100vh; background:var(--bg);
+    display:flex; flex-direction:column;
+    position:relative;
+}
 
-        /* ===== BOOKING CARD ===== */
-        .booking-card {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.1rem;
-            margin-bottom: 0.75rem;
-            transition: all 0.2s ease;
-            overflow: hidden;
-        }
-        .booking-card:last-child { margin-bottom: 0; }
-        .booking-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+/* ═══════════════════════════════════════
+   HEADER  — สีม่วง brand เหมือน booking/confirm
+═══════════════════════════════════════ */
+.page-header {
+    background: linear-gradient(155deg, #7061bd 0%, #5a4da3 50%, #42398a 100%);
+    padding: 1.6rem 1.5rem 5.5rem;
+    position:relative; overflow:hidden;
+}
+.hdr-grid {
+    position:absolute; inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size:28px 28px;
+}
+.hdr-orb1 {
+    position:absolute; top:-70px; right:-50px;
+    width:220px; height:220px;
+    background:radial-gradient(circle, rgba(255,255,255,.09) 0%, transparent 70%);
+    border-radius:50%;
+}
+.hdr-orb2 {
+    position:absolute; bottom:-30px; left:-40px;
+    width:160px; height:160px;
+    background:radial-gradient(circle, rgba(245,166,35,.12) 0%, transparent 70%);
+    border-radius:50%;
+}
+.hdr-inner { position:relative; z-index:2; }
 
-        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.65rem; }
-        .booking-id {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            background: var(--primary-soft); color: var(--primary-dark);
-            font-size: 0.75rem; font-weight: 700; padding: 0.22rem 0.65rem; border-radius: 8px;
-        }
-        .booking-id i { font-size: 0.65rem; }
+/* back button */
+.back-btn {
+    display:inline-flex; align-items:center; gap:.5rem;
+    color:rgba(255,255,255,.85); font-size:.84rem; text-decoration:none;
+    margin-bottom:1.3rem;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
+    border-radius:24px; padding:.35rem .9rem;
+    transition:background .2s;
+}
+.back-btn:hover { background:rgba(255,255,255,.2); color:#fff; }
 
-        /* Status pills */
-        .status-pill {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            padding: 0.25rem 0.7rem; border-radius: 20px;
-            font-size: 0.75rem; font-weight: 700;
-        }
-        .status-pill.approved { background: var(--warning-soft); color: var(--warning); }
-        .status-pill.confirmed { background: var(--success-soft); color: var(--success); }
-        .status-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-        }
-        .status-pill.approved .status-dot { background: var(--warning); }
-        .status-pill.confirmed .status-dot { background: var(--success); }
+/* header icon */
+.hdr-icon-wrap {
+    width:58px; height:58px;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
+    border-radius:18px; display:flex; align-items:center; justify-content:center;
+    margin-bottom:.9rem; backdrop-filter:blur(10px);
+    box-shadow:0 8px 24px rgba(0,0,0,.15);
+}
+.hdr-icon-wrap i { font-size:1.6rem; color:#fff; }
+.hdr-title  { font-size:1.6rem; font-weight:800; color:#fff; letter-spacing:-.3px; margin-bottom:.2rem; }
+.hdr-sub    { font-size:.82rem; color:rgba(255,255,255,.65); }
 
-        .course-name {
-            font-size: 1.02rem; font-weight: 700;
-            color: var(--text); margin-bottom: 0.6rem;
-            line-height: 1.4;
-        }
+/* STATUS CHIPS */
+.hdr-chips {
+    display:flex; align-items:center; gap:.5rem;
+    margin-top:1.2rem; flex-wrap:wrap;
+}
+.hdr-chip {
+    display:inline-flex; align-items:center; gap:.35rem;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+    border-radius:20px; padding:.28rem .75rem;
+    font-size:.74rem; color:rgba(255,255,255,.85); font-weight:600;
+    backdrop-filter:blur(8px);
+}
+.hdr-chip .dot { width:6px; height:6px; border-radius:50%; }
+.hdr-chip .dot.gold  { background:var(--gold); box-shadow:0 0 6px rgba(245,166,35,.7); }
+.hdr-chip .dot.green { background:#4ade80; box-shadow:0 0 6px rgba(74,222,128,.7); }
+.hdr-chip .dot.teal  { background:#2dd4bf; box-shadow:0 0 6px rgba(45,212,191,.7); }
 
-        .meta-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-bottom: 0.6rem; }
-        .meta-item {
-            display: flex; align-items: center; gap: 0.35rem;
-            font-size: 0.8rem; color: var(--text-2);
-        }
-        .meta-item i { color: var(--primary-light, var(--primary)); width: 13px; text-align: center; font-size: 0.75rem; }
-        .meta-item.green i { color: var(--success); }
+/* ═══════════════════════════════════════
+   MAIN CONTENT  (overlay card pattern)
+═══════════════════════════════════════ */
+.main-content {
+    flex:1; padding:0 1rem 4rem;
+    margin-top:-4rem; position:relative; z-index:3;
+}
 
-        /* Expand section */
-        .expand-btn {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            font-size: 0.78rem; color: var(--primary); cursor: pointer;
-            font-weight: 600; margin-top: 0.4rem;
-            background: var(--primary-soft); border-radius: 8px;
-            padding: 0.3rem 0.7rem; transition: all 0.2s;
-        }
-        .expand-btn:hover { background: var(--border-strong); }
+/* ─── SECTION CARD ─── */
+.section-card {
+    background:var(--surface); border-radius:var(--radius-lg);
+    padding:1.25rem; margin-bottom:.85rem;
+    box-shadow:var(--shadow-md); border:1px solid var(--border);
+    animation:fadeUp .38s ease-out both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.section-card:nth-child(2) { animation-delay:.06s; }
+.section-card:nth-child(3) { animation-delay:.12s; }
 
-        .card-detail {
-            display: none; margin-top: 0.9rem;
-            padding-top: 0.9rem;
-            border-top: 1.5px dashed var(--border);
-        }
-        .booking-card.expanded .card-detail { display: block; }
+/* card head row */
+.card-head {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:1rem; padding-bottom:.85rem; border-bottom:1.5px solid var(--border);
+}
+.card-title {
+    font-size:.95rem; font-weight:700; color:var(--text);
+    display:flex; align-items:center; gap:.55rem;
+}
+.card-title-icon {
+    width:32px; height:32px; border-radius:9px;
+    background:var(--primary-soft); display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.card-title-icon i { font-size:.88rem; color:var(--primary); }
 
-        .detail-grid { display: flex; flex-direction: column; gap: 0; }
-        .detail-row {
-            display: flex; justify-content: space-between;
-            align-items: center; padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .detail-row:last-child { border-bottom: none; }
-        .detail-label { font-size: 0.82rem; color: var(--muted); }
-        .detail-value { font-size: 0.88rem; font-weight: 600; color: var(--text); text-align: right; max-width: 60%; }
+.list-count-badge {
+    font-size:.75rem; background:var(--primary-soft); color:var(--primary);
+    font-weight:700; padding:.22rem .7rem; border-radius:10px;
+    border:1px solid rgba(112,97,189,.2);
+}
 
-        /* ===== EMPTY STATE ===== */
-        .empty-state {
-            text-align: center; padding: 3rem 1.5rem; color: var(--muted);
-        }
-        .empty-icon {
-            width: 72px; height: 72px;
-            background: var(--primary-soft); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 1.2rem;
-        }
-        .empty-icon i { font-size: 2rem; color: var(--primary); opacity: 0.5; }
-        .empty-title { font-size: 1.05rem; font-weight: 700; color: var(--text-2); margin-bottom: 0.4rem; }
-        .empty-sub { font-size: 0.85rem; line-height: 1.5; }
+/* ═══════════════════════════════════════
+   FILTER TABS
+═══════════════════════════════════════ */
+.filter-tabs {
+    display:flex; gap:.45rem; margin-bottom:1rem;
+    overflow-x:auto; padding-bottom:.2rem;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+}
+.filter-tabs::-webkit-scrollbar { display:none; }
+.filter-tab {
+    display:inline-flex; align-items:center; gap:.35rem;
+    padding:.38rem .85rem; border-radius:20px; font-size:.78rem;
+    font-weight:700; cursor:pointer; white-space:nowrap;
+    border:1.5px solid var(--border);
+    background:var(--surface); color:var(--text-2);
+    transition:all .2s ease; font-family:'Sarabun',sans-serif;
+}
+.filter-tab:hover { border-color:var(--primary-light); color:var(--primary); background:var(--primary-xsoft); }
+.filter-tab.active { background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 3px 12px rgba(112,97,189,.32); }
+.filter-tab .tab-count {
+    background:rgba(255,255,255,.25); color:inherit;
+    font-size:.68rem; font-weight:800;
+    padding:.06rem .42rem; border-radius:10px;
+    min-width:18px; text-align:center;
+}
+.filter-tab:not(.active) .tab-count { background:var(--border); color:var(--muted); }
 
-        /* ===== SKELETON ===== */
-        .skeleton {
-            background: linear-gradient(90deg, #ede8f8 25%, #f5f2fc 50%, #ede8f8 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite; border-radius: var(--radius-sm);
-        }
-        .skel-card { height: 90px; margin-bottom: 0.75rem; border-radius: var(--radius); }
-        @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
-    </style>
+/* ═══════════════════════════════════════
+   BOOKING ITEM CARD  (Agoda-inspired)
+═══════════════════════════════════════ */
+.booking-item {
+    background:var(--surface); border:1.5px solid var(--border);
+    border-radius:var(--radius); padding:1rem 2.8rem 1rem 1rem;
+    margin-bottom:.7rem; cursor:pointer;
+    transition:all .22s cubic-bezier(.34,1.56,.64,1);
+    position:relative; overflow:hidden;
+}
+.booking-item:last-child { margin-bottom:0; }
+.booking-item:hover {
+    border-color:var(--primary-light);
+    box-shadow:0 4px 20px rgba(112,97,189,.16);
+    transform:translateY(-2px);
+}
+.booking-item::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:3px; border-radius:3px 0 0 3px;
+    background:linear-gradient(180deg, var(--primary), var(--primary-light));
+    opacity:0; transition:opacity .2s;
+}
+.booking-item:hover::before { opacity:1; }
+.booking-item.confirmed-item::before { background:linear-gradient(180deg, var(--success-mid), #00cba3); }
+.booking-item.confirmed-item:hover { border-color:rgba(0,184,148,.35); }
+
+/* ID tag */
+.booking-id-tag {
+    display:inline-flex; align-items:center; gap:.3rem;
+    background:var(--primary-soft); color:var(--primary);
+    font-size:.72rem; font-weight:800;
+    padding:.2rem .6rem; border-radius:8px; margin-bottom:.42rem;
+    letter-spacing:.02em;
+}
+
+/* Status pills */
+.status-pill {
+    display:inline-flex; align-items:center; gap:.3rem;
+    padding:.22rem .65rem; border-radius:20px;
+    font-size:.72rem; font-weight:700;
+}
+.status-pill .dot { width:6px; height:6px; border-radius:50%; }
+.status-pill.approved  { background:var(--warning-soft); color:var(--warning); }
+.status-pill.approved .dot  { background:var(--warning); }
+.status-pill.confirmed { background:var(--teal-soft); color:var(--teal); }
+.status-pill.confirmed .dot { background:var(--teal); box-shadow:0 0 5px rgba(0,184,148,.6); animation:blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
+/* Course name & meta */
+.booking-course-name {
+    font-size:.97rem; font-weight:700; margin-bottom:.42rem;
+    color:var(--text); line-height:1.35;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.booking-meta {
+    display:flex; gap:.35rem .75rem; flex-wrap:wrap;
+}
+.booking-meta-item {
+    font-size:.78rem; color:var(--text-2);
+    display:flex; align-items:center; gap:.28rem;
+}
+.booking-meta-item i { color:var(--primary); width:12px; text-align:center; font-size:.72rem; }
+.booking-meta-item.green i { color:var(--success-mid); }
+
+/* arrow chevron */
+.item-arrow {
+    position:absolute; right:.9rem; top:50%; transform:translateY(-50%);
+    width:28px; height:28px; border-radius:50%;
+    background:var(--bg); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--muted); font-size:.68rem;
+    transition:all .2s;
+}
+.booking-item:hover .item-arrow {
+    background:var(--primary); border-color:var(--primary); color:#fff;
+    transform:translateY(-50%) translateX(2px);
+}
+.booking-item.confirmed-item:hover .item-arrow {
+    background:var(--teal); border-color:var(--teal);
+}
+
+/* ═══════════════════════════════════════
+   EXPANDED DETAIL PANEL
+═══════════════════════════════════════ */
+.card-detail {
+    display:none; margin-top:.85rem;
+    padding-top:.85rem; border-top:1.5px dashed var(--border);
+    animation:fadeUp .2s ease;
+}
+.booking-item.expanded .card-detail { display:block; }
+
+.detail-grid { display:flex; flex-direction:column; gap:0; }
+.detail-row {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:.52rem 0; border-bottom:1px solid var(--border);
+}
+.detail-row:last-child { border-bottom:none; }
+.detail-label { font-size:.8rem; color:var(--muted); display:flex; align-items:center; gap:.4rem; }
+.detail-label i { width:13px; text-align:center; font-size:.75rem; }
+.detail-value { font-size:.88rem; font-weight:700; color:var(--text); text-align:right; max-width:58%; }
+
+/* Confirmed banner inside detail */
+.confirmed-banner {
+    background:linear-gradient(135deg, var(--teal-soft), rgba(0,184,148,.05));
+    border:1px solid rgba(0,184,148,.25);
+    border-radius:var(--radius-sm); padding:.7rem .9rem;
+    display:flex; align-items:center; gap:.65rem;
+    margin-top:.7rem;
+}
+.confirmed-banner i { color:var(--teal); font-size:1.1rem; flex-shrink:0; }
+.confirmed-banner-text { font-size:.8rem; color:#065f46; font-weight:600; line-height:1.45; }
+
+/* ═══════════════════════════════════════
+   STATS STRIP  (summary row at top)
+═══════════════════════════════════════ */
+.stats-strip {
+    display:grid; grid-template-columns:repeat(3,1fr);
+    background:var(--surface); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-md); border:1px solid var(--border);
+    margin-bottom:.85rem; overflow:hidden;
+    animation:fadeUp .3s ease-out both;
+}
+.stat-cell {
+    padding:.85rem .5rem; text-align:center;
+    position:relative;
+}
+.stat-cell + .stat-cell::before {
+    content:''; position:absolute; left:0; top:25%; bottom:25%;
+    width:1px; background:var(--border);
+}
+.stat-num  { font-size:1.45rem; font-weight:800; color:var(--primary); display:block; line-height:1.1; }
+.stat-label{ font-size:.7rem; color:var(--muted); display:block; margin-top:.18rem; font-weight:500; }
+.stat-cell.teal .stat-num  { color:var(--teal); }
+.stat-cell.gold  .stat-num  { color:var(--gold-dark); }
+
+/* ═══════════════════════════════════════
+   EMPTY STATE
+═══════════════════════════════════════ */
+.empty-state { text-align:center; padding:3rem 1.5rem; }
+.empty-icon {
+    width:72px; height:72px; background:var(--primary-soft);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    margin:0 auto 1.1rem;
+}
+.empty-icon i { font-size:2rem; color:var(--primary); opacity:.5; }
+.empty-title { font-size:1rem; font-weight:700; color:var(--text-2); margin-bottom:.4rem; }
+.empty-sub   { font-size:.84rem; color:var(--muted); line-height:1.55; }
+.empty-btn {
+    display:inline-flex; align-items:center; gap:.5rem;
+    margin-top:1.2rem; padding:.62rem 1.4rem;
+    background:linear-gradient(135deg, var(--primary), var(--primary-light));
+    color:#fff; font-size:.88rem; font-weight:700;
+    border-radius:var(--radius); text-decoration:none;
+    box-shadow:0 4px 16px rgba(112,97,189,.35);
+    transition:all .2s; font-family:'Sarabun',sans-serif; border:none; cursor:pointer;
+}
+.empty-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(112,97,189,.45); color:#fff; }
+
+/* ═══════════════════════════════════════
+   SKELETON
+═══════════════════════════════════════ */
+.skeleton {
+    background:linear-gradient(90deg, #ede8f8 25%, #f5f2fc 50%, #ede8f8 75%);
+    background-size:200% 100%;
+    animation:shimmer 1.5s infinite; border-radius:var(--radius);
+}
+.skel-card { height:88px; margin-bottom:.7rem; border-radius:var(--radius); }
+@keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+.app-footer { padding:.5rem 1rem 2.5rem; }
+.footer-contact {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:.9rem 1.1rem;
+    display:flex; align-items:center; gap:.8rem;
+}
+.footer-contact-icon {
+    width:36px; height:36px; border-radius:10px;
+    background:var(--primary-soft);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.footer-contact-icon i { font-size:.9rem; color:var(--primary); }
+.footer-contact-label { font-size:.72rem; color:var(--muted); display:block; }
+.footer-contact-val { font-size:.88rem; font-weight:700; color:var(--text); display:block; }
+
+/* ═══════════════════════════════════════
+   SWEETALERT OVERRIDE
+═══════════════════════════════════════ */
+.swal2-popup { font-family:'Sarabun',sans-serif !important; border-radius:20px !important; }
+.swal2-confirm { background:var(--primary) !important; border-radius:10px !important; }
+
+/* Expand chevron button */
+.expand-btn {
+    display:inline-flex; align-items:center; gap:.3rem;
+    font-size:.76rem; color:var(--primary); cursor:pointer;
+    font-weight:700; margin-top:.55rem;
+    background:var(--primary-soft); border-radius:8px;
+    padding:.28rem .7rem; transition:all .2s; border:none; font-family:'Sarabun',sans-serif;
+}
+.expand-btn:hover { background:var(--primary); color:#fff; }
+
+/* top row of each card */
+.booking-item-top {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:.38rem; gap:.5rem;
+}
+</style>
 </head>
 <body>
 <div class="app-wrap">
+
+    <!-- ═══ HEADER ═══ -->
     <div class="page-header">
-        <div class="header-dots"></div>
-        <div class="header-blob"></div>
-        <div class="header-inner">
+        <div class="hdr-grid"></div>
+        <div class="hdr-orb1"></div>
+        <div class="hdr-orb2"></div>
+        <div class="hdr-inner">
             <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> หน้าหลัก</a>
-            <div class="page-title"><i class="fas fa-search me-2"></i>สถานะการจอง</div>
-            <div class="page-sub">รายการที่อนุมัติและยืนยันแล้ว</div>
+            <div class="hdr-icon-wrap"><i class="fas fa-magnifying-glass"></i></div>
+            <div class="hdr-title">ตรวจสอบสถานะ</div>
+            <div class="hdr-sub">รายการจองที่อนุมัติและยืนยันแล้ว</div>
+            <div class="hdr-chips">
+                <div class="hdr-chip"><div class="dot gold"></div> รออยืนยัน</div>
+                <div class="hdr-chip"><div class="dot green"></div> ยืนยันแล้ว</div>
+                <div class="hdr-chip"><i class="fas fa-clock" style="font-size:.65rem;opacity:.75;"></i> อัปเดตเรียลไทม์</div>
+            </div>
         </div>
     </div>
 
-    <div class="content">
-        <div class="section-card">
-            <div class="section-head">
-                <div class="section-title-text"><i class="fas fa-list"></i> รายการจองของคุณ</div>
-                <span class="count-pill" id="countText">กำลังโหลด...</span>
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <div class="main-content">
+
+        <!-- Stats strip -->
+        <div class="stats-strip" id="statsStrip" style="display:none;">
+            <div class="stat-cell">
+                <span class="stat-num" id="statTotal">0</span>
+                <span class="stat-label">รายการทั้งหมด</span>
             </div>
+            <div class="stat-cell gold">
+                <span class="stat-num" id="statApproved">0</span>
+                <span class="stat-label">รออยืนยัน</span>
+            </div>
+            <div class="stat-cell teal">
+                <span class="stat-num" id="statConfirmed">0</span>
+                <span class="stat-label">ยืนยันแล้ว</span>
+            </div>
+        </div>
+
+        <!-- Booking list card -->
+        <div class="section-card">
+            <div class="card-head">
+                <div class="card-title">
+                    <div class="card-title-icon"><i class="fas fa-list-check"></i></div>
+                    รายการจองของฉัน
+                </div>
+                <span class="list-count-badge" id="countBadge">กำลังโหลด...</span>
+            </div>
+
+            <!-- Filter tabs -->
+            <div class="filter-tabs" id="filterTabs" style="display:none;">
+                <button class="filter-tab active" onclick="filterList('all')" id="tab-all">
+                    <i class="fas fa-border-all"></i> ทั้งหมด
+                    <span class="tab-count" id="cnt-all">0</span>
+                </button>
+                <button class="filter-tab" onclick="filterList('approved')" id="tab-approved">
+                    <i class="fas fa-hourglass-half"></i> รออยืนยัน
+                    <span class="tab-count" id="cnt-approved">0</span>
+                </button>
+                <button class="filter-tab" onclick="filterList('confirmed')" id="tab-confirmed">
+                    <i class="fas fa-circle-check"></i> ยืนยันแล้ว
+                    <span class="tab-count" id="cnt-confirmed">0</span>
+                </button>
+            </div>
+
+            <!-- List -->
             <div id="statusList">
                 <div class="skeleton skel-card"></div>
                 <div class="skeleton skel-card"></div>
+                <div class="skeleton skel-card" style="animation-delay:.15s;"></div>
             </div>
         </div>
-    </div>
-</div>
+
+        <!-- Footer -->
+        <div class="app-footer" style="padding:0 0 2.5rem;">
+            <div class="footer-contact">
+                <div class="footer-contact-icon"><i class="fas fa-phone-alt"></i></div>
+                <div>
+                    <span class="footer-contact-label">ติดต่อสอบถาม</span>
+                    <span class="footer-contact-val">034-339-224 และ (33)15619</span>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.main-content -->
+</div><!-- /.app-wrap -->
 
 <script>
-const GAS_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec"; // ← ใส่ GAS Web App URL
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec"; // ← ใส่ GAS Web App URL
 
+let allBookings = [];
+let currentFilter = 'all';
+
+/* ─── Init ─── */
 function init() {
     const userId = sessionStorage.getItem('userId') || '';
     if (!userId) { window.location.href = 'index.html'; return; }
     loadStatus(userId);
 }
 
+/* ─── Load ─── */
 async function loadStatus(userId) {
     try {
-        const res = await fetch(`${GAS_URL}?action=getAllBookings&userId=${userId}`);
+        const res = await fetch(`${GAS_WEB_APP_URL}?action=getAllBookings&userId=${userId}`);
         const result = await res.json();
-        const bookings = (result.bookings || []).filter(b =>
+        allBookings = (result.bookings || []).filter(b =>
             b.approvalStatus === 'Approved' || b.approvalStatus === 'Confirmed'
         );
-        renderStatus(bookings);
+        updateStats();
+        renderList(allBookings);
+        if (allBookings.length > 0) {
+            document.getElementById('statsStrip').style.display = 'grid';
+            document.getElementById('filterTabs').style.display = 'flex';
+        }
     } catch(e) {
         document.getElementById('statusList').innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon"><i class="fas fa-exclamation"></i></div>
+                <div class="empty-icon"><i class="fas fa-wifi-slash"></i></div>
                 <div class="empty-title">ไม่สามารถโหลดข้อมูลได้</div>
-                <div class="empty-sub">กรุณาลองใหม่อีกครั้ง</div>
+                <div class="empty-sub">กรุณาตรวจสอบการเชื่อมต่อและลองใหม่อีกครั้ง</div>
+                <button class="empty-btn" onclick="location.reload()">
+                    <i class="fas fa-rotate-right"></i> ลองใหม่
+                </button>
             </div>`;
-        document.getElementById('countText').textContent = 'ข้อผิดพลาด';
+        document.getElementById('countBadge').textContent = 'ข้อผิดพลาด';
     }
 }
 
-function renderStatus(bookings) {
-    const container = document.getElementById('statusList');
-    const countText = document.getElementById('countText');
+/* ─── Stats ─── */
+function updateStats() {
+    const approved  = allBookings.filter(b => b.approvalStatus === 'Approved').length;
+    const confirmed = allBookings.filter(b => b.approvalStatus === 'Confirmed').length;
+    document.getElementById('statTotal').textContent     = allBookings.length;
+    document.getElementById('statApproved').textContent  = approved;
+    document.getElementById('statConfirmed').textContent = confirmed;
+    document.getElementById('cnt-all').textContent       = allBookings.length;
+    document.getElementById('cnt-approved').textContent  = approved;
+    document.getElementById('cnt-confirmed').textContent = confirmed;
+}
 
-    if (bookings.length === 0) {
-        countText.textContent = '0 รายการ';
+/* ─── Filter ─── */
+function filterList(type) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + type).classList.add('active');
+    const filtered = type === 'all' ? allBookings :
+        allBookings.filter(b => b.approvalStatus.toLowerCase() === type);
+    renderList(filtered);
+}
+
+/* ─── Render ─── */
+function renderList(bookings) {
+    const container = document.getElementById('statusList');
+    const badge     = document.getElementById('countBadge');
+
+    if (bookings.length === 0 && allBookings.length === 0) {
+        badge.textContent = '0 รายการ';
         container.innerHTML = `
             <div class="empty-state">
                 <div class="empty-icon"><i class="fas fa-inbox"></i></div>
-                <div class="empty-title">ยังไม่มีรายการ</div>
-                <div class="empty-sub">ยังไม่มีรายการจองที่อนุมัติหรือยืนยัน</div>
+                <div class="empty-title">ยังไม่มีรายการจอง</div>
+                <div class="empty-sub">รายการที่ผ่านการอนุมัติหรือยืนยันแล้วจะปรากฏที่นี่</div>
+                <a href="booking.html" class="empty-btn">
+                    <i class="fas fa-calendar-plus"></i> จองห้องประชุม
+                </a>
             </div>`;
         return;
     }
 
-    countText.textContent = `${bookings.length} รายการ`;
+    if (bookings.length === 0) {
+        badge.textContent = '0 รายการ';
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon"><i class="fas fa-filter-slash"></i></div>
+                <div class="empty-title">ไม่มีรายการในกลุ่มนี้</div>
+                <div class="empty-sub">ลองเปลี่ยนตัวกรองเพื่อดูรายการอื่น</div>
+            </div>`;
+        return;
+    }
+
+    badge.textContent = `${bookings.length} รายการ`;
     container.innerHTML = bookings.map((b, i) => {
         const isConfirmed = b.approvalStatus === 'Confirmed';
-        const statusCls = isConfirmed ? 'confirmed' : 'approved';
-        const statusTxt = isConfirmed
-            ? '<span class="status-dot"></span> ยืนยันแล้ว'
-            : '<span class="status-dot"></span> รออยืนยัน';
-        const sd = formatDateTH(b.startDate), ed = formatDateTH(b.endDate);
-        const ci = formatDateTH(b.checkin), co = formatDateTH(b.checkout);
+        const statusCls   = isConfirmed ? 'confirmed' : 'approved';
+        const statusTxt   = isConfirmed
+            ? '<div class="dot"></div> ยืนยันแล้ว'
+            : '<div class="dot"></div> รออยืนยัน';
+        const sd  = fmtTH(b.startDate);
+        const ed  = fmtTH(b.endDate);
+        const ci  = fmtTH(b.checkin);
+        const co  = fmtTH(b.checkout);
         const hasAcc = b.accommodation === 'ต้องการ';
+        const itemCls = isConfirmed ? 'confirmed-item' : '';
 
         return `
-        <div class="booking-card" id="card_${i}">
-            <div class="card-top">
-                <span class="booking-id"><i class="fas fa-hashtag"></i>${b.bookingId}</span>
+        <div class="booking-item ${itemCls}" id="card_${i}">
+            <!-- top row: ID + status pill -->
+            <div class="booking-item-top">
+                <div class="booking-id-tag"><i class="fas fa-hashtag" style="font-size:.65rem;"></i>${b.bookingId || '-'}</div>
                 <span class="status-pill ${statusCls}">${statusTxt}</span>
             </div>
-            <div class="course-name">${b.courseName || '-'}</div>
-            <div class="meta-row">
-                <span class="meta-item"><i class="fas fa-calendar-range"></i>${sd} – ${ed}</span>
-                <span class="meta-item"><i class="fas fa-users"></i>${b.attendees} คน</span>
-                <span class="meta-item"><i class="fas fa-door-open"></i>${b.room || '-'}</span>
-                ${hasAcc ? `<span class="meta-item green"><i class="fas fa-bed"></i>พัก ${b.numRooms} ห้อง</span>` : ''}
+
+            <!-- course name -->
+            <div class="booking-course-name">${b.courseName || '—'}</div>
+
+            <!-- meta info row -->
+            <div class="booking-meta">
+                <span class="booking-meta-item"><i class="fas fa-calendar-range"></i>${sd} – ${ed}</span>
+                <span class="booking-meta-item"><i class="fas fa-users"></i>${b.attendees || '—'} คน</span>
+                <span class="booking-meta-item"><i class="fas fa-door-open"></i>${b.room || '—'}</span>
+                ${hasAcc ? `<span class="booking-meta-item green"><i class="fas fa-bed"></i>พัก ${b.numRooms || '?'} ห้อง</span>` : ''}
             </div>
-            <span class="expand-btn" onclick="toggleExpand(${i})" id="btn_${i}">
-                <i class="fas fa-chevron-down" id="icon_${i}"></i> ดูรายละเอียด
-            </span>
+
+            <!-- expand button -->
+            <button class="expand-btn" onclick="toggleExpand(${i})" id="ebtn_${i}">
+                <i class="fas fa-chevron-down" id="eicon_${i}"></i> ดูรายละเอียด
+            </button>
+
+            <!-- expanded detail -->
             <div class="card-detail">
                 <div class="detail-grid">
-                    <div class="detail-row"><span class="detail-label">หน่วยงาน</span><span class="detail-value">${b.department || '-'}</span></div>
-                    <div class="detail-row"><span class="detail-label">เบอร์โทร</span><span class="detail-value">${String(b.phone||'').replace("'","")}</span></div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-building"></i> หน่วยงาน</span>
+                        <span class="detail-value">${b.department || '—'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-phone"></i> เบอร์โทร</span>
+                        <span class="detail-value">${String(b.phone||'—').replace("'","")}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-door-open"></i> ห้องประชุม</span>
+                        <span class="detail-value">${b.room || '—'}</span>
+                    </div>
                     ${hasAcc ? `
-                    <div class="detail-row"><span class="detail-label">Check-in</span><span class="detail-value">${ci}</span></div>
-                    <div class="detail-row"><span class="detail-label">Check-out</span><span class="detail-value">${co}</span></div>
-                    ${parseInt(b.viprooms||0)>0?`<div class="detail-row"><span class="detail-label">ห้อง VIP</span><span class="detail-value">${b.viprooms} ห้อง</span></div>`:''}
-                    ` : `<div class="detail-row"><span class="detail-label">ที่พัก</span><span class="detail-value">ไม่ต้องการ</span></div>`}
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-right-to-bracket"></i> Check-in</span>
+                        <span class="detail-value">${ci}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-right-from-bracket"></i> Check-out</span>
+                        <span class="detail-value">${co}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-bed"></i> จำนวนห้องพัก</span>
+                        <span class="detail-value">${b.numRooms || '—'} ห้อง</span>
+                    </div>
+                    ${parseInt(b.viprooms||0)>0 ? `
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-star"></i> ห้อง VIP</span>
+                        <span class="detail-value">${b.viprooms} ห้อง</span>
+                    </div>` : ''}
+                    ` : `
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-bed"></i> ที่พัก</span>
+                        <span class="detail-value">ไม่ต้องการ</span>
+                    </div>`}
                 </div>
+                ${isConfirmed ? `
+                <div class="confirmed-banner">
+                    <i class="fas fa-circle-check"></i>
+                    <div class="confirmed-banner-text">การจองนี้ได้รับการยืนยันเรียบร้อยแล้ว<br>กรุณาเตรียมตัวตามวันและเวลาที่กำหนด</div>
+                </div>` : ''}
             </div>
+
+            <!-- arrow -->
+            <div class="item-arrow"><i class="fas fa-chevron-right"></i></div>
         </div>`;
     }).join('');
 }
 
+/* ─── Toggle expand ─── */
 function toggleExpand(i) {
     const card = document.getElementById(`card_${i}`);
-    const icon = document.getElementById(`icon_${i}`);
-    const btn = document.getElementById(`btn_${i}`);
-    const isExpanded = card.classList.toggle('expanded');
-    icon.className = isExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
-    btn.innerHTML = `<i class="${isExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'}" id="icon_${i}"></i> ${isExpanded ? 'ย่อ' : 'ดูรายละเอียด'}`;
+    const icon = document.getElementById(`eicon_${i}`);
+    const btn  = document.getElementById(`ebtn_${i}`);
+    const open = card.classList.toggle('expanded');
+    icon.className = open ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+    btn.innerHTML  = `<i class="${open ? 'fas fa-chevron-up' : 'fas fa-chevron-down'}" id="eicon_${i}"></i> ${open ? 'ย่อ' : 'ดูรายละเอียด'}`;
+    // close arrow when open
+    card.querySelector('.item-arrow').style.display = open ? 'none' : '';
 }
 
-function formatDateTH(dateStr) {
-    if (!dateStr) return '-';
+/* ─── Format date TH ─── */
+function fmtTH(dateStr) {
+    if (!dateStr) return '—';
     const d = new Date(dateStr);
-    return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+    return d.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
 }
 
 init();
