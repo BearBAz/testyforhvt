@@ -849,6 +849,82 @@
     .swal2-confirm { background: var(--primary) !important; border-radius: 10px !important; }
 
     /* ═══════════════════════════════════════
+       SUGGESTED DATES WIDGET
+    ═══════════════════════════════════════ */
+    .suggest-dates-box {
+        background: linear-gradient(135deg, #fff8ec 0%, #fff3e0 100%);
+        border: 1.5px solid rgba(244,168,54,0.35);
+        border-radius: var(--radius-md);
+        padding: 1rem 1rem 0.9rem;
+        margin-top: 0.85rem;
+        animation: slideUp 0.32s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .suggest-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.7rem;
+    }
+    .suggest-icon-wrap {
+        width: 32px; height: 32px;
+        background: var(--accent);
+        border-radius: 9px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .suggest-icon-wrap i { color: #fff; font-size: 0.82rem; }
+    .suggest-title { font-size: 0.88rem; font-weight: 700; color: #92400e; }
+    .suggest-subtitle { font-size: 0.73rem; color: #b45309; margin-top: 0.05rem; }
+
+    .suggest-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        margin-top: 0.15rem;
+    }
+    .suggest-chip {
+        background: #fff;
+        border: 1.5px solid rgba(244,168,54,0.5);
+        border-radius: 20px;
+        padding: 0.38rem 0.85rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #92400e;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        white-space: nowrap;
+    }
+    .suggest-chip:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(244,168,54,0.35);
+    }
+    .suggest-chip i { font-size: 0.72rem; }
+    .suggest-chip.earlier { border-color: rgba(2,132,199,0.45); color: #0369a1; }
+    .suggest-chip.earlier:hover { background: var(--info); border-color: var(--info); color: #fff; box-shadow: 0 4px 12px rgba(2,132,199,0.35); }
+    .suggest-chip.later { border-color: rgba(5,150,105,0.45); color: #065f46; }
+    .suggest-chip.later:hover { background: var(--success); border-color: var(--success); color: #fff; box-shadow: 0 4px 12px rgba(5,150,105,0.35); }
+    .suggest-loading {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.8rem;
+        color: #b45309;
+        padding: 0.3rem 0;
+    }
+    .suggest-none {
+        font-size: 0.8rem;
+        color: #b45309;
+        font-style: italic;
+        padding: 0.2rem 0;
+    }
+
+    /* ═══════════════════════════════════════
        DESKTOP LAYOUT
     ═══════════════════════════════════════ */
     .desktop-sidebar { display: none; }
@@ -1505,6 +1581,10 @@
 
     function updateRoomSelect(rooms) {
         meetingRoomOptions.innerHTML = '';
+        // Clear any previous suggestion box
+        const existingSuggest = document.getElementById('meetingRoomSuggestBox');
+        if (existingSuggest) existingSuggest.remove();
+
         if (rooms.length === 0) {
             roomSelectLabel.textContent = 'กรุณาเลือกวันที่ก่อน';
             roomSelectLabel.className   = 'room-select-text';
@@ -1535,6 +1615,7 @@
             }
             meetingRoomOptions.appendChild(li);
         });
+
         const selected = hiddenMeetingRoomInput.value;
         if (selected) {
             const found = rooms.find(r => r.name === selected);
@@ -1545,6 +1626,158 @@
                 updateProgressSteps();
             }
         }
+
+        // If ALL rooms are unavailable → show suggested dates
+        const allUnavail = rooms.length > 0 && rooms.every(r => !r.isAvailable);
+        if (allUnavail) {
+            const startDate = document.getElementById('startDate').value;
+            const endDate   = document.getElementById('endDate').value;
+            if (startDate && endDate) {
+                const suggestBox = document.createElement('div');
+                suggestBox.id = 'meetingRoomSuggestBox';
+                // Insert after the dropdown's parent
+                customMeetingRoomSelect.closest('.field-group').appendChild(suggestBox);
+                renderMeetingRoomSuggestions(suggestBox, startDate, endDate);
+            }
+        }
+    }
+
+    /* ─── Find nearest available weekday slots for meeting rooms ─── */
+    function isWeekday(date) {
+        const d = date.getDay(); // 0=Sun,6=Sat
+        return d !== 0 && d !== 6;
+    }
+
+    function addDays(dateStr, n) {
+        const d = new Date(dateStr);
+        d.setDate(d.getDate() + n);
+        return d;
+    }
+
+    function toYMD(date) {
+        return date.toISOString().split('T')[0];
+    }
+
+    function formatShortTH(dateStr) {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('th-TH', { day:'numeric', month:'short' });
+    }
+
+    async function renderMeetingRoomSuggestions(container, startDate, endDate) {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const duration = Math.round((new Date(endDate) - new Date(startDate)) / (1000*60*60*24));
+
+        container.innerHTML = `
+            <div class="suggest-dates-box">
+                <div class="suggest-header">
+                    <div class="suggest-icon-wrap"><i class="fas fa-calendar-alt"></i></div>
+                    <div>
+                        <div class="suggest-title">ไม่มีห้องประชุมว่างในช่วงนี้</div>
+                        <div class="suggest-subtitle">กำลังค้นหาวันที่ใกล้เคียงที่มีห้องว่าง...</div>
+                    </div>
+                </div>
+                <div class="suggest-loading"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบช่วงเวลาอื่น...</div>
+            </div>`;
+
+        // Search for available slots: check up to 14 days before & after
+        const earlier = [], later = [];
+        const checks = [];
+
+        for (let offset = 1; offset <= 21; offset++) {
+            // Earlier
+            const eStart = addDays(startDate, -offset);
+            const eEnd   = addDays(endDate,   -offset);
+            if (eStart >= today && isWeekday(eStart) && isWeekday(eEnd)) {
+                checks.push({ dir: 'earlier', offset, startStr: toYMD(eStart), endStr: toYMD(eEnd) });
+            }
+            // Later
+            const lStart = addDays(startDate, offset);
+            const lEnd   = addDays(endDate,   offset);
+            if (isWeekday(lStart) && isWeekday(lEnd)) {
+                checks.push({ dir: 'later', offset, startStr: toYMD(lStart), endStr: toYMD(lEnd) });
+            }
+        }
+
+        // Deduplicate and limit
+        const seen = new Set();
+        const uniqueChecks = checks.filter(c => {
+            const key = c.startStr + '_' + c.endStr;
+            if (seen.has(key)) return false;
+            seen.add(key); return true;
+        });
+
+        // Batch fetch — run in parallel, limit to 10 candidates
+        const candidates = uniqueChecks.slice(0, 16);
+        const results = await Promise.allSettled(
+            candidates.map(c =>
+                fetch(`${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${c.startStr}&endDate=${c.endStr}`)
+                    .then(r => r.json())
+                    .then(data => ({ ...c, rooms: data.rooms || [] }))
+                    .catch(() => null)
+            )
+        );
+
+        const availSlots = { earlier: [], later: [] };
+        results.forEach(r => {
+            if (r.status !== 'fulfilled' || !r.value) return;
+            const { dir, startStr, endStr, rooms } = r.value;
+            const hasAvail = rooms.some(rm => rm.isAvailable);
+            if (hasAvail) {
+                availSlots[dir].push({ startStr, endStr });
+            }
+        });
+
+        // Sort earlier desc (closest first), later asc
+        availSlots.earlier.sort((a,b) => new Date(b.startStr) - new Date(a.startStr));
+        availSlots.later.sort((a,b)   => new Date(a.startStr) - new Date(b.startStr));
+
+        const topEarlier = availSlots.earlier.slice(0, 3);
+        const topLater   = availSlots.later.slice(0, 3);
+        const totalFound = topEarlier.length + topLater.length;
+
+        let chipsHtml = '';
+        topEarlier.forEach(slot => {
+            chipsHtml += `<button type="button" class="suggest-chip earlier"
+                onclick="applyMeetingRoomDate('${slot.startStr}','${slot.endStr}')">
+                <i class="fas fa-arrow-left"></i>
+                ${formatShortTH(slot.startStr)} – ${formatShortTH(slot.endStr)}
+            </button>`;
+        });
+        topLater.forEach(slot => {
+            chipsHtml += `<button type="button" class="suggest-chip later"
+                onclick="applyMeetingRoomDate('${slot.startStr}','${slot.endStr}')">
+                ${formatShortTH(slot.startStr)} – ${formatShortTH(slot.endStr)}
+                <i class="fas fa-arrow-right"></i>
+            </button>`;
+        });
+
+        container.innerHTML = `
+            <div class="suggest-dates-box">
+                <div class="suggest-header">
+                    <div class="suggest-icon-wrap"><i class="fas fa-calendar-alt"></i></div>
+                    <div>
+                        <div class="suggest-title">ไม่มีห้องประชุมว่างในช่วงนี้</div>
+                        <div class="suggest-subtitle">${totalFound > 0 ? 'แนะนำช่วงเวลาใกล้เคียงที่มีห้องว่าง (จ–ศ เท่านั้น)' : 'ไม่พบช่วงเวลาว่างในช่วง 3 สัปดาห์ใกล้เคียง'}</div>
+                    </div>
+                </div>
+                ${totalFound > 0
+                    ? `<div class="suggest-chips">${chipsHtml}</div>`
+                    : `<div class="suggest-none"><i class="fas fa-info-circle" style="margin-right:4px;"></i>กรุณาเลือกช่วงเวลาอื่นด้วยตนเอง</div>`
+                }
+            </div>`;
+    }
+
+    function applyMeetingRoomDate(start, end) {
+        document.getElementById('startDate').value = start;
+        document.getElementById('endDate').value   = end;
+        document.getElementById('endDate').setAttribute('min', start);
+        // Remove suggestion box immediately
+        const box = document.getElementById('meetingRoomSuggestBox');
+        if (box) box.remove();
+        checkMeetingRoomAvailability();
+        checkAccommodation();
+        updateProgressSteps();
     }
 
     /* ─── Accommodation check ─── */
@@ -1665,7 +1898,13 @@
                                 <div class="s">${showCI} – ${showCO} (${nights} คืน)</div>
                                 <div style="font-size:0.8rem;color:var(--danger);margin-top:0.3rem;">${desc} โปรดเลือกช่วงเวลาอื่น</div>
                             </div>
-                        </div>`;
+                        </div>
+                        <div id="accSuggestBox"></div>`;
+                    // Trigger accommodation date suggestions
+                    renderAccommodationSuggestions(
+                        document.getElementById('accSuggestBox'),
+                        sStr, eStr, suggested
+                    );
                 }
             } catch (error) {
                 accommodationAvailable = true;
@@ -1676,6 +1915,108 @@
                     </div>`;
             }
         }, 600);
+    }
+
+    /* ─── Find nearest available slots for accommodation ─── */
+    async function renderAccommodationSuggestions(container, startDate, endDate, neededRooms) {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        container.innerHTML = `
+            <div class="suggest-dates-box" style="margin-top:0.85rem;">
+                <div class="suggest-header">
+                    <div class="suggest-icon-wrap"><i class="fas fa-bed"></i></div>
+                    <div>
+                        <div class="suggest-title">ค้นหาวันที่ที่ห้องพักเพียงพอ</div>
+                        <div class="suggest-subtitle">กำลังตรวจสอบช่วงเวลาใกล้เคียง...</div>
+                    </div>
+                </div>
+                <div class="suggest-loading"><i class="fas fa-spinner fa-spin"></i> กำลังค้นหา...</div>
+            </div>`;
+
+        const candidates = [];
+        for (let offset = 1; offset <= 21; offset++) {
+            // Earlier
+            const eStart = addDays(startDate, -offset);
+            const eEnd   = addDays(endDate,   -offset);
+            if (eStart >= today) candidates.push({ dir:'earlier', offset, startStr: toYMD(eStart), endStr: toYMD(eEnd) });
+            // Later
+            const lStart = addDays(startDate, offset);
+            const lEnd   = addDays(endDate,   offset);
+            candidates.push({ dir:'later', offset, startStr: toYMD(lStart), endStr: toYMD(lEnd) });
+        }
+
+        const seen2 = new Set();
+        const unique2 = candidates.filter(c => {
+            const key = c.startStr + '_' + c.endStr;
+            if (seen2.has(key)) return false;
+            seen2.add(key); return true;
+        }).slice(0, 16);
+
+        const results2 = await Promise.allSettled(
+            unique2.map(c =>
+                fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${c.startStr}&endDate=${c.endStr}`)
+                    .then(r => r.json())
+                    .then(data => ({ ...c, available: data.availableRooms || 0 }))
+                    .catch(() => null)
+            )
+        );
+
+        const availSlots2 = { earlier: [], later: [] };
+        results2.forEach(r => {
+            if (r.status !== 'fulfilled' || !r.value) return;
+            const { dir, startStr, endStr, available } = r.value;
+            if (available >= neededRooms) availSlots2[dir].push({ startStr, endStr, available });
+        });
+
+        availSlots2.earlier.sort((a,b) => new Date(b.startStr) - new Date(a.startStr));
+        availSlots2.later.sort((a,b)   => new Date(a.startStr) - new Date(b.startStr));
+
+        const topE2 = availSlots2.earlier.slice(0, 3);
+        const topL2 = availSlots2.later.slice(0, 3);
+        const total2 = topE2.length + topL2.length;
+
+        let chips2 = '';
+        topE2.forEach(slot => {
+            chips2 += `<button type="button" class="suggest-chip earlier"
+                onclick="applyAccommodationDate('${slot.startStr}','${slot.endStr}')">
+                <i class="fas fa-arrow-left"></i>
+                ${formatShortTH(slot.startStr)} – ${formatShortTH(slot.endStr)}
+                <span style="font-size:0.7rem;opacity:0.8;">(${slot.available}ห้องว่าง)</span>
+            </button>`;
+        });
+        topL2.forEach(slot => {
+            chips2 += `<button type="button" class="suggest-chip later"
+                onclick="applyAccommodationDate('${slot.startStr}','${slot.endStr}')">
+                ${formatShortTH(slot.startStr)} – ${formatShortTH(slot.endStr)}
+                <span style="font-size:0.7rem;opacity:0.8;">(${slot.available}ห้องว่าง)</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>`;
+        });
+
+        container.innerHTML = `
+            <div class="suggest-dates-box" style="margin-top:0.85rem;">
+                <div class="suggest-header">
+                    <div class="suggest-icon-wrap"><i class="fas fa-bed"></i></div>
+                    <div>
+                        <div class="suggest-title">วันที่ใกล้เคียงที่ห้องพักเพียงพอ</div>
+                        <div class="suggest-subtitle">${total2 > 0 ? 'คลิกเพื่อเลือกช่วงเวลานี้' : 'ไม่พบช่วงว่างในช่วง 3 สัปดาห์ใกล้เคียง'}</div>
+                    </div>
+                </div>
+                ${total2 > 0
+                    ? `<div class="suggest-chips">${chips2}</div>`
+                    : `<div class="suggest-none"><i class="fas fa-info-circle" style="margin-right:4px;"></i>กรุณาเลือกช่วงเวลาอื่นด้วยตนเอง</div>`
+                }
+            </div>`;
+    }
+
+    function applyAccommodationDate(start, end) {
+        document.getElementById('startDate').value = start;
+        document.getElementById('endDate').value   = end;
+        document.getElementById('endDate').setAttribute('min', start);
+        checkMeetingRoomAvailability();
+        checkAccommodation();
+        updateProgressSteps();
     }
 
     /* ─── Event Listeners ─── */
