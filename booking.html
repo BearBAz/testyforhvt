@@ -493,10 +493,11 @@
 
     /* Confirm button inside dropdown */
     .room-dropdown-footer {
-        padding: 0.7rem 0.9rem;
-        border-top: 1px solid var(--border);
+        padding: 0.65rem 0.9rem;
+        border-top: 1.5px solid var(--border);
         display: flex; align-items: center; justify-content: space-between;
         gap: 0.5rem;
+        background: var(--primary-xsoft);
     }
     .room-confirm-btn {
         background: var(--primary); color: #fff;
@@ -522,22 +523,27 @@
         color: var(--primary);
     }
 
-    .room-dropdown {
-        display: none;
+    /* Room dropdown wrapper - positions the whole panel */
+    .room-dropdown-wrap {
+        position: absolute;
+        width: 100%;
+        z-index: 100;
         border: 1.5px solid var(--primary);
         border-top: none;
         border-bottom-left-radius: var(--radius);
         border-bottom-right-radius: var(--radius);
         background: var(--surface);
         box-shadow: var(--shadow-lg);
-        z-index: 100;
-        max-height: 340px;
-        overflow-y: auto;
-        padding: 0.4rem 0.4rem 0;
-        list-style: none;
         animation: dropIn 0.22s ease;
-        position: absolute;
-        width: 100%;
+        overflow: hidden;
+    }
+    .room-dropdown {
+        display: block;
+        max-height: 240px;
+        overflow-y: auto;
+        padding: 0.4rem;
+        list-style: none;
+        margin: 0;
     }
     .room-dropdown.show { display: block; }
     @keyframes dropIn {
@@ -1379,7 +1385,15 @@
                                             </div>
                                             <i class="fas fa-chevron-down room-select-arrow" id="roomSelectArrow"></i>
                                         </div>
-                                        <ul class="room-dropdown" id="meetingRoomOptions"></ul>
+                                        <div class="room-dropdown-wrap" id="roomDropdownWrap">
+                                            <ul class="room-dropdown" id="meetingRoomOptions"></ul>
+                                            <div class="room-dropdown-footer" id="roomDropdownFooter" style="display:none;">
+                                                <div class="room-selected-hint">เลือกแล้ว <span id="selectedCountLabel">0</span> ห้อง</div>
+                                                <button type="button" class="room-confirm-btn" onclick="confirmRoomSelection()">
+                                                    <i class="fas fa-check"></i> ยืนยัน
+                                                </button>
+                                            </div>
+                                        </div>
                                         <input type="hidden" id="meetingRoom" name="meetingRoom">
                                     </div>
                                     <div class="field-hint" id="multiRoomHint" style="display:none;">
@@ -1722,18 +1736,18 @@
             meetingRoomOptions.appendChild(li);
         });
 
-        // Footer with count + confirm button
-        const footer = document.createElement('div');
-        footer.className = 'room-dropdown-footer';
-        footer.id = 'roomDropdownFooter';
-        footer.innerHTML = `
-            <div class="room-selected-hint">เลือกแล้ว <span id="selectedCountLabel">${selectedRooms.length}</span> ห้อง</div>
-            <button type="button" class="room-confirm-btn" onclick="confirmRoomSelection()">
-                <i class="fas fa-check"></i> ยืนยัน
-            </button>`;
-        meetingRoomOptions.appendChild(footer);
+        // Footer is in HTML, just update count
+        updateDropdownFooter();
+
+        // Show footer
+        const footer = document.getElementById('roomDropdownFooter');
+        if (footer) footer.style.display = 'flex';
 
         renderSelectedTags();
+
+        // Show footer
+        const footer = document.getElementById('roomDropdownFooter');
+        if (footer) footer.style.display = rooms.length > 0 ? 'flex' : 'none';
 
         // Show suggested dates if all unavailable
         const allUnavail = rooms.length > 0 && rooms.every(r => !r.isAvailable);
@@ -1752,10 +1766,12 @@
     function updateDropdownFooter() {
         const countLabel = document.getElementById('selectedCountLabel');
         if (countLabel) countLabel.textContent = selectedRooms.length;
+        const footer = document.getElementById('roomDropdownFooter');
+        if (footer) footer.style.display = 'flex';
     }
 
     function confirmRoomSelection() {
-        meetingRoomOptions.classList.remove('show');
+        document.getElementById('roomDropdownWrap').style.display = 'none';
         customMeetingRoomSelect.classList.remove('is-open');
         renderSelectedTags();
         // Update hidden input with comma-separated room names
@@ -2197,15 +2213,16 @@
     });
 
     // Room select dropdown toggle
+    const roomDropdownWrap = document.getElementById('roomDropdownWrap');
     customMeetingRoomSelect.addEventListener('click', (e) => {
-        // Don't toggle if clicking the remove tag button
         if (e.target.closest('.room-tag-remove')) return;
-        meetingRoomOptions.classList.toggle('show');
-        customMeetingRoomSelect.classList.toggle('is-open');
+        const isOpen = roomDropdownWrap.style.display !== 'none';
+        roomDropdownWrap.style.display = isOpen ? 'none' : 'block';
+        customMeetingRoomSelect.classList.toggle('is-open', !isOpen);
     });
     document.addEventListener('click', (e) => {
-        if (!customMeetingRoomSelect.contains(e.target) && !meetingRoomOptions.contains(e.target)) {
-            meetingRoomOptions.classList.remove('show');
+        if (!customMeetingRoomSelect.contains(e.target) && !roomDropdownWrap.contains(e.target)) {
+            roomDropdownWrap.style.display = 'none';
             customMeetingRoomSelect.classList.remove('is-open');
         }
     });
