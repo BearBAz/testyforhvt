@@ -96,13 +96,44 @@
         background: linear-gradient(145deg, #7061bd 0%, #5a4da0 50%, #44388a 100%);
         padding: 1.4rem 1.2rem 3.8rem; position: relative; overflow: hidden;
     }
-    .hero-pattern { position: absolute; inset: 0; background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%); }
-    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 32px 32px; }
-    .hero-content { position: relative; z-index: 2; }
-    .hero-stats-row { display: flex; gap: 0.6rem; margin-top: 0.9rem; }
-    .hero-stat-chip { background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 0.3rem 0.75rem; display: flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; color: rgba(255,255,255,0.9); font-weight: 600; }
-    .hero-main-title { font-size: 1.4rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; margin-bottom: 0.15rem; }
-    .hero-subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.75); }
+    .hero-pattern { 
+        position: absolute; inset: 0; 
+        background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%); 
+    }
+    .hero-grid { 
+        position: absolute; 
+        inset: 0; 
+        background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 32px 32px; 
+    }
+    .hero-content { 
+        position: relative; 
+        z-index: 2; 
+    }
+    .hero-stats-row { 
+        display: flex; 
+        gap: 0.6rem; 
+        margin-top: 0.9rem; 
+    }
+    .hero-stat-chip { 
+        background: rgba(255,255,255,0.13); 
+        border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; 
+        padding: 0.3rem 0.75rem; 
+        display: flex; 
+        align-items: center; 
+        gap: 0.35rem; 
+        font-size: 0.72rem; 
+        color: rgba(255,255,255,0.9); font-weight: 600; 
+    }
+    .hero-main-title { 
+        font-size: 1.4rem; 
+        font-weight: 800; 
+        color: #fff; letter-spacing: -0.3px; 
+        margin-bottom: 0.15rem; 
+    }
+    .hero-subtitle { 
+        font-size: 0.8rem; 
+        color: rgba(255,255,255,0.75); 
+    }
 
     /* ═══ PROGRESS STEPS ═══ */
     .steps-float {
@@ -110,16 +141,69 @@
         padding: 1rem 0.75rem; box-shadow: var(--shadow-md);
         border: 1px solid var(--border); position: relative; z-index: 10; margin-bottom: 1rem;
     }
-    .steps-track { display: flex; align-items: center; position: relative; }
-    .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
-    .step-connector { flex: 1; height: 2px; background: var(--border); position: relative; top: -14px; z-index: 0; transition: background 0.4s; }
-    .step-connector.done { background: var(--primary); }
-    .step-num { width: 36px; height: 36px; border-radius: 50%; background: var(--bg); border: 2px solid var(--border); color: var(--muted); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; transition: all 0.35s; margin-bottom: 0.4rem; }
-    .step-item.active .step-num { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 0 0 5px rgba(112,97,189,0.15); transform: scale(1.1); }
-    .step-item.completed .step-num { background: var(--success); border-color: var(--success); color: #fff; }
-    .step-lbl { font-size: 0.68rem; font-weight: 600; color: var(--muted); text-align: center; white-space: nowrap; }
-    .step-item.active .step-lbl { color: var(--primary); }
-    .step-item.completed .step-lbl { color: var(--success); }
+    .steps-track { 
+        display: flex; 
+        align-items: center; 
+        position: relative; 
+    }
+    .step-item { 
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        position: relative; 
+        z-index: 1; 
+    }
+    .step-connector { 
+        flex: 1; 
+        height: 2px; 
+        background: var(--border); 
+        position: relative; 
+        top: -14px; 
+        z-index: 0; 
+        transition: background 0.4s; 
+    }
+    .step-connector.done { 
+        background: var(--primary); 
+    }
+    .step-num { 
+        width: 36px; 
+        height: 36px; 
+        border-radius: 50%; background: var(--bg); 
+        border: 2px solid var(--border); color: var(--muted); 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-weight: 700; 
+        font-size: 0.9rem; 
+        transition: all 0.35s; 
+        margin-bottom: 0.4rem; 
+    }
+    .step-item.active .step-num { 
+        background: var(--primary); 
+        border-color: var(--primary); 
+        color: #fff; 
+        box-shadow: 0 0 0 5px rgba(112,97,189,0.15); 
+        transform: scale(1.1); 
+    }
+    .step-item.completed .step-num { 
+        background: var(--success); 
+        border-color: var(--success); 
+        color: #fff; 
+    }
+    .step-lbl { 
+        font-size: 0.68rem; 
+        font-weight: 600; 
+        color: var(--muted); 
+        text-align: center; 
+        white-space: nowrap; 
+    }
+    .step-item.active .step-lbl { 
+        color: var(--primary); 
+    }
+    .step-item.completed .step-lbl { 
+        color: var(--success); 
+    }
 
     /* ═══ PAGE BODY ═══ */
     .page-body { padding: 0 1rem 5rem; }
@@ -141,7 +225,16 @@
         padding: 0.85rem 1.1rem;
         display: flex; align-items: center; gap: 0.65rem;
     }
-    .card-header-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .card-header-icon { 
+        width: 32px; 
+        height: 32px; 
+        background: var(--primary); 
+        border-radius: 9px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        flex-shrink: 0; 
+    }
     .card-header-icon i { color: #fff; font-size: 0.82rem; }
     .card-header-title { font-size: 0.9rem; font-weight: 700; color: var(--text); }
     .card-header-hint { font-size: 0.72rem; color: var(--muted); margin-top: 0.05rem; }
