@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ยืนยันการจองห้องประชุม ศฝฟ.</title>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ─────────────────────────────────────────
-   DESIGN TOKENS
-───────────────────────────────────────── */
+
 :root {
     --brand:        #7061bd;
     --brand-dk:     #5a4da3;
@@ -63,7 +62,9 @@ body {
     padding-bottom:3rem;
 }
 
-/* ════════ HEADER ════════ */
+/* ═══════════════════════════════════════
+   HEADER  — สีม่วง brand เหมือน booking
+═══════════════════════════════════════ */
 .page-header {
     background: linear-gradient(155deg, #7061bd 0%, #5a4da3 50%, #42398a 100%);
     padding: 1.6rem 1.5rem 5.5rem;
@@ -90,6 +91,7 @@ body {
 }
 .hdr-inner { position:relative; z-index:2; }
 
+/* back button */
 .back-btn {
     display:inline-flex; align-items:center; gap:.5rem;
     color:rgba(255,255,255,.85); font-size:.84rem; text-decoration:none;
@@ -100,6 +102,7 @@ body {
 }
 .back-btn:hover { background:rgba(255,255,255,.2); color:#fff; }
 
+/* header icon */
 .hdr-icon-wrap {
     width:58px; height:58px;
     background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
@@ -111,7 +114,11 @@ body {
 .hdr-title  { font-size:1.6rem; font-weight:800; color:#fff; letter-spacing:-.3px; margin-bottom:.2rem; }
 .hdr-sub    { font-size:.82rem; color:rgba(255,255,255,.65); }
 
-.hdr-chips { display:flex; align-items:center; gap:.5rem; margin-top:1.2rem; flex-wrap:wrap; }
+/* ─── STATUS CHIPS ─── */
+.hdr-chips {
+    display:flex; align-items:center; gap:.5rem;
+    margin-top:1.2rem; flex-wrap:wrap;
+}
 .hdr-chip {
     display:inline-flex; align-items:center; gap:.35rem;
     background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
@@ -123,7 +130,9 @@ body {
 .hdr-chip .dot.gold  { background:var(--gold); }
 .hdr-chip .dot.green { background:#4caf50; }
 
-/* ════════ MAIN CONTENT ════════ */
+/* ═══════════════════════════════════════
+   MAIN CONTENT  (overlay card pattern)
+═══════════════════════════════════════ */
 .main-content {
     flex:1; padding:0 1rem 1rem;
     margin-top:-4rem; position:relative; z-index:3;
@@ -138,6 +147,7 @@ body {
 }
 @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
+/* card title row */
 .card-head {
     display:flex; align-items:center; justify-content:space-between;
     margin-bottom:1rem; padding-bottom:.85rem; border-bottom:1.5px solid var(--border);
@@ -156,13 +166,16 @@ body {
 .card-title-icon.green-icon { background:var(--success-soft); }
 .card-title-icon.green-icon i { color:var(--success); }
 
-/* ════════ LIST SECTION ════════ */
+/* ═══════════════════════════════════════
+   LIST SECTION
+═══════════════════════════════════════ */
 .list-count-badge {
     font-size:.75rem; background:var(--brand-soft); color:var(--brand);
     font-weight:700; padding:.2rem .65rem; border-radius:10px;
     border:1px solid rgba(112,97,189,.2);
 }
 
+/* Booking item card (Agoda-style) */
 .booking-item {
     background:var(--surface); border:1.5px solid var(--border);
     border-radius:var(--r); padding:1rem 2.8rem 1rem 1rem;
@@ -191,29 +204,45 @@ body {
     padding:.2rem .6rem; border-radius:8px; margin-bottom:.45rem;
     letter-spacing:.02em;
 }
-.booking-course-name { font-size:.97rem; font-weight:700; margin-bottom:.45rem; color:var(--text); line-height:1.35; }
-.booking-meta { display:flex; gap:.4rem .85rem; flex-wrap:wrap; }
-.booking-meta-item { font-size:.78rem; color:var(--text2); display:flex; align-items:center; gap:.28rem; }
+.booking-course-name {
+    font-size:.97rem; font-weight:700; margin-bottom:.45rem;
+    color:var(--text); line-height:1.35;
+}
+.booking-meta {
+    display:flex; gap:.4rem .85rem; flex-wrap:wrap;
+}
+.booking-meta-item {
+    font-size:.78rem; color:var(--text2);
+    display:flex; align-items:center; gap:.28rem;
+}
 .booking-meta-item i { color:var(--brand); width:12px; text-align:center; font-size:.72rem; }
 .item-arrow {
     position:absolute; right:1rem; top:50%; transform:translateY(-50%);
     width:28px; height:28px; border-radius:50%;
     background:var(--bg); border:1px solid var(--border);
     display:flex; align-items:center; justify-content:center;
-    color:var(--muted); font-size:.7rem; transition:all .2s;
+    color:var(--muted); font-size:.7rem;
+    transition:all .2s;
 }
 .booking-item:hover .item-arrow {
     background:var(--brand); border-color:var(--brand);
     color:#fff; transform:translateY(-50%) translateX(2px);
 }
 
+/* Empty state */
 .empty-state { text-align:center; padding:3rem 1.5rem; }
-.empty-icon { width:72px; height:72px; background:var(--brand-soft); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1.1rem; }
+.empty-icon {
+    width:72px; height:72px; background:var(--brand-soft);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    margin:0 auto 1.1rem;
+}
 .empty-icon i { font-size:2rem; color:var(--brand); opacity:.55; }
 .empty-title { font-size:1rem; font-weight:700; color:var(--text2); margin-bottom:.4rem; }
 .empty-sub   { font-size:.84rem; color:var(--muted); line-height:1.55; }
 
-/* ════════ SELECTED BANNER ════════ */
+/* ═══════════════════════════════════════
+   SELECTED BOOKING BANNER  (booking.com style)
+═══════════════════════════════════════ */
 .selected-banner {
     background:linear-gradient(135deg, var(--brand-soft), rgba(112,97,189,.06));
     border:1.5px solid rgba(112,97,189,.25);
@@ -228,7 +257,10 @@ body {
 }
 .selected-banner-icon i { color:#fff; font-size:1.1rem; }
 .selected-banner-body { flex:1; min-width:0; }
-.selected-banner-id { font-size:.72rem; color:var(--brand); font-weight:800; display:flex; align-items:center; gap:.3rem; margin-bottom:.18rem; letter-spacing:.03em; }
+.selected-banner-id {
+    font-size:.72rem; color:var(--brand); font-weight:800;
+    display:flex; align-items:center; gap:.3rem; margin-bottom:.18rem; letter-spacing:.03em;
+}
 .selected-banner-course { font-size:.97rem; font-weight:700; color:var(--text); line-height:1.3; }
 .change-link {
     font-size:.8rem; color:var(--brand); font-weight:700;
@@ -238,109 +270,43 @@ body {
 }
 .change-link:hover { opacity:.75; }
 
-/* ════════ FORM ELEMENTS — IMPROVED ════════ */
+/* ═══════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════ */
 .form-label { font-weight:600; color:var(--text2); margin-bottom:.4rem; font-size:.87rem; display:block; }
 .req { color:var(--danger); }
 
-.form-control {
+.form-control, .form-select {
     border:1.5px solid var(--border); border-radius:var(--r-sm);
     padding:.75rem 1rem; font-size:.93rem;
     font-family:'Sarabun',sans-serif; transition:all .2s;
     background:var(--surface); color:var(--text); width:100%;
 }
-.form-control:focus {
+.form-control:focus, .form-select:focus {
     border-color:var(--brand); box-shadow:0 0 0 3px rgba(112,97,189,.12); outline:none;
 }
 .form-control:disabled { background:var(--bg); color:var(--muted); }
 
-/* ════════════════════════════════════════
-   CUSTOM SELECT — แก้ปัญหา dropdown เช็คยาก
-   ใช้ visual card layout แทน native select
-════════════════════════════════════════ */
-.custom-select-wrap { position:relative; }
-.custom-select-trigger {
-    width:100%; padding:.8rem 3rem .8rem 1rem;
-    border:2px solid var(--border); border-radius:var(--r-sm);
-    background:var(--surface); color:var(--text);
-    font-family:'Sarabun',sans-serif; font-size:.93rem; font-weight:500;
-    cursor:pointer; display:flex; align-items:center; gap:.65rem;
-    transition:all .22s; position:relative; text-align:left;
-    box-shadow: var(--shadow-sm);
+/* Date pair display */
+.date-pair {
+    display:grid; grid-template-columns:1fr 1fr; gap:.65rem;
 }
-.custom-select-trigger:hover { border-color:var(--brand-lt); background:var(--brand-xsoft); }
-.custom-select-trigger.open { border-color:var(--brand); box-shadow:0 0 0 3px rgba(112,97,189,.12); }
-.custom-select-trigger .sel-icon {
-    width:32px; height:32px; border-radius:8px; flex-shrink:0;
-    background:var(--brand-soft); display:flex; align-items:center; justify-content:center;
-}
-.custom-select-trigger .sel-icon i { font-size:.9rem; color:var(--brand); }
-.custom-select-trigger .sel-text { flex:1; }
-.custom-select-trigger .sel-text .sel-label { font-size:.72rem; color:var(--muted); display:block; line-height:1; margin-bottom:.1rem; }
-.custom-select-trigger .sel-text .sel-value { font-size:.93rem; font-weight:600; color:var(--text); }
-.custom-select-trigger .sel-text .sel-value.placeholder { color:var(--muted); font-weight:400; }
-.custom-select-trigger .sel-chevron {
-    position:absolute; right:.9rem; top:50%; transform:translateY(-50%);
-    width:26px; height:26px; border-radius:7px; background:var(--bg);
-    display:flex; align-items:center; justify-content:center;
-    color:var(--muted); font-size:.78rem;
-    transition:transform .25s, background .2s;
-}
-.custom-select-trigger.open .sel-chevron { transform:translateY(-50%) rotate(180deg); background:var(--brand-soft); color:var(--brand); }
-
-/* Dropdown panel */
-.custom-select-panel {
-    position:absolute; top:calc(100% + .5rem); left:0; right:0; z-index:1000;
-    background:var(--surface); border:1.5px solid var(--border-strong);
-    border-radius:var(--r); box-shadow:var(--shadow-lg);
-    overflow:hidden; display:none;
-    animation:dropIn .18s ease-out;
-}
-.custom-select-panel.open { display:block; }
-@keyframes dropIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
-
-.select-option {
-    display:flex; align-items:center; gap:.7rem;
-    padding:.85rem 1rem; cursor:pointer;
-    transition:background .15s; border-bottom:1px solid var(--border);
-    position:relative;
-}
-.select-option:last-child { border-bottom:none; }
-.select-option:hover { background:var(--brand-soft); }
-.select-option.selected { background:var(--brand-soft); }
-.select-option .opt-icon {
-    width:36px; height:36px; border-radius:9px; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-    font-size:1.1rem;
-}
-.select-option .opt-body { flex:1; }
-.select-option .opt-name { font-size:.93rem; font-weight:700; color:var(--text); line-height:1.25; }
-.select-option .opt-desc { font-size:.74rem; color:var(--muted); margin-top:.1rem; }
-.select-option .opt-check {
-    width:20px; height:20px; border-radius:50%;
-    background:var(--brand); display:flex; align-items:center; justify-content:center;
-    opacity:0; transition:opacity .15s; flex-shrink:0;
-}
-.select-option .opt-check i { font-size:.65rem; color:#fff; }
-.select-option.selected .opt-check { opacity:1; }
-/* placeholder option */
-.select-option.placeholder-opt { opacity:.5; pointer-events:none; }
-
-/* hidden native select for form submission */
-.native-select-hidden { display:none; }
-
-/* ════════ DATE PAIR ════════ */
-.date-pair { display:grid; grid-template-columns:1fr 1fr; gap:.65rem; }
 .date-chip {
     background:var(--bg); border:1.5px solid var(--border);
     border-radius:var(--r-sm); padding:.7rem .9rem;
     display:flex; align-items:center; gap:.6rem;
 }
-.date-chip-icon { width:30px; height:30px; border-radius:8px; background:var(--brand-soft); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.date-chip-icon {
+    width:30px; height:30px; border-radius:8px;
+    background:var(--brand-soft); display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
 .date-chip-icon i { font-size:.8rem; color:var(--brand); }
 .date-chip-label { font-size:.7rem; color:var(--muted); font-weight:500; display:block; }
 .date-chip-value { font-size:.88rem; font-weight:700; color:var(--text); display:block; line-height:1.2; }
 
-/* ════════ ROOM COUNTER ════════ */
+/* ═══════════════════════════════════════
+   ROOM COUNTER  (Agoda quantity picker)
+═══════════════════════════════════════ */
 .room-total-badge {
     display:inline-flex; align-items:center; gap:.3rem;
     background:var(--brand-soft); color:var(--brand);
@@ -348,6 +314,7 @@ body {
     padding:.26rem .7rem; border-radius:10px;
     border:1.5px solid rgba(112,97,189,.22);
 }
+
 .room-type-box {
     background:var(--bg); border:1.5px solid var(--border);
     border-radius:var(--r); padding:1rem 1.1rem; margin-bottom:.7rem;
@@ -356,28 +323,47 @@ body {
 .room-type-box:hover { border-color:var(--border-strong); }
 .room-type-box.vip-box { border-color:rgba(155,89,182,.22); background:var(--vip-soft); }
 .room-type-box:last-child { margin-bottom:0; }
-.room-type-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:.85rem; }
-.room-type-name { font-weight:700; display:flex; align-items:center; gap:.5rem; font-size:.91rem; color:var(--text); }
-.vip-tag { background:var(--vip); color:#fff; font-size:.67rem; font-weight:800; padding:.14rem .52rem; border-radius:10px; letter-spacing:.03em; }
-.avail-pill { display:inline-flex; align-items:center; gap:.28rem; padding:.2rem .6rem; border-radius:10px; font-size:.74rem; font-weight:700; }
+.room-type-top {
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:.85rem;
+}
+.room-type-name {
+    font-weight:700; display:flex; align-items:center; gap:.5rem;
+    font-size:.91rem; color:var(--text);
+}
+.vip-tag {
+    background:var(--vip); color:#fff;
+    font-size:.67rem; font-weight:800;
+    padding:.14rem .52rem; border-radius:10px; letter-spacing:.03em;
+}
+.avail-pill {
+    display:inline-flex; align-items:center; gap:.28rem;
+    padding:.2rem .6rem; border-radius:10px; font-size:.74rem; font-weight:700;
+}
 .avail-pill.ok   { background:var(--success-soft); color:var(--success); }
 .avail-pill.warn { background:var(--warning-soft); color:var(--warning); }
 .avail-pill.full { background:var(--danger-soft);  color:var(--danger);  }
 
+/* Qty stepper */
 .counter-row { display:flex; align-items:center; gap:1rem; }
 .counter-btn {
     width:40px; height:40px; border-radius:var(--r-sm);
     border:1.5px solid var(--border); background:var(--surface);
     font-size:1.3rem; display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:all .2s; font-weight:700; color:var(--text2); line-height:1; flex-shrink:0;
+    cursor:pointer; transition:all .2s; font-weight:700; color:var(--text2); line-height:1;
+    flex-shrink:0;
 }
 .counter-btn:hover:not(:disabled) { background:var(--brand); color:#fff; border-color:var(--brand); }
 .counter-btn.vip-btn:hover:not(:disabled) { background:var(--vip); border-color:var(--vip); }
 .counter-btn:disabled { opacity:.3; cursor:not-allowed; }
-.counter-val { font-size:1.45rem; font-weight:800; min-width:44px; text-align:center; color:var(--text); }
+.counter-val {
+    font-size:1.45rem; font-weight:800;
+    min-width:44px; text-align:center; color:var(--text);
+}
 .room-info-text { font-size:.78rem; color:var(--muted); margin-top:.5rem; }
 
-/* ════════ CHECKBOX LIST ════════ */
+/* ═══════════════════════════════════════
+   CHECKBOX LIST  (equipment / field)
+═══════════════════════════════════════ */
 .check-list { display:flex; flex-direction:column; gap:.45rem; }
 .check-row {
     display:flex; align-items:center; gap:.7rem;
@@ -385,51 +371,15 @@ body {
     border-radius:var(--r-sm); border:1.5px solid transparent; transition:all .15s;
 }
 .check-row:hover { background:var(--brand-soft); border-color:var(--border); }
-.check-row input[type="checkbox"] { width:18px; height:18px; accent-color:var(--brand); cursor:pointer; flex-shrink:0; }
+.check-row input[type="checkbox"] {
+    width:18px; height:18px; accent-color:var(--brand);
+    cursor:pointer; flex-shrink:0;
+}
 .check-row label { cursor:pointer; font-size:.9rem; color:var(--text2); flex:1; line-height:1.4; }
 
-/* ════════ FOOD SECTION — REDESIGNED ════════ */
-
-/* ── ปุ่มดาวน์โหลดเมนูอาหาร (โดดเด่น น่าคลิก) ── */
-.food-download-wrap {
-    margin-bottom:1.1rem;
-}
-.food-menu-btn {
-    display:flex; align-items:center; gap:.75rem;
-    background:linear-gradient(135deg, #16a34a 0%, #15803d 60%, #166534 100%);
-    color:#fff; font-size:.93rem; font-weight:700;
-    border:none; border-radius:var(--r); padding:.85rem 1.2rem;
-    cursor:pointer; text-decoration:none; transition:all .25s;
-    box-shadow:0 6px 20px rgba(22,163,74,.35);
-    width:100%; position:relative; overflow:hidden;
-}
-.food-menu-btn::before {
-    content:''; position:absolute; inset:0;
-    background:linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 60%);
-    pointer-events:none;
-}
-.food-menu-btn:hover {
-    transform:translateY(-2px);
-    box-shadow:0 10px 30px rgba(22,163,74,.45);
-    color:#fff;
-}
-.food-menu-btn:active { transform:translateY(0); }
-.food-btn-icon {
-    width:40px; height:40px; border-radius:10px; flex-shrink:0;
-    background:rgba(255,255,255,.2);
-    display:flex; align-items:center; justify-content:center;
-}
-.food-btn-icon i { font-size:1.15rem; }
-.food-btn-body { flex:1; text-align:left; }
-.food-btn-label { font-size:.72rem; color:rgba(255,255,255,.75); display:block; line-height:1; margin-bottom:.12rem; }
-.food-btn-main  { font-size:.97rem; font-weight:800; display:block; }
-.food-btn-arrow {
-    width:28px; height:28px; border-radius:50%;
-    background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;
-    font-size:.75rem; flex-shrink:0;
-}
-
-/* food radio cards */
+/* ═══════════════════════════════════════
+   FOOD RADIO  (card toggle — LineMAN style)
+═══════════════════════════════════════ */
 .food-radio-grid { display:grid; grid-template-columns:1fr 1fr; gap:.85rem; margin-top:.5rem; }
 .food-card { position:relative; }
 .food-card input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
@@ -449,11 +399,14 @@ body {
 .food-card.sel-yes .food-check-mark { display:block; color:var(--brand); }
 .food-card.sel-no  .food-check-mark { display:block; color:var(--muted); }
 
-/* ════════ UPLOAD ZONES ════════ */
+/* ═══════════════════════════════════════
+   UPLOAD ZONES  (booking.com dropzone)
+═══════════════════════════════════════ */
 .upload-zone {
     border:2px dashed var(--border-strong); border-radius:var(--r-sm);
     padding:1.2rem 1rem; text-align:center; cursor:pointer;
-    transition:all .22s; background:var(--bg); position:relative;
+    transition:all .22s; background:var(--bg);
+    position:relative;
 }
 .upload-zone:hover  { border-color:var(--brand); background:var(--brand-xsoft); }
 .upload-zone.has-file { border-color:var(--success); background:var(--success-soft); border-style:solid; }
@@ -464,6 +417,7 @@ body {
 .file-name { font-size:.76rem; color:var(--success); margin-top:.3rem; font-weight:600; }
 input[type="file"] { display:none; }
 
+/* Upload label (required / optional) */
 .upload-badge {
     display:inline-flex; align-items:center; gap:.3rem;
     font-size:.7rem; font-weight:700; padding:.16rem .5rem; border-radius:6px;
@@ -472,7 +426,9 @@ input[type="file"] { display:none; }
 .upload-badge.req-badge { background:var(--danger-soft); color:var(--danger); }
 .upload-badge.opt-badge { background:var(--bg); color:var(--muted); border:1px solid var(--border); }
 
-/* ════════ SUBMIT BUTTON ════════ */
+/* ═══════════════════════════════════════
+   SUBMIT BUTTON  (full-width pill gradient)
+═══════════════════════════════════════ */
 .submit-btn {
     width:100%; padding:1rem; border:none; border-radius:var(--r);
     background:linear-gradient(135deg, var(--brand), var(--brand-lt));
@@ -484,7 +440,20 @@ input[type="file"] { display:none; }
 .submit-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 10px 32px rgba(112,97,189,.48); }
 .submit-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
 
-/* ════════ LOADING OVERLAY ════════ */
+/* food menu download */
+.food-menu-btn {
+    display:inline-flex; align-items:center; gap:.5rem;
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#fff; font-size:.87rem; font-weight:700;
+    border:none; border-radius:var(--r-sm); padding:.62rem 1.1rem;
+    cursor:pointer; text-decoration:none; transition:all .2s;
+    box-shadow:0 3px 10px rgba(34,197,94,.28); margin-bottom:1rem;
+}
+.food-menu-btn:hover { transform:translateY(-1px); box-shadow:0 5px 16px rgba(34,197,94,.4); color:#fff; }
+
+/* ═══════════════════════════════════════
+   LOADING OVERLAY
+═══════════════════════════════════════ */
 .loading-overlay {
     position:fixed; inset:0; background:rgba(112,97,189,.12);
     backdrop-filter:blur(12px); display:none;
@@ -504,21 +473,26 @@ input[type="file"] { display:none; }
 @keyframes spin { to { transform:rotate(360deg); } }
 .loading-label { font-size:.92rem; color:var(--text2); font-weight:500; }
 
+/* Swal override */
 .swal2-popup { font-family:'Sarabun',sans-serif !important; border-radius:20px !important; }
 .swal2-confirm { background:var(--brand) !important; border-radius:10px !important; }
 
+/* footer contact */
 .footer-contact {
     display:flex; align-items:center; gap:.85rem;
     background:var(--surface); border:1px solid var(--border);
     border-radius:var(--r); padding:.9rem 1rem;
     box-shadow:var(--shadow-sm); margin:0 1rem 1rem;
 }
-.footer-contact-icon { width:36px; height:36px; background:var(--brand-soft); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.footer-contact-icon {
+    width:36px; height:36px; background:var(--brand-soft);
+    border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
 .footer-contact-icon i { color:var(--brand); font-size:.95rem; }
 .footer-contact-label { font-size:.73rem; color:var(--muted); }
 .footer-contact-value { font-size:.87rem; font-weight:700; color:var(--text); }
 
-/* staggered animation */
+/* staggered animation delays */
 .delay-1 { animation-delay:.04s; }
 .delay-2 { animation-delay:.1s;  }
 .delay-3 { animation-delay:.16s; }
@@ -526,26 +500,14 @@ input[type="file"] { display:none; }
 .delay-5 { animation-delay:.28s; }
 .delay-6 { animation-delay:.34s; }
 .delay-7 { animation-delay:.4s;  }
-
-/* close overlay when clicking outside */
-.select-backdrop {
-    position:fixed; inset:0; z-index:999; display:none;
-}
-.select-backdrop.open { display:block; }
-
-/* divider label inside select */
-.select-divider {
-    padding:.4rem 1rem .2rem;
-    font-size:.68rem; font-weight:700; color:var(--muted);
-    text-transform:uppercase; letter-spacing:.06em;
-    background:var(--bg); border-bottom:1px solid var(--border);
-}
 </style>
 </head>
 <body>
 <div class="app-wrap">
 
-    <!-- ════ HEADER ════ -->
+    <!-- ════════════════════════════════
+         HEADER
+    ════════════════════════════════ -->
     <div class="page-header">
         <div class="hdr-grid"></div>
         <div class="hdr-orb1"></div>
@@ -558,16 +520,22 @@ input[type="file"] { display:none; }
             <div class="hdr-title">ยืนยันการจอง</div>
             <div class="hdr-sub">เลือกรายการที่อนุมัติแล้วเพื่อดำเนินการต่อ</div>
             <div class="hdr-chips">
-                <div class="hdr-chip"><span class="dot gold"></span>รายการอนุมัติแล้ว</div>
-                <div class="hdr-chip"><span class="dot green"></span>พร้อมยืนยัน</div>
+                <div class="hdr-chip">
+                    <span class="dot gold"></span>รายการอนุมัติแล้ว
+                </div>
+                <div class="hdr-chip">
+                    <span class="dot green"></span>พร้อมยืนยัน
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ════ MAIN CONTENT ════ -->
+    <!-- ════════════════════════════════
+         MAIN CONTENT
+    ════════════════════════════════ -->
     <div class="main-content">
 
-        <!-- LIST SECTION -->
+        <!-- ── LIST SECTION ── -->
         <div id="listSection">
             <div class="section-card delay-1">
                 <div class="card-head">
@@ -587,7 +555,7 @@ input[type="file"] { display:none; }
             </div>
         </div>
 
-        <!-- FORM SECTION -->
+        <!-- ── FORM SECTION ── -->
         <div id="formSection" style="display:none;">
 
             <!-- 0 · Selected banner -->
@@ -645,6 +613,7 @@ input[type="file"] { display:none; }
                     <label class="form-label">จำนวนผู้เข้าร่วม <span class="req">*</span></label>
                     <input type="number" class="form-control" id="f_attendees" min="1">
                 </div>
+                <!-- ช่วงประชุม -->
                 <div class="mb-3">
                     <label class="form-label" style="font-size:.8rem;">ช่วงวันประชุม</label>
                     <div class="date-pair">
@@ -663,9 +632,11 @@ input[type="file"] { display:none; }
                             </div>
                         </div>
                     </div>
+                    <!-- hidden inputs -->
                     <input type="hidden" id="f_startDate">
                     <input type="hidden" id="f_endDate">
                 </div>
+                <!-- Check-in / Check-out -->
                 <div class="mb-0">
                     <label class="form-label" style="font-size:.8rem;">ที่พัก Check-in / Check-out</label>
                     <div class="date-pair">
@@ -693,7 +664,7 @@ input[type="file"] { display:none; }
                 </div>
             </div>
 
-            <!-- 3 · ห้องพัก -->
+            <!-- 3 · ห้องพัก (counter) -->
             <div class="section-card delay-3">
                 <div class="card-head">
                     <div class="card-title">
@@ -705,6 +676,7 @@ input[type="file"] { display:none; }
                     </span>
                 </div>
                 <div id="roomCounterWrap">
+                    <!-- Standard -->
                     <div class="room-type-box">
                         <div class="room-type-top">
                             <div class="room-type-name">
@@ -719,6 +691,7 @@ input[type="file"] { display:none; }
                         </div>
                         <div class="room-info-text">กดเพิ่ม/ลดจำนวนห้องพักมาตรฐาน</div>
                     </div>
+                    <!-- VIP -->
                     <div class="room-type-box vip-box">
                         <div class="room-type-top">
                             <div class="room-type-name">
@@ -751,76 +724,16 @@ input[type="file"] { display:none; }
                     </div>
                 </div>
 
-                <!-- การจัดห้อง — Custom Select แทน native dropdown -->
+                <!-- การจัดห้อง -->
                 <div class="mb-3">
                     <label class="form-label">การจัดห้อง</label>
-
-                    <!-- Custom visual select -->
-                    <div class="custom-select-wrap" id="roomSetupWrap">
-                        <button type="button" class="custom-select-trigger" id="roomSetupTrigger"
-                                onclick="toggleSelect('roomSetup')">
-                            <div class="sel-icon"><i class="fas fa-layer-group"></i></div>
-                            <div class="sel-text">
-                                <span class="sel-label">รูปแบบการจัดห้อง</span>
-                                <span class="sel-value placeholder" id="roomSetupDisplay">เลือกรูปแบบ...</span>
-                            </div>
-                            <div class="sel-chevron"><i class="fas fa-chevron-down"></i></div>
-                        </button>
-                        <div class="custom-select-panel" id="roomSetupPanel">
-                            <div class="select-option placeholder-opt">
-                                <div class="opt-body"><div class="opt-name" style="color:var(--muted)">เลือกรูปแบบ...</div></div>
-                            </div>
-                            <div class="select-option" data-value="Classroom" onclick="selectOption('roomSetup','Classroom','🎓','Classroom','แบบห้องเรียน — โต๊ะหันหน้าเข้าหาจอ')">
-                                <div class="opt-icon">🎓</div>
-                                <div class="opt-body">
-                                    <div class="opt-name">Classroom</div>
-                                    <div class="opt-desc">แบบห้องเรียน — โต๊ะหันหน้าเข้าหาจอ</div>
-                                </div>
-                                <div class="opt-check"><i class="fas fa-check"></i></div>
-                            </div>
-                            <div class="select-option" data-value="U-Shape" onclick="selectOption('roomSetup','U-Shape','🔷','U-Shape','แบบตัวยู — เหมาะสำหรับการอภิปราย')">
-                                <div class="opt-icon">🔷</div>
-                                <div class="opt-body">
-                                    <div class="opt-name">U-Shape</div>
-                                    <div class="opt-desc">แบบตัวยู — เหมาะสำหรับการอภิปราย</div>
-                                </div>
-                                <div class="opt-check"><i class="fas fa-check"></i></div>
-                            </div>
-                            <div class="select-option" data-value="Theater" onclick="selectOption('roomSetup','Theater','🎭','Theater','แบบโรงละคร — ไม่มีโต๊ะ รองรับได้มาก')">
-                                <div class="opt-icon">🎭</div>
-                                <div class="opt-body">
-                                    <div class="opt-name">Theater</div>
-                                    <div class="opt-desc">แบบโรงละคร — ไม่มีโต๊ะ รองรับได้มาก</div>
-                                </div>
-                                <div class="opt-check"><i class="fas fa-check"></i></div>
-                            </div>
-                            <div class="select-option" data-value="Computor" onclick="selectOption('roomSetup','Computor','💻','ห้องคอมพิวเตอร์','มีเครื่องคอมพิวเตอร์ประจำที่นั่ง')">
-                                <div class="opt-icon">💻</div>
-                                <div class="opt-body">
-                                    <div class="opt-name">ห้องคอมพิวเตอร์</div>
-                                    <div class="opt-desc">มีเครื่องคอมพิวเตอร์ประจำที่นั่ง</div>
-                                </div>
-                                <div class="opt-check"><i class="fas fa-check"></i></div>
-                            </div>
-                            <div class="select-option" data-value="อื่นๆ" onclick="selectOption('roomSetup','อื่นๆ','✏️','อื่นๆ','โปรดระบุรูปแบบเพิ่มเติม')">
-                                <div class="opt-icon">✏️</div>
-                                <div class="opt-body">
-                                    <div class="opt-name">อื่นๆ</div>
-                                    <div class="opt-desc">โปรดระบุรูปแบบเพิ่มเติม</div>
-                                </div>
-                                <div class="opt-check"><i class="fas fa-check"></i></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- native hidden select for form value -->
-                    <select class="native-select-hidden" id="f_roomSetup">
-                        <option value=""></option>
-                        <option value="Classroom">Classroom</option>
-                        <option value="U-Shape">U-Shape</option>
+                    <select class="form-select" id="f_roomSetup">
+                        <option value="">เลือกรูปแบบ...</option>
+                        <option value="Classroom">Classroom (แบบห้องเรียน)</option>
+                        <option value="U-Shape">U-Shape (แบบตัวยู)</option>
                         <option value="Theater">Theater</option>
                         <option value="Computor">ห้องคอมพิวเตอร์</option>
-                        <option value="อื่นๆ">อื่นๆ</option>
+                        <option value="อื่นๆ">อื่นๆ (โปรดระบุ)</option>
                     </select>
                 </div>
                 <div class="mb-3" id="roomSetupOtherWrap" style="display:none;">
@@ -865,24 +778,10 @@ input[type="file"] { display:none; }
                         จองอาหารและอาหารว่าง
                     </div>
                 </div>
-
-                <!-- ปุ่มดาวน์โหลดเมนู (redesigned) -->
-                <div class="food-download-wrap">
-                    <a href="https://drive.google.com/drive/folders/1HmUtWF2_J6cuFUZXmLBKFZwFoQsAaoDH?usp=sharing"
-                       target="_blank" class="food-menu-btn">
-                        <div class="food-btn-icon">
-                            <i class="fas fa-utensils"></i>
-                        </div>
-                        <div class="food-btn-body">
-                            <span class="food-btn-label">คลิกเพื่อดูและดาวน์โหลด</span>
-                            <span class="food-btn-main">เมนูอาหารและอาหารว่าง</span>
-                        </div>
-                        <div class="food-btn-arrow">
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                    </a>
-                </div>
-
+                <a href="https://drive.google.com/drive/folders/1HmUtWF2_J6cuFUZXmLBKFZwFoQsAaoDH?usp=sharing"
+                   target="_blank" class="food-menu-btn">
+                    <i class="fas fa-download"></i> ดาวน์โหลดเมนูอาหาร
+                </a>
                 <div class="food-radio-grid">
                     <div class="food-card" id="foodCardYes">
                         <span class="food-check-mark" id="checkYes"><i class="fas fa-check-circle"></i></span>
@@ -932,7 +831,7 @@ input[type="file"] { display:none; }
                     </div>
 
                 </div>
-            
+
             <!-- 6 · อัปโหลดเอกสาร -->
             <div class="section-card delay-6">
                 <div class="card-head">
@@ -941,6 +840,8 @@ input[type="file"] { display:none; }
                         อัปโหลดเอกสาร
                     </div>
                 </div>
+
+                <!-- เอกสารอนุมัติ (required) -->
                 <div class="mb-3">
                     <label class="form-label">
                         เอกสารอนุมัติจัดฝึกอบรม
@@ -953,6 +854,8 @@ input[type="file"] { display:none; }
                     </div>
                     <input type="file" id="file_approval" accept=".pdf,.doc,.docx,.xls,.xlsx">
                 </div>
+
+                <!-- รายชื่อผู้เข้าร่วม (optional) -->
                 <div class="mb-3">
                     <label class="form-label">
                         รายชื่อผู้เข้าร่วมประชุม
@@ -965,6 +868,8 @@ input[type="file"] { display:none; }
                     </div>
                     <input type="file" id="file_attendee" accept=".pdf,.doc,.docx,.xls,.xlsx">
                 </div>
+
+                <!-- รายการอาหาร (แสดงเมื่อต้องการอาหาร) -->
                 <div class="mb-0" id="foodUploadSection" style="display:none;">
                     <label class="form-label">
                         รายการอาหารและอาหารว่าง
@@ -989,6 +894,7 @@ input[type="file"] { display:none; }
         </div><!-- /formSection -->
     </div><!-- /main-content -->
 
+    <!-- footer -->
     <div class="footer-contact mt-2">
         <div class="footer-contact-icon"><i class="fas fa-phone-alt"></i></div>
         <div>
@@ -1007,159 +913,162 @@ input[type="file"] { display:none; }
     </div>
 </div>
 
-<!-- backdrop for closing dropdowns -->
-<div class="select-backdrop" id="selectBackdrop" onclick="closeAllSelects()"></div>
-
 <script>
+const LIFF_ID = "2007138631-Ono58j50";
 const GAS_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
-
-const VIP_TOTAL = 5;
+const VIP_TOTAL = 9;
+    
 let userId = '';
 let selectedBooking = null;
 let origStd = 0, curStd = 0, curVip = 0;
 let vipCanBook = 0;
 let currentFoodBooking = '';
 
-function toggleSelect(id) {
-    const trigger = document.getElementById(id + 'Trigger');
-    const panel   = document.getElementById(id + 'Panel');
-    const backdrop = document.getElementById('selectBackdrop');
-    const isOpen = panel.classList.contains('open');
-    closeAllSelects();
-    if (!isOpen) {
-        panel.classList.add('open');
-        trigger.classList.add('open');
-        backdrop.classList.add('open');
-    }
-}
-
-function closeAllSelects() {
-    document.querySelectorAll('.custom-select-panel').forEach(p => p.classList.remove('open'));
-    document.querySelectorAll('.custom-select-trigger').forEach(t => t.classList.remove('open'));
-    document.getElementById('selectBackdrop').classList.remove('open');
-}
-
-function selectOption(selectId, value, emoji, name, desc) {
-    // update hidden native select
-    const native = document.getElementById('f_' + selectId);
-    if (native) {
-        native.value = value;
-        // fire change event so existing listeners still work
-        native.dispatchEvent(new Event('change'));
-    }
-
-    // update visual trigger display
-    const display = document.getElementById(selectId + 'Display');
-    display.textContent = name;
-    display.classList.remove('placeholder');
-
-    // mark selected option
-    const panel = document.getElementById(selectId + 'Panel');
-    panel.querySelectorAll('.select-option').forEach(opt => {
-        opt.classList.toggle('selected', opt.dataset.value === value);
-    });
-
-    closeAllSelects();
-}
-
-/* ════════════════════════════════════════
-   INIT — เหมือนเดิม
-════════════════════════════════════════ */
+/* ── INIT ── */
 async function init() {
-    const params = new URLSearchParams(window.location.search);
-    userId = params.get('userId') || '';
-    setupListeners();
-    await loadBookings();
-}
+    userId = sessionStorage.getItem('userId') || '';
+    if (userId) {
+        loadApprovedBookings();
+        setupListeners();
+        return;
+    }
 
-async function loadBookings() {
     try {
-        const res  = await fetch(`${GAS_URL}?action=getApprovedBookings&userId=${encodeURIComponent(userId)}`);
-        const data = await res.json();
-        renderList(data.bookings || []);
-    } catch(e) {
-        renderList([]);
+        await liff.init({ liffId: LIFF_ID });
+
+        if (!liff.isLoggedIn()) {
+            liff.login();
+            return;
+        }
+
+        const profile = await liff.getProfile();
+        userId = profile.userId;
+
+        sessionStorage.setItem('userId', profile.userId);
+        sessionStorage.setItem('displayName', profile.displayName);
+        sessionStorage.setItem('pictureUrl', profile.pictureUrl || '');
+        sessionStorage.setItem('liffReady', 'true');
+
+        loadApprovedBookings();
+        setupListeners();
+    } catch (err) {
+        console.error('LIFF init error:', err);
+        // Fallback: redirect index ถ้า LIFF ล้มเหลว
+        window.location.href = 'index.html';
     }
 }
 
-function renderList(bookings) {
-    const listEl = document.getElementById('bookingList');
-    const hint   = document.getElementById('listHint');
-    hint.textContent = `${bookings.length} รายการ`;
-    if (!bookings.length) {
-        listEl.innerHTML = `
+/* ── LOAD LIST ── */
+async function loadApprovedBookings() {
+    try {
+        const res = await fetch(`${GAS_URL}?action=getApprovedBookings&userId=${userId}`);
+        const result = await res.json();
+        renderBookingList(result.bookings || []);
+    } catch(e) {
+        renderBookingList([]);
+    }
+}
+
+/* ── RENDER LIST ── */
+function renderBookingList(bookings) {
+    const container = document.getElementById('bookingList');
+    const hint = document.getElementById('listHint');
+    if (bookings.length === 0) {
+        hint.textContent = '0 รายการ';
+        container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon"><i class="fas fa-calendar-times"></i></div>
-                <div class="empty-title">ไม่พบรายการรอยืนยัน</div>
-                <div class="empty-sub">ยังไม่มีการจองที่ได้รับอนุมัติ<br>หรือดำเนินการยืนยันแล้ว</div>
+                <div class="empty-icon"><i class="fas fa-clipboard-check"></i></div>
+                <div class="empty-title">ไม่มีรายการรอยืนยัน</div>
+                <div class="empty-sub">ยังไม่มีการจองที่ได้รับอนุมัติและรอการยืนยัน</div>
             </div>`;
         return;
     }
-    listEl.innerHTML = bookings.map(b => `
+    hint.textContent = `${bookings.length} รายการ`;
+    container.innerHTML = bookings.map(b => {
+        const start = formatDateTH(b.startDate), end = formatDateTH(b.endDate);
+        return `
         <div class="booking-item" onclick="selectBooking(${JSON.stringify(b).replace(/"/g,'&quot;')})">
             <div class="booking-id-tag"><i class="fas fa-hashtag"></i>${b.bookingId}</div>
             <div class="booking-course-name">${b.courseName || '-'}</div>
             <div class="booking-meta">
-                <div class="booking-meta-item"><i class="fas fa-calendar-day"></i>${formatDateTH(b.startDate)}</div>
-                <div class="booking-meta-item"><i class="fas fa-users"></i>${b.attendees || '-'} คน</div>
-                <div class="booking-meta-item"><i class="fas fa-building"></i>${b.department || '-'}</div>
+                <span class="booking-meta-item"><i class="fas fa-calendar-alt"></i>${start} – ${end}</span>
+                <span class="booking-meta-item"><i class="fas fa-users"></i>${b.attendees} คน</span>
+                <span class="booking-meta-item"><i class="fas fa-door-open"></i>${b.room || '-'}</span>
             </div>
             <div class="item-arrow"><i class="fas fa-chevron-right"></i></div>
-        </div>`).join('');
+        </div>`;
+    }).join('');
 }
 
+/* ── SELECT BOOKING ── */
 function selectBooking(b) {
     selectedBooking = b;
+
+    // banner
     document.getElementById('selectedId').textContent     = b.bookingId;
     document.getElementById('selectedCourse').textContent = b.courseName || '-';
-    document.getElementById('f_fullName').value    = b.fullName    || '';
-    document.getElementById('f_department').value  = b.department  || '';
-    document.getElementById('f_phone').value       = b.phone       || '';
-    document.getElementById('f_courseName').value  = b.courseName  || '';
-    document.getElementById('f_attendees').value   = b.attendees   || '';
+
+    // ผู้จอง
+    document.getElementById('f_fullName').value   = b.fullName   || '';
+    document.getElementById('f_department').value = b.department || '';
+    document.getElementById('f_phone').value      = String(b.phone || '').replace("'", '');
+
+    // การจอง
+    document.getElementById('f_courseName').value = b.courseName || '';
+    document.getElementById('f_attendees').value  = b.attendees  || '';
+
+    // hidden dates
+    document.getElementById('f_startDate').value = b.startDate || '';
+    document.getElementById('f_endDate').value   = b.endDate   || '';
+    document.getElementById('f_checkin').value   = b.checkin   || '';
+    document.getElementById('f_checkout').value  = b.checkout  || '';
+
+    // display date chips
     document.getElementById('disp_startDate').textContent = formatDateTH(b.startDate);
     document.getElementById('disp_endDate').textContent   = formatDateTH(b.endDate);
     document.getElementById('disp_checkin').textContent   = formatDateTH(b.checkin);
     document.getElementById('disp_checkout').textContent  = formatDateTH(b.checkout);
-    document.getElementById('f_startDate').value   = b.startDate  || '';
-    document.getElementById('f_endDate').value     = b.endDate    || '';
-    document.getElementById('f_checkin').value     = b.checkin    || '';
-    document.getElementById('f_checkout').value    = b.checkout   || '';
 
-    origStd = parseInt(b.standardRooms) || 0;
-    curStd  = origStd; curVip = 0;
+    // rooms
+    origStd = parseInt(b.numRooms) || 0;
+    curVip  = parseInt(b.viprooms) || 0;
+    curStd  = origStd - curVip;
     updateRoomDisplay();
-    checkVipAvailability(b.startDate, b.endDate);
+    checkVipAvailability();
 
+    // switch views
     document.getElementById('listSection').style.display = 'none';
     document.getElementById('formSection').style.display = 'block';
-    window.scrollTo({ top:0, behavior:'smooth' });
+    window.scrollTo(0, 0);
 }
 
 function resetToList() {
     selectedBooking = null;
     document.getElementById('formSection').style.display = 'none';
     document.getElementById('listSection').style.display = 'block';
-    window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-async function checkVipAvailability(startDate, endDate) {
-    const badge = document.getElementById('vipAvailBadge');
+/* ── VIP AVAILABILITY ── */
+async function checkVipAvailability() {
+    if (!selectedBooking) return;
     try {
-        const res    = await fetch(`${GAS_URL}?action=getVipAvailability&startDate=${startDate}&endDate=${endDate}`);
+        const res = await fetch(`${GAS_URL}?action=checkVipAvailability&bookingId=${selectedBooking.bookingId}&checkin=${selectedBooking.checkin}&checkout=${selectedBooking.checkout}`);
         const result = await res.json();
-        vipCanBook = Math.max(0, VIP_TOTAL - (result.usedRooms || 0));
-        if (vipCanBook === 0) {
-            badge.className = 'avail-pill full';
-            badge.innerHTML = `<i class="fas fa-times-circle"></i> เต็ม (${result.usedRooms}/${VIP_TOTAL})`;
-        } else if (vipCanBook <= 2) {
-            badge.className = 'avail-pill warn';
-            badge.innerHTML = `<i class="fas fa-exclamation-circle"></i> เหลือ ${vipCanBook} ห้อง`;
-        } else {
-            badge.className = 'avail-pill ok';
-            badge.innerHTML = `<i class="fas fa-check-circle"></i> ว่าง ${vipCanBook} ห้อง`;
+        if (result.success) {
+            vipCanBook = Math.max(0, VIP_TOTAL - (result.usedRooms || 0));
+            const badge = document.getElementById('vipAvailBadge');
+            if (vipCanBook === 0) {
+                badge.className = 'avail-pill full';
+                badge.innerHTML = `<i class="fas fa-times-circle"></i> เต็ม (${result.usedRooms}/${VIP_TOTAL})`;
+            } else if (vipCanBook <= 2) {
+                badge.className = 'avail-pill warn';
+                badge.innerHTML = `<i class="fas fa-exclamation-circle"></i> เหลือ ${vipCanBook} ห้อง`;
+            } else {
+                badge.className = 'avail-pill ok';
+                badge.innerHTML = `<i class="fas fa-check-circle"></i> ว่าง ${vipCanBook} ห้อง`;
+            }
+            updateRoomButtons();
         }
-        updateRoomButtons();
     } catch(e) { console.error(e); }
 }
 
@@ -1206,27 +1115,6 @@ function updateRoomButtons() {
 
 /* ── FOOD RADIO ── */
 function onFoodBookingChange(value) {
-    currentFoodBooking = value;
-    const cardYes = document.getElementById('foodCardYes');
-    const cardNo  = document.getElementById('foodCardNo');
-    const checkY  = document.getElementById('checkYes');
-    const checkN  = document.getElementById('checkNo');
-    cardYes.classList.remove('sel-yes','sel-no');
-    cardNo.classList.remove('sel-yes','sel-no');
-    checkY.style.display = 'none';
-    checkN.style.display = 'none';
-    if (value === 'ต้องการ') {
-        cardYes.classList.add('sel-yes'); cardNo.classList.add('sel-no');
-        checkY.style.display = 'block';
-        document.getElementById('foodUploadSection').style.display = 'block';
-    } else {
-        cardNo.classList.add('sel-yes'); cardYes.classList.add('sel-no');
-        checkN.style.display = 'block';
-        document.getElementById('foodUploadSection').style.display = 'none';
-    }
-}
-
-    function onFoodBookingChange(value) {
     currentFoodBooking = value;
     const cardYes = document.getElementById('foodCardYes');
     const cardNo  = document.getElementById('foodCardNo');
@@ -1360,7 +1248,6 @@ function setupListeners() {
     setupFileUpload('file_approval','zone_approval','fname_approval');
     setupFileUpload('file_attendee','zone_attendee','fname_attendee');
     setupFileUpload('file_food',    'zone_food',    'fname_food');
-    // native select change listener (ยังทำงานเหมือนเดิม)
     document.getElementById('f_roomSetup').addEventListener('change', function() {
         document.getElementById('roomSetupOtherWrap').style.display = this.value === 'อื่นๆ' ? 'block' : 'none';
     });
@@ -1376,7 +1263,6 @@ function setupListeners() {
     document.getElementById('snackOtherCheck').addEventListener('change', function() {
         document.getElementById('snackOtherWrap').style.display = this.checked ? 'block' : 'none';
     });
-
     function limitCheckboxes(name, max) {
         const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
         checkboxes.forEach(cb => {
