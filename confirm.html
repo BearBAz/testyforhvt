@@ -905,6 +905,34 @@ input[type="file"] { display:none; }
                 </div>
             </div>
 
+            <div id="foodSelectionArea" style="display:none; margin-top: 1.5rem; padding-top: 1rem; border-top: 1.5px dashed var(--border);">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">เลือกร้านอาหาร <span style="font-size:0.8rem; color:var(--muted);">(เลือกได้สูงสุด 3 ร้าน)</span></label>
+                        <div class="check-list">
+                            <label class="check-row"><input type="checkbox" name="restaurantOption" value="ร้าน 1"><label>ร้าน 1</label></label>
+                            <label class="check-row"><input type="checkbox" name="restaurantOption" value="ร้าน 2"><label>ร้าน 2</label></label>
+                            <label class="check-row"><input type="checkbox" name="restaurantOption" value="อื่นๆ" id="restOtherCheck"><label>อื่นๆ (โปรดระบุ)</label></label>
+                        </div>
+                        <div class="mt-2" id="restOtherWrap" style="display:none;">
+                            <input type="text" class="form-control" id="f_restOther" placeholder="โปรดระบุชื่อร้านอาหารอื่นๆ...">
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <label class="form-label">เลือกร้านอาหารว่าง <span style="font-size:0.8rem; color:var(--muted);">(เลือกได้สูงสุด 3 ร้าน)</span></label>
+                        <div class="check-list">
+                            <label class="check-row"><input type="checkbox" name="snackOption" value="ร้าน 1"><label>ร้าน 1</label></label>
+                            <label class="check-row"><input type="checkbox" name="snackOption" value="ร้าน 2"><label>ร้าน 2</label></label>
+                            <label class="check-row"><input type="checkbox" name="snackOption" value="อื่นๆ" id="snackOtherCheck"><label>อื่นๆ (โปรดระบุ)</label></label>
+                        </div>
+                        <div class="mt-2" id="snackOtherWrap" style="display:none;">
+                            <input type="text" class="form-control" id="f_snackOther" placeholder="โปรดระบุชื่อร้านอาหารว่างอื่นๆ...">
+                        </div>
+                    </div>
+
+                </div>
+            
             <!-- 6 · อัปโหลดเอกสาร -->
             <div class="section-card delay-6">
                 <div class="card-head">
@@ -1198,6 +1226,29 @@ function onFoodBookingChange(value) {
     }
 }
 
+    function onFoodBookingChange(value) {
+    currentFoodBooking = value;
+    const cardYes = document.getElementById('foodCardYes');
+    const cardNo  = document.getElementById('foodCardNo');
+    const checkY  = document.getElementById('checkYes');
+    const checkN  = document.getElementById('checkNo');
+    cardYes.classList.remove('sel-yes','sel-no');
+    cardNo.classList.remove('sel-yes','sel-no');
+    checkY.style.display = 'none';
+    checkN.style.display = 'none';
+    if (value === 'ต้องการ') {
+        cardYes.classList.add('sel-yes'); cardNo.classList.add('sel-no');
+        checkY.style.display = 'block';
+        document.getElementById('foodUploadSection').style.display = 'block';
+        document.getElementById('foodSelectionArea').style.display = 'block'; // เพิ่มบรรทัดนี้
+    } else {
+        cardNo.classList.add('sel-yes'); cardYes.classList.add('sel-no');
+        checkN.style.display = 'block';
+        document.getElementById('foodUploadSection').style.display = 'none';
+        document.getElementById('foodSelectionArea').style.display = 'none'; // เพิ่มบรรทัดนี้
+    }
+}
+
 /* ── FILE UPLOAD ── */
 function setupFileUpload(inputId, zoneId, nameId) {
     document.getElementById(inputId).addEventListener('change', function(e) {
@@ -1248,6 +1299,9 @@ async function submitConfirmation() {
         ]);
         const equipments = [...document.querySelectorAll('input[name="equipment"]:checked')].map(c => c.value);
         const fields     = [...document.querySelectorAll('input[name="fieldActivity"]:checked')].map(c => c.value);
+        const restaurants = [...document.querySelectorAll('input[name="restaurantOption"]:checked')].map(c => c.value);
+        const snacks      = [...document.querySelectorAll('input[name="snackOption"]:checked')].map(c => c.value);
+        
         const payload = {
             bookingId_confirm:  selectedBooking.bookingId,
             courseName:         document.getElementById('f_courseName').value,
@@ -1264,6 +1318,10 @@ async function submitConfirmation() {
             approvalFile:       approvalData,
             attendeeListFile:   attendeeData,
             foodOrderFile:      foodData,
+            restaurantOptions:  restaurants,
+            restaurantOther:    document.getElementById('f_restOther').value,
+            snackOptions:       snacks,
+            snackOther:         document.getElementById('f_snackOther').value
         };
         document.getElementById('loadingMsg').textContent = 'กำลังส่งข้อมูล...';
         await fetch(GAS_URL, {
@@ -1312,6 +1370,36 @@ function setupListeners() {
     document.getElementById('fieldOtherCheck').addEventListener('change', function() {
         document.getElementById('fieldOtherWrap').style.display = this.checked ? 'block' : 'none';
     });
+    document.getElementById('restOtherCheck').addEventListener('change', function() {
+        document.getElementById('restOtherWrap').style.display = this.checked ? 'block' : 'none';
+    });
+    document.getElementById('snackOtherCheck').addEventListener('change', function() {
+        document.getElementById('snackOtherWrap').style.display = this.checked ? 'block' : 'none';
+    });
+
+    function limitCheckboxes(name, max) {
+        const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                const checkedCount = document.querySelectorAll(`input[name="${name}"]:checked`).length;
+                if (checkedCount > max) {
+                    this.checked = false; // ยกเลิกการติ๊ก
+                    Swal.fire({ 
+                        title: 'ข้อจำกัด', 
+                        text: `คุณสามารถเลือกได้สูงสุด ${max} ร้านต่อวันเท่านั้น`, 
+                        icon: 'warning', 
+                        confirmButtonColor: 'var(--brand)' 
+                    });
+                    // ซ่อนช่องพิมพ์ถ้าถูกบังคับให้ติ๊กออก
+                    if (this.id === 'restOtherCheck') document.getElementById('restOtherWrap').style.display = 'none';
+                    if (this.id === 'snackOtherCheck') document.getElementById('snackOtherWrap').style.display = 'none';
+                }
+            });
+        });
+    }
+    limitCheckboxes('restaurantOption', 3);
+    limitCheckboxes('snackOption', 3);
+    // --------------------------------------------------------
 }
 
 init();
