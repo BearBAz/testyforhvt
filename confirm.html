@@ -500,6 +500,160 @@ input[type="file"] { display:none; }
 .delay-5 { animation-delay:.28s; }
 .delay-6 { animation-delay:.34s; }
 .delay-7 { animation-delay:.4s;  }
+
+
+/* ─────────────────────────────────────────────
+   Food shop quota UX/UI
+───────────────────────────────────────────── */
+.food-shop-section {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+    border: 1px solid #bbf7d0;
+    box-shadow: 0 12px 32px rgba(34, 197, 94, 0.10);
+}
+.food-shop-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+.food-shop-header h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #14532d;
+}
+.food-shop-header p {
+    margin: 5px 0 0;
+    font-size: .84rem;
+    color: #64748b;
+}
+.quota-badge {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #22c55e;
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 800;
+    box-shadow: 0 8px 18px rgba(34,197,94,.25);
+}
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+.shop-card {
+    padding: 16px;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, .06);
+}
+.shop-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.shop-icon {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: #dcfce7;
+    color: #16a34a;
+    font-size: 1.25rem;
+}
+.shop-card-title h4 {
+    margin: 0;
+    font-size: .98rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+.shop-card-title p {
+    margin: 2px 0 0;
+    font-size: .76rem;
+    color: #64748b;
+}
+.shop-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 56px;
+    padding: 11px 12px;
+    margin-bottom: 10px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all .18s ease;
+}
+.shop-option:hover {
+    border-color: #22c55e;
+    background: #f0fdf4;
+    transform: translateY(-1px);
+}
+.shop-option input {
+    width: 18px;
+    height: 18px;
+    accent-color: #22c55e;
+}
+.shop-option span {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    font-weight: 800;
+    color: #111827;
+}
+.shop-option small {
+    font-size: .72rem;
+    font-weight: 600;
+    color: #64748b;
+}
+.shop-option.is-available small { color: #16a34a; }
+.shop-option.is-full {
+    opacity: .55;
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    cursor: not-allowed;
+}
+.shop-option.is-full small {
+    color: #dc2626;
+    font-weight: 800;
+}
+.shop-other-input {
+    width: 100%;
+    margin-top: 4px;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 15px;
+    font-size: .9rem;
+    outline: none;
+}
+.shop-other-input:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 4px rgba(34,197,94,.12);
+}
+.food-shop-note {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 15px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    font-size: .82rem;
+}
+@media (max-width: 720px) {
+    .shop-grid { grid-template-columns: 1fr; }
+    .food-shop-header { flex-direction: column; }
+}
+
 </style>
 </head>
 <body>
@@ -802,35 +956,73 @@ input[type="file"] { display:none; }
                         </label>
                     </div>
                 </div>
-            </div>
 
-            <div id="foodSelectionArea" style="display:none; margin-top: 1.5rem; padding-top: 1rem; border-top: 1.5px dashed var(--border);">
-                    
-                    <div class="mb-3">
-                        <label class="form-label">เลือกร้านอาหาร <span style="font-size:0.8rem; color:var(--muted);">(เลือกได้สูงสุด 3 ร้าน)</span></label>
-                        <div class="check-list">
-                            <label class="check-row"><input type="checkbox" name="restaurantOption" value="ร้าน 1"><label>ร้าน 1</label></label>
-                            <label class="check-row"><input type="checkbox" name="restaurantOption" value="ร้าน 2"><label>ร้าน 2</label></label>
-                            <label class="check-row"><input type="checkbox" name="restaurantOption" value="อื่นๆ" id="restOtherCheck"><label>อื่นๆ (โปรดระบุ)</label></label>
+                <!-- เลือกร้านอาหารและอาหารว่าง (แสดงเมื่อเลือก "ต้องการ") -->
+                <div id="foodShopSection" class="food-shop-section" style="display:none;">
+                    <div class="food-shop-header">
+                        <div>
+                            <h3><i class="fas fa-store"></i> เลือกร้านอาหารและอาหารว่าง</h3>
+                            <p>เลือกร้านก่อนแนบไฟล์รายการอาหาร ระบบจำกัด 3 โควต้า/วัน/ร้าน</p>
                         </div>
-                        <div class="mt-2" id="restOtherWrap" style="display:none;">
-                            <input type="text" class="form-control" id="f_restOther" placeholder="โปรดระบุชื่อร้านอาหารอื่นๆ...">
+                        <span class="quota-badge"><i class="fas fa-ticket-alt"></i> 3 โควต้า/วัน</span>
+                    </div>
+
+                    <div class="shop-grid">
+                        <div class="shop-card">
+                            <div class="shop-card-title">
+                                <span class="shop-icon"><i class="fas fa-bowl-food"></i></span>
+                                <div>
+                                    <h4>ร้านอาหาร</h4>
+                                    <p>สำหรับอาหารหลัก</p>
+                                </div>
+                            </div>
+
+                            <label class="shop-option" data-shop-option="foodShop1">
+                                <input type="radio" name="foodShop" value="ร้าน 1" onchange="onShopSelectionChange()">
+                                <span>ร้าน 1 <small id="foodShop1Quota">รอตรวจสอบโควต้า</small></span>
+                            </label>
+                            <label class="shop-option" data-shop-option="foodShop2">
+                                <input type="radio" name="foodShop" value="ร้าน 2" onchange="onShopSelectionChange()">
+                                <span>ร้าน 2 <small id="foodShop2Quota">รอตรวจสอบโควต้า</small></span>
+                            </label>
+                            <label class="shop-option">
+                                <input type="radio" name="foodShop" value="อื่นๆ" onchange="onShopSelectionChange()">
+                                <span>อื่นๆ <small>ระบุชื่อร้านเอง</small></span>
+                            </label>
+                            <input type="text" id="foodShopOther" class="shop-other-input" style="display:none;" placeholder="ระบุชื่อร้านอาหารอื่นๆ">
+                        </div>
+
+                        <div class="shop-card">
+                            <div class="shop-card-title">
+                                <span class="shop-icon"><i class="fas fa-mug-hot"></i></span>
+                                <div>
+                                    <h4>ร้านอาหารว่าง</h4>
+                                    <p>สำหรับอาหารว่าง/เครื่องดื่ม</p>
+                                </div>
+                            </div>
+
+                            <label class="shop-option" data-shop-option="snackShop1">
+                                <input type="radio" name="snackShop" value="ร้าน 1" onchange="onShopSelectionChange()">
+                                <span>ร้าน 1 <small id="snackShop1Quota">รอตรวจสอบโควต้า</small></span>
+                            </label>
+                            <label class="shop-option" data-shop-option="snackShop2">
+                                <input type="radio" name="snackShop" value="ร้าน 2" onchange="onShopSelectionChange()">
+                                <span>ร้าน 2 <small id="snackShop2Quota">รอตรวจสอบโควต้า</small></span>
+                            </label>
+                            <label class="shop-option">
+                                <input type="radio" name="snackShop" value="อื่นๆ" onchange="onShopSelectionChange()">
+                                <span>อื่นๆ <small>ระบุชื่อร้านเอง</small></span>
+                            </label>
+                            <input type="text" id="snackShopOther" class="shop-other-input" style="display:none;" placeholder="ระบุชื่อร้านอาหารว่างอื่นๆ">
                         </div>
                     </div>
 
-                    <div class="mb-0">
-                        <label class="form-label">เลือกร้านอาหารว่าง <span style="font-size:0.8rem; color:var(--muted);">(เลือกได้สูงสุด 3 ร้าน)</span></label>
-                        <div class="check-list">
-                            <label class="check-row"><input type="checkbox" name="snackOption" value="ร้าน 1"><label>ร้าน 1</label></label>
-                            <label class="check-row"><input type="checkbox" name="snackOption" value="ร้าน 2"><label>ร้าน 2</label></label>
-                            <label class="check-row"><input type="checkbox" name="snackOption" value="อื่นๆ" id="snackOtherCheck"><label>อื่นๆ (โปรดระบุ)</label></label>
-                        </div>
-                        <div class="mt-2" id="snackOtherWrap" style="display:none;">
-                            <input type="text" class="form-control" id="f_snackOther" placeholder="โปรดระบุชื่อร้านอาหารว่างอื่นๆ...">
-                        </div>
+                    <div class="food-shop-note">
+                        <i class="fas fa-circle-info"></i>
+                        หากร้านที่เลือกเต็มโควต้าในช่วงวันที่ประชุม ระบบจะแจ้งเตือนและไม่ให้เลือกก่อนยืนยันการจอง
                     </div>
-
                 </div>
+            </div>
 
             <!-- 6 · อัปโหลดเอกสาร -->
             <div class="section-card delay-6">
@@ -1120,21 +1312,153 @@ function onFoodBookingChange(value) {
     const cardNo  = document.getElementById('foodCardNo');
     const checkY  = document.getElementById('checkYes');
     const checkN  = document.getElementById('checkNo');
+    const foodShopSection = document.getElementById('foodShopSection');
+
     cardYes.classList.remove('sel-yes','sel-no');
     cardNo.classList.remove('sel-yes','sel-no');
     checkY.style.display = 'none';
     checkN.style.display = 'none';
+
     if (value === 'ต้องการ') {
-        cardYes.classList.add('sel-yes'); cardNo.classList.add('sel-no');
+        cardYes.classList.add('sel-yes');
+        cardNo.classList.add('sel-no');
         checkY.style.display = 'block';
         document.getElementById('foodUploadSection').style.display = 'block';
-        document.getElementById('foodSelectionArea').style.display = 'block'; // เพิ่มบรรทัดนี้
+        if (foodShopSection) foodShopSection.style.display = 'block';
+        refreshFoodShopQuota();
     } else {
-        cardNo.classList.add('sel-yes'); cardYes.classList.add('sel-no');
+        cardNo.classList.add('sel-yes');
+        cardYes.classList.add('sel-no');
         checkN.style.display = 'block';
         document.getElementById('foodUploadSection').style.display = 'none';
-        document.getElementById('foodSelectionArea').style.display = 'none'; // เพิ่มบรรทัดนี้
+        if (foodShopSection) foodShopSection.style.display = 'none';
+        clearFoodShopSelection();
     }
+}
+
+function getRadioValue(name) {
+    const checked = document.querySelector(`input[name="${name}"]:checked`);
+    return checked ? checked.value : '';
+}
+
+function clearFoodShopSelection() {
+    document.querySelectorAll('input[name="foodShop"], input[name="snackShop"]').forEach(el => {
+        el.checked = false;
+        el.disabled = false;
+    });
+    ['foodShopOther','snackShopOther'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.value = '';
+            input.style.display = 'none';
+        }
+    });
+}
+
+function onShopSelectionChange() {
+    const foodShop = getRadioValue('foodShop');
+    const snackShop = getRadioValue('snackShop');
+    const foodOther = document.getElementById('foodShopOther');
+    const snackOther = document.getElementById('snackShopOther');
+
+    if (foodOther) {
+        foodOther.style.display = foodShop === 'อื่นๆ' ? 'block' : 'none';
+        if (foodShop !== 'อื่นๆ') foodOther.value = '';
+    }
+    if (snackOther) {
+        snackOther.style.display = snackShop === 'อื่นๆ' ? 'block' : 'none';
+        if (snackShop !== 'อื่นๆ') snackOther.value = '';
+    }
+}
+
+function setShopQuotaState(elementId, used, quota) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+
+    const remain = Math.max(quota - used, 0);
+    el.textContent = remain > 0 ? `เหลือ ${remain}/${quota} โควต้า` : `เต็ม ${quota}/${quota} โควต้า`;
+
+    const option = el.closest('.shop-option');
+    if (!option) return;
+
+    const radio = option.querySelector('input[type="radio"]');
+    option.classList.toggle('is-full', remain <= 0);
+    option.classList.toggle('is-available', remain > 0);
+
+    if (radio) {
+        radio.disabled = remain <= 0;
+        if (remain <= 0) radio.checked = false;
+    }
+}
+
+async function fetchQuotaForShop(type, shop, elementId) {
+    if (!selectedBooking) return;
+    try {
+        const url = `${GAS_URL}?action=checkFoodShopQuota&bookingId=${encodeURIComponent(selectedBooking.bookingId)}&startDate=${encodeURIComponent(selectedBooking.startDate)}&endDate=${encodeURIComponent(selectedBooking.endDate)}&type=${encodeURIComponent(type)}&shop=${encodeURIComponent(shop)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const quota = data.quotaPerDay || 3;
+        const usageObj = type === 'food' ? data.food?.usage : data.snack?.usage;
+        const used = usageObj ? Math.max(...Object.values(usageObj), 0) : 0;
+        setShopQuotaState(elementId, used, quota);
+    } catch (err) {
+        const el = document.getElementById(elementId);
+        if (el) el.textContent = 'ตรวจสอบโควต้าไม่ได้';
+        console.error('Quota check error:', err);
+    }
+}
+
+function refreshFoodShopQuota() {
+    if (!selectedBooking || currentFoodBooking !== 'ต้องการ') return;
+    fetchQuotaForShop('food', 'ร้าน 1', 'foodShop1Quota');
+    fetchQuotaForShop('food', 'ร้าน 2', 'foodShop2Quota');
+    fetchQuotaForShop('snack', 'ร้าน 1', 'snackShop1Quota');
+    fetchQuotaForShop('snack', 'ร้าน 2', 'snackShop2Quota');
+}
+
+async function validateFoodShopBeforeSubmit() {
+    if (currentFoodBooking !== 'ต้องการ') return true;
+
+    const foodShop = getRadioValue('foodShop');
+    const snackShop = getRadioValue('snackShop');
+    const foodOther = document.getElementById('foodShopOther')?.value.trim() || '';
+    const snackOther = document.getElementById('snackShopOther')?.value.trim() || '';
+
+    if (!foodShop) {
+        Swal.fire({ title:'กรุณาเลือกร้านอาหาร', icon:'warning', confirmButtonColor:'var(--brand)' });
+        return false;
+    }
+    if (!snackShop) {
+        Swal.fire({ title:'กรุณาเลือกร้านอาหารว่าง', icon:'warning', confirmButtonColor:'var(--brand)' });
+        return false;
+    }
+    if (foodShop === 'อื่นๆ' && !foodOther) {
+        Swal.fire({ title:'กรุณาระบุชื่อร้านอาหารอื่นๆ', icon:'warning', confirmButtonColor:'var(--brand)' });
+        return false;
+    }
+    if (snackShop === 'อื่นๆ' && !snackOther) {
+        Swal.fire({ title:'กรุณาระบุชื่อร้านอาหารว่างอื่นๆ', icon:'warning', confirmButtonColor:'var(--brand)' });
+        return false;
+    }
+
+    // ตรวจซ้ำก่อนส่งจริง เพื่อกันกรณีมีผู้ใช้คนอื่นจองพร้อมกัน
+    if (foodShop !== 'อื่นๆ' || snackShop !== 'อื่นๆ') {
+        try {
+            const url = `${GAS_URL}?action=checkFoodShopQuota&bookingId=${encodeURIComponent(selectedBooking.bookingId)}&startDate=${encodeURIComponent(selectedBooking.startDate)}&endDate=${encodeURIComponent(selectedBooking.endDate)}&foodShop=${encodeURIComponent(foodShop)}&snackShop=${encodeURIComponent(snackShop)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            if (!data.success) {
+                Swal.fire({ title:'ร้านเต็มโควต้า', text:data.message || 'ร้านที่เลือกเต็มโควต้า', icon:'error', confirmButtonColor:'var(--brand)' });
+                refreshFoodShopQuota();
+                return false;
+            }
+        } catch (err) {
+            Swal.fire({ title:'ตรวจสอบโควต้าไม่ได้', text:'กรุณาลองใหม่อีกครั้ง', icon:'error', confirmButtonColor:'var(--brand)' });
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /* ── FILE UPLOAD ── */
@@ -1177,6 +1501,9 @@ async function submitConfirmation() {
         Swal.fire({ title:'VIP เกิน', text:`เหลือเพียง ${vipCanBook} ห้อง`, icon:'error', confirmButtonColor:'var(--brand)' });
         return;
     }
+    const foodShopValid = await validateFoodShopBeforeSubmit();
+    if (!foodShopValid) return;
+
     showLoading('กำลังเตรียมไฟล์...');
     document.getElementById('submitBtn').disabled = true;
     try {
@@ -1187,9 +1514,6 @@ async function submitConfirmation() {
         ]);
         const equipments = [...document.querySelectorAll('input[name="equipment"]:checked')].map(c => c.value);
         const fields     = [...document.querySelectorAll('input[name="fieldActivity"]:checked')].map(c => c.value);
-        const restaurants = [...document.querySelectorAll('input[name="restaurantOption"]:checked')].map(c => c.value);
-        const snacks      = [...document.querySelectorAll('input[name="snackOption"]:checked')].map(c => c.value);
-        
         const payload = {
             bookingId_confirm:  selectedBooking.bookingId,
             courseName:         document.getElementById('f_courseName').value,
@@ -1203,13 +1527,13 @@ async function submitConfirmation() {
             fieldActivity:      fields,
             fieldActivityOther: document.getElementById('f_fieldOther').value,
             foodBooking:        currentFoodBooking,
+            foodShop:           getRadioValue('foodShop'),
+            foodShopOther:      document.getElementById('foodShopOther')?.value.trim() || '',
+            snackShop:          getRadioValue('snackShop'),
+            snackShopOther:     document.getElementById('snackShopOther')?.value.trim() || '',
             approvalFile:       approvalData,
             attendeeListFile:   attendeeData,
             foodOrderFile:      foodData,
-            restaurantOptions:  restaurants,
-            restaurantOther:    document.getElementById('f_restOther').value,
-            snackOptions:       snacks,
-            snackOther:         document.getElementById('f_snackOther').value
         };
         document.getElementById('loadingMsg').textContent = 'กำลังส่งข้อมูล...';
         await fetch(GAS_URL, {
@@ -1257,35 +1581,6 @@ function setupListeners() {
     document.getElementById('fieldOtherCheck').addEventListener('change', function() {
         document.getElementById('fieldOtherWrap').style.display = this.checked ? 'block' : 'none';
     });
-    document.getElementById('restOtherCheck').addEventListener('change', function() {
-        document.getElementById('restOtherWrap').style.display = this.checked ? 'block' : 'none';
-    });
-    document.getElementById('snackOtherCheck').addEventListener('change', function() {
-        document.getElementById('snackOtherWrap').style.display = this.checked ? 'block' : 'none';
-    });
-    function limitCheckboxes(name, max) {
-        const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', function() {
-                const checkedCount = document.querySelectorAll(`input[name="${name}"]:checked`).length;
-                if (checkedCount > max) {
-                    this.checked = false; // ยกเลิกการติ๊ก
-                    Swal.fire({ 
-                        title: 'ข้อจำกัด', 
-                        text: `คุณสามารถเลือกได้สูงสุด ${max} ร้านต่อวันเท่านั้น`, 
-                        icon: 'warning', 
-                        confirmButtonColor: 'var(--brand)' 
-                    });
-                    // ซ่อนช่องพิมพ์ถ้าถูกบังคับให้ติ๊กออก
-                    if (this.id === 'restOtherCheck') document.getElementById('restOtherWrap').style.display = 'none';
-                    if (this.id === 'snackOtherCheck') document.getElementById('snackOtherWrap').style.display = 'none';
-                }
-            });
-        });
-    }
-    limitCheckboxes('restaurantOption', 3);
-    limitCheckboxes('snackOption', 3);
-    // --------------------------------------------------------
 }
 
 init();
