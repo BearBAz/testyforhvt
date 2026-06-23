@@ -543,8 +543,16 @@ input[type="file"] { display:none; }
 }
 .shop-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr !important;
     gap: 14px;
+}
+.food-shop-section .shop-card {
+    width: 100%;
+}
+@media (max-width: 720px) {
+    .shop-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 .shop-card {
     padding: 16px;
