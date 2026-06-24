@@ -4,7 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>จองห้องประชุม ศฝฟ.</title>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js">
+
+    /* ─── Multi-date Segment Manager ─── */
+    const bookingSegmentsList = document.getElementById('bookingSegmentsList');
+    const bookingSegmentsSummary = document.getElementById('bookingSegmentsSummary');
+    const addSegmentBtn = document.getElementById('addSegmentBtn');
+    let bookingSegments = [];
+    let segmentSeq = 0;
+
+    function todayYmd(){ return new Date().toISOString().split('T')[0]; }
+    function formatThaiDateShort(ymd){
+        if(!ymd) return '-';
+        const d = new Date(ymd + 'T00:00:00');
+        return d.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'2-digit'});
+    }
+    function addBookingSegment(seed={}){
+        const id = 'seg_' + (++segmentSeq);
+        bookingSegments.push({ id, startDate: seed.startDate || '', endDate: seed.endDate || '', meetingRoom: seed.meetingRoom || '', roomLabel: seed.meetingRoom || '', rooms: [] });
+        renderBookingSegments();
+    }
+    function removeBookingSegment(id){
+        if(bookingSegments.length <= 1) return;
+        bookingSegments = bookingSegments.filter(s => s.id !== id);
+        renderBookingSegments();
+        syncLegacySegmentFields();
+    }
+    function renderBookingSegments(){
+        if(!bookingSegmentsList) return;
+        bookingSegmentsList.innerHTML = bookingSegments.map((seg, idx) => `
+            <div class="segment-card ${bookingSegments.length>1?'can-remove':''}" data-segment-id="${seg.id}">
+                <div class="segment-card-top">
+                    <div class="segment-badge"><span class="dot"></span> ช่วงที่ ${idx+1}</div>
+                    <button type="button" class="segment-remove" onclick="removeBookingSegment('${seg.id}')"><i class="fas fa-trash-alt"></i> ลบ</button>
+                </div>
+                <div class="segment-grid">
+                    <div class="segment-field">
+                        <label>วันเริ่มต้น</label>
+                        <input type="date" class="seg-start" min="${todayYmd()}" value="${seg.startDate || ''}" onchange="onSegmentDateChange('${seg.id}','startDate',this.value)">
+                    </div>
+                    <div class="segment-field">
+                        <label>วันสิ้นสุด</label>
+                        <input type="date" class="seg-end" min="${seg.startDate || todayYmd()}" value="${seg.endDate || ''}" onchange="onSegmentDateChange('${seg.id}','endDate',this.value)">
+                    </div>
+                    <div class="segment-field segment-room-wrap">
+                        <label>ห้องประชุม</label>
+                        <button type="button" class="segment-room-btn ${(!seg.startDate || !seg.endDate)?'disabled':''}" onclick="toggleSegmentRoomDropdown('${seg.id}')">
+                            <span>${seg.roomLabel || 'เลือกห้องประชุม'}<span class="meta">${seg.startDate && seg.endDate ? formatThaiDateShort(seg.startDate)+' - '+formatThaiDateShort(seg.endDate) : 'เลือกวันที่ก่อน'}</span></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <ul class="segment-room-dropdown" id="roomDropdown_${seg.id}">${renderRoomOptions(seg)}</ul>
+                    </div>
+                </div>
+            </div>`).join('');
+        updateBookingSegmentsSummary();
+        syncLegacySegmentFields();
+    }
+    function renderRoomOptions(seg){
+        if(!seg.startDate || !seg.endDate) return '<li class="segment-room-option unavailable"><span class="room-name">กรุณาเลือกวันที่ก่อน</span></li>';
+        if(!seg.rooms || seg.rooms.length===0) return '<li class="segment-room-option unavailable"><span class="room-name">กำลังตรวจสอบ/ยังไม่พบข้อมูลห้อง</span></li>';
+        return seg.rooms.map(r => `<li class="segment-room-option ${r.isAvailable?'':'unavailable'}" onclick="selectSegmentRoom('${seg.id}','${String(r.name).replace(/'/g,"&#39;")}',${r.isAvailable})">
+            <span><span class="room-name">${r.name}</span><br><span class="room-cap">${r.category || ''} · ${r.capacity || '-'} ที่นั่ง</span></span>
+            <span>${r.isAvailable ? 'ว่าง' : 'ไม่ว่าง'}</span>
+        </li>`).join('');
+    }
+    async function onSegmentDateChange(id, field, value){
+        const seg = bookingSegments.find(s => s.id === id); if(!seg) return;
+        seg[field] = value;
+        if(field === 'startDate' && seg.endDate && seg.endDate < value) seg.endDate = value;
+        seg.meetingRoom = ''; seg.roomLabel = '';
+        renderBookingSegments();
+        if(seg.startDate && seg.endDate) await loadRoomsForSegment(id);
+    }
+    async function loadRoomsForSegment(id){
+        const seg = bookingSegments.find(s => s.id === id); if(!seg || !seg.startDate || !seg.endDate) return;
+        try{
+            const url = `${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${seg.startDate}&endDate=${seg.endDate}`;
+            const response = await fetch(url);
+            const result = await response.json();
+            seg.rooms = result.rooms || [];
+            renderBookingSegments();
+        }catch(err){
+            console.error('loadRoomsForSegment error', err);
+            seg.rooms = [];
+            renderBookingSegments();
+        }
+    }
+    function toggleSegmentRoomDropdown(id){
+        const seg = bookingSegments.find(s => s.id === id); if(!seg || !seg.startDate || !seg.endDate) return;
+        document.querySelectorAll('.segment-room-dropdown').forEach(el => { if(el.id !== 'roomDropdown_'+id) el.classList.remove('show'); });
+        const dd = document.getElementById('roomDropdown_'+id); if(dd) dd.classList.toggle('show');
+        if((!seg.rooms || seg.rooms.length===0)) loadRoomsForSegment(id);
+    }
+    function selectSegmentRoom(id, roomName, isAvailable){
+        if(!isAvailable) return;
+        const seg = bookingSegments.find(s => s.id === id); if(!seg) return;
+        seg.meetingRoom = roomName; seg.roomLabel = roomName;
+        renderBookingSegments();
+    }
+    function collectBookingSegments(){
+        return bookingSegments.map((s,idx)=>({
+            segmentNo: idx+1,
+            startDate: s.startDate,
+            endDate: s.endDate,
+            meetingRoom: s.meetingRoom
+        }));
+    }
+    function validateBookingSegments(){
+        const attendees = parseInt(document.getElementById('attendees').value) || 0;
+        for(const [idx, seg] of bookingSegments.entries()){
+            if(!seg.startDate || !seg.endDate || !seg.meetingRoom){ Swal.fire({title:`กรุณากรอกช่วงที่ ${idx+1} ให้ครบ`, text:'เลือกวันเริ่มต้น วันสิ้นสุด และห้องประชุม', icon:'warning'}); return false; }
+            if(seg.endDate < seg.startDate){ Swal.fire({title:`วันที่ช่วงที่ ${idx+1} ไม่ถูกต้อง`, text:'วันสิ้นสุดต้องไม่น้อยกว่าวันเริ่มต้น', icon:'warning'}); return false; }
+            const roomConfig = (seg.rooms || []).find(r => r.name === seg.meetingRoom);
+            if(roomConfig && !roomConfig.isAvailable){ Swal.fire({title:`ห้องไม่ว่างในช่วงที่ ${idx+1}`, text:`${seg.meetingRoom} ไม่ว่างในวันที่เลือก`, icon:'error'}); return false; }
+            if(roomConfig && attendees > roomConfig.capacity){ Swal.fire({title:`จำนวนผู้เข้าร่วมเกินความจุ`, text:`ช่วงที่ ${idx+1}: ${seg.meetingRoom} รองรับ ${roomConfig.capacity} คน`, icon:'error'}); return false; }
+        }
+        return true;
+    }
+    function syncLegacySegmentFields(){
+        const first = bookingSegments[0] || {};
+        const sd=document.getElementById('startDate'), ed=document.getElementById('endDate'), mr=document.getElementById('meetingRoom'), lbl=document.getElementById('roomSelectLabel');
+        if(sd) sd.value = first.startDate || '';
+        if(ed) ed.value = first.endDate || '';
+        if(mr) mr.value = first.meetingRoom || '';
+        if(lbl) lbl.textContent = first.meetingRoom || 'กรุณาเลือกวันที่ก่อน';
+        roomData = first.rooms || roomData || [];
+    }
+    function updateBookingSegmentsSummary(){
+        if(!bookingSegmentsSummary) return;
+        const ready = bookingSegments.filter(s=>s.startDate && s.endDate && s.meetingRoom);
+        if(!ready.length){ bookingSegmentsSummary.innerHTML = 'เลือกวันเริ่มต้น วันสิ้นสุด และห้องประชุม เพื่อเริ่มการจอง'; return; }
+        bookingSegmentsSummary.innerHTML = `<b>${ready.length}</b> ช่วงการจอง: ` + ready.map((s,i)=>`ช่วงที่ ${i+1} ${formatThaiDateShort(s.startDate)} - ${formatThaiDateShort(s.endDate)} · ${s.meetingRoom}`).join(' | ');
+    }
+    document.addEventListener('click', e => { if(!e.target.closest('.segment-room-wrap')) document.querySelectorAll('.segment-room-dropdown').forEach(el=>el.classList.remove('show')); });
+    if(addSegmentBtn) addSegmentBtn.addEventListener('click', () => addBookingSegment());
+
+</script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -1080,38 +1215,19 @@
     }
 
 
-/* ===== Multi-date Booking OTA Style ===== */
-.multi-date-section { background:#fff; border:1px solid var(--border); border-radius:24px; padding:18px; box-shadow:0 10px 26px rgba(15,23,42,.06); }
-.multi-date-head { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; margin-bottom:14px; }
-.multi-date-sub { color:var(--muted); font-size:.82rem; line-height:1.45; }
-.add-date-btn { border:0; border-radius:999px; padding:.78rem 1rem; background:linear-gradient(135deg,var(--primary),#22c55e); color:#fff; font-weight:800; white-space:nowrap; box-shadow:0 8px 20px rgba(34,197,94,.22); cursor:pointer; }
-.segments-summary { background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; border-radius:16px; padding:.78rem .9rem; font-size:.86rem; margin-bottom:.85rem; }
-.segments-list { display:grid; gap:.75rem; }
-.segment-card { display:flex; justify-content:space-between; gap:1rem; padding:1rem; border:1px solid var(--border); border-radius:18px; background:#fff; box-shadow:0 6px 18px rgba(15,23,42,.04); }
-.segment-title { font-weight:800; color:var(--text); margin-bottom:.25rem; }
-.segment-meta { color:var(--muted); font-size:.86rem; line-height:1.45; }
-.status-pill-modern { display:inline-flex; align-items:center; gap:.35rem; border-radius:999px; padding:.38rem .65rem; font-size:.76rem; font-weight:800; background:#dcfce7; color:#166534; }
-.segment-actions { display:flex; align-items:center; gap:.55rem; }
-.segment-delete { border:0; background:#fee2e2; color:#b91c1c; border-radius:999px; padding:.42rem .68rem; font-weight:800; cursor:pointer; }
-.date-room-modal.hidden, .hidden { display:none !important; }
-.date-room-modal { position:fixed; inset:0; z-index:9999; display:grid; place-items:end center; }
-.date-room-backdrop { position:absolute; inset:0; background:rgba(15,23,42,.55); backdrop-filter:blur(3px); }
-.date-room-panel { position:relative; width:min(760px,100%); max-height:88vh; overflow:auto; background:#fff; border-radius:28px 28px 0 0; padding:1.35rem; box-shadow:0 -20px 55px rgba(15,23,42,.25); }
-.date-room-header { display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; margin-bottom:1rem; }
-.date-room-title { font-size:1.2rem; font-weight:900; color:var(--text); }
-.date-room-subtitle { color:var(--muted); font-size:.86rem; margin-top:.15rem; }
-.date-room-close { border:0; background:#f3f4f6; color:#374151; width:38px; height:38px; border-radius:999px; font-size:1.45rem; line-height:1; cursor:pointer; }
-.date-room-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.8rem; }
-.available-room-list { display:grid; gap:.65rem; margin-top:1rem; }
-.available-room-card { border:1px solid var(--border); border-radius:18px; padding:.9rem; display:flex; justify-content:space-between; gap:.8rem; cursor:pointer; transition:.18s; }
-.available-room-card:hover { transform:translateY(-1px); box-shadow:0 8px 18px rgba(15,23,42,.08); }
-.available-room-card.selected { border-color:#22c55e; background:#f0fdf4; }
-.available-room-card.disabled { opacity:.48; cursor:not-allowed; background:#f9fafb; }
-.date-room-footer { display:flex; gap:.75rem; margin-top:1.2rem; }
-.modal-primary-btn, .modal-secondary-btn { border:0; border-radius:16px; height:48px; padding:0 1rem; font-weight:900; cursor:pointer; }
-.modal-primary-btn { flex:1; color:#fff; background:linear-gradient(135deg,var(--primary),#22c55e); }
-.modal-secondary-btn { background:#f3f4f6; color:#374151; }
-@media (max-width:640px){ .multi-date-head{flex-direction:column;} .add-date-btn{width:100%;} .date-room-grid{grid-template-columns:1fr;} .segment-card{flex-direction:column;} .segment-actions{justify-content:space-between;} }
+    /* ===== Multi-date / OTA style segment booking ===== */
+    .segment-panel{border:1px solid rgba(16,185,129,.18);background:linear-gradient(180deg,#ffffff 0%,#f8fffb 100%);border-radius:22px;padding:16px;margin-top:4px;box-shadow:0 10px 30px rgba(15,23,42,.06)}
+    .segment-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .segment-title{font-weight:800;color:#0f172a;display:flex;align-items:center;gap:9px;font-size:1rem}.segment-title i{color:#10b981}
+    .segment-subtitle{font-size:.78rem;color:#64748b;margin-top:2px}.segment-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn-add-segment{border:0;border-radius:999px;background:#10b981;color:white;font-weight:800;padding:10px 14px;box-shadow:0 10px 22px rgba(16,185,129,.25);font-size:.86rem}.btn-add-segment:active{transform:translateY(1px)}
+    .segment-list{display:flex;flex-direction:column;gap:12px}.segment-card{border:1px solid #e2e8f0;background:#fff;border-radius:18px;padding:14px;position:relative;transition:.18s ease;box-shadow:0 8px 22px rgba(15,23,42,.045)}
+    .segment-card:hover{border-color:#86efac;box-shadow:0 12px 30px rgba(22,163,74,.08)}.segment-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+    .segment-badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:#ecfdf5;color:#047857;font-weight:900;padding:7px 11px;font-size:.82rem}.segment-badge .dot{width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,.13)}
+    .segment-remove{border:0;background:#fee2e2;color:#b91c1c;border-radius:999px;font-weight:800;padding:7px 10px;font-size:.78rem;display:none}.segment-card.can-remove .segment-remove{display:inline-flex;align-items:center;gap:6px}
+    .segment-grid{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:10px;align-items:end}.segment-field label{font-size:.74rem;font-weight:800;color:#475569;margin-bottom:6px;display:block}.segment-field input,.segment-field select{width:100%;border:1px solid #dbe3ef;border-radius:14px;padding:12px 12px;background:#fff;font-weight:700;color:#0f172a;outline:none}.segment-field input:focus,.segment-field select:focus{border-color:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,.12)}
+    .segment-room-wrap{position:relative}.segment-room-btn{width:100%;border:1px solid #dbe3ef;border-radius:14px;padding:12px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;font-weight:800;color:#0f172a}.segment-room-btn.disabled{cursor:not-allowed;color:#94a3b8;background:#f8fafc}.segment-room-btn .meta{display:block;font-size:.72rem;color:#64748b;font-weight:700;margin-top:2px}.segment-room-dropdown{display:none;position:absolute;z-index:80;top:calc(100% + 8px);left:0;right:0;max-height:290px;overflow:auto;background:#fff;border:1px solid #dbe3ef;border-radius:16px;box-shadow:0 22px 45px rgba(15,23,42,.16);padding:6px;list-style:none;margin:0}.segment-room-dropdown.show{display:block}.segment-room-option{padding:10px 11px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}.segment-room-option:hover{background:#f0fdf4}.segment-room-option.unavailable{opacity:.48;cursor:not-allowed;background:#f8fafc}.segment-room-option .room-name{font-weight:900;color:#0f172a}.segment-room-option .room-cap{font-size:.74rem;color:#64748b;font-weight:800}.segment-summary{margin-top:12px;border-radius:16px;background:#f1f5f9;padding:11px 12px;color:#334155;font-size:.82rem;line-height:1.55}.segment-summary b{color:#047857}.legacy-booking-fields{display:none!important}
+    @media(max-width:768px){.segment-grid{grid-template-columns:1fr}.segment-panel{padding:13px;border-radius:18px}.segment-head{align-items:flex-start;flex-direction:column}.segment-actions{width:100%;justify-content:stretch}.btn-add-segment{width:100%}}
 
 </style>
 </head>
@@ -1312,44 +1428,49 @@
                                     <span class="field-icon-right"><i class="fas fa-chalkboard-teacher" style="font-size:0.85rem;"></i></span>
                                 </div>
                             </div>
-                            <!-- Multi-date Booking (OTA style): เก็บข้อมูลในชีทหลักเท่านั้น -->
-                            <div class="field-group multi-date-section">
-                                <div class="multi-date-head">
-                                    <div>
-                                        <label class="field-label" style="margin-bottom:.2rem;">ช่วงวันที่และห้องประชุม <span class="req">*</span></label>
-                                        <div class="multi-date-sub">เพิ่มได้หลายช่วงวันที่ และเลือกห้องประชุมแยกแต่ละช่วง</div>
-                                    </div>
-                                    <button type="button" class="add-date-btn" onclick="openDateRoomModal()">
-                                        <i class="fas fa-plus"></i> เพิ่มวันที่การจอง
-                                    </button>
-                                </div>
 
-                                <div id="bookingSegmentsSummary" class="segments-summary">
-                                    ยังไม่มีช่วงวันที่การจอง กรุณากดเพิ่มวันที่
-                                </div>
-                                <div id="bookingSegmentsList" class="segments-list"></div>
-
-                                <!-- legacy hidden fields: ใช้คอลัมน์เดิมในชีทหลักเพื่อ backward compatibility -->
-                                <input type="hidden" id="startDate" name="startDate">
-                                <input type="hidden" id="endDate" name="endDate">
-                                <input type="hidden" id="meetingRoom" name="meetingRoom">
-                                <div style="display:none;">
-                                    <div id="customMeetingRoomSelect"><span id="roomSelectLabel"></span></div>
-                                    <ul id="meetingRoomOptions"></ul>
-                                </div>
-                            </div>
-
+                            <!-- Multi-date Segment Booking (OTA style) -->
                             <div class="field-group">
-                                <label class="field-label" for="attendees">จำนวน (คน) <span class="req">*</span></label>
-                                <div class="field-input-wrap">
-                                    <input type="number" class="field-input has-icon-right" id="attendees" name="attendees"
-                                           placeholder="คน" required min="1"
-                                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                                    <span class="field-icon-right"><i class="fas fa-users" style="font-size:0.8rem;"></i></span>
+                                <label class="field-label">ช่วงวันที่และห้องประชุม <span class="req">*</span></label>
+                                <div class="segment-panel">
+                                    <div class="segment-head">
+                                        <div>
+                                            <div class="segment-title"><i class="fas fa-layer-group"></i> จองหลายช่วงวันที่ได้ในครั้งเดียว</div>
+                                            <div class="segment-subtitle">เพิ่มช่วงวันที่ เลือกห้องแต่ละช่วง ระบบจะตรวจห้องว่างแบบแยกรายการให้อัตโนมัติ</div>
+                                        </div>
+                                        <div class="segment-actions">
+                                            <button type="button" class="btn-add-segment" id="addSegmentBtn"><i class="fas fa-plus"></i> เพิ่มวันที่การจอง</button>
+                                        </div>
+                                    </div>
+                                    <div class="segment-list" id="bookingSegmentsList"></div>
+                                    <div class="segment-summary" id="bookingSegmentsSummary">เลือกวันเริ่มต้น วันสิ้นสุด และห้องประชุม เพื่อเริ่มการจอง</div>
                                 </div>
                             </div>
 
-                            <!-- Accommodation Toggle -->
+                            <!-- Legacy hidden fields: keep compatibility with existing backend and validators -->
+                            <div class="legacy-booking-fields">
+                                <input type="date" id="startDate" name="startDate" required>
+                                <input type="date" id="endDate" name="endDate" required>
+                                <div class="room-select-btn" id="customMeetingRoomSelect"><span id="roomSelectLabel">กรุณาเลือกวันที่ก่อน</span></div>
+                                <ul class="room-dropdown" id="meetingRoomOptions"></ul>
+                                <input type="hidden" id="meetingRoom" name="meetingRoom" required>
+                            </div>
+
+                            <!-- Room + Attendees -->
+                            <div class="field-row-7-3">
+                                <div class="field-group" style="display:none;"></div>
+                                <div class="field-group" style="grid-column:1 / -1;">
+                                    <label class="field-label" for="attendees">จำนวนผู้เข้าร่วมต่อช่วง (คน) <span class="req">*</span></label>
+                                    <div class="field-input-wrap">
+                                        <input type="number" class="field-input has-icon-right" id="attendees" name="attendees"
+                                               placeholder="เช่น 30" required min="1"
+                                               oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                        <span class="field-icon-right"><i class="fas fa-users" style="font-size:0.8rem;"></i></span>
+                                    </div>
+                                    <div class="field-hint">ระบบจะใช้จำนวนนี้ตรวจเทียบความจุห้องในทุกช่วงวันที่</div>
+                                </div>
+                            </div>
+
                             <!-- Accommodation Toggle -->
                             <div class="mb-3" style="margin-top: 1rem;">
                                 <label class="field-label">ต้องการที่พัก <span class="req">*</span></label>
@@ -1400,41 +1521,6 @@
             </button>
         </div>
 
-
-
-        <!-- Multi-date / Room Modal -->
-        <div id="dateRoomModal" class="date-room-modal hidden" aria-hidden="true">
-            <div class="date-room-backdrop" onclick="closeDateRoomModal()"></div>
-            <div class="date-room-panel" role="dialog" aria-modal="true" aria-labelledby="dateRoomModalTitle">
-                <div class="date-room-header">
-                    <div>
-                        <div id="dateRoomModalTitle" class="date-room-title">เพิ่มวันที่การจอง</div>
-                        <div class="date-room-subtitle">เลือกช่วงวันที่ แล้วเลือกห้องประชุมที่ว่าง</div>
-                    </div>
-                    <button type="button" class="date-room-close" onclick="closeDateRoomModal()" aria-label="ปิด">×</button>
-                </div>
-
-                <div class="date-room-grid">
-                    <label class="field-label">วันเริ่มต้น
-                        <input type="date" class="field-input" id="segmentStartDate" onchange="loadAvailableRoomsForSegment()">
-                    </label>
-                    <label class="field-label">วันสิ้นสุด
-                        <input type="date" class="field-input" id="segmentEndDate" onchange="loadAvailableRoomsForSegment()">
-                    </label>
-                </div>
-
-                <div id="roomLoadingState" class="segments-summary hidden" style="margin-top:1rem;">
-                    <i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่าง...
-                </div>
-                <div id="availableRoomsList" class="available-room-list"></div>
-
-                <div class="date-room-footer">
-                    <button type="button" class="modal-secondary-btn" onclick="closeDateRoomModal()">ยกเลิก</button>
-                    <button type="button" class="modal-primary-btn" onclick="addSelectedSegment()">เพิ่มรายการนี้</button>
-                </div>
-            </div>
-        </div>
-
         <!-- Loading Overlay -->
         <div id="loading" class="loading-overlay">
             <div class="loading-box">
@@ -1449,7 +1535,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const LIFF_ID = "2007138631-Ono58j50";
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz9MADm0LF_d6F3uW0lqNgK9VfAcW12MiD_t1UQ71OdNV5PhnxA2wjsd6bF5bxCW8S9bQ/exec";
 
     const mainContent = document.getElementById('mainContent');
     const submitBtn = document.getElementById('submitBtn');
@@ -1576,11 +1662,11 @@
     /* ─── Progress steps ─── */
     function updateProgressSteps() {
         const s1f = ['employeeId','fullName','department','phone'];
-        const s2f = ['courseName','attendees'];
+        const s2f = ['courseName','startDate','endDate','meetingRoom','attendees'];
         const accChecked = document.querySelector('input[name="accommodation"]:checked') !== null;
         const s1filled   = s1f.every(f => document.getElementById(f).value.trim() !== '');
         const step1Done  = s1filled && isEmployeeVerified;
-        const step2Done  = s2f.every(f => document.getElementById(f).value.trim() !== '') && bookingSegments.length > 0 && accChecked;
+        const step2Done  = s2f.every(f => document.getElementById(f).value.trim() !== '') && accChecked;
         const pdpaOk     = document.getElementById('pdpaConsent').checked;
 
         if (submitBtn) submitBtn.disabled = !(step1Done && step2Done && pdpaOk);
@@ -2131,153 +2217,6 @@
     document.getElementById('attendees').addEventListener('input', checkAccommodation);
     document.querySelectorAll('input[name="accommodation"]').forEach(r => r.addEventListener('change', checkAccommodation));
 
-
-
-    /* ─── Multi-date Booking (OTA style) ─── */
-    let bookingSegments = [];
-    let selectedRoomForSegment = null;
-    let latestSegmentRooms = [];
-
-    function syncLegacyBookingFields() {
-        const sorted = [...bookingSegments].sort((a,b) => new Date(a.startDate) - new Date(b.startDate));
-        document.getElementById('startDate').value = sorted[0]?.startDate || '';
-        document.getElementById('endDate').value = sorted[sorted.length - 1]?.endDate || '';
-        document.getElementById('meetingRoom').value = sorted[0]?.meetingRoom || '';
-    }
-
-    function renderBookingSegments() {
-        const list = document.getElementById('bookingSegmentsList');
-        const summary = document.getElementById('bookingSegmentsSummary');
-        list.innerHTML = '';
-        if (bookingSegments.length === 0) {
-            summary.textContent = 'ยังไม่มีช่วงวันที่การจอง กรุณากดเพิ่มวันที่';
-            syncLegacyBookingFields();
-            updateProgressSteps();
-            return;
-        }
-        const uniqueRooms = new Set(bookingSegments.map(x => x.meetingRoom)).size;
-        summary.innerHTML = `<i class="fas fa-calendar-check"></i> รวม ${bookingSegments.length} ช่วงวันที่ · ${uniqueRooms} ห้องประชุม`;
-        bookingSegments
-            .sort((a,b) => new Date(a.startDate) - new Date(b.startDate))
-            .forEach((segment, index) => {
-                const card = document.createElement('div');
-                card.className = 'segment-card';
-                card.innerHTML = `
-                    <div>
-                        <div class="segment-title">วันที่ ${index + 1}</div>
-                        <div class="segment-meta"><i class="fas fa-calendar-alt"></i> ${formatThaiDate(segment.startDate)} - ${formatThaiDate(segment.endDate)}</div>
-                        <div class="segment-meta"><i class="fas fa-door-open"></i> ห้อง ${segment.meetingRoom} · ${segment.roomCapacity || '-'} ที่นั่ง · ${segment.roomCategory || '-'}</div>
-                    </div>
-                    <div class="segment-actions">
-                        <span class="status-pill-modern"><i class="fas fa-check-circle"></i> ว่าง</span>
-                        <button type="button" class="segment-delete" onclick="removeSegment('${segment.id}')">ลบ</button>
-                    </div>`;
-                list.appendChild(card);
-            });
-        syncLegacyBookingFields();
-        updateProgressSteps();
-    }
-
-    function openDateRoomModal() {
-        selectedRoomForSegment = null;
-        latestSegmentRooms = [];
-        document.getElementById('segmentStartDate').value = '';
-        document.getElementById('segmentEndDate').value = '';
-        document.getElementById('availableRoomsList').innerHTML = '';
-        document.getElementById('dateRoomModal').classList.remove('hidden');
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('segmentStartDate').setAttribute('min', today);
-        document.getElementById('segmentEndDate').setAttribute('min', today);
-    }
-
-    function closeDateRoomModal() {
-        document.getElementById('dateRoomModal').classList.add('hidden');
-    }
-
-    async function loadAvailableRoomsForSegment() {
-        const startDate = document.getElementById('segmentStartDate').value;
-        const endDate = document.getElementById('segmentEndDate').value;
-        selectedRoomForSegment = null;
-        if (!startDate || !endDate) return;
-        if (new Date(endDate) < new Date(startDate)) { showRoomListMessage('วันสิ้นสุดต้องไม่น้อยกว่าวันเริ่มต้น'); return; }
-        if (hasOverlappedSegment(startDate, endDate)) { showRoomListMessage('ช่วงวันที่นี้ทับซ้อนกับรายการที่เพิ่มไว้แล้ว'); return; }
-        const loading = document.getElementById('roomLoadingState');
-        loading.classList.remove('hidden');
-        try {
-            const url = `${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
-            const response = await fetch(url);
-            const result = await response.json();
-            latestSegmentRooms = result.rooms || [];
-            renderAvailableRooms(latestSegmentRooms);
-        } catch (error) {
-            console.error(error);
-            showRoomListMessage('ไม่สามารถตรวจสอบห้องว่างได้ กรุณาลองใหม่');
-        } finally { loading.classList.add('hidden'); }
-    }
-
-    function renderAvailableRooms(rooms) {
-        const list = document.getElementById('availableRoomsList');
-        list.innerHTML = '';
-        if (!rooms.length) { showRoomListMessage('ไม่พบข้อมูลห้องประชุม'); return; }
-        rooms.forEach(room => {
-            const card = document.createElement('div');
-            card.className = `available-room-card ${room.isAvailable ? '' : 'disabled'}`;
-            card.innerHTML = `
-                <div>
-                    <div class="segment-title">${room.name}</div>
-                    <div class="segment-meta">${room.capacity} ที่นั่ง · ${room.category}</div>
-                </div>
-                <div>${room.isAvailable ? '<span class="status-pill-modern"><i class="fas fa-check-circle"></i> ว่าง</span>' : '<span class="avail-pill no"><i class="fas fa-times-circle"></i> ไม่ว่าง</span>'}</div>`;
-            if (room.isAvailable) {
-                card.onclick = () => {
-                    selectedRoomForSegment = room;
-                    document.querySelectorAll('.available-room-card').forEach(el => el.classList.remove('selected'));
-                    card.classList.add('selected');
-                };
-            }
-            list.appendChild(card);
-        });
-    }
-
-    function showRoomListMessage(message) {
-        document.getElementById('availableRoomsList').innerHTML = `<div class="segments-summary">${message}</div>`;
-    }
-
-    function addSelectedSegment() {
-        const startDate = document.getElementById('segmentStartDate').value;
-        const endDate = document.getElementById('segmentEndDate').value;
-        if (!startDate || !endDate) { Swal.fire({ title:'กรุณาเลือกวันที่', icon:'warning', confirmButtonText:'ตกลง' }); return; }
-        if (!selectedRoomForSegment) { Swal.fire({ title:'กรุณาเลือกห้องประชุม', icon:'warning', confirmButtonText:'ตกลง' }); return; }
-        if (hasOverlappedSegment(startDate, endDate)) { Swal.fire({ title:'ช่วงวันที่ทับซ้อน', text:'กรุณาเลือกช่วงวันที่ใหม่', icon:'warning', confirmButtonText:'ตกลง' }); return; }
-        bookingSegments.push({
-            id: (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : String(Date.now()),
-            startDate,
-            endDate,
-            meetingRoom: selectedRoomForSegment.name,
-            roomCapacity: selectedRoomForSegment.capacity,
-            roomCategory: selectedRoomForSegment.category
-        });
-        renderBookingSegments();
-        closeDateRoomModal();
-    }
-
-    function removeSegment(id) { bookingSegments = bookingSegments.filter(item => item.id !== id); renderBookingSegments(); }
-
-    function hasOverlappedSegment(startDate, endDate) {
-        const newStart = new Date(startDate);
-        const newEnd = new Date(endDate);
-        return bookingSegments.some(segment => {
-            const oldStart = new Date(segment.startDate);
-            const oldEnd = new Date(segment.endDate);
-            return newStart <= oldEnd && newEnd >= oldStart;
-        });
-    }
-
-    function formatThaiDate(dateString) {
-        if (!dateString) return '-';
-        return new Date(dateString).toLocaleDateString('th-TH', { day:'2-digit', month:'short', year:'numeric' });
-    }
-
     /* ─── Form submit ─── */
     document.getElementById('bookingForm').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -2308,15 +2247,14 @@
                 await Swal.fire({ title:'ที่พักไม่เพียงพอ!', text:'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว', icon:'error', confirmButtonText:'ตกลง' }); return;
             }
         }
-        if (bookingSegments.length === 0) {
-            await Swal.fire({ title:'กรุณาเพิ่มวันที่การจอง', text:'ต้องมีอย่างน้อย 1 ช่วงวันที่และห้องประชุม', icon:'warning', confirmButtonText:'ตกลง' });
-            return;
-        }
+        const selectedRoomName = hiddenMeetingRoomInput.value;
         const attendees = parseInt(document.getElementById('attendees').value) || 0;
-        const overCapacity = bookingSegments.find(s => attendees > (parseInt(s.roomCapacity) || 0));
-        if (overCapacity) {
-            await Swal.fire({ title:'จำนวนผู้เข้าร่วมเกินความจุห้อง!', text:`ห้อง ${overCapacity.meetingRoom} รองรับได้ ${overCapacity.roomCapacity} คน`, icon:'error', confirmButtonText:'ตกลง' });
-            return;
+        const roomConfig = roomData.find(r => r.name === selectedRoomName);
+        if (roomConfig && attendees > roomConfig.capacity) {
+            await Swal.fire({ title:'จำนวนผู้เข้าร่วมเกินความจุห้อง!', text:`ห้อง ${selectedRoomName} รองรับได้ ${roomConfig.capacity} คน`, icon:'error', confirmButtonText:'ตกลง' }); return;
+        }
+        if (roomConfig && !roomConfig.isAvailable) {
+            await Swal.fire({ title:'ห้องประชุมไม่ว่าง!', text:'กรุณาเลือกห้องอื่น', icon:'error', confirmButtonText:'ตกลง' }); return;
         }
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
@@ -2329,14 +2267,14 @@
             department: formData.get('department'),
             phone:      formData.get('phone'),
             courseName: formData.get('courseName'),
-            startDate:  document.getElementById('startDate').value,
-            endDate:    document.getElementById('endDate').value,
-            meetingRoom:document.getElementById('meetingRoom').value,
-            bookingSegments: bookingSegments.map(({id, ...rest}) => rest),
+            startDate:  formData.get('startDate'),
+            endDate:    formData.get('endDate'),
+            meetingRoom:formData.get('meetingRoom'),
             accommodation: formData.get('accommodation'),
             attendees:  formData.get('attendees'),
             numRooms:   numRoomsValue,
-            timestamp:  new Date().toISOString()
+            timestamp:  new Date().toISOString(),
+            bookingSegments: collectBookingSegments()
         };
         try {
             await fetch(GAS_WEB_APP_URL, {
@@ -2364,7 +2302,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('startDate').setAttribute('min', today);
-        renderBookingSegments();
+        if (bookingSegments.length === 0) addBookingSegment();
         updateProgressSteps();
     });
 
