@@ -1078,11 +1078,6 @@
         .field-row-7-3 > div:first-child { margin-bottom: 1rem; }
         .desktop-welcome { display: none; }
     }
-
-
-/* ===== Multi-slot booking OTA style ===== */
-.booking-slots-section{margin-top:1rem}.slot-section-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}.slot-section-head h3{margin:0;font-size:1rem;color:#0f172a;font-weight:800}.slot-section-head p{margin:4px 0 0;color:#64748b;font-size:.82rem}.btn-add-slot{border:0;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border-radius:999px;padding:10px 15px;font-weight:800;box-shadow:0 10px 24px rgba(34,197,94,.24);cursor:pointer;white-space:nowrap}.booking-slot-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:0 12px 34px rgba(15,23,42,.06)}.slot-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.slot-badge{display:inline-flex;align-items:center;gap:6px;background:#dcfce7;color:#15803d;border-radius:999px;padding:6px 10px;font-size:.78rem;font-weight:900}.btn-remove-slot{border:0;background:#fee2e2;color:#b91c1c;border-radius:999px;padding:7px 10px;font-weight:800;cursor:pointer}.slot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.slot-grid label{display:block;font-size:.82rem;color:#475569;font-weight:800;margin-bottom:6px}.slot-grid input,.slot-grid select{width:100%;border:1px solid #cbd5e1;border-radius:13px;padding:10px 12px;font-size:.92rem;background:#fff}.slot-status{font-size:.82rem;font-weight:800;margin-top:10px}.slot-status.ok{color:#16a34a}.slot-status.warn{color:#f97316}.slot-status.error{color:#dc2626}.slot-summary{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:15px;padding:12px;margin-top:10px;color:#334155;font-size:.84rem}.hidden-legacy-booking-fields{display:none!important}@media(max-width:768px){.slot-section-head{flex-direction:column;align-items:stretch}.slot-grid{grid-template-columns:1fr}.btn-add-slot{width:100%}}
-
 </style>
 </head>
 <body>
@@ -1283,42 +1278,42 @@
                                 </div>
                             </div>
 
-                            <!-- Multi Date / Room Slots (OTA style) -->
-                            <div class="booking-slots-section">
-                                <div class="slot-section-head">
-                                    <div>
-                                        <h3><i class="fas fa-calendar-plus" style="color:#22c55e;"></i> ช่วงวันที่และห้องประชุม</h3>
-                                        <p>เพิ่มได้หลายช่วง และเลือกห้องประชุมแยกตามแต่ละช่วง</p>
+                            <!-- Date Range (Agoda style) -->
+                            <div class="field-group">
+                                <label class="field-label">ช่วงเวลา <span class="req">*</span></label>
+                                <div class="date-range-box">
+                                    <div class="date-cell">
+                                        <div class="date-cell-label"><i class="fas fa-calendar-day" style="font-size:0.65rem;"></i> วันเริ่มต้น</div>
+                                        <input type="date" id="startDate" name="startDate" required>
                                     </div>
-                                    <button type="button" class="btn-add-slot" onclick="addBookingSlot()">
-                                        <i class="fas fa-plus"></i> เพิ่มวันที่การจอง
-                                    </button>
-                                </div>
-                                <div id="bookingSlotsContainer"></div>
-                                <div id="bookingSlotsSummary" class="slot-summary"></div>
-
-                                <!-- legacy hidden fields: ให้ code เดิมและ Apps Script ยังรับค่า startDate/endDate/meetingRoom ได้ -->
-                                <div class="hidden-legacy-booking-fields">
-                                    <input type="date" id="startDate" name="startDate">
-                                    <input type="date" id="endDate" name="endDate">
-                                    <input type="hidden" id="meetingRoom" name="meetingRoom">
-                                    <input type="hidden" id="bookingSlotsJson" name="bookingSlotsJson">
-                                    <div class="room-select-btn" id="customMeetingRoomSelect">
-                                        <span class="room-select-text" id="roomSelectLabel">เลือกจากระบบใหม่</span>
-                                        <i class="fas fa-chevron-down room-select-arrow"></i>
+                                    <div class="date-cell">
+                                        <div class="date-cell-label"><i class="fas fa-calendar-check" style="font-size:0.65rem;"></i> วันสิ้นสุด</div>
+                                        <input type="date" id="endDate" name="endDate" required>
                                     </div>
-                                    <ul class="room-dropdown" id="meetingRoomOptions"></ul>
                                 </div>
                             </div>
 
-                            <!-- Attendees -->
-                            <div class="field-group" style="margin-top:1rem;">
-                                <label class="field-label" for="attendees">จำนวน (คน) <span class="req">*</span></label>
-                                <div class="field-input-wrap">
-                                    <input type="number" class="field-input has-icon-right" id="attendees" name="attendees"
-                                           placeholder="คน" required min="1"
-                                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                                    <span class="field-icon-right"><i class="fas fa-users" style="font-size:0.8rem;"></i></span>
+                            <!-- Room + Attendees -->
+                            <div class="field-row-7-3">
+                                <div class="field-group">
+                                    <label class="field-label">เลือกห้องประชุม <span class="req">*</span></label>
+                                    <div style="position:relative;">
+                                        <div class="room-select-btn" id="customMeetingRoomSelect">
+                                            <span class="room-select-text" id="roomSelectLabel">กรุณาเลือกวันที่ก่อน</span>
+                                            <i class="fas fa-chevron-down room-select-arrow"></i>
+                                        </div>
+                                        <ul class="room-dropdown" id="meetingRoomOptions"></ul>
+                                        <input type="hidden" id="meetingRoom" name="meetingRoom" required>
+                                    </div>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label" for="attendees">จำนวน (คน) <span class="req">*</span></label>
+                                    <div class="field-input-wrap">
+                                        <input type="number" class="field-input has-icon-right" id="attendees" name="attendees"
+                                               placeholder="คน" required min="1"
+                                               oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                        <span class="field-icon-right"><i class="fas fa-users" style="font-size:0.8rem;"></i></span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2068,119 +2063,6 @@
     document.getElementById('attendees').addEventListener('input', checkAccommodation);
     document.querySelectorAll('input[name="accommodation"]').forEach(r => r.addEventListener('change', checkAccommodation));
 
-
-
-/* ===== Multi-slot booking: OTA style ===== */
-let bookingSlots = [];
-let slotRoomCache = {};
-
-function getTodayYmd(){ return new Date().toISOString().split('T')[0]; }
-function escapeHtml(text){ return String(text || '').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
-function formatDateShortTH(value){ if(!value) return '-'; const d = new Date(value); return isNaN(d) ? value : d.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'}); }
-
-function addBookingSlot(defaultData = {}) {
-    bookingSlots.push({ startDate: defaultData.startDate || '', endDate: defaultData.endDate || '', meetingRoom: defaultData.meetingRoom || '' });
-    renderBookingSlots();
-}
-
-function removeBookingSlot(index) {
-    if (bookingSlots.length <= 1) { Swal.fire({title:'ต้องมีอย่างน้อย 1 ช่วง', icon:'info', confirmButtonText:'ตกลง'}); return; }
-    bookingSlots.splice(index, 1); renderBookingSlots();
-}
-
-function updateBookingSlot(index, key, value) {
-    bookingSlots[index][key] = value;
-    if (key === 'startDate') {
-        if (bookingSlots[index].endDate && bookingSlots[index].endDate < value) bookingSlots[index].endDate = value;
-        bookingSlots[index].meetingRoom = '';
-    }
-    if (key === 'endDate') bookingSlots[index].meetingRoom = '';
-    renderBookingSlots();
-    if (bookingSlots[index] && bookingSlots[index].startDate && bookingSlots[index].endDate) loadAvailableRoomsForSlot(index);
-}
-
-function renderBookingSlots() {
-    const container = document.getElementById('bookingSlotsContainer');
-    if (!container) return;
-    const today = getTodayYmd();
-    container.innerHTML = bookingSlots.map((slot, index) => `
-        <div class="booking-slot-card">
-            <div class="slot-card-head">
-                <span class="slot-badge"><i class="fas fa-calendar-check"></i> ช่วงที่ ${index + 1}</span>
-                ${index > 0 ? `<button type="button" class="btn-remove-slot" onclick="removeBookingSlot(${index})"><i class="fas fa-trash-alt"></i> ลบช่วงนี้</button>` : ''}
-            </div>
-            <div class="slot-grid">
-                <div><label>วันเริ่มต้น</label><input type="date" min="${today}" value="${slot.startDate || ''}" onchange="updateBookingSlot(${index}, 'startDate', this.value)"></div>
-                <div><label>วันสิ้นสุด</label><input type="date" min="${slot.startDate || today}" value="${slot.endDate || ''}" onchange="updateBookingSlot(${index}, 'endDate', this.value)"></div>
-                <div><label>เลือกห้องประชุม</label><select id="slotRoom_${index}" onchange="updateBookingSlot(${index}, 'meetingRoom', this.value)" ${(!slot.startDate || !slot.endDate) ? 'disabled' : ''}><option value="">${slot.startDate && slot.endDate ? 'กำลังโหลดห้อง...' : 'เลือกวันที่ก่อน'}</option></select></div>
-            </div>
-            <div id="slotStatus_${index}" class="slot-status"></div>
-        </div>`).join('');
-    syncBookingSlotsJson();
-    bookingSlots.forEach((slot, index) => { if (slot.startDate && slot.endDate) loadAvailableRoomsForSlot(index, slot.meetingRoom); });
-}
-
-function syncBookingSlotsJson() {
-    const clean = bookingSlots.filter(s => s.startDate && s.endDate && s.meetingRoom);
-    const overallStart = bookingSlots.map(s => s.startDate).filter(Boolean).sort()[0] || '';
-    const overallEnd = bookingSlots.map(s => s.endDate).filter(Boolean).sort().slice(-1)[0] || '';
-    const roomSummary = [...new Set(clean.map(s => s.meetingRoom))].join(', ');
-    const startEl = document.getElementById('startDate'), endEl = document.getElementById('endDate'), roomEl = document.getElementById('meetingRoom'), jsonEl = document.getElementById('bookingSlotsJson');
-    if (startEl) startEl.value = overallStart;
-    if (endEl) endEl.value = overallEnd;
-    if (roomEl) roomEl.value = roomSummary;
-    if (jsonEl) jsonEl.value = JSON.stringify(clean);
-    const label = document.getElementById('roomSelectLabel'); if (label) label.textContent = roomSummary || 'เลือกจากระบบใหม่';
-    const summary = document.getElementById('bookingSlotsSummary');
-    if (summary) summary.innerHTML = clean.length ? `<b>สรุป:</b> ${clean.length} ช่วง · ${formatDateShortTH(overallStart)} - ${formatDateShortTH(overallEnd)} · ${escapeHtml(roomSummary)}` : 'ยังไม่ได้เลือกช่วงวันที่และห้องประชุม';
-}
-
-async function loadAvailableRoomsForSlot(index, selectedRoom = '') {
-    const slot = bookingSlots[index];
-    const roomSelect = document.getElementById(`slotRoom_${index}`);
-    const statusEl = document.getElementById(`slotStatus_${index}`);
-    if (!slot || !roomSelect || !statusEl || !slot.startDate || !slot.endDate) return;
-    if (slot.endDate < slot.startDate) { statusEl.className='slot-status error'; statusEl.textContent='วันสิ้นสุดต้องไม่น้อยกว่าวันเริ่มต้น'; return; }
-    statusEl.className='slot-status warn'; statusEl.textContent='กำลังตรวจสอบห้องว่าง...';
-    try {
-        const url = `${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${encodeURIComponent(slot.startDate)}&endDate=${encodeURIComponent(slot.endDate)}`;
-        const res = await fetch(url); const data = await res.json();
-        slotRoomCache[index] = data.rooms || [];
-        roomSelect.innerHTML = '<option value="">เลือกห้องประชุม</option>';
-        (data.rooms || []).forEach(room => {
-            const option = document.createElement('option'); option.value = room.name;
-            option.textContent = `${room.name} · ${room.capacity} ที่นั่ง${room.isAvailable ? '' : ' · ไม่ว่าง'}`;
-            option.disabled = !room.isAvailable; if (selectedRoom && selectedRoom === room.name) option.selected = true; roomSelect.appendChild(option);
-        });
-        roomSelect.disabled = false;
-        const availableCount = (data.rooms || []).filter(r => r.isAvailable).length;
-        statusEl.className = availableCount > 0 ? 'slot-status ok' : 'slot-status error';
-        statusEl.textContent = availableCount > 0 ? `พบห้องว่าง ${availableCount} ห้อง` : 'ไม่มีห้องว่างในช่วงวันที่นี้';
-    } catch (err) {
-        statusEl.className='slot-status error'; statusEl.textContent='ตรวจสอบห้องว่างไม่สำเร็จ กรุณาลองใหม่';
-    }
-}
-
-async function validateBookingSlotsBeforeSubmit() {
-    if (!bookingSlots.length) { await Swal.fire({title:'กรุณาเพิ่มช่วงวันที่การจอง', icon:'warning', confirmButtonText:'ตกลง'}); return false; }
-    const attendees = parseInt(document.getElementById('attendees').value) || 0;
-    for (let i=0;i<bookingSlots.length;i++) {
-        const s = bookingSlots[i];
-        if (!s.startDate || !s.endDate || !s.meetingRoom) { await Swal.fire({title:`กรุณากรอกข้อมูลช่วงที่ ${i+1} ให้ครบ`, icon:'warning', confirmButtonText:'ตกลง'}); return false; }
-        if (s.endDate < s.startDate) { await Swal.fire({title:`ช่วงที่ ${i+1}: วันสิ้นสุดไม่ถูกต้อง`, icon:'warning', confirmButtonText:'ตกลง'}); return false; }
-        const roomConfig = (slotRoomCache[i] || roomData || []).find(r => r.name === s.meetingRoom);
-        if (roomConfig && !roomConfig.isAvailable) { await Swal.fire({title:`ช่วงที่ ${i+1}: ห้องประชุมไม่ว่าง`, text:`ห้อง ${s.meetingRoom} ถูกจองแล้ว`, icon:'error', confirmButtonText:'ตกลง'}); return false; }
-        if (roomConfig && attendees > roomConfig.capacity) { await Swal.fire({title:`ช่วงที่ ${i+1}: ผู้เข้าร่วมเกินความจุห้อง`, text:`ห้อง ${s.meetingRoom} รองรับได้ ${roomConfig.capacity} คน`, icon:'error', confirmButtonText:'ตกลง'}); return false; }
-        for (let j=i+1;j<bookingSlots.length;j++) {
-            const t = bookingSlots[j];
-            if (s.startDate <= t.endDate && s.endDate >= t.startDate && s.meetingRoom === t.meetingRoom) {
-                await Swal.fire({title:'ช่วงวันที่ซ้อนกัน', text:`ช่วงที่ ${j+1} ใช้ห้องเดียวกับช่วงที่ ${i+1} ในวันที่ซ้อนกัน`, icon:'warning', confirmButtonText:'ตกลง'}); return false;
-            }
-        }
-    }
-    syncBookingSlotsJson(); return true;
-}
-
     /* ─── Form submit ─── */
     document.getElementById('bookingForm').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -2211,7 +2093,15 @@ async function validateBookingSlotsBeforeSubmit() {
                 await Swal.fire({ title:'ที่พักไม่เพียงพอ!', text:'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว', icon:'error', confirmButtonText:'ตกลง' }); return;
             }
         }
-        if (!(await validateBookingSlotsBeforeSubmit())) return;
+        const selectedRoomName = hiddenMeetingRoomInput.value;
+        const attendees = parseInt(document.getElementById('attendees').value) || 0;
+        const roomConfig = roomData.find(r => r.name === selectedRoomName);
+        if (roomConfig && attendees > roomConfig.capacity) {
+            await Swal.fire({ title:'จำนวนผู้เข้าร่วมเกินความจุห้อง!', text:`ห้อง ${selectedRoomName} รองรับได้ ${roomConfig.capacity} คน`, icon:'error', confirmButtonText:'ตกลง' }); return;
+        }
+        if (roomConfig && !roomConfig.isAvailable) {
+            await Swal.fire({ title:'ห้องประชุมไม่ว่าง!', text:'กรุณาเลือกห้องอื่น', icon:'error', confirmButtonText:'ตกลง' }); return;
+        }
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
         loadingDiv.classList.add('show');
@@ -2226,8 +2116,6 @@ async function validateBookingSlotsBeforeSubmit() {
             startDate:  formData.get('startDate'),
             endDate:    formData.get('endDate'),
             meetingRoom:formData.get('meetingRoom'),
-            bookingSlots: bookingSlots.filter(s => s.startDate && s.endDate && s.meetingRoom),
-            bookingSlotsJson: document.getElementById('bookingSlotsJson').value,
             accommodation: formData.get('accommodation'),
             attendees:  formData.get('attendees'),
             numRooms:   numRoomsValue,
@@ -2259,7 +2147,6 @@ async function validateBookingSlotsBeforeSubmit() {
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('startDate').setAttribute('min', today);
-        if (!bookingSlots.length) addBookingSlot();
         updateProgressSteps();
     });
 
