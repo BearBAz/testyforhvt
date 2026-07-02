@@ -1418,10 +1418,21 @@ async function fetchQuotaForShop(type, shop, elementId) {
 
 function refreshFoodShopQuota() {
     if (!selectedBooking || currentFoodBooking !== 'ต้องการ') return;
-    fetchQuotaForShop('food', 'ร้าน 1', 'foodShop1Quota');
-    fetchQuotaForShop('food', 'ร้าน 2', 'foodShop2Quota');
-    fetchQuotaForShop('snack', 'ร้าน 1', 'snackShop1Quota');
-    fetchQuotaForShop('snack', 'ร้าน 2', 'snackShop2Quota');
+    // ดึงชื่อร้านจริงจาก value ของ radio แต่ละตัวเสมอ (ห้ามฮาร์ดโค้ดชื่อ
+    // "ร้าน 1"/"ร้าน 2" เพราะไม่ตรงกับชื่อร้านจริงที่บันทึกในชีต ทำให้
+    // ระบบหาแถวที่ตรงกันไม่เจอ และเช็คโควต้าได้ 0 เสมอ)
+    document.querySelectorAll('.shop-option[data-shop-option^="foodShop"]').forEach(option => {
+        const radio = option.querySelector('input[type="radio"][name="foodShop"]');
+        const small = option.querySelector('small[id]');
+        if (!radio || !small || radio.value === 'อื่นๆ') return;
+        fetchQuotaForShop('food', radio.value, small.id);
+    });
+    document.querySelectorAll('.shop-option[data-shop-option^="snackShop"]').forEach(option => {
+        const radio = option.querySelector('input[type="radio"][name="snackShop"]');
+        const small = option.querySelector('small[id]');
+        if (!radio || !small || radio.value === 'อื่นๆ') return;
+        fetchQuotaForShop('snack', radio.value, small.id);
+    });
 }
 
 async function validateFoodShopBeforeSubmit() {
