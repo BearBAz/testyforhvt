@@ -662,14 +662,6 @@ input[type="file"] { display:none; }
     .food-shop-header { flex-direction: column; }
 }
 
-
-
-/* ===== Multi-date summary on confirm page ===== */
-.segment-confirm-list { display:grid; gap:.55rem; margin:.75rem 0 1rem; }
-.segment-confirm-card { display:flex; justify-content:space-between; gap:.75rem; align-items:flex-start; padding:.75rem; border:1px solid var(--border); border-radius:16px; background:#f8fafc; }
-.segment-confirm-title { font-weight:800; color:var(--text); font-size:.88rem; }
-.segment-confirm-meta { color:var(--muted); font-size:.8rem; line-height:1.45; margin-top:.15rem; }
-
 </style>
 </head>
 <body>
@@ -1123,7 +1115,7 @@ input[type="file"] { display:none; }
 
 <script>
 const LIFF_ID = "2007138631-Ono58j50";
-const GAS_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz9MADm0LF_d6F3uW0lqNgK9VfAcW12MiD_t1UQ71OdNV5PhnxA2wjsd6bF5bxCW8S9bQ/exec";
 const VIP_TOTAL = 9;
     
 let userId = '';
@@ -1201,27 +1193,11 @@ function renderBookingList(bookings) {
             <div class="booking-meta">
                 <span class="booking-meta-item"><i class="fas fa-calendar-alt"></i>${start} – ${end}</span>
                 <span class="booking-meta-item"><i class="fas fa-users"></i>${b.attendees} คน</span>
-                <span class="booking-meta-item"><i class="fas fa-door-open"></i>${(b.bookingSegments && b.bookingSegments.length > 1) ? b.bookingSegments.length + ' ช่วงวันที่' : (b.room || '-')}</span>
+                <span class="booking-meta-item"><i class="fas fa-door-open"></i>${b.room || '-'}</span>
             </div>
             <div class="item-arrow"><i class="fas fa-chevron-right"></i></div>
         </div>`;
     }).join('');
-}
-
-
-
-function renderConfirmSegments(segments) {
-    const container = document.getElementById('bookingSegmentsConfirmList');
-    if (!container) return;
-    if (!Array.isArray(segments) || segments.length === 0) { container.innerHTML = ''; return; }
-    container.innerHTML = segments.map((s, idx) => `
-        <div class="segment-confirm-card">
-            <div>
-                <div class="segment-confirm-title">วันที่ ${idx + 1}</div>
-                <div class="segment-confirm-meta"><i class="fas fa-calendar-alt"></i> ${formatDateTH(s.startDate)} – ${formatDateTH(s.endDate)}</div>
-                <div class="segment-confirm-meta"><i class="fas fa-door-open"></i> ${s.meetingRoom || s.room || '-'} · ${s.roomCapacity || '-'} ที่นั่ง</div>
-            </div>
-        </div>`).join('');
 }
 
 /* ── SELECT BOOKING ── */
@@ -1252,7 +1228,6 @@ function selectBooking(b) {
     document.getElementById('disp_endDate').textContent   = formatDateTH(b.endDate);
     document.getElementById('disp_checkin').textContent   = formatDateTH(b.checkin);
     document.getElementById('disp_checkout').textContent  = formatDateTH(b.checkout);
-    renderConfirmSegments(b.bookingSegments || []);
 
     // rooms
     origStd = parseInt(b.numRooms) || 0;
