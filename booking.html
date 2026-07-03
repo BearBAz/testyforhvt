@@ -105,6 +105,9 @@
     }
     .top-bar-icon i { color: #fff; font-size: 1rem; }
 
+    /* ═══════════════════════════════════════
+       HERO BANNER (Booking.com style)
+    ═══════════════════════════════════════ */
     .hero-banner {
         background: linear-gradient(145deg, #7061bd 0%, #5a4da0 50%, #44388a 100%);
         padding: 1.4rem 1.2rem 3.8rem;
@@ -1478,8 +1481,14 @@
         `).join('');
 
         segments.forEach(seg => {
-            if (seg.startDate && seg.endDate) checkMeetingRoomAvailability(seg.id);
-            else renderRoomOptions(seg.id, []);
+            if (seg.room && seg.roomData && seg.roomData.length > 0) {
+                // มีห้องที่เลือกไว้แล้วและมีข้อมูลแคชอยู่ -> แสดงผลจากแคชทันที ไม่ต้องยิง fetch ใหม่ (กันบั๊ก label ค้าง/กระพริบ)
+                renderRoomOptions(seg.id, seg.roomData);
+            } else if (seg.startDate && seg.endDate) {
+                checkMeetingRoomAvailability(seg.id);
+            } else {
+                renderRoomOptions(seg.id, []);
+            }
         });
     }
 
@@ -1780,6 +1789,11 @@
                 label.textContent = 'กรุณาเลือกห้องประชุม';
                 label.className = 'room-select-text';
                 updateProgressSteps();
+            } else {
+                // ห้องที่เลือกไว้ยังว่างอยู่ -> คืนค่าชื่อห้องกลับที่ label
+                // (ป้องกันบั๊ก: label ค้างที่ "กำลังตรวจสอบห้องว่าง..." ตอนรีเฟรชช่วงอื่นพร้อมกัน)
+                label.textContent = seg.room;
+                label.className = 'room-select-text selected';
             }
         }
     }
