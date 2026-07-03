@@ -262,6 +262,12 @@ body {
     display:flex; align-items:center; gap:.3rem; margin-bottom:.18rem; letter-spacing:.03em;
 }
 .selected-banner-course { font-size:.97rem; font-weight:700; color:var(--text); line-height:1.3; }
+.seg-count-badge {
+    display:inline-flex; align-items:center; gap:.25rem;
+    font-size:.68rem; font-weight:800; color:var(--brand);
+    background:rgba(255,255,255,.85); border:1px solid var(--border);
+    padding:.1rem .5rem; border-radius:20px; margin-left:.4rem; vertical-align:middle;
+}
 .change-link {
     font-size:.8rem; color:var(--brand); font-weight:700;
     cursor:pointer; display:inline-flex; align-items:center; gap:.3rem;
@@ -303,6 +309,17 @@ body {
 .date-chip-icon i { font-size:.8rem; color:var(--brand); }
 .date-chip-label { font-size:.7rem; color:var(--muted); font-weight:500; display:block; }
 .date-chip-value { font-size:.88rem; font-weight:700; color:var(--text); display:block; line-height:1.2; }
+
+/* Room segments (หลายช่วงวันที่ + ห้องประชุม) */
+.room-seg-list { display:flex; flex-direction:column; gap:.5rem; }
+.room-seg-item {
+    background:var(--bg); border:1.5px solid var(--border);
+    border-radius:var(--r-sm); padding:.6rem .85rem;
+    display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+}
+.room-seg-name { font-size:.86rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:.45rem; }
+.room-seg-name i { color:var(--brand); font-size:.8rem; }
+.room-seg-date { font-size:.78rem; color:var(--muted); font-weight:600; white-space:nowrap; }
 
 /* ═══════════════════════════════════════
    ROOM COUNTER  (Agoda quantity picker)
@@ -728,6 +745,7 @@ input[type="file"] { display:none; }
                         <div class="selected-banner-id">
                             <i class="fas fa-hashtag"></i>
                             <span id="selectedId">-</span>
+                            <span id="selectedSegBadge"></span>
                         </div>
                         <div class="selected-banner-course" id="selectedCourse">-</div>
                         <span class="change-link" onclick="resetToList()">
@@ -797,6 +815,11 @@ input[type="file"] { display:none; }
                     <!-- hidden inputs -->
                     <input type="hidden" id="f_startDate">
                     <input type="hidden" id="f_endDate">
+                </div>
+                <!-- ห้องประชุมที่จอง (รองรับหลายช่วง วันที่+ห้อง) -->
+                <div class="mb-3">
+                    <label class="form-label" style="font-size:.8rem;">ห้องประชุมที่จอง</label>
+                    <div class="room-seg-list" id="roomSegList"></div>
                 </div>
                 <!-- Check-in / Check-out -->
                 <div class="mb-0">
@@ -1115,7 +1138,7 @@ input[type="file"] { display:none; }
 
 <script>
 const LIFF_ID = "2007138631-Ono58j50";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbz9MADm0LF_d6F3uW0lqNgK9VfAcW12MiD_t1UQ71OdNV5PhnxA2wjsd6bF5bxCW8S9bQ/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzDPbnquUQTCv9dK13-r0VN7AaaoI5RKe0MwhBQX88jIdv4iqFuMo3JF9oC2RZrCJpLyw/exec";
 const VIP_TOTAL = 9;
     
 let userId = '';
@@ -1186,6 +1209,8 @@ function renderBookingList(bookings) {
     hint.textContent = `${bookings.length} รายการ`;
     container.innerHTML = bookings.map(b => {
         const start = formatDateTH(b.startDate), end = formatDateTH(b.endDate);
+        const segCount = Array.isArray(b.segments) ? b.segments.length : 0;
+        const roomChip = segCount > 1 ? `${segCount} ช่วง/ห้อง` : (b.room || '-');
         return `
         <div class="booking-item" onclick="selectBooking(${JSON.stringify(b).replace(/"/g,'&quot;')})">
             <div class="booking-id-tag"><i class="fas fa-hashtag"></i>${b.bookingId}</div>
@@ -1193,7 +1218,7 @@ function renderBookingList(bookings) {
             <div class="booking-meta">
                 <span class="booking-meta-item"><i class="fas fa-calendar-alt"></i>${start} – ${end}</span>
                 <span class="booking-meta-item"><i class="fas fa-users"></i>${b.attendees} คน</span>
-                <span class="booking-meta-item"><i class="fas fa-door-open"></i>${b.room || '-'}</span>
+                <span class="booking-meta-item"><i class="fas fa-door-open"></i>${roomChip}</span>
             </div>
             <div class="item-arrow"><i class="fas fa-chevron-right"></i></div>
         </div>`;
@@ -1207,6 +1232,11 @@ function selectBooking(b) {
     // banner
     document.getElementById('selectedId').textContent     = b.bookingId;
     document.getElementById('selectedCourse').textContent = b.courseName || '-';
+    const segBadgeEl = document.getElementById('selectedSegBadge');
+    const segCount = Array.isArray(b.segments) ? b.segments.length : 0;
+    segBadgeEl.innerHTML = segCount > 1
+        ? `<span class="seg-count-badge"><i class="fas fa-layer-group"></i>${segCount} ช่วง</span>`
+        : '';
 
     // ผู้จอง
     document.getElementById('f_fullName').value   = b.fullName   || '';
@@ -1228,6 +1258,9 @@ function selectBooking(b) {
     document.getElementById('disp_endDate').textContent   = formatDateTH(b.endDate);
     document.getElementById('disp_checkin').textContent   = formatDateTH(b.checkin);
     document.getElementById('disp_checkout').textContent  = formatDateTH(b.checkout);
+
+    // ห้องประชุมที่จอง (รองรับหลายช่วงวันที่+ห้อง)
+    renderRoomSegList(b);
 
     // rooms
     origStd = parseInt(b.numRooms) || 0;
@@ -1252,7 +1285,11 @@ function resetToList() {
 async function checkVipAvailability() {
     if (!selectedBooking) return;
     try {
-        const res = await fetch(`${GAS_URL}?action=checkVipAvailability&bookingId=${selectedBooking.bookingId}&checkin=${selectedBooking.checkin}&checkout=${selectedBooking.checkout}`);
+        const hasSegments = Array.isArray(selectedBooking.segments) && selectedBooking.segments.length > 0;
+        const dateParam = hasSegments
+            ? `segments=${encodeURIComponent(JSON.stringify(selectedBooking.segments.map(s => ({ startDate: s.startDate, endDate: s.endDate }))))}`
+            : `checkin=${selectedBooking.checkin}&checkout=${selectedBooking.checkout}`;
+        const res = await fetch(`${GAS_URL}?action=checkVipAvailability&bookingId=${selectedBooking.bookingId}&${dateParam}`);
         const result = await res.json();
         if (result.success) {
             vipCanBook = Math.max(0, VIP_TOTAL - (result.usedRooms || 0));
@@ -1585,6 +1622,26 @@ function formatDateTH(dateStr) {
     if (!dateStr) return '-';
     const d = new Date(dateStr);
     return d.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
+}
+
+function renderRoomSegList(b) {
+    const el = document.getElementById('roomSegList');
+    if (!el) return;
+    const segments = Array.isArray(b.segments) ? b.segments : [];
+    if (segments.length === 0) {
+        // ข้อมูลเก่าก่อนอัปเดตระบบ ไม่มี segments แยก แสดงเป็นห้อง+ช่วงวันเดียว
+        el.innerHTML = `
+            <div class="room-seg-item">
+                <div class="room-seg-name"><i class="fas fa-door-open"></i>${b.room || '-'}</div>
+                <div class="room-seg-date">${formatDateTH(b.startDate)} – ${formatDateTH(b.endDate)}</div>
+            </div>`;
+        return;
+    }
+    el.innerHTML = segments.map(s => `
+        <div class="room-seg-item">
+            <div class="room-seg-name"><i class="fas fa-door-open"></i>${s.room || '-'}</div>
+            <div class="room-seg-date">${formatDateTH(s.startDate)} – ${formatDateTH(s.endDate)}</div>
+        </div>`).join('');
 }
 
 function setupListeners() {
