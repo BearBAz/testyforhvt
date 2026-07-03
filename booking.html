@@ -730,6 +730,37 @@
         opacity: 0.07;
     }
 
+    .acc-windows-list {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0.7rem 0.85rem;
+        margin-bottom: 0.85rem;
+    }
+    .acc-window-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.83rem;
+        padding: 0.3rem 0;
+    }
+    .acc-window-num {
+        background: var(--primary); color: #fff; font-size: 0.68rem; font-weight: 800;
+        width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .acc-window-date { flex: 1; font-weight: 700; color: var(--text); }
+    .acc-window-nights { color: var(--primary); font-weight: 700; font-size: 0.78rem; }
+    .acc-window-hint {
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-top: 0.4rem;
+        padding-top: 0.4rem;
+        border-top: 1px dashed var(--border-strong);
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
     .rooms-avail-strip {
         background: var(--success-soft);
         border: 1px solid rgba(5,150,105,0.2);
@@ -1800,19 +1831,37 @@
 
     /* ─── Accommodation check ─── */
     let maxAvailableRooms = 0;
-    function getOverallDateRange() {
-        const valid = segments.filter(s => s.startDate && s.endDate);
-        if (valid.length === 0) return { startDate: '', endDate: '' };
-        const minStart = valid.reduce((min, s) => s.startDate < min ? s.startDate : min, valid[0].startDate);
-        const maxEnd = valid.reduce((max, s) => s.endDate > max ? s.endDate : max, valid[0].endDate);
-        return { startDate: minStart, endDate: maxEnd };
+
+    // ที่พักนับเฉพาะคืนในแต่ละช่วงจริง (เหมือน backend) ไม่รวมคืนในช่วงว่างระหว่างช่วงประชุม
+    // 1 segment -> 1 window (checkin = 1 วันก่อนเริ่ม, checkout = วันสิ้นสุด) แล้วรวมช่วงที่ติด/ทับกันเพื่อแสดงผล
+    function computeAccommodationWindows(segs) {
+        const raw = segs
+            .filter(s => s.startDate && s.endDate)
+            .map(s => {
+                const start = new Date(s.startDate);
+                const checkin = new Date(start); checkin.setDate(start.getDate() - 1);
+                const checkout = new Date(s.endDate);
+                return { checkin, checkout };
+            })
+            .sort((a, b) => a.checkin - b.checkin);
+
+        const merged = [];
+        raw.forEach(w => {
+            const last = merged[merged.length - 1];
+            if (last && w.checkin <= last.checkout) {
+                if (w.checkout > last.checkout) last.checkout = w.checkout;
+            } else {
+                merged.push({ checkin: new Date(w.checkin), checkout: new Date(w.checkout) });
+            }
+        });
+        return merged;
     }
 
     async function checkAccommodation() {
         clearTimeout(checkTimeout);
         checkTimeout = setTimeout(async () => {
             const accChoice   = document.querySelector('input[name="accommodation"]:checked');
-            const { startDate, endDate } = getOverallDateRange();
+            const validSegs    = segments.filter(s => s.startDate && s.endDate);
             const attendeesIn = document.getElementById('attendees').value;
             const attendees   = parseInt(attendeesIn) || 0;
             const container   = document.getElementById('accommodationStatus');
@@ -1822,7 +1871,7 @@
             if (!accChoice || accChoice.value !== 'ต้องการ') {
                 container.innerHTML = ''; container.style.display = 'none'; return;
             }
-            if (!startDate || !endDate || !attendeesIn || attendees <= 0) {
+            if (validSegs.length === 0 || !attendeesIn || attendees <= 0) {
                 container.innerHTML = ''; container.style.display = 'none'; return;
             }
             container.style.display = 'block';
@@ -1834,19 +1883,39 @@
                     <div style="padding:1rem;"><div class="skeleton-block"></div></div>
                 </div>`;
             try {
-                const s = new Date(startDate), e = new Date(endDate);
-                const checkin = new Date(s); checkin.setDate(s.getDate()-1);
-                const checkout = new Date(e);
-                const nights = Math.ceil((checkout-checkin)/(1000*60*60*24));
+                const windows = computeAccommodationWindows(validSegs);
                 const opt = { day:'numeric', month:'short', year:'2-digit' };
-                const showCI = checkin.toLocaleDateString('th-TH', opt);
-                const showCO = checkout.toLocaleDateString('th-TH', opt);
-                const sStr = s.toISOString().split('T')[0];
-                const eStr = e.toISOString().split('T')[0];
+                const segmentsPayload = validSegs.map(s => ({ startDate: s.startDate, endDate: s.endDate }));
 
-                const res    = await fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${sStr}&endDate=${eStr}`);
+                const res    = await fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&segments=${encodeURIComponent(JSON.stringify(segmentsPayload))}`);
                 const result = await res.json();
                 if (result.error) throw new Error(result.error);
+
+                const nights = result.nightsCount; // จำนวนคืนจริงจาก backend (นับเฉพาะคืนในแต่ละช่วง ไม่รวมช่วงว่าง)
+                const ciCoHtml = windows.length <= 1
+                    ? `<div class="checkin-checkout-row">
+                        <div class="ci-co-box">
+                            <div class="ci-co-label">Check-in</div>
+                            <div class="ci-co-date">${windows[0].checkin.toLocaleDateString('th-TH', opt)}</div>
+                            <div class="ci-co-time">เวลา 14:00 น.</div>
+                            <i class="fas fa-calendar-check ci-co-icon"></i>
+                        </div>
+                        <div class="ci-co-box">
+                            <div class="ci-co-label">Check-out</div>
+                            <div class="ci-co-date">${windows[0].checkout.toLocaleDateString('th-TH', opt)}</div>
+                            <div class="ci-co-time">เวลา 10:00 น.</div>
+                            <i class="fas fa-calendar-times ci-co-icon"></i>
+                        </div>
+                    </div>`
+                    : `<div class="acc-windows-list">
+                        ${windows.map((w, idx) => `
+                            <div class="acc-window-row">
+                                <span class="acc-window-num">${idx + 1}</span>
+                                <span class="acc-window-date">${w.checkin.toLocaleDateString('th-TH', opt)} – ${w.checkout.toLocaleDateString('th-TH', opt)}</span>
+                                <span class="acc-window-nights">${Math.round((w.checkout - w.checkin) / 86400000)} คืน</span>
+                            </div>`).join('')}
+                        <div class="acc-window-hint"><i class="fas fa-info-circle"></i> ไม่รวมคืนในช่วงว่างระหว่างกิจกรรม</div>
+                    </div>`;
 
                 const available = result.availableRooms;
                 maxAvailableRooms = available;
@@ -1862,20 +1931,7 @@
                                 <span class="nights-badge">${nights} คืน</span>
                             </div>
                             <div class="acc-result-body">
-                                <div class="checkin-checkout-row">
-                                    <div class="ci-co-box">
-                                        <div class="ci-co-label">Check-in</div>
-                                        <div class="ci-co-date">${showCI}</div>
-                                        <div class="ci-co-time">เวลา 14:00 น.</div>
-                                        <i class="fas fa-calendar-check ci-co-icon"></i>
-                                    </div>
-                                    <div class="ci-co-box">
-                                        <div class="ci-co-label">Check-out</div>
-                                        <div class="ci-co-date">${showCO}</div>
-                                        <div class="ci-co-time">เวลา 10:00 น.</div>
-                                        <i class="fas fa-calendar-times ci-co-icon"></i>
-                                    </div>
-                                </div>
+                                ${ciCoHtml}
                                 <div class="rooms-avail-strip">
                                     <div class="rooms-avail-lbl"><i class="fas fa-check-circle"></i> ห้องพักว่าง</div>
                                     <span class="rooms-count-badge">${available} ห้อง</span>
@@ -1915,12 +1971,13 @@
                     accommodationAvailable = false;
                     const title = available === 0 ? 'ไม่มีห้องพักว่าง' : `ห้องพักไม่เพียงพอ`;
                     const desc  = available === 0 ? 'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว' : `ต้องการ ${suggested} ห้อง แต่มีว่างเพียง ${available} ห้อง`;
+                    const rangeSummary = windows.map(w => `${w.checkin.toLocaleDateString('th-TH', opt)} – ${w.checkout.toLocaleDateString('th-TH', opt)}`).join(', ');
                     container.innerHTML = `
                         <div class="unavail-alert-box">
                             <div class="unavail-icon-wrap"><i class="fas fa-times"></i></div>
                             <div class="unavail-text-wrap">
                                 <div class="t">${title}</div>
-                                <div class="s">${showCI} – ${showCO} (${nights} คืน)</div>
+                                <div class="s">${rangeSummary} (${nights} คืน)</div>
                                 <div style="font-size:0.8rem;color:var(--danger);margin-top:0.3rem;">${desc} กรุณาเลือกวันที่อื่น หรือติดต่อ admin ผ่าน Line OA</div>
                             </div>
                         </div>`;
