@@ -566,6 +566,48 @@
     }
 
     /* ═══════════════════════════════════════
+       BOOKING SUMMARY (สรุปก่อนส่ง แบบ Agoda/Booking.com)
+    ═══════════════════════════════════════ */
+    .booking-summary-card {
+        background: linear-gradient(180deg, var(--primary-xsoft), var(--surface));
+        border: 1.5px solid var(--primary-soft);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.05rem;
+        margin: 0 0 1rem;
+    }
+    .summary-title {
+        font-size: 0.85rem;
+        font-weight: 800;
+        color: var(--primary-dark);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-bottom: 0.7rem;
+    }
+    .summary-divider { border-top: 1px dashed var(--border-strong); margin: 0.6rem 0; }
+    .summary-seg-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        padding: 0.3rem 0;
+    }
+    .summary-seg-label { color: var(--text); font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
+    .summary-seg-label .seg-num {
+        background: var(--primary); color: #fff; font-size: 0.68rem; font-weight: 800;
+        width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .summary-seg-date { color: var(--muted); font-weight: 600; }
+    .summary-meta-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        color: var(--muted);
+        padding: 0.15rem 0;
+    }
+    .summary-meta-row b { color: var(--text); font-weight: 700; }
+
+    /* ═══════════════════════════════════════
        ACCOMMODATION TOGGLE (Lineman style)
     ═══════════════════════════════════════ */
     .acc-toggle-group {
@@ -1319,6 +1361,9 @@
                         </div>
                     </div>
 
+                    <!-- Booking Summary (สรุปก่อนส่ง แบบ Agoda/Booking.com) -->
+                    <div class="booking-summary-card" id="bookingSummaryCard" style="display:none;"></div>
+
                     <!-- PDPA -->
                     <div class="pdpa-wrap">
                         <input class="pdpa-checkbox-custom" type="checkbox" id="pdpaConsent" required>
@@ -1584,6 +1629,38 @@
         return segments.length > 0 && segments.every(s => s.startDate && s.endDate && s.room);
     }
 
+    function formatShortTH_(dateStr) {
+        if (!dateStr) return '';
+        return new Date(dateStr).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
+    }
+
+    function renderBookingSummary(show) {
+        const card = document.getElementById('bookingSummaryCard');
+        if (!card) return;
+        if (!show) { card.style.display = 'none'; return; }
+
+        const attendees = document.getElementById('attendees').value || '-';
+        const accChoice = document.querySelector('input[name="accommodation"]:checked');
+        const accVal = accChoice ? accChoice.value : '-';
+        const numRoomsInput = document.getElementById('numRooms');
+        const numRoomsVal = (accVal === 'ต้องการ' && numRoomsInput) ? numRoomsInput.value : null;
+
+        const segRows = segments.map((s, idx) => `
+            <div class="summary-seg-row">
+                <span class="summary-seg-label"><span class="seg-num">${idx + 1}</span>${s.room || 'ยังไม่ได้เลือกห้อง'}</span>
+                <span class="summary-seg-date">${s.startDate && s.endDate ? `${formatShortTH_(s.startDate)} – ${formatShortTH_(s.endDate)}` : 'ยังไม่ระบุวันที่'}</span>
+            </div>`).join('');
+
+        card.style.display = 'block';
+        card.innerHTML = `
+            <div class="summary-title"><i class="fas fa-clipboard-check"></i> สรุปการจองของท่าน</div>
+            ${segRows}
+            <div class="summary-divider"></div>
+            <div class="summary-meta-row"><span>ผู้เข้าร่วม</span><b>${attendees} คน</b></div>
+            <div class="summary-meta-row"><span>ที่พัก</span><b>${accVal}${numRoomsVal ? ` (${numRoomsVal} ห้อง)` : ''}</b></div>
+        `;
+    }
+
     function updateProgressSteps() {
         const s1f = ['employeeId','fullName','department','phone'];
         const s2f = ['courseName','attendees'];
@@ -1594,6 +1671,7 @@
         const pdpaOk     = document.getElementById('pdpaConsent').checked;
 
         if (submitBtn) submitBtn.disabled = !(step1Done && step2Done && pdpaOk);
+        renderBookingSummary(step2Done);
 
         // Mobile steps
         const el1 = document.getElementById('step1');
