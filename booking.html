@@ -14,37 +14,38 @@
 
 <style>
     :root {
-        --primary: #7061bd;
-        --primary-dark: #5a4da0;
-        --primary-light: #8f82cc;
-        --primary-soft: #eeecf9;
-        --primary-xsoft: #f7f6fd;
-        --accent: #f4a836;
-        --accent-soft: #fef4e4;
+        --primary: #6C5CE7;
+        --primary-dark: #4B3AC4;
+        --primary-light: #A79EF2;
+        --primary-soft: #EFEBFC;
+        --primary-xsoft: #F7F5FF;
+        --accent: #FF6B4A;
+        --accent-soft: #FFE7DF;
         --danger: #e5484d;
         --danger-soft: #fef0f0;
-        --success: #059669;
-        --success-soft: #ecfdf5;
+        --success: #0EA394;
+        --success-soft: #DEFBF6;
         --warning: #d97706;
         --warning-soft: #fef3c7;
         --info: #0284c7;
         --info-soft: #e0f2fe;
-        --bg: #f4f2fb;
+        --bg: #F6F4FE;
         --surface: #ffffff;
-        --text: #1c1638;
-        --text-2: #4a4569;
-        --muted: #9490b0;
-        --border: #e5e2f0;
-        --border-strong: #ccc8e5;
-        --shadow-xs: 0 1px 3px rgba(112,97,189,0.08);
-        --shadow-sm: 0 2px 8px rgba(112,97,189,0.10);
-        --shadow-md: 0 6px 20px rgba(112,97,189,0.13);
-        --shadow-lg: 0 16px 48px rgba(112,97,189,0.16);
+        --text: #221C4A;
+        --text-2: #55507A;
+        --muted: #8B87A6;
+        --border: #E7E3F7;
+        --border-strong: #D2CBF0;
+        --shadow-xs: 0 1px 3px rgba(76,58,196,0.08);
+        --shadow-sm: 0 2px 8px rgba(76,58,196,0.10);
+        --shadow-md: 0 6px 20px rgba(76,58,196,0.13);
+        --shadow-lg: 0 16px 48px rgba(76,58,196,0.16);
         --radius-xs: 8px;
         --radius: 12px;
         --radius-md: 16px;
         --radius-lg: 20px;
         --radius-xl: 28px;
+        --gradient-brand: linear-gradient(120deg, #6C5CE7 0%, #8D6DF0 42%, #FF6B4A 120%);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -75,12 +76,12 @@
         position: sticky;
         top: 0;
         z-index: 50;
-        background: var(--primary);
+        background: var(--gradient-brand);
         padding: 0.85rem 1.1rem;
         display: flex;
         align-items: center;
         gap: 0.85rem;
-        box-shadow: 0 2px 12px rgba(112,97,189,0.35);
+        box-shadow: 0 2px 12px rgba(76,58,196,0.35);
     }
     .top-bar-back {
         width: 36px; height: 36px;
@@ -109,7 +110,7 @@
        HERO BANNER (Booking.com style)
     ═══════════════════════════════════════ */
     .hero-banner {
-        background: linear-gradient(145deg, #7061bd 0%, #5a4da0 50%, #44388a 100%);
+        background: var(--gradient-brand);
         padding: 1.4rem 1.2rem 3.8rem;
         position: relative;
         overflow: hidden;
@@ -913,7 +914,7 @@
         padding: 1rem 1.5rem;
         border: none;
         border-radius: var(--radius-md);
-        background: linear-gradient(135deg, var(--primary), #5a4da0);
+        background: linear-gradient(135deg, var(--primary) 0%, #8D6DF0 55%, var(--accent) 130%);
         color: #fff;
         font-size: 1rem;
         font-weight: 700;
@@ -925,7 +926,7 @@
         justify-content: center;
         gap: 0.55rem;
         transition: all 0.25s ease;
-        box-shadow: 0 8px 24px rgba(112,97,189,0.4);
+        box-shadow: 0 8px 24px rgba(76,58,196,0.4);
         pointer-events: all;
     }
     .cta-btn:hover:not(:disabled) {
@@ -1012,7 +1013,7 @@
             display: flex;
             flex-direction: column;
             width: 340px;
-            background: linear-gradient(180deg, #7061bd 0%, #5a4da0 60%, #44388a 100%);
+            background: linear-gradient(180deg, #6C5CE7 0%, #5B4FE0 55%, #4B3AC4 100%);
             padding: 2.5rem 2rem;
             position: sticky;
             top: 0;
