@@ -7,47 +7,56 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #7061bd;
-            --primary-dark: #5a4da3;
-            --primary-darker: #453a8a;
-            --primary-light: #8f82cc;
-            --primary-soft: #eeecf8;
-            --primary-xsoft: #f8f7fd;
-            --accent: #ff6b35;
-            --accent-soft: #fff0eb;
-            --gold: #f5a623;
-            --gold-soft: #fef6e4;
-            --success: #00b894;
-            --success-soft: #e0f7f3;
-            --danger: #e74c3c;
-            --danger-soft: #fdf0ee;
-            --info: #0984e3;
-            --bg: #f4f3fb;
-            --surface: #ffffff;
-            --text: #1a1535;
-            --text-2: #4a4470;
-            --muted: #9590b8;
-            --border: #e5e2f2;
-            --border-strong: #ccc8e8;
-            --shadow-sm: 0 2px 8px rgba(112,97,189,0.08);
-            --shadow-md: 0 6px 24px rgba(112,97,189,0.12);
-            --shadow-lg: 0 16px 48px rgba(112,97,189,0.16);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --radius-lg: 22px;
-            --radius-xl: 28px;
+            /* ── Unified brand system (ใช้ร่วมกันทั้ง 4 หน้า) ── */
+            --violet-900: #2E2152;
+            --violet-700: #4B3AC4;
+            --violet-600: #5B4FE0;
+            --violet-500: #6C5CE7;
+            --violet-300: #A79EF2;
+            --violet-100: #EFEBFC;
+            --violet-50:  #F7F5FF;
+            --coral-600: #E85A3B;
+            --coral-500: #FF6B4A;
+            --coral-100: #FFE7DF;
+            --teal-600: #0EA394;
+            --teal-500: #17C3B2;
+            --teal-100: #DEFBF6;
+            --sun-500: #FFB648;
+            --sun-100: #FFF3DE;
+            --pink-500: #FF4D8D;
+            --ink-900: #221C4A;
+            --ink-600: #55507A;
+            --ink-400: #8B87A6;
+            --line: #E7E3F7;
+            --line-strong: #D2CBF0;
+            --surface: #FFFFFF;
+            --bg: #F6F4FE;
+            --radius-sm: 12px;
+            --radius: 18px;
+            --radius-lg: 24px;
+            --radius-xl: 30px;
+            --shadow-sm: 0 2px 10px rgba(76,58,196,0.08);
+            --shadow-md: 0 8px 28px rgba(76,58,196,0.14);
+            --shadow-lg: 0 18px 50px rgba(76,58,196,0.18);
+            --gradient-hero: linear-gradient(120deg, #6C5CE7 0%, #8D6DF0 42%, #FF6B4A 120%);
+            --gradient-coral: linear-gradient(135deg, #FF6B4A 0%, #FF9166 100%);
+            --gradient-teal: linear-gradient(135deg, #17C3B2 0%, #4DD8C8 100%);
+            --gradient-violet: linear-gradient(135deg, #6C5CE7 0%, #8F82F2 100%);
+            --gradient-sun: linear-gradient(135deg, #FFB648 0%, #FFCE7C 100%);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Sarabun', sans-serif;
             background: var(--bg);
             min-height: 100vh;
-            color: var(--text);
+            color: var(--ink-900);
             -webkit-font-smoothing: antialiased;
         }
+        h1, h2, .display-font { font-family: 'Kanit', 'Sarabun', sans-serif; }
         .app-wrap {
             max-width: 480px;
             margin: 0 auto;
@@ -56,121 +65,126 @@
             flex-direction: column;
             background: var(--bg);
             position: relative;
+            padding-bottom: 5.5rem; /* เผื่อพื้นที่ bottom nav */
         }
 
         /* ===== LOADING SCREEN ===== */
         .loading-screen {
             position: fixed; inset: 0;
-            background: linear-gradient(145deg, #7061bd 0%, #5a4da3 50%, #453a8a 100%);
+            background: var(--gradient-hero);
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             z-index: 9999; transition: opacity 0.6s ease;
         }
         .loading-screen.hide { opacity: 0; pointer-events: none; }
-        .loading-logo-wrap {
-            position: relative; margin-bottom: 2rem;
-        }
+        .loading-logo-wrap { position: relative; margin-bottom: 2rem; }
         .loading-logo-ring {
             width: 90px; height: 90px; border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.25);
             display: flex; align-items: center; justify-content: center;
             animation: ring-spin 3s linear infinite;
         }
         @keyframes ring-spin { to { transform: rotate(360deg); } }
         .loading-logo-inner {
             width: 70px; height: 70px; border-radius: 20px;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.18);
             display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(255,255,255,0.25);
+            border: 1px solid rgba(255,255,255,0.3);
             backdrop-filter: blur(10px);
         }
         .loading-logo-inner i { font-size: 2rem; color: #fff; }
         .loading-pulse {
             position: absolute; inset: -8px; border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.15);
             animation: pulse-out 2s ease-out infinite;
         }
         @keyframes pulse-out { 0%{transform:scale(0.8);opacity:1;} 100%{transform:scale(1.4);opacity:0;} }
-        .loading-brand { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
-        .loading-sub-text { font-size: 0.82rem; color: rgba(255,255,255,0.55); margin-bottom: 2rem; }
-        .loading-bar-wrap { width: 140px; height: 3px; background: rgba(255,255,255,0.15); border-radius: 10px; overflow: hidden; }
-        .loading-bar-fill { height: 100%; width: 0; background: rgba(255,255,255,0.7); border-radius: 10px; animation: bar-fill 1.2s ease-out forwards; }
+        .loading-brand { font-family:'Kanit',sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+        .loading-sub-text { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-bottom: 2rem; }
+        .loading-bar-wrap { width: 140px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; }
+        .loading-bar-fill { height: 100%; width: 0; background: #fff; border-radius: 10px; animation: bar-fill 1.2s ease-out forwards; }
         @keyframes bar-fill { 0%{width:0;} 100%{width:85%;} }
 
-        /* ===== HERO HEADER ===== */
+        /* ===== HERO (ticket-style) ===== */
         .hero {
-            background: linear-gradient(145deg, #7061bd 0%, #5a4da3 55%, #453a8a 100%);
-            padding: 3rem 1.5rem 5rem;
+            background: var(--gradient-hero);
+            padding: 2.6rem 1.5rem 2.6rem;
             position: relative; overflow: hidden;
         }
-        .hero-mesh {
-            position: absolute; inset: 0; overflow: hidden;
-        }
         .hero-mesh::before {
-            content: '';
-            position: absolute;
-            top: -80px; right: -60px;
-            width: 260px; height: 260px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            content: ''; position: absolute; top: -90px; right: -70px;
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(255,255,255,0.16) 0%, transparent 70%);
             border-radius: 50%;
         }
         .hero-mesh::after {
-            content: '';
-            position: absolute;
-            bottom: -40px; left: -60px;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%);
+            content: ''; position: absolute; bottom: -10px; left: -70px;
+            width: 220px; height: 220px;
+            background: radial-gradient(circle, rgba(255,182,72,0.35) 0%, transparent 70%);
             border-radius: 50%;
         }
-        .hero-grid-bg {
+        .hero-dots {
             position: absolute; inset: 0;
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-            background-size: 32px 32px;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.14) 1.5px, transparent 1.5px);
+            background-size: 22px 22px;
         }
         .hero-inner { position: relative; z-index: 2; }
-        .hero-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.8rem; }
+        .hero-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.6rem; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 0.4rem;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.3);
             border-radius: 20px; padding: 0.3rem 0.85rem;
-            font-size: 0.73rem; color: rgba(255,255,255,0.9);
+            font-size: 0.72rem; color: #fff;
             backdrop-filter: blur(8px);
-            font-weight: 600; letter-spacing: 0.02em;
+            font-weight: 700; letter-spacing: 0.02em;
         }
         .hero-badge-dot {
             width: 6px; height: 6px; border-radius: 50%;
-            background: #4ade80;
-            box-shadow: 0 0 6px rgba(74,222,128,0.8);
+            background: #baffcf;
+            box-shadow: 0 0 6px rgba(186,255,207,0.9);
             animation: blink 2s ease infinite;
         }
         @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
         .profile-chip {
             display: none; align-items: center; gap: 0.5rem;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.3);
             border-radius: 30px; padding: 0.3rem 0.8rem 0.3rem 0.3rem;
             backdrop-filter: blur(8px);
         }
         .profile-chip.show { display: flex; }
         .profile-avatar {
             width: 28px; height: 28px; border-radius: 50%;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
             display: flex; align-items: center; justify-content: center; overflow: hidden;
             flex-shrink: 0;
         }
         .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .profile-avatar i { color: #fff; font-size: 0.85rem; }
-        .profile-name { font-size: 0.8rem; color: #fff; font-weight: 600; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .profile-name { font-size: 0.8rem; color: #fff; font-weight: 700; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .hero-title { font-size: 2rem; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 0.5rem; letter-spacing: -0.5px; }
-        .hero-title span { color: rgba(255,255,255,0.6); font-weight: 400; font-size: 1.3rem; display: block; }
-        .hero-subtitle { font-size: 0.88rem; color: rgba(255,255,255,0.65); line-height: 1.5; }
+        .hero-title { font-family:'Kanit',sans-serif; font-size: 1.9rem; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 0.4rem; }
+        .hero-title span { color: rgba(255,255,255,0.75); font-weight: 400; font-size: 1.15rem; display: block; margin-top: 0.15rem; }
+        .hero-subtitle { font-size: 0.87rem; color: rgba(255,255,255,0.78); line-height: 1.5; }
+
+        /* Ticket scalloped edge — ตัดขอบล่างของ hero ให้ดูเหมือนตั๋ว/บัตรจอง */
+        .ticket-edge {
+            height: 18px;
+            margin-top: -1px;
+            background: #F0703F; /* โทนใกล้เคียงปลาย gradient ของ hero */
+            -webkit-mask-image: radial-gradient(circle at 12px 0, transparent 10px, #000 10.5px);
+            mask-image: radial-gradient(circle at 12px 0, transparent 10px, #000 10.5px);
+            -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+            -webkit-mask-size: 24px 18px; mask-size: 24px 18px;
+        }
+        .ticket-dash {
+            border-top: 2px dashed rgba(255,255,255,0.35);
+            margin: 0 1.5rem;
+        }
 
         /* ===== CONTENT SECTION ===== */
-        .content-section { flex: 1; padding: 0 1rem 3rem; margin-top: -3.5rem; position: relative; z-index: 3; }
+        .content-section { flex: 1; padding: 0 1rem 1rem; margin-top: -2.2rem; position: relative; z-index: 3; }
 
         /* Stats Card */
         .stats-card {
@@ -178,38 +192,29 @@
             border-radius: var(--radius-lg);
             padding: 1.1rem 1.2rem;
             box-shadow: var(--shadow-md);
-            border: 1px solid var(--border);
+            border: 1px solid var(--line);
             margin-bottom: 1.2rem;
             display: flex; gap: 0;
         }
         .stat-cell { flex: 1; text-align: center; padding: 0.3rem 0.5rem; }
-        .stat-cell + .stat-cell { border-left: 1.5px solid var(--border); }
-        .stat-num {
-            font-size: 1.5rem; font-weight: 800; color: var(--primary);
-            display: block; line-height: 1.1;
-        }
-        .stat-label { font-size: 0.72rem; color: var(--muted); display: block; margin-top: 0.2rem; font-weight: 500; }
+        .stat-cell + .stat-cell { border-left: 1.5px dashed var(--line-strong); }
+        .stat-num { font-family:'Kanit',sans-serif; font-size: 1.55rem; font-weight: 700; color: var(--violet-600); display: block; line-height: 1.1; }
+        .stat-label { font-size: 0.72rem; color: var(--ink-400); display: block; margin-top: 0.25rem; font-weight: 600; }
 
         /* Section header */
-        .section-header {
-            display: flex; align-items: center; gap: 0.5rem;
-            margin-bottom: 0.8rem; padding: 0 0.15rem;
-        }
-        .section-header-line {
-            width: 3px; height: 16px; border-radius: 2px;
-            background: linear-gradient(to bottom, var(--primary), var(--primary-light));
-        }
-        .section-header-text { font-size: 0.78rem; font-weight: 700; color: var(--text-2); letter-spacing: 0.06em; text-transform: uppercase; }
+        .section-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; padding: 0 0.15rem; }
+        .section-header-line { width: 4px; height: 16px; border-radius: 3px; background: var(--gradient-coral); }
+        .section-header-text { font-size: 0.78rem; font-weight: 700; color: var(--ink-600); letter-spacing: 0.06em; text-transform: uppercase; }
 
-        /* Menu Cards */
+        /* Menu Cards — colorful icon badges (Traveloka-style category cards) */
         .menu-cards { display: flex; flex-direction: column; gap: 0.75rem; }
         .menu-card {
             background: var(--surface);
             border-radius: var(--radius-lg);
-            padding: 1.25rem;
+            padding: 1.2rem;
             display: flex; align-items: center; gap: 1rem;
             box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
+            border: 1px solid var(--line);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             text-decoration: none; color: inherit;
@@ -218,61 +223,45 @@
         .menu-card:hover, .menu-card:active {
             transform: translateY(-4px) scale(1.005);
             box-shadow: var(--shadow-lg);
-            border-color: var(--primary-soft);
+            border-color: var(--violet-100);
             color: inherit;
         }
-        .menu-card::before {
-            content: '';
-            position: absolute; inset: 0;
-            background: linear-gradient(135deg, transparent 0%, rgba(112,97,189,0.02) 100%);
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .menu-card:hover::before { opacity: 1; }
         .menu-icon-wrap {
-            width: 54px; height: 54px; border-radius: 16px;
+            width: 56px; height: 56px; border-radius: 18px;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0; position: relative;
         }
-        .menu-icon-wrap.violet {
-            background: linear-gradient(135deg, #7061bd 0%, #8f82cc 100%);
-            box-shadow: 0 6px 18px rgba(112,97,189,0.35);
-        }
-        .menu-icon-wrap.orange {
-            background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
-            box-shadow: 0 6px 18px rgba(255,107,53,0.35);
-        }
-        .menu-icon-wrap.teal {
-            background: linear-gradient(135deg, #00b894 0%, #00cba3 100%);
-            box-shadow: 0 6px 18px rgba(0,184,148,0.35);
-        }
-        .menu-icon-wrap i { font-size: 1.35rem; color: #fff; }
+        .menu-icon-wrap.violet { background: var(--gradient-violet); box-shadow: 0 8px 20px rgba(108,92,231,0.38); }
+        .menu-icon-wrap.coral  { background: var(--gradient-coral); box-shadow: 0 8px 20px rgba(255,107,74,0.38); }
+        .menu-icon-wrap.teal   { background: var(--gradient-teal); box-shadow: 0 8px 20px rgba(23,195,178,0.38); }
+        .menu-icon-wrap i { font-size: 1.4rem; color: #fff; }
         .menu-content { flex: 1; min-width: 0; }
-        .menu-label { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
-        .menu-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+        .menu-label { font-size: 1rem; font-weight: 700; color: var(--ink-900); margin-bottom: 0.2rem; }
+        .menu-desc { font-size: 0.8rem; color: var(--ink-400); line-height: 1.4; }
         .menu-right { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
         .menu-arrow {
             width: 30px; height: 30px; border-radius: 50%;
-            background: var(--primary-soft);
+            background: var(--violet-100);
             display: flex; align-items: center; justify-content: center;
             transition: all 0.25s;
         }
-        .menu-arrow i { font-size: 0.75rem; color: var(--primary); }
-        .menu-card:hover .menu-arrow { background: var(--primary); }
+        .menu-arrow i { font-size: 0.75rem; color: var(--violet-600); }
+        .menu-card:hover .menu-arrow { background: var(--gradient-violet); }
         .menu-card:hover .menu-arrow i { color: #fff; }
         .notify-badge {
-            background: var(--danger); color: #fff;
+            background: var(--pink-500); color: #fff;
             font-size: 0.7rem; font-weight: 800;
             padding: 0.15rem 0.5rem; border-radius: 10px;
             min-width: 22px; text-align: center;
-            box-shadow: 0 2px 8px rgba(231,76,60,0.45);
+            box-shadow: 0 2px 8px rgba(255,77,141,0.45);
             animation: badge-pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
         }
         @keyframes badge-pop { from{transform:scale(0);} to{transform:scale(1);} }
 
         /* Notice card */
         .notice-card {
-            background: linear-gradient(135deg, var(--gold-soft), #fff9ec);
-            border: 1.5px solid rgba(245,166,35,0.25);
+            background: var(--sun-100);
+            border: 1.5px dashed var(--sun-500);
             border-radius: var(--radius);
             padding: 1rem 1.1rem;
             display: flex; align-items: flex-start; gap: 0.75rem;
@@ -280,30 +269,51 @@
         }
         .notice-icon {
             width: 32px; height: 32px; border-radius: 10px;
-            background: rgba(245,166,35,0.15);
+            background: var(--gradient-sun);
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        .notice-icon i { font-size: 0.9rem; color: var(--gold); }
-        .notice-text { font-size: 0.8rem; color: #7a6200; line-height: 1.5; }
-        .notice-text strong { color: #5a4800; font-weight: 700; }
+        .notice-icon i { font-size: 0.9rem; color: #fff; }
+        .notice-text { font-size: 0.8rem; color: #7a5200; line-height: 1.5; }
+        .notice-text strong { color: #5a3c00; font-weight: 700; }
 
         /* Footer */
-        .app-footer { padding: 0.5rem 1rem 2.5rem; }
+        .app-footer { padding: 0.5rem 0 1.5rem; }
         .footer-contact {
             background: var(--surface);
-            border: 1px solid var(--border);
+            border: 1px solid var(--line);
             border-radius: var(--radius);
             padding: 0.9rem 1.1rem;
             display: flex; align-items: center; gap: 0.8rem;
         }
         .footer-contact-icon {
             width: 36px; height: 36px; border-radius: 10px;
-            background: var(--primary-soft);
+            background: var(--violet-100);
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        .footer-contact-icon i { font-size: 0.9rem; color: var(--primary); }
-        .footer-contact-label { font-size: 0.72rem; color: var(--muted); display: block; }
-        .footer-contact-val { font-size: 0.88rem; font-weight: 700; color: var(--text); display: block; }
+        .footer-contact-icon i { font-size: 0.9rem; color: var(--violet-600); }
+        .footer-contact-label { font-size: 0.72rem; color: var(--ink-400); display: block; }
+        .footer-contact-val { font-size: 0.88rem; font-weight: 700; color: var(--ink-900); display: block; }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 480px;
+            background: var(--surface);
+            border-top: 1px solid var(--line);
+            display: flex; justify-content: space-around;
+            padding: 0.55rem 0.5rem calc(0.55rem + env(safe-area-inset-bottom));
+            box-shadow: 0 -6px 24px rgba(76,58,196,0.10);
+            z-index: 50;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+            text-decoration: none; color: var(--ink-400);
+            font-size: 0.68rem; font-weight: 700;
+            padding: 0.3rem 0.7rem; border-radius: 14px;
+            transition: all 0.2s;
+        }
+        .nav-item i { font-size: 1.05rem; }
+        .nav-item.active { color: var(--violet-600); background: var(--violet-100); }
 
         /* Animations */
         .fade-in { animation: fadeInUp 0.5s ease forwards; opacity: 0; }
@@ -320,9 +330,7 @@
 <div class="loading-screen" id="loadingScreen">
     <div class="loading-logo-wrap">
         <div class="loading-logo-ring">
-            <div class="loading-logo-inner">
-                <i class="fas fa-building-columns"></i>
-            </div>
+            <div class="loading-logo-inner"><i class="fas fa-building-columns"></i></div>
         </div>
         <div class="loading-pulse"></div>
     </div>
@@ -332,9 +340,9 @@
 </div>
 
 <div class="app-wrap" id="mainApp" style="display:none;">
-    <!-- Hero -->
+    <!-- Hero (ticket style) -->
     <div class="hero">
-        <div class="hero-grid-bg"></div>
+        <div class="hero-dots"></div>
         <div class="hero-mesh"></div>
         <div class="hero-inner">
             <div class="hero-top">
@@ -353,24 +361,17 @@
             </div>
             <div class="hero-subtitle">เลือกห้อง จองวันที่ ยืนยันการใช้งาน ง่ายๆ ผ่าน LINE</div>
         </div>
+        <div class="ticket-dash"></div>
     </div>
+    <div class="ticket-edge"></div>
 
     <!-- Content -->
     <div class="content-section">
         <!-- Stats -->
         <div class="stats-card fade-in">
-            <div class="stat-cell">
-                <span class="stat-num">13</span>
-                <span class="stat-label">ห้องประชุม</span>
-            </div>
-            <div class="stat-cell">
-                <span class="stat-num">90</span>
-                <span class="stat-label">ห้องพัก</span>
-            </div>
-            <div class="stat-cell">
-                <span class="stat-num">9</span>
-                <span class="stat-label">ห้อง VIP</span>
-            </div>
+            <div class="stat-cell"><span class="stat-num">13</span><span class="stat-label">ห้องประชุม</span></div>
+            <div class="stat-cell"><span class="stat-num">90</span><span class="stat-label">ห้องพัก</span></div>
+            <div class="stat-cell"><span class="stat-num">9</span><span class="stat-label">ห้อง VIP</span></div>
         </div>
 
         <!-- Notice -->
@@ -388,22 +389,16 @@
 
         <div class="menu-cards">
             <a href="booking.html" class="menu-card fade-in delay-2">
-                <div class="menu-icon-wrap violet">
-                    <i class="fas fa-calendar-plus"></i>
-                </div>
+                <div class="menu-icon-wrap violet"><i class="fas fa-calendar-plus"></i></div>
                 <div class="menu-content">
                     <div class="menu-label">จองห้องประชุม</div>
                     <div class="menu-desc">เลือกห้อง วันที่ และรายละเอียดการใช้งาน</div>
                 </div>
-                <div class="menu-right">
-                    <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
-                </div>
+                <div class="menu-right"><div class="menu-arrow"><i class="fas fa-chevron-right"></i></div></div>
             </a>
 
             <a href="confirm.html" class="menu-card fade-in delay-3">
-                <div class="menu-icon-wrap orange">
-                    <i class="fas fa-clipboard-check"></i>
-                </div>
+                <div class="menu-icon-wrap coral"><i class="fas fa-clipboard-check"></i></div>
                 <div class="menu-content">
                     <div class="menu-label">ยืนยันการจอง</div>
                     <div class="menu-desc">ยืนยันรายการที่ได้รับการอนุมัติแล้ว</div>
@@ -415,35 +410,39 @@
             </a>
 
             <a href="status.html" class="menu-card fade-in delay-4">
-                <div class="menu-icon-wrap teal">
-                    <i class="fas fa-magnifying-glass"></i>
-                </div>
+                <div class="menu-icon-wrap teal"><i class="fas fa-magnifying-glass"></i></div>
                 <div class="menu-content">
                     <div class="menu-label">ตรวจสอบสถานะ</div>
                     <div class="menu-desc">ดูรายการจองที่อนุมัติและยืนยันแล้ว</div>
                 </div>
-                <div class="menu-right">
-                    <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
-                </div>
+                <div class="menu-right"><div class="menu-arrow"><i class="fas fa-chevron-right"></i></div></div>
             </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="app-footer">
+            <div class="footer-contact">
+                <div class="footer-contact-icon"><i class="fas fa-phone-alt"></i></div>
+                <div>
+                    <span class="footer-contact-label">ติดต่อสอบถาม</span>
+                    <span class="footer-contact-val">034-339-224 และ (33)15619</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="app-footer">
-        <div class="footer-contact">
-            <div class="footer-contact-icon"><i class="fas fa-phone-alt"></i></div>
-            <div>
-                <span class="footer-contact-label">ติดต่อสอบถาม</span>
-                <span class="footer-contact-val">034-339-224 และ (33)15619</span>
-            </div>
-        </div>
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item active"><i class="fas fa-house"></i><span>หน้าแรก</span></a>
+        <a href="booking.html" class="nav-item"><i class="fas fa-calendar-plus"></i><span>จองห้อง</span></a>
+        <a href="confirm.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span>ยืนยัน</span></a>
+        <a href="status.html" class="nav-item"><i class="fas fa-magnifying-glass"></i><span>สถานะ</span></a>
     </div>
 </div>
 
 <script>
-const LIFF_ID = "2007138631-Ono58j50";
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8VAtdyxSMkPIIWNBAqUa9YJw2XNT7-fcPqbsSPqsk1IkrVex0X83DUMcGOmIdCJLPMw/exec";
+    const LIFF_ID = "2007138631-Ono58j50";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzDPbnquUQTCv9dK13-r0VN7AaaoI5RKe0MwhBQX88jIdv4iqFuMo3JF9oC2RZrCJpLyw/exec";
 
 async function init() {
     try {
