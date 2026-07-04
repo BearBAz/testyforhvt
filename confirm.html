@@ -13,36 +13,37 @@
 <style>
 
 :root {
-    --brand:        #7061bd;
-    --brand-dk:     #5a4da3;
-    --brand-ddk:    #42398a;
-    --brand-lt:     #8f80cb;
-    --brand-soft:   #f0eefb;
-    --brand-xsoft:  #faf9fe;
-    --gold:         #f5a623;
-    --gold-dk:      #d9871a;
-    --gold-soft:    #fff8ec;
-    --vip:          #9b59b6;
-    --vip-soft:     #f5f0fc;
-    --success:      #2e7d32;
-    --success-soft: #e8f5e9;
+    --brand:        #6C5CE7;
+    --brand-dk:     #4B3AC4;
+    --brand-ddk:    #2E2152;
+    --brand-lt:     #A79EF2;
+    --brand-soft:   #EFEBFC;
+    --brand-xsoft:  #F7F5FF;
+    --gold:         #FFB648;
+    --gold-dk:      #B4700C;
+    --gold-soft:    #FFF3DE;
+    --vip:          #FF4D8D;
+    --vip-soft:     #FFE7F0;
+    --success:      #0EA394;
+    --success-soft: #DEFBF6;
     --danger:       #e53935;
     --danger-soft:  #fce8e8;
     --warning:      #f57c00;
     --warning-soft: #fff3e0;
-    --bg:           #f5f4fc;
+    --bg:           #F6F4FE;
     --surface:      #ffffff;
-    --text:         #1c1630;
-    --text2:        #4a4272;
-    --muted:        #8e87b0;
-    --border:       #e4e0f5;
-    --border-strong:#cbc4ef;
-    --shadow-sm:    0 2px 8px  rgba(112,97,189,.07);
-    --shadow-md:    0 6px 24px rgba(112,97,189,.12);
-    --shadow-lg:    0 16px 48px rgba(112,97,189,.17);
+    --text:         #221C4A;
+    --text2:        #55507A;
+    --muted:        #8B87A6;
+    --border:       #E7E3F7;
+    --border-strong:#D2CBF0;
+    --shadow-sm:    0 2px 8px  rgba(76,58,196,.07);
+    --shadow-md:    0 6px 24px rgba(76,58,196,.12);
+    --shadow-lg:    0 16px 48px rgba(76,58,196,.17);
     --r:    16px;
     --r-sm: 10px;
     --r-lg: 22px;
+    --gradient-brand: linear-gradient(120deg, #6C5CE7 0%, #8D6DF0 42%, #FF6B4A 120%);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -62,8 +63,11 @@ body {
     padding-bottom:3rem;
 }
 
+/* ═══════════════════════════════════════
+   HEADER  — สีม่วง brand เหมือน booking
+═══════════════════════════════════════ */
 .page-header {
-    background: linear-gradient(155deg, #7061bd 0%, #5a4da3 50%, #42398a 100%);
+    background: var(--gradient-brand);
     padding: 1.6rem 1.5rem 5.5rem;
     position:relative; overflow:hidden;
 }
@@ -445,13 +449,13 @@ input[type="file"] { display:none; }
 ═══════════════════════════════════════ */
 .submit-btn {
     width:100%; padding:1rem; border:none; border-radius:var(--r);
-    background:linear-gradient(135deg, var(--brand), var(--brand-lt));
+    background: linear-gradient(135deg, var(--brand) 0%, #8D6DF0 55%, #FF6B4A 130%);
     color:#fff; font-size:1.05rem; font-weight:700;
     font-family:'Sarabun',sans-serif; cursor:pointer;
-    transition:all .25s; box-shadow:0 6px 22px rgba(112,97,189,.38);
+    transition:all .25s; box-shadow:0 6px 22px rgba(76,58,196,.38);
     display:flex; align-items:center; justify-content:center; gap:.55rem;
 }
-.submit-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 10px 32px rgba(112,97,189,.48); }
+.submit-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 10px 32px rgba(76,58,196,.48); }
 .submit-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
 
 /* food menu download */
