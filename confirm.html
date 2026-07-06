@@ -1644,18 +1644,34 @@ async function submitConfirmation() {
             foodOrderFile:      foodData,
         };
         document.getElementById('loadingMsg').textContent = 'กำลังส่งข้อมูล...';
-        await fetch(GAS_URL, {
-            method:'POST', mode:'no-cors',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ action:'submitConfirmationFromWeb', ...payload })
+        
+        // --- FIX: ลบ mode: 'no-cors' และ header ออก เพื่อให้ดึงผลลัพธ์จากเซิร์ฟเวอร์กลับมาเช็คได้ ---
+        const res = await fetch(GAS_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'submitConfirmationFromWeb', ...payload })
         });
+        
+        const result = await res.json();
         hideLoading();
-        Swal.fire({
-            title: 'ยืนยันสำเร็จ!',
-            html: `<p>บันทึกข้อมูลการยืนยัน <strong>${selectedBooking.bookingId}</strong> เรียบร้อยแล้ว</p>
-                   <p style="color:var(--muted);font-size:.88rem;">ระบบแจ้งเตือนไปยัง LINE ของคุณแล้ว</p>`,
-            icon: 'success', confirmButtonText: 'กลับหน้าหลัก'
-        }).then(() => window.location.href = 'index.html');
+        
+        if (result.status === 'success') {
+            Swal.fire({
+                title: 'ยืนยันสำเร็จ!',
+                html: `<p>บันทึกข้อมูลการยืนยัน <strong>${selectedBooking.bookingId}</strong> เรียบร้อยแล้ว</p>
+                       <p style="color:var(--muted);font-size:.88rem;">ระบบแจ้งเตือนไปยัง LINE ของคุณแล้ว</p>`,
+                icon: 'success', 
+                confirmButtonText: 'กลับหน้าหลัก'
+            }).then(() => window.location.href = 'index.html');
+        } else {
+            // หากมี Error จาก Backend จะมาแสดงตรงนี้
+            Swal.fire({ 
+                title: 'เกิดข้อผิดพลาด', 
+                text: result.message || 'ไม่สามารถบันทึกข้อมูลลง Sheet ได้', 
+                icon: 'error',
+                confirmButtonColor: 'var(--brand)'
+            });
+            document.getElementById('submitBtn').disabled = false;
+        }
     } catch(err) {
         hideLoading();
         document.getElementById('submitBtn').disabled = false;
