@@ -523,12 +523,19 @@
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        font-size: 0.76rem;
+        font-size: 0.8rem;
         font-weight: 800;
         color: var(--primary);
         background: var(--primary-soft);
-        padding: 0.28rem 0.65rem;
+        padding: 0.28rem 0.65rem 0.28rem 0.28rem;
         border-radius: 20px;
+    }
+    .segment-badge-num {
+        width: 20px; height: 20px; border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: #fff; font-size: 0.7rem; font-weight: 800;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
     }
     .segment-remove-btn {
         border: none;
@@ -559,6 +566,8 @@
         justify-content: center;
         gap: 0.5rem;
         cursor: pointer;
+        margin-top: 1rem;
+        margin-bottom: 0.3rem;
         transition: background 0.15s, border-color 0.15s;
     }
     .add-segment-btn:hover { background: #FFE6D0; border-color: var(--accent); }
@@ -570,26 +579,6 @@
         align-items: center;
         gap: 0.35rem;
     }
-
-    /* Timeline rail เชื่อมแต่ละช่วงการจอง (signature element) */
-    .segment-row { display: flex; gap: 0.7rem; align-items: stretch; }
-    .segment-rail { display: flex; flex-direction: column; align-items: center; width: 26px; flex-shrink: 0; padding-top: 2px; }
-    .rail-dot {
-        width: 26px; height: 26px; border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary), var(--primary-light));
-        color: #fff; font-family: 'Prompt', sans-serif; font-weight: 800; font-size: 0.72rem;
-        display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 0 0 4px var(--primary-soft);
-        flex-shrink: 0;
-        z-index: 1;
-    }
-    .rail-line {
-        width: 3px; flex: 1; min-height: 14px;
-        background: linear-gradient(180deg, var(--primary-light), var(--accent));
-        border-radius: 3px;
-        margin: 3px 0;
-    }
-    .segment-row .segment-card { flex: 1; }
 
     /* ═══════════════════════════════════════
        BOOKING SUMMARY (สรุปก่อนส่ง แบบ Agoda/Booking.com)
@@ -1521,28 +1510,23 @@
 
     function renderSegments() {
         segmentsContainer.innerHTML = segments.map((seg, idx) => `
-            <div class="segment-row">
-                <div class="segment-rail">
-                    <div class="rail-dot">${idx + 1}</div>
-                    ${idx < segments.length - 1 ? '<div class="rail-line"></div>' : ''}
+            <div class="segment-card" data-seg-id="${seg.id}">
+                <div class="segment-card-head">
+                    <span class="segment-badge"><span class="segment-badge-num">${idx + 1}</span> ช่วงที่ ${idx + 1}</span>
+                    ${segments.length > 1 ? `<button type="button" class="segment-remove-btn" onclick="removeSegment(${seg.id})" title="ลบช่วงนี้"><i class="fas fa-times"></i></button>` : ''}
                 </div>
-                <div class="segment-card" data-seg-id="${seg.id}">
-                    <div class="segment-card-head">
-                        <span class="segment-badge"><i class="fas fa-calendar-alt"></i> ช่วงที่ ${idx + 1}</span>
-                        ${segments.length > 1 ? `<button type="button" class="segment-remove-btn" onclick="removeSegment(${seg.id})" title="ลบช่วงนี้"><i class="fas fa-times"></i></button>` : ''}
+                <div class="date-range-box">
+                    <div class="date-cell">
+                        <div class="date-cell-label"><i class="fas fa-calendar-day" style="font-size:0.65rem;"></i> วันเริ่มต้น</div>
+                        <input type="date" id="seg-${seg.id}-startDate" value="${seg.startDate}" min="${todayStr()}"
+                               onchange="onSegmentDateChange(${seg.id}, 'startDate', this.value)">
                     </div>
-                    <div class="date-range-box">
-                        <div class="date-cell">
-                            <div class="date-cell-label"><i class="fas fa-calendar-day" style="font-size:0.65rem;"></i> วันเริ่มต้น</div>
-                            <input type="date" id="seg-${seg.id}-startDate" value="${seg.startDate}" min="${todayStr()}"
-                                   onchange="onSegmentDateChange(${seg.id}, 'startDate', this.value)">
-                        </div>
-                        <div class="date-cell">
-                            <div class="date-cell-label"><i class="fas fa-calendar-check" style="font-size:0.65rem;"></i> วันสิ้นสุด</div>
-                            <input type="date" id="seg-${seg.id}-endDate" value="${seg.endDate}" min="${seg.startDate || todayStr()}"
-                                   onchange="onSegmentDateChange(${seg.id}, 'endDate', this.value)">
-                        </div>
+                    <div class="date-cell">
+                        <div class="date-cell-label"><i class="fas fa-calendar-check" style="font-size:0.65rem;"></i> วันสิ้นสุด</div>
+                        <input type="date" id="seg-${seg.id}-endDate" value="${seg.endDate}" min="${seg.startDate || todayStr()}"
+                               onchange="onSegmentDateChange(${seg.id}, 'endDate', this.value)">
                     </div>
+                </div>
                     <div class="field-group" style="margin-top:0.75rem;margin-bottom:0;">
                         <label class="field-label">เลือกห้องประชุม <span class="req">*</span></label>
                         <div style="position:relative;">
@@ -1554,7 +1538,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         `).join('');
 
         segments.forEach(seg => {
