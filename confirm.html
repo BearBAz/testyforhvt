@@ -1597,7 +1597,52 @@ function readFileAsBase64(file) {
     });
 }
 
-/* ── SUBMIT ── */
+/* ============================================================
+   Helper Function: ยิง API อัปโหลดไฟล์ทีละไฟล์ (Phase 1)
+   ============================================================ */
+async function uploadFilePhase1(fileInputId, bookingId, courseName) {
+    const file = document.getElementById(fileInputId).files[0];
+    if (!file) return null;
+
+    const fileData = await readFileAsBase64(file);
+    if (!fileData) return null;
+
+    const payload = {
+        action: 'uploadFilePhase1',
+        bookingId: bookingId,
+        courseName: courseName,
+        base64: fileData.base64,
+        mimeType: fileData.mimeType,
+        fileName: fileData.fileName
+    };
+
+    const response = await fetch(GAS_URL, {
+        method: 'POST',
+        mode: 'no-cors', // หากเซ็ต CORS ได้ แนะนำให้ใช้ cors เพื่อรับ JSON ตอบกลับตรงๆ
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    
+    // หมายเหตุ: เนื่องจากใช้ no-cors ใน GAS ฝั่ง Client จะอ่าน response ตรงๆ ไม่ได้
+    // หากต้องการให้ปลอดภัยและได้ URL กลับมา ควรใช้ Web App แบบรับ-ส่ง JSON ด้วย fetch ปกติ
+    // แต่เพื่อไม่กระทบ Flow เดิม จะใช้ Promise.all หรือถ้าปรับเป็น JSON ได้:
+    
+    // สมมติว่า Web App ของคุณตั้งค่าอนุญาตให้ fetch ได้ (CORS ok)
+    const result = await (await fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+    })).json();
+
+    if (result.status === 'success') {
+        return result.url;
+    } else {
+        throw new Error(result.message || 'Upload failed');
+    }
+}
+
+/* ============================================================
+   TWO-PHASE COMMIT SUBMIT
+   ============================================================ */
 async function submitConfirmation() {
     if (!selectedBooking) return;
     const approvalFile = document.getElementById('file_approval').files[0];
@@ -1612,19 +1657,34 @@ async function submitConfirmation() {
     const foodShopValid = await validateFoodShopBeforeSubmit();
     if (!foodShopValid) return;
 
-    showLoading('กำลังเตรียมไฟล์...');
     document.getElementById('submitBtn').disabled = true;
+
     try {
-        const [approvalData, attendeeData, foodData] = await Promise.all([
-            readFileAsBase64(document.getElementById('file_approval').files[0]),
-            readFileAsBase64(document.getElementById('file_attendee').files[0]),
-            readFileAsBase64(document.getElementById('file_food').files[0]),
-        ]);
+        // --- PHASE 1: UPLOAD FILES ---
+        showLoading('กำลังอัปโหลดเอกสารอนุมัติ...');
+        const courseNameInput = document.getElementById('f_courseName').value;
+        const approvalUrl = await uploadFilePhase1('file_approval', selectedBooking.bookingId, courseNameInput);
+
+        let attendeeUrl = null;
+        if (document.getElementById('file_attendee').files[0]) {
+            showLoading('กำลังอัปโหลดรายชื่อผู้เข้าร่วม...');
+            attendeeUrl = await uploadFilePhase1('file_attendee', selectedBooking.bookingId, courseNameInput);
+        }
+
+        let foodUrl = null;
+        if (currentFoodBooking === 'ต้องการ' && document.getElementById('file_food').files[0]) {
+            showLoading('กำลังอัปโหลดรายการอาหาร...');
+            foodUrl = await uploadFilePhase1('file_food', selectedBooking.bookingId, courseNameInput);
+        }
+
+        // --- PHASE 2: SUBMIT DATA ---
+        showLoading('กำลังบันทึกข้อมูลการยืนยันจอง...');
         const equipments = [...document.querySelectorAll('input[name="equipment"]:checked')].map(c => c.value);
         const fields     = [...document.querySelectorAll('input[name="fieldActivity"]:checked')].map(c => c.value);
+        
         const payload = {
             bookingId_confirm:  selectedBooking.bookingId,
-            courseName:         document.getElementById('f_courseName').value,
+            courseName:         courseNameInput,
             attendees:          document.getElementById('f_attendees').value,
             standardRooms:      curStd,
             vipRooms:           curVip,
@@ -1639,43 +1699,37 @@ async function submitConfirmation() {
             foodShopOther:      document.getElementById('foodShopOther')?.value.trim() || '',
             snackShop:          getRadioValue('snackShop'),
             snackShopOther:     document.getElementById('snackShopOther')?.value.trim() || '',
-            approvalFile:       approvalData,
-            attendeeListFile:   attendeeData,
-            foodOrderFile:      foodData,
+            // ส่ง URL ที่ได้จาก Phase 1 ไปแทน Base64
+            approvalUrl:        approvalUrl,
+            attendeeUrl:        attendeeUrl,
+            foodUrl:            foodUrl
         };
-        document.getElementById('loadingMsg').textContent = 'กำลังส่งข้อมูล...';
-        
-        // --- FIX: ลบ mode: 'no-cors' และ header ออก เพื่อให้ดึงผลลัพธ์จากเซิร์ฟเวอร์กลับมาเช็คได้ ---
-        const res = await fetch(GAS_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'submitConfirmationFromWeb', ...payload })
+
+        // ยิงข้อมูล Phase 2
+        const submitResponse = await fetch(GAS_URL, {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ action:'submitConfirmationFromWeb', ...payload })
         });
         
-        const result = await res.json();
+        const result = await submitResponse.json();
         hideLoading();
-        
+
         if (result.status === 'success') {
             Swal.fire({
                 title: 'ยืนยันสำเร็จ!',
-                html: `<p>บันทึกข้อมูลการยืนยัน <strong>${selectedBooking.bookingId}</strong> เรียบร้อยแล้ว</p>
-                       <p style="color:var(--muted);font-size:.88rem;">ระบบแจ้งเตือนไปยัง LINE ของคุณแล้ว</p>`,
+                html: `<p>บันทึกข้อมูลการยืนยัน <strong>${selectedBooking.bookingId}</strong> เรียบร้อยแล้ว</p>`,
                 icon: 'success', 
                 confirmButtonText: 'กลับหน้าหลัก'
             }).then(() => window.location.href = 'index.html');
         } else {
-            // หากมี Error จาก Backend จะมาแสดงตรงนี้
-            Swal.fire({ 
-                title: 'เกิดข้อผิดพลาด', 
-                text: result.message || 'ไม่สามารถบันทึกข้อมูลลง Sheet ได้', 
-                icon: 'error',
-                confirmButtonColor: 'var(--brand)'
-            });
-            document.getElementById('submitBtn').disabled = false;
+            throw new Error(result.message);
         }
+
     } catch(err) {
         hideLoading();
         document.getElementById('submitBtn').disabled = false;
-        Swal.fire({ title:'เกิดข้อผิดพลาด', text: err.message, icon:'error' });
+        Swal.fire({ title:'เกิดข้อผิดพลาด', text: err.message || 'การเชื่อมต่อขัดข้อง', icon:'error' });
     }
 }
 
