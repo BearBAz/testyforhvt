@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* ── Unified brand system (ใช้ร่วมกันทั้ง 4 หน้า) ── */
             --violet-900: #06264D;
             --violet-700: #0B4DA2;
             --violet-600: #0B4DA2;
@@ -64,7 +65,7 @@
             flex-direction: column;
             background: var(--bg);
             position: relative;
-            padding-bottom: 5.5rem;
+            padding-bottom: 1.5rem;
         }
 
         /* ===== LOADING SCREEN ===== */
@@ -107,8 +108,10 @@
         /* ===== HERO (ticket-style) ===== */
         .hero {
             background: var(--gradient-hero);
-            padding: 2.6rem 1.5rem 2.6rem;
+            padding: 2.6rem 1.5rem 3rem;
             position: relative; overflow: hidden;
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
         }
         .hero-mesh::before {
             content: ''; position: absolute; top: -90px; right: -70px;
@@ -167,16 +170,6 @@
         .hero-title span { color: rgba(255,255,255,0.75); font-weight: 400; font-size: 1.15rem; display: block; margin-top: 0.15rem; }
         .hero-subtitle { font-size: 0.87rem; color: rgba(255,255,255,0.78); line-height: 1.5; }
 
-        /* Ticket scalloped edge — ตัดขอบล่างของ hero ให้ดูเหมือนตั๋ว/บัตรจอง */
-        .ticket-edge {
-            height: 18px;
-            margin-top: -1px;
-            background: #2F7BE0; /* โทนใกล้เคียงปลาย gradient ของ hero */
-            -webkit-mask-image: radial-gradient(circle at 12px 0, transparent 10px, #000 10.5px);
-            mask-image: radial-gradient(circle at 12px 0, transparent 10px, #000 10.5px);
-            -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
-            -webkit-mask-size: 24px 18px; mask-size: 24px 18px;
-        }
         /* ===== CONTENT SECTION ===== */
         .content-section { flex: 1; padding: 0 1rem 1rem; margin-top: -2.2rem; position: relative; z-index: 3; }
 
@@ -289,26 +282,6 @@
         .footer-contact-val { font-size: 0.88rem; font-weight: 700; color: var(--ink-900); display: block; }
 
         /* ===== BOTTOM NAV ===== */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 100%; max-width: 480px;
-            background: var(--surface);
-            border-top: 1px solid var(--line);
-            display: flex; justify-content: space-around;
-            padding: 0.55rem 0.5rem calc(0.55rem + env(safe-area-inset-bottom));
-            box-shadow: 0 -6px 24px rgba(6,38,77,0.10);
-            z-index: 50;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
-            text-decoration: none; color: var(--ink-400);
-            font-size: 0.68rem; font-weight: 700;
-            padding: 0.3rem 0.7rem; border-radius: 14px;
-            transition: all 0.2s;
-        }
-        .nav-item i { font-size: 1.05rem; }
-        .nav-item.active { color: var(--violet-600); background: var(--violet-100); }
-
         /* Animations */
         .fade-in { animation: fadeInUp 0.5s ease forwards; opacity: 0; }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
@@ -356,7 +329,6 @@
             <div class="hero-subtitle">เลือกห้อง จองวันที่ ยืนยันการใช้งาน ง่ายๆ ผ่าน LINE</div>
         </div>
     </div>
-    <div class="ticket-edge"></div>
 
     <!-- Content -->
     <div class="content-section">
@@ -422,14 +394,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Bottom Nav -->
-    <div class="bottom-nav">
-        <a href="index.html" class="nav-item active"><i class="fas fa-house"></i><span>หน้าแรก</span></a>
-        <a href="booking.html" class="nav-item"><i class="fas fa-calendar-plus"></i><span>จองห้อง</span></a>
-        <a href="confirm.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span>ยืนยัน</span></a>
-        <a href="status.html" class="nav-item"><i class="fas fa-magnifying-glass"></i><span>สถานะ</span></a>
     </div>
 </div>
 
