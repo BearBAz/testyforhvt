@@ -48,7 +48,7 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Sarabun',sans-serif; background:var(--bg); color:var(--ink-900); -webkit-font-smoothing: antialiased; }
         h1, h2, .display-font { font-family: 'Prompt', 'Sarabun', sans-serif; }
-        .app-wrap { max-width:480px; margin:0 auto; min-height:100vh; background:var(--bg); padding-bottom: 5.5rem; }
+        .app-wrap { max-width:480px; margin:0 auto; min-height:100vh; background:var(--bg); }
 
         /* ===== HEADER ===== */
         .page-header {
@@ -107,7 +107,7 @@
         }
 
         /* ===== CONTENT ===== */
-        .content { padding: 0 1rem; margin-top: -0.4rem; }
+        .content { padding: 0 1rem 1.5rem; margin-top: -0.4rem; }
 
         .section-card {
             background: var(--surface);
@@ -234,19 +234,6 @@
         @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 
         /* ===== BOTTOM NAV (เหมือนหน้าอื่น) ===== */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 100%; max-width: 480px;
-            background: var(--surface);
-            border-top: 1px solid var(--line);
-            display: flex; justify-content: space-around;
-            padding: 0.55rem 0.5rem calc(0.55rem + env(safe-area-inset-bottom));
-            box-shadow: 0 -6px 24px rgba(6,38,77,0.10);
-            z-index: 50;
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; text-decoration: none; color: var(--ink-400); font-size: 0.68rem; font-weight: 700; padding: 0.3rem 0.7rem; border-radius: 14px; transition: all 0.2s; }
-        .nav-item i { font-size: 1.05rem; }
-        .nav-item.active { color: var(--violet-600); background: var(--violet-100); }
     </style>
 </head>
 <body>
@@ -277,18 +264,10 @@
             </div>
         </div>
     </div>
-
-    <!-- Bottom Nav -->
-    <div class="bottom-nav">
-        <a href="index.html" class="nav-item"><i class="fas fa-house"></i><span>หน้าแรก</span></a>
-        <a href="booking.html" class="nav-item"><i class="fas fa-calendar-plus"></i><span>จองห้อง</span></a>
-        <a href="confirm.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span>ยืนยัน</span></a>
-        <a href="status.html" class="nav-item active"><i class="fas fa-magnifying-glass"></i><span>สถานะ</span></a>
-    </div>
 </div>
 
 <script>
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzDPbnquUQTCv9dK13-r0VN7AaaoI5RKe0MwhBQX88jIdv4iqFuMo3JF9oC2RZrCJpLyw/exec"; // ← ใส่ GAS Web App URL
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxw0_Gn42bLLXoOTQbHm3YLwWKsavO3_3WJth6lFXNB6NwtkwVCCZDcAGfAmMQQ8CJWOQ/exec"; // ← ใส่ GAS Web App URL
 
 function init() {
     const userId = sessionStorage.getItem('userId') || '';
