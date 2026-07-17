@@ -164,23 +164,21 @@
         .hero-title span { color: rgba(255,255,255,0.75); font-weight: 400; font-size: 1.15rem; display: block; margin-top: 0.15rem; }
         .hero-subtitle { font-size: 0.87rem; color: rgba(255,255,255,0.78); line-height: 1.5; }
 
-        /* ===== CONTENT SECTION ===== */
-        .content-section { flex: 1; padding: 0 1.5rem 1rem; margin-top: -2.2rem; position: relative; z-index: 3; }
-
-        /* Stats Card */
-        .stats-card {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            padding: 1.1rem 1.2rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--line);
-            margin-bottom: 1.2rem;
-            display: flex; gap: 0;
+        /* Hero stat chips (แทน stats-card ลอยแบบเดิม ให้สัดส่วนตรงกับหน้า booking/confirm) */
+        .hero-stats-row { display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap; }
+        .hero-stat-chip {
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 20px;
+            padding: 0.3rem 0.75rem;
+            display: flex; align-items: center; gap: 0.35rem;
+            font-size: 0.72rem; color: rgba(255,255,255,0.9); font-weight: 600;
+            backdrop-filter: blur(8px);
         }
-        .stat-cell { flex: 1; text-align: center; padding: 0.3rem 0.5rem; }
-        .stat-cell + .stat-cell { border-left: 1.5px dashed var(--line-strong); }
-        .stat-num { font-family:'Prompt',sans-serif; font-size: 1.55rem; font-weight: 700; color: var(--violet-600); display: block; line-height: 1.1; }
-        .stat-label { font-size: 0.72rem; color: var(--ink-400); display: block; margin-top: 0.25rem; font-weight: 600; }
+        .hero-stat-chip b { font-family:'Prompt',sans-serif; color: #fff; font-weight: 800; }
+
+        /* ===== CONTENT SECTION ===== */
+        .content-section { flex: 1; padding: 1.2rem 1.5rem 1rem; position: relative; z-index: 3; }
 
         /* Section header */
         .section-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; padding: 0 0.15rem; }
@@ -275,7 +273,6 @@
         .footer-contact-label { font-size: 0.72rem; color: var(--ink-400); display: block; }
         .footer-contact-val { font-size: 0.88rem; font-weight: 700; color: var(--ink-900); display: block; }
 
-        /* ===== BOTTOM NAV ===== */
         /* Animations */
         .fade-in { animation: fadeInUp 0.5s ease forwards; opacity: 0; }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
@@ -321,18 +318,16 @@
                 <span>ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง</span>
             </div>
             <div class="hero-subtitle">เลือกห้อง จองวันที่ ยืนยันการใช้งาน ง่ายๆ ผ่าน LINE</div>
+            <div class="hero-stats-row">
+                <div class="hero-stat-chip"><i class="fas fa-door-open"></i> <b>13</b> ห้องประชุม</div>
+                <div class="hero-stat-chip"><i class="fas fa-bed"></i> <b>90</b> ห้องพัก</div>
+                <div class="hero-stat-chip"><i class="fas fa-star"></i> <b>9</b> ห้อง VIP</div>
+            </div>
         </div>
     </div>
 
     <!-- Content -->
     <div class="content-section">
-        <!-- Stats -->
-        <div class="stats-card fade-in">
-            <div class="stat-cell"><span class="stat-num">13</span><span class="stat-label">ห้องประชุม</span></div>
-            <div class="stat-cell"><span class="stat-num">90</span><span class="stat-label">ห้องพัก</span></div>
-            <div class="stat-cell"><span class="stat-num">9</span><span class="stat-label">ห้อง VIP</span></div>
-        </div>
-
         <!-- Notice -->
         <div class="notice-card fade-in delay-1">
             <div class="notice-icon"><i class="fas fa-info"></i></div>
