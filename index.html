@@ -109,9 +109,9 @@
         .hero {
             background: var(--gradient-hero);
             padding: 2.6rem 1.5rem 3rem;
-            position: relative; overflow: hidden;
-            border-bottom-left-radius: var(--radius-xl);
-            border-bottom-right-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden;
+            border-radius: 0; /* กรอบสี่เหลี่ยมให้สอดคล้องกับ header หน้า booking */
         }
         .hero-mesh::before {
             content: ''; position: absolute; top: -90px; right: -70px;
@@ -318,10 +318,10 @@
                 <span>ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง</span>
             </div>
             <div class="hero-subtitle">เลือกห้อง จองวันที่ ยืนยันการใช้งาน ง่ายๆ ผ่าน LINE</div>
-            <div class="hero-stats-row">
-                <div class="hero-stat-chip"><i class="fas fa-door-open"></i> <b>13</b> ห้องประชุม</div>
-                <div class="hero-stat-chip"><i class="fas fa-bed"></i> <b>90</b> ห้องพัก</div>
-                <div class="hero-stat-chip"><i class="fas fa-star"></i> <b>9</b> ห้อง VIP</div>
+            <div class="hero-stats-row" aria-label="จุดเด่นของระบบ">
+                <div class="hero-stat-chip"><i class="fas fa-bolt"></i> จองสะดวกผ่าน LINE</div>
+                <div class="hero-stat-chip"><i class="fas fa-layer-group"></i> จองได้หลายช่วงเวลา</div>
+                <div class="hero-stat-chip"><i class="fas fa-clipboard-check"></i> ติดตามสถานะได้ทันที</div>
             </div>
         </div>
     </div>
