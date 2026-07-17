@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>ยืนยันการจองห้องประชุม ศฝฟ.</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -734,6 +734,145 @@ input[type="file"] { display:none; }
     .food-shop-header { flex-direction: column; }
 }
 
+
+/* ===== GLOBAL OTA 2026 EXPERIENCE ===== */
+:root { --ota-glass:rgba(255,255,255,.82); --ota-focus:0 0 0 4px rgba(47,123,224,.18); --ota-ease:cubic-bezier(.2,.8,.2,1); }
+html { background:#EAF0F8; scroll-behavior:smooth; }
+body { background:radial-gradient(circle at 8% 0%,rgba(47,123,224,.12),transparent 32rem),radial-gradient(circle at 100% 88%,rgba(23,195,178,.08),transparent 30rem),#F4F7FC; }
+a,button,input,select,textarea,.booking-item,.upload-zone { -webkit-tap-highlight-color:transparent; }
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible { outline:none!important; box-shadow:var(--ota-focus)!important; }
+.app-wrap { width:100%; max-width:620px; box-shadow:0 0 0 1px rgba(6,38,77,.03),0 30px 100px rgba(6,38,77,.10); }
+.page-header { min-height:330px; padding:calc(1.35rem + env(safe-area-inset-top)) 1.25rem 5.8rem; border-radius:0; background:radial-gradient(circle at 88% 10%,rgba(111,185,255,.34),transparent 28%),radial-gradient(circle at 0 100%,rgba(255,182,72,.15),transparent 35%),linear-gradient(145deg,#041B38,#073B76 52%,#0B5DB8); }
+.hdr-grid { opacity:.55; mask-image:linear-gradient(to bottom,#000,transparent 92%); }
+.back-btn { min-height:38px; border-radius:12px; background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.18); backdrop-filter:blur(14px); }
+.hdr-icon-wrap { width:54px;height:54px;border-radius:16px;background:rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 12px 30px rgba(0,0,0,.12); }
+.hdr-title { font-size:1.85rem; letter-spacing:-.04em; }
+.hdr-sub { color:rgba(255,255,255,.72); }
+.hdr-chip { min-height:32px; border-radius:10px; background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.14); }
+.main-content { margin-top:-4.35rem; padding:0 1rem calc(1.5rem + env(safe-area-inset-bottom)); }
+.section-card { border-radius:22px; border:1px solid rgba(203,213,225,.72); background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(250,252,255,.92)); box-shadow:0 12px 36px rgba(6,38,77,.09),inset 0 1px 0 #fff; }
+.card-head { border-bottom-color:#E7ECF3; }
+.card-title { font-family:'Prompt',sans-serif; letter-spacing:-.015em; }
+.card-title-icon { border-radius:11px; box-shadow:0 7px 16px rgba(11,77,162,.12); }
+.booking-item { border-radius:16px!important; border-color:#DCE4EF!important; background:#FBFCFE!important; transition:transform .24s var(--ota-ease),box-shadow .24s,border-color .24s; }
+.booking-item:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(6,38,77,.10); border-color:#AFC7E8!important; }
+.selected-banner { border-radius:16px!important; background:linear-gradient(135deg,#EDF4FF,#F8FBFF)!important; border:1px solid #DCE9FB!important; }
+.form-control,.form-select { min-height:48px; border-radius:12px!important; background:#FBFCFE!important; border-color:#DCE4EF!important; }
+.form-control:focus,.form-select:focus { background:#fff!important; border-color:#2F7BE0!important; }
+.room-type-box,.food-card,.shop-card { border-radius:16px!important; border-color:#DCE4EF!important; box-shadow:0 6px 20px rgba(6,38,77,.045); }
+.upload-zone { border-radius:16px!important; background:#F8FAFD!important; border-color:#CAD7E8!important; transition:transform .22s var(--ota-ease),background .22s,border-color .22s; }
+.upload-zone:hover { transform:translateY(-1px); background:#F1F6FD!important; border-color:#7FAAE1!important; }
+.submit-btn { min-height:56px; border-radius:15px!important; box-shadow:0 14px 32px rgba(22,163,74,.28)!important; transition:transform .24s var(--ota-ease),box-shadow .24s!important; }
+.list-count-badge,.quota-badge { border-radius:8px!important; }
+.swal2-popup { border-radius:22px!important; }
+@media (min-width:900px) {
+ body { padding:2rem; }
+ .app-wrap { max-width:1120px; min-height:calc(100vh - 4rem); border-radius:28px; overflow:hidden; }
+ .page-header { padding:2rem 3rem 6rem; }
+ .main-content { padding-inline:2rem; }
+ #formSection { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; align-items:start; }
+ #formSection > .section-card { margin-bottom:0; }
+ #formSection > .section-card:first-child,#formSection > .section-card:last-child { grid-column:1/-1; }
+ #listSection .section-card { max-width:900px; margin-inline:auto; }
+}
+@media (max-width:380px) { .page-header{padding-inline:1rem}.main-content{padding-inline:.75rem}.section-card{padding:1rem}.hdr-title{font-size:1.6rem} }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important; } }
+
+
+
+/* ===== CONFIRM 2026 — SOFT OTA CHECKOUT ===== */
+:root { --soft-line:rgba(226,232,240,.88); --soft-shadow:0 10px 30px rgba(15,27,45,.065); }
+.section-card {
+    border:1px solid var(--soft-line)!important;
+    border-radius:22px!important;
+    background:#fff!important;
+    box-shadow:var(--soft-shadow)!important;
+}
+.card-head { padding-bottom:.75rem; border-bottom:0; }
+.card-title-icon {
+    color:#40566F!important; background:linear-gradient(145deg,#F4F7FB,#EAF0F7)!important;
+    box-shadow:inset 0 0 0 1px rgba(203,213,225,.62)!important;
+}
+.card-title-icon i { color:#405F82!important; }
+.card-title-icon.gold-icon i { color:#A86C0F!important; }
+.card-title-icon.green-icon i { color:#128674!important; }
+
+/* Approved booking choices: no decorative colored edge */
+.booking-item {
+    border:1px solid var(--soft-line)!important; border-radius:18px!important;
+    background:linear-gradient(155deg,#fff,#FAFCFF)!important;
+    box-shadow:0 5px 18px rgba(15,27,45,.045)!important;
+    overflow:hidden;
+}
+.booking-item::before { display:none!important; }
+.booking-item:hover {
+    border-color:rgba(190,202,218,.95)!important; transform:translateY(-3px)!important;
+    box-shadow:0 14px 34px rgba(15,27,45,.09)!important;
+}
+.item-status { border-radius:9px!important; background:#FFF7E8!important; color:#98600B!important; }
+.item-arrow { color:#405F82!important; background:#F1F5F9!important; border-radius:10px!important; }
+
+.selected-banner {
+    border:1px solid var(--soft-line)!important; border-radius:18px!important;
+    background:linear-gradient(145deg,#F8FAFD,#F2F6FA)!important;
+    box-shadow:inset 0 1px 0 #fff!important;
+}
+.selected-banner-icon {
+    border-radius:13px!important; background:linear-gradient(145deg,#456B96,#254E7C)!important;
+    box-shadow:0 8px 18px rgba(37,78,124,.20)!important;
+}
+.change-link { padding:.35rem .55rem; border:0!important; border-radius:8px; background:#E9EEF5; }
+
+.form-control,.form-select {
+    min-height:50px; border:1px solid #DDE5EF!important; border-radius:13px!important;
+    background:#F9FBFD!important; box-shadow:inset 0 1px 2px rgba(15,27,45,.025)!important;
+}
+.form-control:focus,.form-select:focus { border-color:#799DC6!important; background:#fff!important; box-shadow:0 0 0 4px rgba(47,123,224,.10)!important; }
+.form-control:disabled { color:#52677F!important; background:#F1F4F8!important; opacity:1; }
+
+.room-type-box,.food-shop-section .shop-card {
+    border:1px solid var(--soft-line)!important; border-radius:18px!important;
+    background:#FAFCFE!important; box-shadow:none!important;
+}
+.room-type-box.vip-box { border-color:var(--soft-line)!important; background:#FAFCFE!important; }
+.counter-btn { border-radius:11px!important; background:#EDF2F7!important; color:#405F82!important; }
+.counter-value { border-radius:10px!important; background:#fff!important; }
+
+.food-card label {
+    min-height:112px; border:1px solid var(--soft-line)!important; border-radius:16px!important;
+    background:#FAFCFE!important; box-shadow:none!important;
+}
+.food-card label:hover { border-color:#B9C8D9!important; background:#F4F7FA!important; }
+.food-card.sel-yes label { border-color:#9DB7D2!important; background:#F1F6FB!important; box-shadow:0 0 0 3px rgba(64,95,130,.08)!important; }
+.food-card.sel-no label { border-color:var(--soft-line)!important; background:#F6F8FA!important; }
+.food-card.sel-yes .food-card-icon,.food-card.sel-yes .food-check-mark { color:#405F82!important; }
+
+.shop-option { border-radius:12px!important; border-color:#E1E7EF!important; background:#fff!important; }
+.shop-option:hover { border-color:#AFC0D3!important; background:#F7F9FC!important; }
+.shop-option:has(input:checked) { border-color:#799DC6!important; background:#F1F6FB!important; box-shadow:0 0 0 3px rgba(47,123,224,.08)!important; }
+
+.upload-zone {
+    min-height:116px; border:1.5px dashed #BFCBDA!important; border-radius:17px!important;
+    background:#F8FAFC!important; box-shadow:none!important;
+}
+.upload-zone:hover { border-color:#799DC6!important; background:#F1F6FB!important; transform:translateY(-1px); }
+.upload-zone.has-file { border-style:solid!important; border-color:#84B9AD!important; background:#EFF9F6!important; }
+.upload-icon { color:#6B7F96!important; }
+
+.submit-btn {
+    min-height:58px; border-radius:16px!important;
+    background:linear-gradient(135deg,#087A6C,#10A28F)!important;
+    box-shadow:0 14px 30px rgba(8,122,108,.24)!important;
+}
+.submit-btn:hover:not(:disabled) { box-shadow:0 18px 38px rgba(8,122,108,.30)!important; }
+.food-menu-btn { border-radius:11px!important; box-shadow:none!important; }
+.list-count-badge,.quota-badge { border-radius:9px!important; }
+
+@media (min-width:900px) {
+  #formSection { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:1.1rem; }
+  .section-card { box-shadow:0 12px 34px rgba(15,27,45,.06)!important; }
+}
+
 </style>
 </head>
 <body>
@@ -751,8 +890,8 @@ input[type="file"] { display:none; }
                 <i class="fas fa-arrow-left"></i> หน้าหลัก
             </a>
             <div class="hdr-icon-wrap"><i class="fas fa-clipboard-check"></i></div>
-            <div class="hdr-title">ยืนยันการจอง</div>
-            <div class="hdr-sub">เลือกรายการที่อนุมัติแล้วเพื่อดำเนินการต่อ</div>
+            <div class="hdr-title">ตรวจสอบและยืนยัน</div>
+            <div class="hdr-sub">ทบทวนรายละเอียด เพิ่มบริการ และส่งคำยืนยันในขั้นตอนเดียว</div>
             <div class="hdr-chips">
                 <div class="hdr-chip">
                     <span class="dot gold"></span>รายการอนุมัติแล้ว
