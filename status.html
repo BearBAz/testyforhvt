@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>ตรวจสอบสถานะการจอง ศฝฟ.</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -229,6 +229,132 @@
         @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 
         /* ===== BOTTOM NAV (เหมือนหน้าอื่น) ===== */
+
+
+        /* ===== 2026 WEB APP EXPERIENCE ===== */
+        :root {
+            --bg: #F4F7FC;
+            --glass: rgba(255,255,255,.78);
+            --ease-spring: cubic-bezier(.2,.8,.2,1);
+            --focus-ring: 0 0 0 4px rgba(47,123,224,.18);
+        }
+        html { background:#EAF0F8; scroll-behavior:smooth; }
+        body {
+            min-height:100vh;
+            background:
+                radial-gradient(circle at 6% 0%, rgba(47,123,224,.11), transparent 30rem),
+                radial-gradient(circle at 100% 88%, rgba(23,195,178,.08), transparent 28rem),
+                var(--bg);
+        }
+        a, button, .expand-btn { -webkit-tap-highlight-color:transparent; }
+        a:focus-visible, button:focus-visible, .expand-btn:focus-visible { outline:none; box-shadow:var(--focus-ring); }
+        .app-wrap {
+            width:100%; max-width:600px; position:relative;
+            box-shadow:0 0 0 1px rgba(6,38,77,.03), 0 30px 100px rgba(6,38,77,.10);
+        }
+        .page-header {
+            min-height:300px;
+            padding:calc(1.25rem + env(safe-area-inset-top)) 1.25rem 3.4rem;
+            border-radius:0;
+            background:
+                radial-gradient(circle at 90% 12%, rgba(111,185,255,.34), transparent 28%),
+                radial-gradient(circle at 0% 100%, rgba(23,195,178,.20), transparent 34%),
+                linear-gradient(145deg,#041B38 0%,#073B76 48%,#0B5DB8 100%);
+            isolation:isolate;
+        }
+        .page-header::after {
+            content:''; position:absolute; width:360px; height:240px; right:-140px; bottom:-140px;
+            border-radius:48%; background:rgba(255,255,255,.08); transform:rotate(-13deg); z-index:-1;
+        }
+        .header-dots { opacity:.30; mask-image:linear-gradient(to bottom,#000,transparent 90%); }
+        .header-blob { width:220px; height:220px; top:-120px; right:-95px; background:rgba(255,255,255,.07); }
+        .header-top-row { margin-bottom:2.2rem; }
+        .back-btn, .live-badge {
+            min-height:38px; border-radius:12px; padding:.46rem .78rem;
+            background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.18);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+            backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+        }
+        .back-btn { transition:transform .22s var(--ease-spring),background .22s ease; }
+        .back-btn:hover { background:rgba(255,255,255,.18); transform:translateX(-2px); }
+        .live-badge-dot { background:#67F2BA; box-shadow:0 0 0 4px rgba(103,242,186,.12),0 0 12px rgba(103,242,186,.55); }
+        .page-eyebrow { display:flex; align-items:center; gap:.4rem; margin-bottom:.45rem; color:#8EDCFF; font-size:.66rem; font-weight:800; letter-spacing:.12em; }
+        .page-title { font-size:clamp(1.75rem,7vw,2.25rem); letter-spacing:-.04em; margin-bottom:.35rem; }
+        .page-sub { max-width:390px; color:rgba(255,255,255,.72); font-size:.88rem; }
+        .header-chips { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.2rem; }
+        .header-chips span { display:inline-flex; align-items:center; gap:.38rem; min-height:32px; padding:.38rem .68rem; border-radius:10px; color:rgba(255,255,255,.88); font-size:.7rem; font-weight:700; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.14); }
+        .header-chips i { color:#8EDCFF; font-size:.67rem; }
+
+        .content { margin-top:-1.9rem; padding:0 1rem calc(1.5rem + env(safe-area-inset-bottom)); position:relative; z-index:4; }
+        .section-card {
+            padding:1rem; border-radius:22px;
+            background:var(--glass); border:1px solid rgba(255,255,255,.80);
+            box-shadow:0 20px 60px rgba(6,38,77,.13), inset 0 1px 0 #fff;
+            backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+        }
+        .section-head { align-items:flex-start; gap:.8rem; padding:.15rem .15rem .9rem; margin-bottom:.15rem; }
+        .section-title-wrap { min-width:0; }
+        .section-title-text { font-family:'Prompt',sans-serif; font-size:.98rem; letter-spacing:-.015em; }
+        .section-title-text i { display:grid; place-items:center; width:28px; height:28px; border-radius:9px; color:#fff; background:var(--gradient-violet); box-shadow:0 7px 16px rgba(11,77,162,.25); }
+        .section-subtitle { margin:3px 0 0 36px; font-size:.69rem; color:var(--ink-400); }
+        .count-pill { flex-shrink:0; border-radius:9px; padding:.3rem .64rem; background:#EDF4FF; border:1px solid #DCE9FB; }
+
+        .booking-card {
+            margin-bottom:.8rem; border:1px solid rgba(203,213,225,.74); border-radius:18px;
+            background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(250,252,255,.91));
+            box-shadow:0 7px 22px rgba(6,38,77,.065), inset 0 1px 0 #fff;
+            transition:transform .26s var(--ease-spring),box-shadow .26s ease,border-color .26s ease;
+        }
+        .booking-card:hover { transform:translateY(-2px); border-color:rgba(47,123,224,.25); box-shadow:0 14px 34px rgba(6,38,77,.12); }
+        .booking-card-stripe { height:4px; }
+        .booking-card-body { padding:1rem; }
+        .booking-id { border-radius:8px; background:#EDF4FF; }
+        .seg-count-chip { border-radius:8px; }
+        .status-pill { border-radius:9px; padding:.3rem .62rem; }
+        .status-pill.approved { border:1px solid rgba(255,182,72,.25); }
+        .status-pill.confirmed { border:1px solid rgba(23,195,178,.22); }
+        .course-name { font-family:'Prompt',sans-serif; font-size:1rem; letter-spacing:-.015em; }
+        .meta-row { gap:.45rem; }
+        .meta-item { padding:.3rem .48rem; border-radius:8px; background:#F7F9FC; border:1px solid #EDF1F6; font-size:.75rem; }
+        .seg-row { border:1px solid #E7EFFA; border-radius:9px; }
+        .timeline { margin-top:1.1rem; }
+        .tl-dot { box-shadow:0 0 0 3px #fff; }
+        .expand-btn {
+            width:100%; justify-content:center; min-height:40px; margin-top:.9rem;
+            border-radius:11px; border:1px solid #DCE9FB; background:#F3F7FD;
+            transition:background .2s ease,transform .2s var(--ease-spring);
+        }
+        .expand-btn:hover { background:#E6F0FF; color:var(--violet-700); }
+        .expand-btn:active { transform:scale(.985); }
+        .card-detail { animation:detailIn .28s ease; }
+        @keyframes detailIn { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:none} }
+        .detail-row { min-height:42px; }
+        .empty-state { padding:3.5rem 1rem; }
+        .empty-icon { border-radius:22px; background:linear-gradient(145deg,#EDF4FF,#E5EEFB); box-shadow:inset 0 1px 0 #fff; }
+        .skeleton { background:linear-gradient(90deg,#EAF0F8 25%,#F8FAFD 50%,#EAF0F8 75%); background-size:200% 100%; }
+
+        @media (min-width:800px) {
+            body { padding:2rem; }
+            .app-wrap { max-width:1040px; min-height:calc(100vh - 4rem); border-radius:28px; overflow:hidden; }
+            .page-header { min-height:320px; padding:2rem 3rem 4.2rem; }
+            .content { padding-inline:2rem; }
+            .section-card { padding:1.25rem; }
+            #statusList { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; align-items:start; }
+            .booking-card { margin-bottom:0; }
+            .empty-state { grid-column:1/-1; }
+            .skel-card { margin:0; }
+        }
+        @media (max-width:380px) {
+            .page-header { padding-inline:1rem; }
+            .content { padding-inline:.75rem; }
+            .section-card { padding:.75rem; }
+            .card-top { gap:.45rem; }
+            .status-pill { font-size:.68rem; }
+        }
+        @media (prefers-reduced-motion:reduce) {
+            *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+        }
+
     </style>
 </head>
 <body>
@@ -241,15 +367,20 @@
                 <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> หน้าหลัก</a>
                 <div class="live-badge"><span class="live-badge-dot"></span> อัปเดตล่าสุด</div>
             </div>
-            <div class="page-title"><i class="fas fa-magnifying-glass me-2"></i>สถานะการจอง</div>
-            <div class="page-sub">รายการที่อนุมัติและยืนยันแล้วของคุณ</div>
+            <div class="page-eyebrow"><i class="fas fa-sparkles"></i> BOOKING ACTIVITY</div>
+            <div class="page-title">สถานะการจอง</div>
+            <div class="page-sub">ติดตามทุกขั้นตอนของรายการจองได้ในที่เดียว</div>
+            <div class="header-chips" aria-label="ประเภทสถานะ">
+                <span><i class="fas fa-clock"></i> รอยืนยัน</span>
+                <span><i class="fas fa-circle-check"></i> ยืนยันแล้ว</span>
+            </div>
         </div>
     </div>
 
     <div class="content">
         <div class="section-card">
             <div class="section-head">
-                <div class="section-title-text"><i class="fas fa-list"></i> รายการจองของคุณ</div>
+                <div class="section-title-wrap"><div class="section-title-text"><i class="fas fa-layer-group"></i> รายการจองของคุณ</div><div class="section-subtitle">แตะ “ดูรายละเอียด” เพื่อตรวจสอบข้อมูลเพิ่มเติม</div></div>
                 <span class="count-pill" id="countText">กำลังโหลด...</span>
             </div>
             <div id="statusList">
