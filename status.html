@@ -54,7 +54,9 @@
         .page-header {
             background: var(--gradient-hero);
             padding: 1.5rem 1.5rem 1.8rem;
-            position: relative; overflow: hidden;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0; /* กรอบสี่เหลี่ยมเหมือนหน้า index */
         }
         .header-dots {
             position: absolute; inset: 0;
@@ -96,15 +98,8 @@
         .page-title { font-family:'Prompt',sans-serif; font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem; }
         .page-sub { font-size: 0.85rem; color: rgba(255,255,255,0.8); }
 
-        /* Ticket edge (เหมือน index.html) */
-        .ticket-edge {
-            height: 18px;
-            background: #2F7BE0;
-            -webkit-mask-image: radial-gradient(circle at 12px 0, transparent 10px, #000 10.5px);
-            mask-image: radial-gradient(circle at 12px 0, transparent 10px, #000 10.5px);
-            -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
-            -webkit-mask-size: 24px 18px; mask-size: 24px 18px;
-        }
+        /* Header เป็นขอบตรงต่อเนื่องเหมือนหน้า index */
+        .ticket-edge { display: none; }
 
         /* ===== CONTENT ===== */
         .content { padding: 0 1rem 1.5rem; margin-top: -0.4rem; }
@@ -250,7 +245,6 @@
             <div class="page-sub">รายการที่อนุมัติและยืนยันแล้วของคุณ</div>
         </div>
     </div>
-    <div class="ticket-edge"></div>
 
     <div class="content">
         <div class="section-card">
