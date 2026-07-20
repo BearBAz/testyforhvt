@@ -1063,6 +1063,52 @@ body,.app-wrap { background:var(--bg); color:var(--text); }
 .submit-btn:hover:not(:disabled) { box-shadow:0 14px 32px rgba(255,122,26,.42); }
 .swal2-confirm { background:var(--primary)!important; }
 
+
+
+/* ===== GREEN VIP / FOOD / QUOTA STATES ===== */
+/* เครื่องหมายถูกและสถานะว่างของห้อง VIP */
+.vip-box .avail-pill.ok,
+#vipAvailBadge.avail-pill.ok {
+    color:#15803D !important;
+    background:#E7F8ED !important;
+    border-color:rgba(22,163,74,.22) !important;
+}
+.vip-box .avail-pill.ok i,
+#vipAvailBadge.avail-pill.ok i {
+    color:#16A34A !important;
+}
+
+/* สัญลักษณ์อาหารและอาหารว่าง */
+.food-card-icon,
+.food-card.sel-yes .food-card-icon,
+.food-shop-header i,
+.food-shop-section .shop-icon,
+.card-title-icon.green-icon i {
+    color:#16A34A !important;
+}
+.food-card.sel-yes label {
+    border-color:rgba(22,163,74,.34) !important;
+    background:#E7F8ED !important;
+    box-shadow:0 0 0 3px rgba(22,163,74,.10) !important;
+}
+.food-card.sel-yes .food-check-mark {
+    color:#16A34A !important;
+}
+
+/* โควต้าและสถานะร้านที่ยังมีโควต้า */
+.quota-badge {
+    color:#15803D !important;
+    background:#E7F8ED !important;
+    border-color:rgba(22,163,74,.22) !important;
+}
+.quota-badge i { color:#16A34A !important; }
+.shop-option.is-available small {
+    color:#16A34A !important;
+}
+.shop-option.is-available {
+    border-color:rgba(22,163,74,.24) !important;
+}
+
 </style>
 </head>
 <body>
