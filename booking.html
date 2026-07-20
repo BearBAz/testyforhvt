@@ -2133,8 +2133,12 @@
             await Swal.fire({
                 title:'บันทึกข้อมูลสำเร็จ!',
                 text:'ระบบได้บันทึกข้อมูลการจองและจะส่งสรุปให้ทาง LINE',
-                icon:'success', confirmButtonText:'ตกลง', allowOutsideClick:false
-            }).then(r => { if (r.isConfirmed) { if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); } } });
+                icon:'success', confirmButtonText:'กลับหน้าหลัก', allowOutsideClick:false
+            }).then(r => {
+                if (r.isConfirmed) {
+                    window.location.href = 'index.html';
+                }
+            });
         } catch (error) {
             loadingDiv.classList.remove('show');
             mainContent.style.display = 'block';
