@@ -526,7 +526,50 @@
             box-shadow:inset 0 0 0 1px rgba(226,232,240,.72);
         }
 
-    </style>
+    
+
+/* ===== BOOKING PAGE PALETTE — APPLIED TO STATUS ===== */
+:root {
+    --violet-900:#06264D; --violet-700:#0B4DA2; --violet-600:#0B4DA2;
+    --violet-500:#2F7BE0; --violet-300:#7FB0EA; --violet-100:#EAF2FF; --violet-50:#F5F9FF;
+    --coral-600:#C15A0E; --coral-500:#FF7A1A; --coral-100:#FFF1E4;
+    --teal-600:#0E8A7A; --teal-500:#17C3B2; --teal-100:#DEFBF6;
+    --sun-500:#FFB648; --sun-100:#FFF3DE;
+    --gradient-hero:linear-gradient(150deg,#06264D 0%,#0B4DA2 60%,#2F7BE0 100%);
+    --gradient-coral:linear-gradient(135deg,#FF7A1A,#FF9640);
+    --gradient-teal:linear-gradient(135deg,#0E8A7A,#17C3B2);
+    --gradient-violet:linear-gradient(135deg,#0B4DA2,#2F7BE0);
+}
+.page-header {
+    background:
+        radial-gradient(circle at 90% 12%,rgba(127,176,234,.28),transparent 30%),
+        radial-gradient(circle at 0% 100%,rgba(23,195,178,.16),transparent 34%),
+        var(--gradient-hero);
+}
+.page-eyebrow { color:#9EDBFF; }
+.section-title-text i { background:var(--gradient-violet); }
+.count-pill,.booking-id { color:var(--violet-600); background:var(--violet-100); border-color:rgba(11,77,162,.14); }
+.booking-card {
+    border-color:#DCE6F2;
+    background:radial-gradient(circle at 100% 0%,rgba(47,123,224,.055),transparent 35%),#fff;
+    box-shadow:0 7px 23px rgba(6,38,77,.065);
+}
+.booking-card:hover { border-color:#A7C6E8; box-shadow:0 15px 34px rgba(6,38,77,.12); }
+.status-pill.approved { color:#A96312; background:var(--sun-100); border-color:rgba(255,182,72,.22); }
+.status-pill.confirmed { color:var(--teal-600); background:var(--teal-100); border-color:rgba(23,195,178,.20); }
+.course-icon { color:#B4700C; background:linear-gradient(145deg,#FFF8EA,#FFF0D0); }
+.course-icon.confirmed { color:var(--teal-600); background:linear-gradient(145deg,#E9FCF8,#DEFBF6); }
+.meta-item i { color:var(--violet-500); background:var(--violet-100); }
+.meta-item.green i { color:var(--teal-600); background:var(--teal-100); }
+.seg-row-num { background:var(--gradient-violet); }
+.tl-step.done .tl-dot { background:var(--gradient-teal); }
+.tl-step.current .tl-dot { background:var(--gradient-coral); box-shadow:0 0 0 4px var(--coral-100); }
+.expand-btn { color:var(--violet-600); background:var(--violet-50); border-color:#D7E5F6; }
+.expand-btn:hover { color:#fff; background:var(--gradient-violet); }
+.empty-icon { background:var(--violet-100); }
+.empty-icon i { color:var(--violet-500); }
+
+</style>
 </head>
 <body>
 <div class="app-wrap">
