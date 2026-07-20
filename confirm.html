@@ -966,6 +966,59 @@ input[type="file"] { display:none; }
     *,*::before,*::after { transition-duration:.01ms!important; animation-duration:.01ms!important; }
 }
 
+
+
+/* ===== BOOKING PAGE PALETTE — APPLIED TO CONFIRM ===== */
+:root {
+    --brand:#0B4DA2; --brand-dk:#06264D; --brand-lt:#2F7BE0;
+    --brand-soft:#EAF2FF; --brand-xsoft:#F5F9FF;
+    --accent:#FF7A1A; --accent-dk:#C15A0E; --accent-soft:#FFF1E4;
+    --success:#0E8A7A; --success-soft:#DEFBF6;
+    --gold:#FFB648; --gold-soft:#FFF3DE;
+    --gradient-brand:linear-gradient(150deg,#06264D 0%,#0B4DA2 60%,#2F7BE0 100%);
+    --gradient-accent:linear-gradient(135deg,#FF7A1A,#FF9640);
+}
+.status-style-header {
+    background:
+        radial-gradient(circle at 90% 12%,rgba(127,176,234,.28),transparent 30%),
+        radial-gradient(circle at 0% 100%,rgba(23,195,178,.16),transparent 34%),
+        var(--gradient-brand);
+}
+.status-eyebrow { color:#9EDBFF; }
+.confirmation-symbol { background:rgba(255,255,255,.13); }
+.section-card { border-color:#DCE6F2; box-shadow:0 9px 28px rgba(6,38,77,.075); }
+.card-title-icon { background:var(--brand-soft); }
+.card-title-icon i { color:var(--brand); }
+.card-title-icon.gold-icon { background:var(--gold-soft); }
+.card-title-icon.gold-icon i { color:#B4700C; }
+.card-title-icon.green-icon { background:var(--success-soft); }
+.card-title-icon.green-icon i { color:var(--success); }
+.list-count-badge,.booking-id-tag { color:var(--brand); background:var(--brand-soft); border-color:rgba(11,77,162,.16); }
+.booking-item {
+    border-color:#DCE6F2;
+    background:radial-gradient(circle at 100% 0%,rgba(47,123,224,.07),transparent 35%),#fff;
+    box-shadow:0 5px 18px rgba(6,38,77,.055);
+}
+.booking-item::before { opacity:1; width:4px; background:linear-gradient(180deg,#0B4DA2,#2F7BE0); }
+.booking-item:hover { border-color:#8DB7E8; box-shadow:0 13px 30px rgba(6,38,77,.13); }
+.booking-meta-item i { color:var(--brand-lt); }
+.item-arrow { color:var(--brand); background:var(--brand-soft); border-color:#D6E5F7; }
+.booking-item:hover .item-arrow { color:#fff; border-color:transparent; background:linear-gradient(135deg,#0B4DA2,#2F7BE0); }
+.selected-banner { border-color:#CADFF6; background:linear-gradient(135deg,#EAF2FF,#F7FAFF 65%,#DEFBF6); }
+.selected-banner-icon { background:linear-gradient(135deg,#0B4DA2,#2F7BE0); box-shadow:0 8px 20px rgba(11,77,162,.24); }
+.form-control:focus,.form-select:focus { border-color:var(--brand-lt); box-shadow:0 0 0 4px rgba(47,123,224,.11); }
+.room-type-box { border-color:#D8E5F4; background:linear-gradient(145deg,#fff,#F5F9FF); }
+.counter-btn { color:var(--brand); background:var(--brand-soft); }
+.counter-btn:hover { color:#fff; background:var(--brand); }
+.food-card.sel-yes label { border-color:#63CDBF; background:var(--success-soft); box-shadow:0 0 0 3px rgba(23,195,178,.10); }
+.food-card.sel-yes .food-card-icon,.food-card.sel-yes .food-check-mark { color:var(--success); }
+.food-menu-btn { border:0; background:var(--gradient-accent); box-shadow:0 7px 18px rgba(255,122,26,.25); }
+.quota-badge { color:#A75D13; background:var(--gold-soft); }
+.upload-zone:hover { border-color:var(--brand-lt); background:var(--brand-soft); }
+.upload-zone.has-file { border-color:#63CDBF; background:var(--success-soft); }
+.upload-zone.has-file .upload-icon,.upload-zone.has-file .upload-text { color:var(--success); }
+.submit-btn { border:0; background:linear-gradient(135deg,#0E8A7A,#17C3B2); box-shadow:0 12px 28px rgba(23,195,178,.28); }
+
 </style>
 </head>
 <body>
