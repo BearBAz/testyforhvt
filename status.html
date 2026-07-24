@@ -10,23 +10,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* ── Unified brand system (เหมือน index.html/booking.html/confirm.html) ── */
-            --violet-900: #06264D;
-            --violet-700: #0B4DA2;
-            --violet-600: #0B4DA2;
-            --violet-500: #2F7BE0;
+            /* ── Brand system นำมาจาก booking.html ทั้งชุด (Primary น้ำเงินเข้ม + Accent ส้ม) ── */
+            --violet-900: #06264D;   /* = booking --primary-dark */
+            --violet-700: #0B4DA2;   /* = booking --primary */
+            --violet-600: #0B4DA2;   /* = booking --primary */
+            --violet-500: #2F7BE0;   /* = booking --primary-light */
             --violet-300: #7FB0EA;
-            --violet-100: #EAF2FF;
-            --violet-50:  #F5F9FF;
-            --coral-600: #C15A0E;
-            --coral-500: #FF7A1A;
-            --coral-100: #FFF1E4;
-            --teal-600: #0E8A7A;
-            --teal-500: #17C3B2;
-            --teal-100: #DEFBF6;
-            --sun-500: #FFB648;
-            --sun-100: #FFF3DE;
-            --pink-500: #FF4D8D;
+            --violet-100: #EAF2FF;   /* = booking --primary-soft */
+            --violet-50:  #F5F9FF;   /* = booking --primary-xsoft */
+            --coral-600: #C15A0E;    /* = booking --accent-dark */
+            --coral-500: #FF7A1A;    /* = booking --accent */
+            --coral-100: #FFF1E4;    /* = booking --accent-soft */
+            /* สถานะ "ยืนยันแล้ว" ใช้โทน success ของ booking แทน teal เดิม */
+            --teal-600: #15803D;
+            --teal-500: #16A34A;     /* = booking --success */
+            --teal-100: #E7F8ED;     /* = booking --success-soft */
+            /* สถานะ "รอยืนยัน" ใช้โทน warning ของ booking แทน sun/gold เดิม */
+            --sun-500: #d97706;      /* = booking --warning */
+            --sun-100: #fef3c7;      /* = booking --warning-soft */
             --ink-900: #0F1B2D;
             --ink-600: #47566B;
             --ink-400: #64748B;
@@ -41,9 +42,9 @@
             --shadow-md: 0 8px 28px rgba(6,38,77,0.14);
             --gradient-hero: linear-gradient(150deg, #06264D 0%, #0B4DA2 60%, #2F7BE0 100%);
             --gradient-coral: linear-gradient(135deg, #FF7A1A 0%, #FF9640 100%);
-            --gradient-teal: linear-gradient(135deg, #17C3B2 0%, #4DD8C8 100%);
+            --gradient-teal: linear-gradient(135deg, #16A34A 0%, #4ADE80 100%);
             --gradient-violet: linear-gradient(135deg, #0B4DA2 0%, #2F7BE0 100%);
-            --gradient-sun: linear-gradient(135deg, #FFB648 0%, #FFCE7C 100%);
+            --gradient-sun: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Sarabun',sans-serif; background:var(--bg); color:var(--ink-900); -webkit-font-smoothing: antialiased; }
@@ -80,8 +81,8 @@
         }
         .live-badge-dot {
             width: 6px; height: 6px; border-radius: 50%;
-            background: #baffcf;
-            box-shadow: 0 0 6px rgba(186,255,207,0.9);
+            background: #4ADE80;
+            box-shadow: 0 0 6px rgba(74,222,128,0.9);
             animation: blink 2s ease infinite;
             display: inline-block;
         }
@@ -150,7 +151,7 @@
 
         /* Status pills */
         .status-pill { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-        .status-pill.approved { background: var(--sun-100); color: #B4700C; }
+        .status-pill.approved { background: var(--sun-100); color: #92400E; }
         .status-pill.confirmed { background: var(--teal-100); color: var(--teal-600); }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; }
         .status-pill.approved .status-dot { background: var(--sun-500); }
@@ -233,17 +234,17 @@
 
         /* ===== 2026 WEB APP EXPERIENCE ===== */
         :root {
-            --bg: #F4F7FC;
+            --bg: #F1F5FB;
             --glass: rgba(255,255,255,.78);
             --ease-spring: cubic-bezier(.2,.8,.2,1);
             --focus-ring: 0 0 0 4px rgba(47,123,224,.18);
         }
-        html { background:#EAF0F8; scroll-behavior:smooth; }
+        html { background:#EAF2FF; scroll-behavior:smooth; }
         body {
             min-height:100vh;
             background:
                 radial-gradient(circle at 6% 0%, rgba(47,123,224,.11), transparent 30rem),
-                radial-gradient(circle at 100% 88%, rgba(23,195,178,.08), transparent 28rem),
+                radial-gradient(circle at 100% 88%, rgba(255,122,26,.06), transparent 28rem),
                 var(--bg);
         }
         a, button, .expand-btn { -webkit-tap-highlight-color:transparent; }
@@ -258,8 +259,8 @@
             border-radius:0;
             background:
                 radial-gradient(circle at 90% 12%, rgba(111,185,255,.34), transparent 28%),
-                radial-gradient(circle at 0% 100%, rgba(23,195,178,.20), transparent 34%),
-                linear-gradient(145deg,#041B38 0%,#073B76 48%,#0B5DB8 100%);
+                radial-gradient(circle at 0% 100%, rgba(255,122,26,.16), transparent 34%),
+                var(--gradient-hero);
             isolation:isolate;
         }
         .page-header::after {
@@ -311,8 +312,8 @@
         .booking-id { border-radius:8px; background:#EDF4FF; }
         .seg-count-chip { border-radius:8px; }
         .status-pill { border-radius:9px; padding:.3rem .62rem; }
-        .status-pill.approved { border:1px solid rgba(255,182,72,.25); }
-        .status-pill.confirmed { border:1px solid rgba(23,195,178,.22); }
+        .status-pill.approved { border:1px solid rgba(217,119,6,.25); }
+        .status-pill.confirmed { border:1px solid rgba(22,163,74,.22); }
         .course-name { font-family:'Prompt',sans-serif; font-size:1rem; letter-spacing:-.015em; }
         .meta-row { gap:.45rem; }
         .meta-item { padding:.3rem .48rem; border-radius:8px; background:#F7F9FC; border:1px solid #EDF1F6; font-size:.75rem; }
@@ -360,8 +361,8 @@
         /* ===== BORDERLESS STATUS CARDS 2026 ===== */
         #statusList { display:flex; flex-direction:column; gap:.9rem; }
         .booking-card {
-            --card-accent:#FFB648;
-            --card-soft:rgba(255,182,72,.12);
+            --card-accent:#d97706;
+            --card-soft:rgba(217,119,6,.12);
             margin:0;
             border:0;
             border-radius:24px;
@@ -371,7 +372,7 @@
             isolation:isolate;
             transform:translateZ(0);
         }
-        .booking-card.confirmed { --card-accent:#17C3B2; --card-soft:rgba(23,195,178,.12); }
+        .booking-card.confirmed { --card-accent:#16A34A; --card-soft:rgba(22,163,74,.12); }
         .booking-card::before {
             content:''; position:absolute; inset:0 auto 0 0; width:5px;
             background:linear-gradient(180deg,var(--card-accent),color-mix(in srgb,var(--card-accent) 55%,#2F7BE0));
@@ -398,10 +399,10 @@
         .course-block { display:grid; grid-template-columns:42px minmax(0,1fr); gap:.75rem; align-items:center; margin-bottom:1rem; }
         .course-icon {
             width:42px; height:42px; display:grid; place-items:center; border-radius:13px;
-            color:#B4700C; background:linear-gradient(145deg,#FFF8EA,#FFF0D0);
+            color:#B45309; background:linear-gradient(145deg,#FFF8EA,#FFF0D0);
             box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
         }
-        .course-icon.confirmed { color:#0E8A7A; background:linear-gradient(145deg,#E9FCF8,#DDF8F2); }
+        .course-icon.confirmed { color:#15803D; background:linear-gradient(145deg,#EDFBF0,#E0F7E5); }
         .course-kicker { margin-bottom:.08rem; color:#8A98AA; font-size:.62rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
         .course-name { margin:0; font-size:1.02rem; line-height:1.4; }
         .meta-row {
@@ -416,7 +417,7 @@
             display:grid; place-items:center; width:24px; height:24px; border-radius:8px;
             color:#2F7BE0; background:#EAF2FF; flex:none;
         }
-        .meta-item.green i { color:#0E8A7A; background:#DEFBF6; }
+        .meta-item.green i { color:#15803D; background:#E7F8ED; }
         .seg-list { margin-top:.7rem; gap:.45rem; }
         .seg-row { padding:.6rem .7rem; border:0; border-radius:12px; background:#F6F9FD; }
         .seg-row-num { width:20px; height:20px; border-radius:7px; }
@@ -479,17 +480,17 @@
 
         /* Status is communicated by the badge/icon only, not the card frame */
         .status-pill.approved {
-            color:#98600B;
-            background:#FFF7E8;
-            box-shadow:inset 0 0 0 1px rgba(255,182,72,.20);
+            color:#92400E;
+            background:#fef3c7;
+            box-shadow:inset 0 0 0 1px rgba(217,119,6,.20);
         }
         .status-pill.confirmed {
-            color:#087A6C;
-            background:#EAF9F6;
-            box-shadow:inset 0 0 0 1px rgba(23,195,178,.18);
+            color:#15803D;
+            background:#E7F8ED;
+            box-shadow:inset 0 0 0 1px rgba(22,163,74,.18);
         }
-        .status-pill.approved .status-dot { background:#E9A431; box-shadow:none; }
-        .status-pill.confirmed .status-dot { background:#17A996; box-shadow:none; }
+        .status-pill.approved .status-dot { background:#d97706; box-shadow:none; }
+        .status-pill.confirmed .status-dot { background:#16A34A; box-shadow:none; }
 
         .course-icon,
         .course-icon.confirmed {
@@ -497,8 +498,8 @@
             background:linear-gradient(145deg,#F4F7FB,#EAF0F7);
             box-shadow:inset 0 0 0 1px rgba(203,213,225,.65);
         }
-        .course-icon.approved i { color:#C78312; }
-        .course-icon.confirmed i { color:#119987; }
+        .course-icon.approved i { color:#B45309; }
+        .course-icon.confirmed i { color:#15803D; }
 
         .meta-row {
             background:#F7F9FC;
@@ -526,50 +527,7 @@
             box-shadow:inset 0 0 0 1px rgba(226,232,240,.72);
         }
 
-    
-
-/* ===== BOOKING PAGE PALETTE — APPLIED TO STATUS ===== */
-:root {
-    --violet-900:#06264D; --violet-700:#0B4DA2; --violet-600:#0B4DA2;
-    --violet-500:#2F7BE0; --violet-300:#7FB0EA; --violet-100:#EAF2FF; --violet-50:#F5F9FF;
-    --coral-600:#C15A0E; --coral-500:#FF7A1A; --coral-100:#FFF1E4;
-    --teal-600:#0E8A7A; --teal-500:#17C3B2; --teal-100:#DEFBF6;
-    --sun-500:#FFB648; --sun-100:#FFF3DE;
-    --gradient-hero:linear-gradient(150deg,#06264D 0%,#0B4DA2 60%,#2F7BE0 100%);
-    --gradient-coral:linear-gradient(135deg,#FF7A1A,#FF9640);
-    --gradient-teal:linear-gradient(135deg,#0E8A7A,#17C3B2);
-    --gradient-violet:linear-gradient(135deg,#0B4DA2,#2F7BE0);
-}
-.page-header {
-    background:
-        radial-gradient(circle at 90% 12%,rgba(127,176,234,.28),transparent 30%),
-        radial-gradient(circle at 0% 100%,rgba(23,195,178,.16),transparent 34%),
-        var(--gradient-hero);
-}
-.page-eyebrow { color:#9EDBFF; }
-.section-title-text i { background:var(--gradient-violet); }
-.count-pill,.booking-id { color:var(--violet-600); background:var(--violet-100); border-color:rgba(11,77,162,.14); }
-.booking-card {
-    border-color:#DCE6F2;
-    background:radial-gradient(circle at 100% 0%,rgba(47,123,224,.055),transparent 35%),#fff;
-    box-shadow:0 7px 23px rgba(6,38,77,.065);
-}
-.booking-card:hover { border-color:#A7C6E8; box-shadow:0 15px 34px rgba(6,38,77,.12); }
-.status-pill.approved { color:#A96312; background:var(--sun-100); border-color:rgba(255,182,72,.22); }
-.status-pill.confirmed { color:var(--teal-600); background:var(--teal-100); border-color:rgba(23,195,178,.20); }
-.course-icon { color:#B4700C; background:linear-gradient(145deg,#FFF8EA,#FFF0D0); }
-.course-icon.confirmed { color:var(--teal-600); background:linear-gradient(145deg,#E9FCF8,#DEFBF6); }
-.meta-item i { color:var(--violet-500); background:var(--violet-100); }
-.meta-item.green i { color:var(--teal-600); background:var(--teal-100); }
-.seg-row-num { background:var(--gradient-violet); }
-.tl-step.done .tl-dot { background:var(--gradient-teal); }
-.tl-step.current .tl-dot { background:var(--gradient-coral); box-shadow:0 0 0 4px var(--coral-100); }
-.expand-btn { color:var(--violet-600); background:var(--violet-50); border-color:#D7E5F6; }
-.expand-btn:hover { color:#fff; background:var(--gradient-violet); }
-.empty-icon { background:var(--violet-100); }
-.empty-icon i { color:var(--violet-500); }
-
-</style>
+    </style>
 </head>
 <body>
 <div class="app-wrap">
