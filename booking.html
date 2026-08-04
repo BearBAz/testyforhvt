@@ -14,13 +14,11 @@
 
 <style>
     :root {
-        /* Primary: น้ำเงินเข้ม สไตล์ Agoda */
         --primary: #0B4DA2;
         --primary-dark: #06264D;
         --primary-light: #2F7BE0;
         --primary-soft: #EAF2FF;
         --primary-xsoft: #F5F9FF;
-        /* Accent: ส้ม สไตล์ blueplus+ */
         --accent: #FF7A1A;
         --accent-dark: #C15A0E;
         --accent-soft: #FFF1E4;
@@ -71,9 +69,6 @@
         position: relative;
     }
 
-    /* ═══════════════════════════════════════
-       STICKY TOP BAR (Lineman/Agoda style)
-    ═══════════════════════════════════════ */
     .top-bar {
         position: sticky;
         top: 0;
@@ -107,10 +102,6 @@
         border: 1px solid rgba(255,255,255,0.2);
     }
     .top-bar-icon i { color: #fff; font-size: 1rem; }
-
-    /* ═══════════════════════════════════════
-       HERO BANNER (Booking.com style)
-    ═══════════════════════════════════════ */
     .hero-banner {
         background: var(--gradient-brand);
         padding: 1.4rem 1.2rem 3.8rem;
@@ -153,10 +144,6 @@
         letter-spacing: -0.3px; margin-bottom: 0.15rem;
     }
     .hero-subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.75); }
-
-    /* ═══════════════════════════════════════
-       PROGRESS STEPS (Agoda style)
-    ═══════════════════════════════════════ */
     .steps-float {
         margin: -2rem 1rem 0;
         background: var(--surface);
@@ -223,17 +210,10 @@
     }
     .step-item.active .step-lbl { color: var(--accent); }
     .step-item.completed .step-lbl { color: var(--success); }
-
-    /* ═══════════════════════════════════════
-       SECTION WRAPPER
-    ═══════════════════════════════════════ */
     .page-body {
         padding: 0 1rem 5rem;
     }
 
-    /* ═══════════════════════════════════════
-       CARDS (Booking.com style)
-    ═══════════════════════════════════════ */
     .bk-card {
         background: var(--surface);
         border-radius: var(--radius-lg);
@@ -273,10 +253,6 @@
     }
     .card-header-hint { font-size: 0.72rem; color: var(--muted); margin-top: 0.05rem; }
     .card-body-wrap { padding: 1.1rem; }
-
-    /* ═══════════════════════════════════════
-       FORM FIELDS (Lineman style)
-    ═══════════════════════════════════════ */
     .field-group { margin-bottom: 1rem; }
     .field-group:last-child { margin-bottom: 0; }
 
@@ -336,20 +312,14 @@
         gap: 0.3rem;
     }
 
-    /* Verified states */
     .field-input.is-verified { border-color: var(--success); background: #f0fdf8; }
     .field-input.is-error { border-color: var(--danger); }
     .field-icon-right.success-icon { color: var(--success); }
     .field-icon-right.danger-icon { color: var(--danger); }
     .field-icon-right.loading-icon { color: var(--primary); }
-
-    /* Two column grid */
     .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     .field-row-7-3 { display: grid; grid-template-columns: 7fr 3fr; gap: 0.75rem; }
 
-    /* ═══════════════════════════════════════
-       DATE RANGE PICKER (Agoda inspired)
-    ═══════════════════════════════════════ */
     .date-range-box {
         background: var(--primary-xsoft);
         border: 1.5px solid var(--border);
@@ -403,9 +373,6 @@
         font-weight: 500;
     }
 
-    /* ═══════════════════════════════════════
-       CUSTOM ROOM SELECT (Agoda dropdown)
-    ═══════════════════════════════════════ */
     .room-select-btn {
         width: 100%;
         padding: 0.78rem 1rem;
@@ -472,7 +439,6 @@
     .room-option:last-child { margin-bottom: 0; }
     .room-option:hover:not(.is-unavail) { background: var(--primary-soft); }
     .room-option.is-unavail { opacity: 0.4; cursor: not-allowed; }
-
     .room-opt-info { flex: 1; }
     .room-opt-name { font-size: 0.88rem; font-weight: 700; color: var(--text); }
     .room-opt-cap { font-size: 0.74rem; color: var(--muted); margin-top: 0.1rem; }
@@ -498,9 +464,6 @@
         border: 1px solid rgba(229,72,77,0.2);
     }
 
-    /* ═══════════════════════════════════════
-       BOOKING SEGMENTS (หลายช่วงวันที่+ห้อง / OTA "add room" style)
-    ═══════════════════════════════════════ */
     .segments-wrap { display: flex; flex-direction: column; gap: 0.85rem; }
     .segment-card {
         border: 1.5px solid var(--border);
@@ -577,9 +540,6 @@
         gap: 0.35rem;
     }
 
-    /* ═══════════════════════════════════════
-       BOOKING SUMMARY (สรุปก่อนส่ง แบบ Agoda/Booking.com)
-    ═══════════════════════════════════════ */
     .booking-summary-card {
         background: var(--gradient-brand);
         border-radius: var(--radius-md);
@@ -632,10 +592,6 @@
         position: relative; z-index: 1;
     }
     .summary-meta-row b { color: var(--accent); font-weight: 800; }
-
-    /* ═══════════════════════════════════════
-       ACCOMMODATION TOGGLE (Lineman style)
-    ═══════════════════════════════════════ */
     .acc-toggle-group {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -693,10 +649,6 @@
     }
     .acc-toggle-check i { color: #fff; font-size: 0.52rem; }
     .acc-toggle-card.is-selected .acc-toggle-check { display: flex; }
-
-    /* ═══════════════════════════════════════
-       ACCOMMODATION RESULT (Agoda hotel card)
-    ═══════════════════════════════════════ */
     .acc-result-box {
         background: var(--surface);
         border: 1.5px solid var(--border);
@@ -866,9 +818,6 @@
     .unavail-text-wrap .t { font-weight: 700; color: var(--danger); font-size: 0.9rem; }
     .unavail-text-wrap .s { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
 
-    /* ═══════════════════════════════════════
-       INLINE ALERTS
-    ═══════════════════════════════════════ */
     .inline-alert {
         border-radius: var(--radius);
         padding: 0.75rem 0.9rem;
@@ -885,9 +834,6 @@
     .inline-alert.danger  { background: var(--danger-soft);  border-color: rgba(229,72,77,0.25);  color: var(--danger); }
     .inline-alert.info    { background: var(--info-soft);    border-color: rgba(11,77,162,0.25);   color: var(--info); }
 
-    /* ═══════════════════════════════════════
-       PDPA CARD
-    ═══════════════════════════════════════ */
     .pdpa-wrap {
         background: var(--primary-xsoft);
         border: 1.5px solid var(--border-strong);
@@ -920,9 +866,6 @@
         border-bottom: 1px dashed var(--primary);
     }
 
-    /* ═══════════════════════════════════════
-       STICKY BOTTOM CTA (Lineman style)
-    ═══════════════════════════════════════ */
     .bottom-cta {
         position: fixed;
         bottom: 0; left: 50%;
@@ -965,9 +908,6 @@
         box-shadow: none;
     }
 
-    /* ═══════════════════════════════════════
-       LOADING OVERLAY
-    ═══════════════════════════════════════ */
     .loading-overlay {
         position: fixed;
         inset: 0;
@@ -997,10 +937,6 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-label { font-size: 0.9rem; color: var(--text-2); font-weight: 600; }
-
-    /* ═══════════════════════════════════════
-       SKELETON
-    ═══════════════════════════════════════ */
     .skeleton-block {
         background: linear-gradient(90deg, #eef1f5 25%, #f7f9fb 50%, #eef1f5 75%);
         background-size: 200% 100%;
@@ -1011,15 +947,8 @@
     }
     @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 
-    /* ═══════════════════════════════════════
-       SWEETALERT OVERRIDES
-    ═══════════════════════════════════════ */
     .swal2-popup { font-family: 'Prompt', sans-serif !important; border-radius: 20px !important; }
     .swal2-confirm { background: var(--primary) !important; border-radius: 10px !important; }
-
-    /* ═══════════════════════════════════════
-       DESKTOP LAYOUT
-    ═══════════════════════════════════════ */
     .desktop-sidebar { display: none; }
 
     @media (min-width: 768px) {
@@ -1175,10 +1104,6 @@
 </head>
 <body>
 <div class="app-container">
-
-    <!-- ════════════════════════════════
-         DESKTOP SIDEBAR
-    ════════════════════════════════ -->
     <div class="desktop-sidebar">
         <div class="sidebar-inner">
             <div class="sidebar-logo"><i class="fas fa-hotel"></i></div>
@@ -1221,12 +1146,7 @@
         </div>
     </div>
 
-    <!-- ════════════════════════════════
-         DESKTOP MAIN
-    ════════════════════════════════ -->
     <div class="desktop-main">
-
-        <!-- MOBILE: Sticky Top Bar -->
         <div class="top-bar">
             <a href="index.html" class="top-bar-back"><i class="fas fa-arrow-left" style="font-size:0.8rem;"></i></a>
             <div class="top-bar-info">
@@ -1236,7 +1156,6 @@
             <div class="top-bar-icon"><i class="fas fa-calendar-plus"></i></div>
         </div>
 
-        <!-- MOBILE: Hero Banner -->
         <div class="hero-banner">
             <div class="hero-pattern"></div>
             <div class="hero-grid"></div>
@@ -1253,7 +1172,6 @@
 
         <div id="mainContent">
 
-            <!-- MOBILE: Floating Steps -->
             <div class="steps-float">
                 <div class="steps-track">
                     <div class="step-item active" id="step1">
@@ -1275,7 +1193,6 @@
 
             <div class="page-body">
 
-                <!-- DESKTOP: Welcome block -->
                 <div class="desktop-welcome d-none d-md-block">
                     <div class="welcome-header">
                         <div class="welcome-icon-lg"><i class="fas fa-calendar-plus"></i></div>
@@ -1293,9 +1210,6 @@
 
                 <form id="bookingForm">
 
-                    <!-- ══════════════════════
-                         CARD 1: ข้อมูลผู้จอง
-                    ══════════════════════ -->
                     <div class="bk-card">
                         <div class="card-header-strip">
                             <div class="card-header-icon"><i class="fas fa-user"></i></div>
@@ -1347,9 +1261,6 @@
                         </div>
                     </div>
 
-                    <!-- ══════════════════════════════
-                         CARD 2: รายละเอียดการจอง
-                    ══════════════════════════════ -->
                     <div class="bk-card">
                         <div class="card-header-strip">
                             <div class="card-header-icon"><i class="fas fa-calendar-alt"></i></div>
@@ -1371,7 +1282,6 @@
                                 </div>
                             </div>
 
-                            <!-- Booking Segments: วันที่ + ห้องประชุม (เพิ่มได้หลายช่วง แบบ OTA) -->
                             <div class="field-group">
                                 <label class="field-label">ช่วงวันที่และห้องประชุม <span class="req">*</span></label>
                                 <div class="segments-wrap" id="segmentsContainer"></div>
@@ -1383,7 +1293,6 @@
                                 </div>
                             </div>
 
-                            <!-- Attendees -->
                             <div class="field-group">
                                 <label class="field-label" for="attendees">จำนวนผู้เข้าร่วม (คน) <span class="req">*</span></label>
                                 <div class="field-input-wrap">
@@ -1394,7 +1303,6 @@
                                 </div>
                             </div>
 
-                            <!-- Accommodation Toggle -->
                             <div class="mb-3" style="margin-top: 1rem;">
                                 <label class="field-label">ต้องการที่พัก <span class="req">*</span></label>
                                 <div class="acc-toggle-group">
@@ -1418,10 +1326,8 @@
                         </div>
                     </div>
 
-                    <!-- Booking Summary (สรุปก่อนส่ง แบบ Agoda/Booking.com) -->
                     <div class="booking-summary-card" id="bookingSummaryCard" style="display:none;"></div>
 
-                    <!-- PDPA -->
                     <div class="pdpa-wrap">
                         <input class="pdpa-checkbox-custom" type="checkbox" id="pdpaConsent" required>
                         <label class="pdpa-body-text" for="pdpaConsent">
@@ -1430,7 +1336,6 @@
                         </label>
                     </div>
 
-                    <!-- Spacer for sticky button -->
                     <div style="height: 4.5rem;"></div>
 
                 </form>
@@ -1439,7 +1344,6 @@
             </div>
         </div>
 
-        <!-- Sticky Bottom CTA -->
         <div class="bottom-cta">
             <button type="button" class="cta-btn" id="submitBtn" disabled onclick="document.getElementById('bookingForm').requestSubmit()">
                 <i class="fas fa-paper-plane"></i>
@@ -1447,7 +1351,6 @@
             </button>
         </div>
 
-        <!-- Loading Overlay -->
         <div id="loading" class="loading-overlay">
             <div class="loading-box">
                 <div class="spinner"></div>
@@ -2134,7 +2037,7 @@
                 title:'บันทึกข้อมูลสำเร็จ!',
                 text:'ระบบได้บันทึกข้อมูลการจองและจะส่งสรุปให้ทาง LINE',
                 icon:'success', confirmButtonText:'ตกลง', allowOutsideClick:false
-            }).then(r => { if (r.isConfirmed) { if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); } } });
+            }).then(r => { if (r.isConfirmed) { window.location.href = 'index.html'; } });
         } catch (error) {
             loadingDiv.classList.remove('show');
             mainContent.style.display = 'block';
