@@ -309,8 +309,7 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
         </form>
         <div class="login-err" id="loginErr"></div>
         <div class="login-hint">
-            <i class="fas fa-circle-info"></i> รหัสนี้คือค่า <b>ADMIN_DASHBOARD_KEY</b> ที่ตั้งไว้ใน <code>code.gs</code>
-            ฝั่ง backend — ระบบจะไม่ส่งข้อมูลการจองใดๆ กลับมาจนกว่าจะยืนยันรหัสถูกต้อง
+            <i class="fas fa-circle-info"></i> สามารถขอรับรหัสผ่านได้จากแผนก ผอส.
         </div>
     </div>
 </div>
@@ -320,11 +319,11 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
     <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="mark"><i class="fas fa-bolt"></i></div>
-            <div class="txt"><b>ศฝฟ. Admin</b><span>Booking Control Center</span></div>
+            <div class="txt"><b>ระบบติดตามสถานะการจอง ศฝฟ. </b><span>Booking Control Center</span></div>
         </div>
         <nav class="sidebar-nav">
             <button class="nav-item active" data-tab="tab1"><i class="fas fa-table-list"></i> ข้อมูลการจองทั้งหมด <span class="cnt" id="navCnt1">0</span></button>
-            <button class="nav-item" data-tab="tab2"><i class="fas fa-stopwatch"></i> ติดตามสถานะ (SLA) <span class="cnt" id="navCnt2">0</span></button>
+            <button class="nav-item" data-tab="tab2"><i class="fas fa-stopwatch"></i> ติดตามสถานะ <span class="cnt" id="navCnt2">0</span></button>
             <button class="nav-item" data-tab="tab3"><i class="fas fa-file-lines"></i> รายงานการใช้สถานที่</button>
             <button class="nav-item" data-tab="tab4"><i class="fas fa-chart-pie"></i> Dashboard สรุปภาพรวม</button>
         </nav>
@@ -438,7 +437,7 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
     </div>
     <div class="drawer-body" id="drawerBody"></div>
     <div class="drawer-foot">
-        <button class="btn primary" id="drawerReportBtn" style="width:100%;justify-content:center;"><i class="fas fa-file-lines"></i> ดูรายงานฉบับเต็ม</button>
+        <button class="btn primary" id="drawerReportBtn" style="width:80%;justify-content:center;"><i class="fas fa-file-lines"></i> ดูรายงานฉบับเต็ม</button>
     </div>
 </div>
 
