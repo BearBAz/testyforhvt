@@ -202,6 +202,8 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
 .report-picker label{ font-size:0.78rem; font-weight:600; color:var(--text-2); display:block; margin-bottom:8px; }
 .report-picker .picker-row{ display:flex; gap:10px; flex-wrap:wrap; }
 .report-picker select{ flex:1; min-width:260px; padding:11px 12px; border-radius:10px; border:1.5px solid var(--border-strong); font-size:0.85rem; background:#fff; font-family:inherit; }
+#reportExtras{ margin-top:16px; padding-top:16px; border-top:1px dashed var(--border); }
+#reportExtras:empty{ display:none; margin:0; padding:0; border:none; }
 
 .report-doc{ background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; }
 .report-head{ background:linear-gradient(135deg,#06264D 0%,#0B4DA2 100%); color:#fff; padding:26px 30px; display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
@@ -394,6 +396,7 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
                         </select>
                         <button class="btn primary" id="printReportBtn"><i class="fas fa-print"></i> พิมพ์รายงาน</button>
                     </div>
+                    <div id="reportExtras"></div>
                 </div>
                 <div id="reportArea"></div>
             </section>
@@ -737,9 +740,18 @@ document.getElementById('printReportBtn').addEventListener('click', ()=> window.
 
 function renderReport(bookingId){
     const area = document.getElementById('reportArea');
-    if (!bookingId){ area.innerHTML = `<div class="empty-hint"><i class="fas fa-file-circle-question"></i>กรุณาเลือก Booking ID เพื่อดูรายงาน</div>`; return; }
+    const extras = document.getElementById('reportExtras');
+    if (!bookingId){
+        area.innerHTML = `<div class="empty-hint"><i class="fas fa-file-circle-question"></i>กรุณาเลือก Booking ID เพื่อดูรายงาน</div>`;
+        extras.innerHTML = '';
+        return;
+    }
     const b = allBookings.find(x=>x.bookingId===bookingId);
-    if (!b){ area.innerHTML = `<div class="empty-hint"><i class="fas fa-triangle-exclamation"></i>ไม่พบข้อมูล Booking นี้</div>`; return; }
+    if (!b){
+        area.innerHTML = `<div class="empty-hint"><i class="fas fa-triangle-exclamation"></i>ไม่พบข้อมูล Booking นี้</div>`;
+        extras.innerHTML = '';
+        return;
+    }
 
     const segs = Array.isArray(b.segments) && b.segments.length ? b.segments : (b.room ? [{room:b.room, startDate:b.startDate, endDate:b.endDate}] : []);
     const files = [
@@ -747,6 +759,9 @@ function renderReport(bookingId){
         b.attendeeListFileUrl ? { label:'รายชื่อผู้เข้าอบรม', url:b.attendeeListFileUrl } : null,
         b.foodOrderFileUrl ? { label:'ใบสั่งอาหาร', url:b.foodOrderFileUrl } : null
     ].filter(Boolean);
+    // ช่วงวันที่เข้าพัก (เช็คอิน-เช็คเอาท์) — คำนวณแบบเดียวกับ flexmessage ยืนยันการจอง (buildAccommodationFlexBlock_ ใน code.gs):
+    // อิงจากแต่ละ segment ห้องประชุม ไม่ใช่แค่วันที่เข้าพักรวมช่วงเดียว
+    const accWindows = b.accommodation === 'ต้องการ' ? getAccommodationWindows(b) : [];
 
     area.innerHTML = `
     <div class="report-doc">
@@ -785,9 +800,12 @@ function renderReport(bookingId){
                 <div class="rep-grid">
                     <div class="rep-field"><div class="l">ต้องการที่พัก</div><div class="v">${esc(b.accommodation||'-')}</div></div>
                     <div class="rep-field"><div class="l">จำนวนห้องพัก</div><div class="v">${esc(b.numRooms||0)} ห้อง (VIP ${esc(b.viprooms||0)})</div></div>
-                    <div class="rep-field"><div class="l">เช็คอิน</div><div class="v">${fmtThaiDate(b.checkin)}</div></div>
-                    <div class="rep-field"><div class="l">เช็คเอาท์</div><div class="v">${fmtThaiDate(b.checkout)}</div></div>
                 </div>
+                ${accWindows.length ? `
+                <div style="margin-top:14px;">
+                    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;">ช่วงวันที่เข้าพัก (เช็คอิน - เช็คเอาท์)</div>
+                    ${accWindows.map((w,i)=>`<div class="rep-seg-item"><span class="num">${i+1}</span><span>${fmtDateObj(w.checkin)} - ${fmtDateObj(w.checkout)} <span style="color:var(--muted);">(${nightsBetween(w.checkin,w.checkout)} คืน)</span></span></div>`).join('')}
+                </div>` : ''}
             </div>
             <div class="rep-section">
                 <h4><i class="fas fa-utensils"></i> อุปกรณ์ / อาหาร / กิจกรรม</h4>
@@ -798,17 +816,46 @@ function renderReport(bookingId){
                     <div class="rep-field"><div class="l">ร้านอาหาร / ร้านอาหารว่าง</div><div class="v">${esc(b.foodShop||b.foodShopOther||'-')} / ${esc(b.snackShop||b.snackShopOther||'-')}</div></div>
                 </div>
             </div>
-            ${files.length ? `<div class="rep-section"><h4><i class="fas fa-paperclip"></i> เอกสารแนบ</h4><div class="rep-files">${files.map(f=>`<a href="${esc(f.url)}" target="_blank" rel="noopener"><i class="fas fa-file-arrow-down"></i>${esc(f.label)}</a>`).join('')}</div></div>` : ''}
-            <div class="rep-section">
-                <h4><i class="fas fa-timeline"></i> ไทม์ไลน์</h4>
-                <div class="rep-timeline">
-                    <div class="rep-tl-item"><span class="ic"><i class="fas fa-paper-plane"></i></span><div><div class="rep-field"><div class="l">ยื่นคำขอจอง</div><div class="v">${esc(b.timestamp||'-')}</div></div></div></div>
-                    <div class="rep-tl-item"><span class="ic"><i class="fas fa-check"></i></span><div><div class="rep-field"><div class="l">ยืนยันการจอง</div><div class="v">${b.confirmedAt ? fmtThaiDate(b.confirmedAt) : 'ยังไม่ยืนยัน'}</div></div></div></div>
-                </div>
-            </div>
         </div>
     </div>`;
+
+    // เอกสารแนบ + ไทม์ไลน์ ย้ายมาไว้ที่ส่วนหัว "เลือก Booking ID..." แทน — ไม่ต้องปริ้นออกมาด้วย
+    extras.innerHTML = `
+        <div class="rep-section" style="margin-bottom:${files.length?'20':'0'}px;">
+            ${files.length ? `
+            <h4><i class="fas fa-paperclip"></i> เอกสารแนบ</h4>
+            <div class="rep-files">${files.map(f=>`<a href="${esc(f.url)}" target="_blank" rel="noopener"><i class="fas fa-file-arrow-down"></i>${esc(f.label)}</a>`).join('')}</div>
+            ` : `<div style="font-size:0.8rem;color:var(--muted);"><i class="fas fa-paperclip"></i> ไม่มีเอกสารแนบสำหรับรายการนี้</div>`}
+        </div>
+        <div class="rep-section" style="margin-bottom:0;">
+            <h4><i class="fas fa-timeline"></i> ไทม์ไลน์</h4>
+            <div class="rep-timeline">
+                <div class="rep-tl-item"><span class="ic"><i class="fas fa-paper-plane"></i></span><div><div class="rep-field"><div class="l">ยื่นคำขอจอง</div><div class="v">${esc(b.timestamp||'-')}</div></div></div></div>
+                <div class="rep-tl-item"><span class="ic"><i class="fas fa-check"></i></span><div><div class="rep-field"><div class="l">ยืนยันการจอง</div><div class="v">${b.confirmedAt ? fmtThaiDate(b.confirmedAt) : 'ยังไม่ยืนยัน'}</div></div></div></div>
+            </div>
+        </div>`;
 }
+
+/* ช่วงวันที่เข้าพัก (checkin/checkout) จาก segments — ตรรกะเดียวกับ getAccommodationWindowsFromSegments_ ใน code.gs
+   ที่ใช้สร้าง flexmessage ตอนยืนยันการจอง: checkin = วันเริ่มของ segment ลบ 1 วัน, checkout = วันสิ้นสุดของ segment */
+function getAccommodationWindows(b){
+    const segs = Array.isArray(b.segments) ? b.segments : [];
+    if (segs.length > 0){
+        return segs.map(s=>{
+            const ci = addDays(parseYMD(s.startDate), -1);
+            const co = parseYMD(s.endDate);
+            return { checkin: ci, checkout: co };
+        }).filter(w=>w.checkin && w.checkout);
+    }
+    if (b.checkin && b.checkout){
+        const ci = parseYMD(b.checkin), co = parseYMD(b.checkout);
+        if (ci && co) return [{ checkin: ci, checkout: co }];
+    }
+    return [];
+}
+function addDays(date, n){ if(!date) return null; const d = new Date(date); d.setDate(d.getDate()+n); return d; }
+function fmtDateObj(d){ if(!d) return '-'; const dd=String(d.getDate()).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); return `${dd}/${mm}/${d.getFullYear()}`; }
+function nightsBetween(ci,co){ if(!ci||!co) return 0; return Math.round((co-ci)/86400000); }
 
 /* ── TAB 4: dashboard ── */
 function renderDashboard(){
