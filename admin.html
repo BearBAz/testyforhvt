@@ -147,7 +147,7 @@ button{ font-family:inherit; cursor:pointer; }
 
 .table-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-xs); overflow:hidden; }
 .table-scroll{ overflow-x:auto; }
-table.data-table{ width:100%; border-collapse:collapse; font-size:0.82rem; min-width:920px; }
+table.data-table{ width:100%; border-collapse:collapse; font-size:0.82rem; min-width:820px; }
 table.data-table thead th{
     text-align:left; padding:12px 14px; background:var(--surface-2); color:var(--text-2); font-weight:600;
     font-size:0.72rem; text-transform:uppercase; letter-spacing:0.4px; border-bottom:1px solid var(--border); white-space:nowrap; cursor:pointer; user-select:none;
@@ -159,6 +159,10 @@ table.data-table tbody tr:hover{ background:var(--primary-xsoft); }
 table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(--text); }
 .td-id{ font-family:var(--mono); font-weight:600; color:var(--primary-dark); }
 .td-sub{ font-size:0.72rem; color:var(--muted); margin-top:2px; }
+.cell-seg-line{ font-size:0.8rem; line-height:1.5; }
+.cell-seg-line + .cell-seg-line{ margin-top:2px; }
+.cell-seg-line b{ color:var(--primary); font-weight:700; }
+.cell-seg-date{ color:var(--muted); font-size:0.74rem; }
 .seg-badge{ display:inline-flex; align-items:center; gap:4px; background:var(--accent-soft); color:var(--accent-dark); font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:20px; margin-left:6px; }
 .table-foot{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px; font-size:0.74rem; color:var(--muted); border-top:1px solid var(--border); }
 
@@ -381,7 +385,7 @@ table.formal-table td.center{ text-align:center; }
             <div id="loadingState" class="loading-hint"><div class="spin"></div>กำลังโหลดข้อมูลการจอง...</div>
 
             <!-- TAB 1 -->
-            <section class="panel" id="tab1">
+            <section class="panel active" id="tab1">
                 <div class="toolbar">
                     <div class="search-box">
                         <i class="fas fa-magnifying-glass"></i>
@@ -396,7 +400,6 @@ table.formal-table td.center{ text-align:center; }
                             <thead>
                                 <tr>
                                     <th data-sort="bookingId">Booking ID <i class="fas fa-sort"></i></th>
-                                    <th data-sort="timestamp">วันที่ยื่น <i class="fas fa-sort"></i></th>
                                     <th data-sort="fullName">ผู้จอง / หน่วยงาน <i class="fas fa-sort"></i></th>
                                     <th data-sort="courseName">หลักสูตร <i class="fas fa-sort"></i></th>
                                     <th data-sort="startDate">วันที่จัดอบรม <i class="fas fa-sort"></i></th>
@@ -527,6 +530,7 @@ function enterApp(){
     document.getElementById('loginGate').style.display = 'none';
     document.getElementById('appShell').classList.add('ready');
     document.getElementById('loadingState').style.display = 'none';
+    goToTab('tab1'); // เข้าสู่ระบบแล้วให้เริ่มที่หน้า "ข้อมูลการจองทั้งหมด" เสมอ
     renderAll();
 }
 
@@ -592,14 +596,18 @@ function statusChip(status){
     return `<span class="chip" style="background:${m.bg};color:${m.fg};"><span class="dot" style="background:${m.dot};"></span>${esc(m.label)}</span>`;
 }
 function roomSummary(b){
-    const segs = Array.isArray(b.segments) ? b.segments : [];
-    if (segs.length > 1) return `${esc(segs[0].room||'-')}<span class="seg-badge"><i class="fas fa-layer-group"></i>${segs.length} ช่วง</span>`;
-    return esc(b.room || '-');
+    const segs = Array.isArray(b.segments) && b.segments.length ? b.segments : (b.room ? [{room:b.room, startDate:b.startDate, endDate:b.endDate}] : []);
+    if (!segs.length) return '<span style="color:var(--muted);">-</span>';
+    return segs.map((s,i)=>`<div class="cell-seg-line">${segs.length>1?`<b>${i+1}.</b> `:''}${esc(s.room||'-')} <span class="cell-seg-date">(${fmtThaiDate(s.startDate)} - ${fmtThaiDate(s.endDate)})</span></div>`).join('');
 }
 function accSummary(b){
     if (!b.accommodation || b.accommodation !== 'ต้องการ') return '<span style="color:var(--muted);">ไม่ใช้ที่พัก</span>';
     const std = parseInt(b.numRooms)||0, vip = parseInt(b.viprooms)||0;
-    return `${std} ห้อง${vip>0?` <span style="color:var(--accent-dark);">(VIP ${vip})</span>`:''}`;
+    const roomsLine = `<div class="cell-seg-line">${std} ห้อง${vip>0?` <span style="color:var(--accent-dark);">(VIP ${vip})</span>`:''}</div>`;
+    const windows = getAccommodationWindows(b);
+    if (!windows.length) return roomsLine;
+    const windowsHtml = windows.map((w,i)=>`<div class="cell-seg-line">${windows.length>1?`<b>${i+1}.</b> `:''}${fmtDateObj(w.checkin)} - ${fmtDateObj(w.checkout)} <span class="cell-seg-date">(${nightsBetween(w.checkin,w.checkout)} คืน)</span></div>`).join('');
+    return roomsLine + windowsHtml;
 }
 
 /* ══════════════════════ RENDER ALL ══════════════════════ */
@@ -661,12 +669,11 @@ function renderTable(){
     const list = sortBookings(getFilteredBookings());
     const tbody = document.getElementById('tableBody');
     if (list.length === 0){
-        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-hint"><i class="fas fa-inbox"></i>ไม่พบข้อมูลการจองตามเงื่อนไขที่เลือก</div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-hint"><i class="fas fa-inbox"></i>ไม่พบข้อมูลการจองตามเงื่อนไขที่เลือก</div></td></tr>`;
     } else {
         tbody.innerHTML = list.map(b=>`
             <tr data-id="${esc(b.bookingId)}">
                 <td class="td-id">${esc(b.bookingId)}</td>
-                <td>${esc(b.timestamp ? b.timestamp.split(' ')[0].split('-').reverse().join('/') : '-')}</td>
                 <td>${esc(b.fullName)}<div class="td-sub">${esc(b.department||'-')}</div></td>
                 <td>${esc(b.courseName)}</td>
                 <td>${fmtThaiDate(b.startDate)}${b.endDate && b.endDate!==b.startDate ? ' - '+fmtThaiDate(b.endDate) : ''}</td>
