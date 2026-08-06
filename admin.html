@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Admin Dashboard | ระบบจองห้องประชุม ศฝฟ.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root{
@@ -228,6 +228,36 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
 .rep-tl-item{ display:flex; align-items:center; gap:10px; }
 .rep-tl-item .ic{ width:30px; height:30px; border-radius:50%; background:var(--success-soft); color:var(--success-fg); display:flex; align-items:center; justify-content:center; font-size:0.8rem; }
 
+/* ───────── FORMAL DOCUMENT (แบบฟอร์มขออนุมัติใช้สถานที่ สำหรับปริ้น) ───────── */
+.formal-doc{ font-family:'Sarabun','Noto Sans Thai',sans-serif; color:#111; background:#fff; }
+.formal-doc .report-body{ padding:34px 40px 40px; }
+.formal-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding-bottom:16px; border-bottom:2px solid #111; margin-bottom:6px; flex-wrap:wrap; }
+.formal-org{ display:flex; align-items:center; gap:12px; }
+.formal-org .mark{ width:42px; height:42px; border-radius:50%; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:1.05rem; color:#111; flex-shrink:0; }
+.formal-org-name{ font-size:1rem; font-weight:700; line-height:1.35; }
+.formal-org-sub{ font-size:0.78rem; color:#444; }
+.formal-doc-meta{ text-align:right; font-size:0.82rem; line-height:1.9; color:#222; }
+.formal-doc-meta b{ font-family:var(--mono); font-weight:600; }
+.formal-title{ text-align:center; margin:18px 0 22px; }
+.formal-title h3{ margin:0; font-size:1.18rem; font-weight:700; letter-spacing:0.2px; }
+.formal-title .formal-status{ margin-top:8px; display:flex; justify-content:center; }
+
+table.formal-table{ width:100%; border-collapse:collapse; margin-bottom:8px; font-size:0.86rem; }
+table.formal-table th, table.formal-table td{ border:1px solid #111; padding:8px 11px; text-align:left; vertical-align:top; line-height:1.55; }
+table.formal-table th{ background:#F3F3F3; font-weight:600; width:17%; white-space:nowrap; }
+table.formal-table td{ font-weight:400; }
+table.formal-table tr.sec td{ background:#111; color:#fff; font-weight:700; padding:7px 11px; font-size:0.8rem; letter-spacing:0.3px; }
+table.formal-table tr.seg-head th{ background:#E4E4E4; width:auto; text-align:center; font-size:0.78rem; }
+table.formal-table td.center{ text-align:center; }
+
+.formal-signblock{ display:flex; gap:22px; margin-top:38px; flex-wrap:wrap; }
+.sign-box{ flex:1; min-width:230px; border:1.5px solid #111; border-radius:4px; padding:20px 18px 18px; text-align:center; }
+.sign-box .sign-role{ font-weight:700; font-size:0.9rem; margin-bottom:22px; }
+.sign-box .sign-line{ font-size:0.88rem; letter-spacing:0.5px; color:#222; }
+.sign-box .sign-name{ font-size:0.82rem; color:#222; margin-top:10px; }
+.sign-box .sign-pos, .sign-box .sign-date{ font-size:0.82rem; color:#333; margin-top:14px; }
+.formal-note{ margin-top:16px; font-size:0.72rem; color:#555; display:flex; align-items:flex-start; gap:6px; }
+
 /* ───────── TAB4: dashboard ───────── */
 .kpi-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-bottom:22px; }
 .kpi-card{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow-xs); position:relative; overflow:hidden; }
@@ -289,6 +319,8 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
     .panel.active{ display:block !important; }
     .report-doc{ box-shadow:none !important; border:none !important; }
     .report-head{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .formal-doc, .formal-doc *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+    @page{ size:A4; margin:14mm; }
 }
 </style>
 </head>
@@ -309,7 +341,8 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
         </form>
         <div class="login-err" id="loginErr"></div>
         <div class="login-hint">
-            <i class="fas fa-circle-info"></i> สามารถขอรับรหัสผ่านได้จากแผนก ผอส.
+            <i class="fas fa-circle-info"></i> รหัสนี้คือค่า <b>ADMIN_DASHBOARD_KEY</b> ที่ตั้งไว้ใน <code>code.gs</code>
+            ฝั่ง backend — ระบบจะไม่ส่งข้อมูลการจองใดๆ กลับมาจนกว่าจะยืนยันรหัสถูกต้อง
         </div>
     </div>
 </div>
@@ -319,11 +352,11 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
     <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="mark"><i class="fas fa-bolt"></i></div>
-            <div class="txt"><b>ติดตามสถานะการจอง ห้องประชุม/ห้องพัก </b><span>Booking Control Center</span></div>
+            <div class="txt"><b>ศฝฟ. Admin</b><span>Booking Control Center</span></div>
         </div>
         <nav class="sidebar-nav">
             <button class="nav-item active" data-tab="tab1"><i class="fas fa-table-list"></i> ข้อมูลการจองทั้งหมด <span class="cnt" id="navCnt1">0</span></button>
-            <button class="nav-item" data-tab="tab2"><i class="fas fa-stopwatch"></i> ติดตามสถานะ <span class="cnt" id="navCnt2">0</span></button>
+            <button class="nav-item" data-tab="tab2"><i class="fas fa-stopwatch"></i> ติดตามสถานะ (SLA) <span class="cnt" id="navCnt2">0</span></button>
             <button class="nav-item" data-tab="tab3"><i class="fas fa-file-lines"></i> รายงานการใช้สถานที่</button>
             <button class="nav-item" data-tab="tab4"><i class="fas fa-chart-pie"></i> Dashboard สรุปภาพรวม</button>
         </nav>
@@ -437,13 +470,13 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
     </div>
     <div class="drawer-body" id="drawerBody"></div>
     <div class="drawer-foot">
-        <button class="btn primary" id="drawerReportBtn" style="width:80%;justify-content:center;"><i class="fas fa-file-lines"></i> ดูรายงานฉบับเต็ม</button>
+        <button class="btn primary" id="drawerReportBtn" style="width:100%;justify-content:center;"><i class="fas fa-file-lines"></i> ดูรายงานฉบับเต็ม</button>
     </div>
 </div>
 
 <script>
 /* ══════════════════════ CONFIG ══════════════════════ */
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxw0_Gn42bLLXoOTQbHm3YLwWKsavO3_3WJth6lFXNB6NwtkwVCCZDcAGfAmMQQ8CJWOQ/exec"; // ใส่ URL ของ Google Apps Script Web App (ตัวเดียวกับ booking.html / confirm.html)
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxw0_Gn42bLLXoOTQbHm3YLwWKsavO3_3WJth6lFXNB6NwtkwVCCZDcAGfAmMQQ8CJWOQ/exec";
 
 const STATUS_META = {
     Approved:  { label:'Approved',  bg:'var(--success-soft)', fg:'var(--success-fg)', dot:'var(--success)'  },
@@ -763,58 +796,69 @@ function renderReport(bookingId){
     const accWindows = b.accommodation === 'ต้องการ' ? getAccommodationWindows(b) : [];
 
     area.innerHTML = `
-    <div class="report-doc">
-        <div class="report-head">
-            <div>
-                <h3>รายงานสรุปการใช้สถานที่</h3>
-                <div class="rid">${esc(b.bookingId)} · พิมพ์เมื่อ ${new Date().toLocaleDateString('th-TH')}</div>
-            </div>
-            <div class="actions">${statusChip(b.status)}</div>
-        </div>
+    <div class="report-doc formal-doc">
         <div class="report-body">
-            <div class="rep-section">
-                <h4><i class="fas fa-user"></i> ข้อมูลผู้จอง</h4>
-                <div class="rep-grid">
-                    <div class="rep-field"><div class="l">ชื่อ-สกุล</div><div class="v">${esc(b.fullName)}</div></div>
-                    <div class="rep-field"><div class="l">หน่วยงาน</div><div class="v">${esc(b.department||'-')}</div></div>
-                    <div class="rep-field"><div class="l">เบอร์โทรศัพท์</div><div class="v">${esc(b.phone||'-')}</div></div>
-                    <div class="rep-field"><div class="l">รหัสพนักงาน</div><div class="v">${esc(b.employeeId||'-')}</div></div>
+            <div class="formal-header">
+                <div class="formal-org">
+                    <div class="mark"><i class="fas fa-bolt"></i></div>
+                    <div>
+                        <div class="formal-org-name">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง</div>
+                        <div class="formal-org-sub">ระบบจองห้องประชุมและที่พัก</div>
+                    </div>
+                </div>
+                <div class="formal-doc-meta">
+                    <div>เลขที่อ้างอิงการจอง: <b>${esc(b.bookingId)}</b></div>
+                    <div>วันที่ออกเอกสาร: <b>${new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'})}</b></div>
                 </div>
             </div>
-            <div class="rep-section">
-                <h4><i class="fas fa-chalkboard-user"></i> ข้อมูลการจัดอบรม</h4>
-                <div class="rep-grid">
-                    <div class="rep-field"><div class="l">หลักสูตร/กิจกรรม</div><div class="v">${esc(b.courseName)}</div></div>
-                    <div class="rep-field"><div class="l">จำนวนผู้เข้าร่วม</div><div class="v">${esc(b.attendees||'-')} คน</div></div>
-                    <div class="rep-field"><div class="l">ช่วงวันที่จัดรวม</div><div class="v">${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</div></div>
-                    <div class="rep-field"><div class="l">รูปแบบห้อง</div><div class="v">${esc(b.roomSetup||'-')}${b.roomSetupOther?' ('+esc(b.roomSetupOther)+')':''}</div></div>
+            <div class="formal-title">
+                <h3>แบบฟอร์มขออนุมัติใช้สถานที่จัดฝึกอบรม / ประชุม</h3>
+                <div class="formal-status">${statusChip(b.status)}</div>
+            </div>
+
+            <table class="formal-table">
+                <tbody>
+                    <tr class="sec"><td colspan="4">1. ข้อมูลผู้ขอใช้สถานที่</td></tr>
+                    <tr><th>ชื่อ-สกุล</th><td>${esc(b.fullName)}</td><th>หน่วยงาน</th><td>${esc(b.department||'-')}</td></tr>
+                    <tr><th>เบอร์โทรศัพท์</th><td>${esc(b.phone||'-')}</td><th>รหัสพนักงาน</th><td>${esc(b.employeeId||'-')}</td></tr>
+
+                    <tr class="sec"><td colspan="4">2. ข้อมูลการจัดอบรม / ประชุม</td></tr>
+                    <tr><th>หลักสูตร/กิจกรรม</th><td colspan="3">${esc(b.courseName)}</td></tr>
+                    <tr><th>จำนวนผู้เข้าร่วม</th><td>${esc(b.attendees||'-')} คน</td><th>รูปแบบห้อง</th><td>${esc(b.roomSetup||'-')}${b.roomSetupOther?' ('+esc(b.roomSetupOther)+')':''}</td></tr>
+                    <tr><th>ช่วงวันที่จัดรวม</th><td colspan="3">${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</td></tr>
+
+                    <tr class="sec"><td colspan="4">3. ห้องประชุมที่ขอใช้ (${segs.length} ช่วง)</td></tr>
+                    <tr class="seg-head"><th style="width:8%;">ลำดับ</th><th>ห้องประชุม</th><th colspan="2">วันที่ใช้งาน</th></tr>
+                    ${segs.length ? segs.map((s,i)=>`<tr><td class="center">${i+1}</td><td>${esc(s.room)}</td><td colspan="2">${fmtThaiDate(s.startDate)} - ${fmtThaiDate(s.endDate)}</td></tr>`).join('')
+                        : `<tr><td colspan="4" class="center">ไม่มีข้อมูล</td></tr>`}
+
+                    <tr class="sec"><td colspan="4">4. ที่พัก</td></tr>
+                    <tr><th>ต้องการที่พัก</th><td>${esc(b.accommodation||'-')}</td><th>จำนวนห้องพัก</th><td>${esc(b.numRooms||0)} ห้อง (VIP ${esc(b.viprooms||0)})</td></tr>
+                    ${accWindows.length ? accWindows.map((w,i)=>`<tr><th>ช่วงเข้าพักที่ ${i+1}</th><td colspan="3">${fmtDateObj(w.checkin)} - ${fmtDateObj(w.checkout)} (${nightsBetween(w.checkin,w.checkout)} คืน)</td></tr>`).join('') : ''}
+
+                    <tr class="sec"><td colspan="4">5. อุปกรณ์ / อาหาร / กิจกรรมเพิ่มเติม</td></tr>
+                    <tr><th>อุปกรณ์เพิ่มเติม</th><td colspan="3">${esc(b.equipment||'-')}${b.equipmentOther?' ('+esc(b.equipmentOther)+')':''}</td></tr>
+                    <tr><th>กิจกรรมภาคสนาม</th><td colspan="3">${esc(b.fieldActivity||'-')}${b.fieldActivityOther?' ('+esc(b.fieldActivityOther)+')':''}</td></tr>
+                    <tr><th>อาหาร</th><td>${esc(b.foodBooking||'-')}</td><th>ร้านอาหาร/ร้านว่าง</th><td>${esc(b.foodShop||b.foodShopOther||'-')} / ${esc(b.snackShop||b.snackShopOther||'-')}</td></tr>
+                </tbody>
+            </table>
+
+            <div class="formal-signblock">
+                <div class="sign-box">
+                    <div class="sign-role">ผู้ขอใช้สถานที่</div>
+                    <div class="sign-line">ลงชื่อ ......................................................</div>
+                    <div class="sign-name">( ${esc(b.fullName || '......................................................')} )</div>
+                    <div class="sign-date">วันที่ ............ / ............ / ............</div>
+                </div>
+                <div class="sign-box">
+                    <div class="sign-role">ผู้อนุมัติใช้สถานที่</div>
+                    <div class="sign-line">ลงชื่อ ......................................................</div>
+                    <div class="sign-name">( ...................................................... )</div>
+                    <div class="sign-pos">ตำแหน่ง ......................................................</div>
+                    <div class="sign-date">วันที่ ............ / ............ / ............</div>
                 </div>
             </div>
-            <div class="rep-section">
-                <h4><i class="fas fa-door-open"></i> ห้องประชุมที่ใช้ (${segs.length} ช่วง)</h4>
-                ${segs.map((s,i)=>`<div class="rep-seg-item"><span class="num">${i+1}</span><span><b>${esc(s.room)}</b> &nbsp;·&nbsp; ${fmtThaiDate(s.startDate)} - ${fmtThaiDate(s.endDate)}</span></div>`).join('') || '<div style="color:var(--muted);font-size:0.85rem;">ไม่มีข้อมูล</div>'}
-            </div>
-            <div class="rep-section">
-                <h4><i class="fas fa-bed"></i> ที่พัก</h4>
-                <div class="rep-grid">
-                    <div class="rep-field"><div class="l">ต้องการที่พัก</div><div class="v">${esc(b.accommodation||'-')}</div></div>
-                    <div class="rep-field"><div class="l">จำนวนห้องพัก</div><div class="v">${esc(b.numRooms||0)} ห้อง (VIP ${esc(b.viprooms||0)})</div></div>
-                </div>
-                ${accWindows.length ? `
-                <div style="margin-top:14px;">
-                    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;">ช่วงวันที่เข้าพัก (เช็คอิน - เช็คเอาท์)</div>
-                    ${accWindows.map((w,i)=>`<div class="rep-seg-item"><span class="num">${i+1}</span><span>${fmtDateObj(w.checkin)} - ${fmtDateObj(w.checkout)} <span style="color:var(--muted);">(${nightsBetween(w.checkin,w.checkout)} คืน)</span></span></div>`).join('')}
-                </div>` : ''}
-            </div>
-            <div class="rep-section">
-                <h4><i class="fas fa-utensils"></i> อุปกรณ์ / อาหาร / กิจกรรม</h4>
-                <div class="rep-grid">
-                    <div class="rep-field"><div class="l">อุปกรณ์เพิ่มเติม</div><div class="v">${esc(b.equipment||'-')}${b.equipmentOther?' ('+esc(b.equipmentOther)+')':''}</div></div>
-                    <div class="rep-field"><div class="l">กิจกรรมภาคสนาม</div><div class="v">${esc(b.fieldActivity||'-')}${b.fieldActivityOther?' ('+esc(b.fieldActivityOther)+')':''}</div></div>
-                    <div class="rep-field"><div class="l">อาหาร</div><div class="v">${esc(b.foodBooking||'-')}</div></div>
-                    <div class="rep-field"><div class="l">ร้านอาหาร / ร้านอาหารว่าง</div><div class="v">${esc(b.foodShop||b.foodShopOther||'-')} / ${esc(b.snackShop||b.snackShopOther||'-')}</div></div>
-                </div>
-            </div>
+            <div class="formal-note"><i class="fas fa-circle-info"></i> ช่องลงนามผู้อนุมัติเว้นว่างไว้สำหรับลงนาม/ประทับตราจริงภายหลังการพิมพ์เอกสารฉบับนี้</div>
         </div>
     </div>`;
 
