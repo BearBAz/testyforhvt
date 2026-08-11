@@ -293,12 +293,34 @@ table.formal-table td.center{ text-align:center; }
 /* ───────── DETAIL DRAWER ───────── */
 .drawer-overlay{ position:fixed; inset:0; background:rgba(6,20,45,0.45); z-index:90; opacity:0; pointer-events:none; transition:opacity .2s; }
 .drawer-overlay.show{ opacity:1; pointer-events:auto; }
-.drawer{ position:fixed; top:0; right:-460px; width:440px; max-width:92vw; height:100vh; background:#fff; z-index:95; box-shadow:-14px 0 40px rgba(6,20,45,0.2); transition:right .25s ease; display:flex; flex-direction:column; }
+.drawer{ position:fixed; top:0; right:-620px; width:560px; max-width:94vw; height:100vh; background:#fff; z-index:95; box-shadow:-14px 0 40px rgba(6,20,45,0.2); transition:right .25s ease; display:flex; flex-direction:column; }
 .drawer.show{ right:0; }
 .drawer-head{ padding:20px 22px; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:10px; }
 .drawer-head .x{ margin-left:auto; background:none; border:none; font-size:1.1rem; color:var(--muted); }
 .drawer-body{ padding:20px 22px; overflow-y:auto; flex:1; }
-.drawer-foot{ padding:16px 22px; border-top:1px solid var(--border); }
+.drawer-foot{ padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; }
+.drawer-foot .btn{ flex:1; justify-content:center; }
+.btn:disabled{ opacity:0.5; cursor:not-allowed; pointer-events:none; }
+
+/* สถานะแบบแก้ไขได้ในลิ้นชักรายละเอียด (คล้าย Google Sheet: เลือกค่า แล้วกดปุ่มบันทึกเพื่อยืนยัน) */
+.drawer-statusbar{ display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap; }
+.status-select{
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    border:1.5px solid rgba(15,27,45,0.08); border-radius:20px; padding:6px 32px 6px 14px;
+    font-size:0.76rem; font-weight:700; font-family:inherit; cursor:pointer;
+    background-repeat:no-repeat; background-position:right 12px center; background-size:9px 6px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2347566B' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.status-select:hover{ filter:brightness(0.97); }
+.status-select:focus-visible{ outline:2.5px solid var(--accent); outline-offset:2px; }
+.unsaved-badge{ font-size:0.68rem; font-weight:700; color:var(--accent-dark); background:var(--accent-soft); padding:4px 10px; border-radius:20px; display:none; align-items:center; gap:5px; }
+.unsaved-badge.show{ display:inline-flex; }
+
+/* toast แจ้งผลการบันทึก */
+.toast{ position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(16px); background:var(--primary-dark); color:#fff; padding:12px 22px; border-radius:12px; font-size:0.82rem; font-weight:600; box-shadow:var(--shadow-md); z-index:300; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; display:flex; align-items:center; gap:9px; }
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto; }
+.toast.success{ background:var(--success-fg); }
+.toast.error{ background:var(--danger); }
 
 /* ───────── MOBILE ───────── */
 @media (max-width:820px){
@@ -316,7 +338,7 @@ table.formal-table td.center{ text-align:center; }
 
 /* ───────── PRINT ───────── */
 @media print{
-    .sidebar, .topbar, .toolbar, .report-picker, .table-foot, .drawer, .drawer-overlay{ display:none !important; }
+    .sidebar, .topbar, .toolbar, .report-picker, .table-foot, .drawer, .drawer-overlay, .toast{ display:none !important; }
     body, .content{ background:#fff !important; padding:0 !important; }
     #appShell.ready{ display:block !important; }
     .panel{ display:none !important; }
@@ -464,17 +486,20 @@ table.formal-table td.center{ text-align:center; }
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <div class="drawer" id="drawer">
     <div class="drawer-head">
-        <div>
+        <div style="min-width:0;">
             <div style="font-family:var(--mono);font-size:0.78rem;color:var(--muted);" id="drawerId">-</div>
             <div style="font-size:1rem;font-weight:700;margin-top:2px;" id="drawerTitle">-</div>
+            <div class="drawer-statusbar" id="drawerStatusBar"></div>
         </div>
         <button class="x" id="drawerClose"><i class="fas fa-xmark"></i></button>
     </div>
     <div class="drawer-body" id="drawerBody"></div>
     <div class="drawer-foot">
-        <button class="btn primary" id="drawerReportBtn" style="width:100%;justify-content:center;"><i class="fas fa-file-lines"></i> ดูรายงานฉบับเต็ม</button>
+        <button class="btn" id="drawerSaveBtn" disabled><i class="fas fa-floppy-disk"></i> บันทึก</button>
+        <button class="btn primary" id="drawerReportBtn"><i class="fas fa-print"></i> พิมพ์รายงาน</button>
     </div>
 </div>
+<div class="toast" id="toast"></div>
 
 <script>
 /* ══════════════════════ CONFIG ══════════════════════ */
@@ -997,35 +1022,180 @@ document.getElementById('calloutGoBtn').addEventListener('click', ()=> goToTab('
 const drawer = document.getElementById('drawer');
 const drawerOverlay = document.getElementById('drawerOverlay');
 let drawerBookingId = null;
+let drawerOriginalStatus = null;
+let drawerPendingStatus = null;
 
 function openDrawer(bookingId){
     const b = allBookings.find(x=>x.bookingId===bookingId);
     if (!b) return;
     drawerBookingId = bookingId;
+    drawerOriginalStatus = b.status;
+    drawerPendingStatus = b.status;
+
     document.getElementById('drawerId').textContent = b.bookingId;
     document.getElementById('drawerTitle').textContent = b.courseName;
-    document.getElementById('drawerBody').innerHTML = `
-        <div class="rep-grid" style="margin-bottom:20px;">
-            <div class="rep-field"><div class="l">สถานะ</div><div class="v">${statusChip(b.status)}</div></div>
-            <div class="rep-field"><div class="l">ผู้จอง</div><div class="v">${esc(b.fullName)}</div></div>
-            <div class="rep-field"><div class="l">หน่วยงาน</div><div class="v">${esc(b.department||'-')}</div></div>
-            <div class="rep-field"><div class="l">วันที่จัด</div><div class="v">${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</div></div>
-            <div class="rep-field"><div class="l">ห้องประชุม</div><div class="v">${roomSummary(b)}</div></div>
-            <div class="rep-field"><div class="l">ที่พัก</div><div class="v">${accSummary(b)}</div></div>
-        </div>`;
+
+    renderDrawerStatusBar(b);
+    renderDrawerBody(b);
+
+    document.getElementById('drawerSaveBtn').disabled = true;
+    document.getElementById('drawerSaveBtn').innerHTML = '<i class="fas fa-floppy-disk"></i> บันทึก';
+
     drawerOverlay.classList.add('show');
     drawer.classList.add('show');
 }
+
+/* แถบสถานะแบบเลือกเปลี่ยนได้ทันที (คล้ายคลิกเซลล์ใน Google Sheet แล้วเลือกค่าใหม่จาก dropdown) */
+function renderDrawerStatusBar(b){
+    const bar = document.getElementById('drawerStatusBar');
+    const m0 = STATUS_META[b.status] || { bg:'var(--gray-soft)', fg:'var(--gray-fg)' };
+    bar.innerHTML = `
+        <select class="status-select" id="drawerStatusSelect" style="background-color:${m0.bg};color:${m0.fg};">
+            ${STATUS_ORDER.map(s=>`<option value="${s}" ${s===b.status?'selected':''}>${esc(STATUS_META[s].label)}</option>`).join('')}
+        </select>
+        <span class="unsaved-badge" id="unsavedBadge"><i class="fas fa-circle-exclamation"></i> มีการแก้ไขที่ยังไม่บันทึก</span>`;
+    document.getElementById('drawerStatusSelect').addEventListener('change', function(){
+        drawerPendingStatus = this.value;
+        const m = STATUS_META[this.value] || { bg:'var(--gray-soft)', fg:'var(--gray-fg)' };
+        this.style.backgroundColor = m.bg; this.style.color = m.fg;
+        const changed = drawerPendingStatus !== drawerOriginalStatus;
+        document.getElementById('drawerSaveBtn').disabled = !changed;
+        document.getElementById('unsavedBadge').classList.toggle('show', changed);
+    });
+}
+
+/* เนื้อหารายละเอียดครบทุกหมวดเหมือนหน้ารายงานการใช้สถานที่ แต่แสดงผลแบบการ์ดสมัยใหม่ (ไม่ใช่ฟอร์มทางการสำหรับพิมพ์) */
+function renderDrawerBody(b){
+    const segs = Array.isArray(b.segments) && b.segments.length ? b.segments : (b.room ? [{room:b.room, startDate:b.startDate, endDate:b.endDate}] : []);
+    const files = [
+        b.approvalFileUrl ? { label:'ไฟล์อนุมัติ/หนังสือขออนุมัติ', url:b.approvalFileUrl } : null,
+        b.attendeeListFileUrl ? { label:'รายชื่อผู้เข้าอบรม', url:b.attendeeListFileUrl } : null,
+        b.foodOrderFileUrl ? { label:'ใบสั่งอาหาร', url:b.foodOrderFileUrl } : null
+    ].filter(Boolean);
+    const accWindows = b.accommodation === 'ต้องการ' ? getAccommodationWindows(b) : [];
+
+    document.getElementById('drawerBody').innerHTML = `
+        <div class="rep-section">
+            <h4><i class="fas fa-user"></i> ข้อมูลผู้ขอใช้สถานที่</h4>
+            <div class="rep-grid">
+                <div class="rep-field"><div class="l">ชื่อ-สกุล</div><div class="v">${esc(b.fullName)}</div></div>
+                <div class="rep-field"><div class="l">หน่วยงาน</div><div class="v">${esc(b.department||'-')}</div></div>
+                <div class="rep-field"><div class="l">เบอร์โทรศัพท์</div><div class="v">${esc(b.phone||'-')}</div></div>
+                <div class="rep-field"><div class="l">รหัสพนักงาน</div><div class="v">${esc(b.employeeId||'-')}</div></div>
+            </div>
+        </div>
+
+        <div class="rep-section">
+            <h4><i class="fas fa-chalkboard-user"></i> ข้อมูลการจัดอบรม / ประชุม</h4>
+            <div class="rep-grid">
+                <div class="rep-field" style="grid-column:1/-1;"><div class="l">หลักสูตร/กิจกรรม</div><div class="v">${esc(b.courseName)}</div></div>
+                <div class="rep-field"><div class="l">จำนวนผู้เข้าร่วม</div><div class="v">${esc(b.attendees||'-')} คน</div></div>
+                <div class="rep-field"><div class="l">รูปแบบห้อง</div><div class="v">${esc(b.roomSetup||'-')}${b.roomSetupOther?' ('+esc(b.roomSetupOther)+')':''}</div></div>
+                <div class="rep-field"><div class="l">วันที่จัด</div><div class="v">${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</div></div>
+            </div>
+        </div>
+
+        <div class="rep-section">
+            <h4><i class="fas fa-door-open"></i> ห้องประชุมที่ขอใช้ (${segs.length} ช่วง)</h4>
+            ${segs.length ? segs.map((s,i)=>`
+                <div class="rep-seg-item"><span class="num">${i+1}</span><div><b>${esc(s.room)}</b> &nbsp;·&nbsp; ${fmtThaiDate(s.startDate)} ถึง ${fmtThaiDate(s.endDate)}</div></div>`).join('')
+                : `<div style="font-size:0.82rem;color:var(--muted);">ไม่มีข้อมูล</div>`}
+        </div>
+
+        <div class="rep-section">
+            <h4><i class="fas fa-bed"></i> ที่พัก</h4>
+            <div class="rep-grid">
+                <div class="rep-field"><div class="l">ต้องการที่พัก</div><div class="v">${esc(b.accommodation||'-')}</div></div>
+                <div class="rep-field"><div class="l">จำนวนห้องพัก</div><div class="v">${esc(b.numRooms||0)} ห้อง (VIP ${esc(b.viprooms||0)})</div></div>
+            </div>
+            ${accWindows.length ? `<div style="margin-top:10px;">${accWindows.map((w,i)=>`
+                <div class="rep-seg-item"><span class="num">${i+1}</span><div>${fmtDateObj(w.checkin)} - ${fmtDateObj(w.checkout)} <span style="color:var(--muted);">(${nightsBetween(w.checkin,w.checkout)} คืน)</span></div></div>`).join('')}</div>` : ''}
+        </div>
+
+        <div class="rep-section">
+            <h4><i class="fas fa-utensils"></i> อุปกรณ์ / อาหาร / กิจกรรมเพิ่มเติม</h4>
+            <div class="rep-grid">
+                <div class="rep-field" style="grid-column:1/-1;"><div class="l">อุปกรณ์เพิ่มเติม</div><div class="v">${esc(b.equipment||'-')}${b.equipmentOther?' ('+esc(b.equipmentOther)+')':''}</div></div>
+                <div class="rep-field" style="grid-column:1/-1;"><div class="l">กิจกรรมภาคสนาม</div><div class="v">${esc(b.fieldActivity||'-')}${b.fieldActivityOther?' ('+esc(b.fieldActivityOther)+')':''}</div></div>
+                <div class="rep-field"><div class="l">อาหาร</div><div class="v">${esc(b.foodBooking||'-')}</div></div>
+                <div class="rep-field"><div class="l">ร้านอาหาร/ร้านว่าง</div><div class="v">${esc(b.foodShop||b.foodShopOther||'-')} / ${esc(b.snackShop||b.snackShopOther||'-')}</div></div>
+            </div>
+        </div>
+
+        <div class="rep-section" style="margin-bottom:${files.length?'22':'0'}px;">
+            <h4><i class="fas fa-paperclip"></i> เอกสารแนบ</h4>
+            ${files.length ? `<div class="rep-files">${files.map(f=>`<a href="${esc(f.url)}" target="_blank" rel="noopener"><i class="fas fa-file-arrow-down"></i>${esc(f.label)}</a>`).join('')}</div>`
+                : `<div style="font-size:0.8rem;color:var(--muted);">ไม่มีเอกสารแนบสำหรับรายการนี้</div>`}
+        </div>
+
+        <div class="rep-section" style="margin-bottom:0;">
+            <h4><i class="fas fa-timeline"></i> ไทม์ไลน์</h4>
+            <div class="rep-timeline">
+                <div class="rep-tl-item"><span class="ic"><i class="fas fa-paper-plane"></i></span><div><div class="rep-field"><div class="l">ยื่นคำขอจอง</div><div class="v">${esc(b.timestamp||'-')}</div></div></div></div>
+                <div class="rep-tl-item"><span class="ic"><i class="fas fa-check"></i></span><div><div class="rep-field"><div class="l">ยืนยันการจอง</div><div class="v">${b.confirmedAt ? fmtThaiDate(b.confirmedAt) : 'ยังไม่ยืนยัน'}</div></div></div></div>
+            </div>
+        </div>`;
+}
+
 function closeDrawer(){ drawerOverlay.classList.remove('show'); drawer.classList.remove('show'); }
 document.getElementById('drawerClose').addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e=>{ if (e.key === 'Escape') closeDrawer(); });
+
+/* ── บันทึกการเปลี่ยนสถานะ: เลือกค่าใหม่ใน dropdown ก่อน แล้วค่อยกด "บันทึก" เพื่อยืนยันการเปลี่ยนแปลง (เหมือนแก้เซลล์ใน Google Sheet) ── */
+document.getElementById('drawerSaveBtn').addEventListener('click', saveDrawerStatus);
+async function saveDrawerStatus(){
+    if (!drawerBookingId || drawerPendingStatus === drawerOriginalStatus) return;
+    const key = sessionStorage.getItem('adminKey');
+    const btn = document.getElementById('drawerSaveBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
+    try {
+        const res = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action:'adminUpdateStatus', adminKey:key, bookingId:drawerBookingId, newStatus:drawerPendingStatus })
+        });
+        const result = await res.json();
+        if (result.success){
+            const b = allBookings.find(x=>x.bookingId===drawerBookingId);
+            if (b){
+                b.status = drawerPendingStatus;
+                if (drawerPendingStatus === 'Confirmed' && !b.confirmedAt){
+                    b.confirmedAt = new Date().toISOString().slice(0,10);
+                }
+            }
+            drawerOriginalStatus = drawerPendingStatus;
+            document.getElementById('unsavedBadge').classList.remove('show');
+            renderAll();
+            showToast('บันทึกสถานะเรียบร้อยแล้ว', 'success');
+        } else {
+            showToast(result.message || 'บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง', 'error');
+        }
+    } catch (err) {
+        showToast('เชื่อมต่อ backend ไม่สำเร็จ กรุณาตรวจสอบ GAS_WEB_APP_URL', 'error');
+    }
+    btn.disabled = drawerPendingStatus === drawerOriginalStatus;
+    btn.innerHTML = '<i class="fas fa-floppy-disk"></i> บันทึก';
+}
+
+let toastTimer = null;
+function showToast(msg, type){
+    const t = document.getElementById('toast');
+    t.innerHTML = `<i class="fas ${type==='error'?'fa-triangle-exclamation':'fa-circle-check'}"></i> ${esc(msg)}`;
+    t.className = 'toast show' + (type ? ' '+type : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> t.classList.remove('show'), 2800);
+}
+
+/* ปุ่ม "พิมพ์รายงาน": พาไปหน้ารายงานการใช้สถานที่พร้อมข้อมูลของรายการนี้ แล้วเปิดหน้าต่างพิมพ์ให้ทันที */
 document.getElementById('drawerReportBtn').addEventListener('click', ()=>{
+    const id = drawerBookingId;
     closeDrawer();
     goToTab('tab3');
-    document.getElementById('reportSelect').value = drawerBookingId;
-    renderReport(drawerBookingId);
+    document.getElementById('reportSelect').value = id;
+    renderReport(id);
+    setTimeout(()=> window.print(), 200);
 });
-document.addEventListener('keydown', e=>{ if (e.key === 'Escape') closeDrawer(); });
 </script>
 </body>
 </html>
