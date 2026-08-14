@@ -166,24 +166,6 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
 .seg-badge{ display:inline-flex; align-items:center; gap:4px; background:var(--accent-soft); color:var(--accent-dark); font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:20px; margin-left:6px; }
 .table-foot{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px; font-size:0.74rem; color:var(--muted); border-top:1px solid var(--border); }
 
-/* เซลล์สถานะแบบแก้ไขได้ในตาราง (คล้ายพิมพ์แก้ค่าในเซลล์ Google Sheet แล้วกดยืนยัน) */
-.status-cell{ display:flex; align-items:center; gap:6px; }
-.status-select-inline{
-    appearance:none; -webkit-appearance:none; -moz-appearance:none;
-    border:1.5px solid rgba(15,27,45,0.08); border-radius:20px; padding:5px 26px 5px 12px;
-    font-size:0.72rem; font-weight:700; font-family:inherit; cursor:pointer;
-    background-repeat:no-repeat; background-position:right 10px center; background-size:8px 5px;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2347566B' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-.status-select-inline:hover{ filter:brightness(0.97); }
-.status-select-inline:focus-visible{ outline:2.5px solid var(--accent); outline-offset:2px; }
-.status-save-btn{ display:none; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; border:none; background:var(--success); color:#fff; font-size:0.68rem; flex-shrink:0; }
-.status-save-btn.show{ display:inline-flex; }
-.status-save-btn:hover{ background:var(--success-fg); }
-.status-save-btn:disabled{ opacity:0.6; cursor:not-allowed; }
-table.data-table tbody tr.row-dirty{ background:var(--accent-soft); }
-table.data-table tbody tr.row-dirty:hover{ background:var(--accent-soft); }
-
 /* ───────── TAB2: SLA tracking ───────── */
 .sla-summary{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:18px; }
 .sla-sum-card{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:15px 17px; box-shadow:var(--shadow-xs); }
@@ -333,6 +315,18 @@ table.formal-table td.center{ text-align:center; }
 .status-select:focus-visible{ outline:2.5px solid var(--accent); outline-offset:2px; }
 .unsaved-badge{ font-size:0.68rem; font-weight:700; color:var(--accent-dark); background:var(--accent-soft); padding:4px 10px; border-radius:20px; display:none; align-items:center; gap:5px; }
 .unsaved-badge.show{ display:inline-flex; }
+
+/* ฟิลด์ข้อมูลแบบแก้ไขได้ในลิ้นชักรายละเอียด (คล้ายกรอกข้อมูลในเซลล์ Google Sheet) */
+.edit-field{ display:flex; flex-direction:column; gap:5px; min-width:0; }
+.edit-field.full{ grid-column:1/-1; }
+.edit-field label{ font-size:0.7rem; color:var(--muted); font-weight:600; }
+.edit-field input, .edit-field select{
+    padding:9px 12px; border-radius:9px; border:1.5px solid var(--border-strong);
+    font-size:0.85rem; font-family:inherit; background:#fff; color:var(--text); width:100%;
+}
+.edit-field input:focus, .edit-field select:focus{ border-color:var(--primary); outline:none; }
+.edit-field input.dirty, .edit-field select.dirty{ border-color:var(--accent); background:var(--accent-soft); }
+.readonly-field .v{ font-size:0.88rem; font-weight:600; color:var(--text); }
 
 /* toast แจ้งผลการบันทึก */
 .toast{ position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(16px); background:var(--primary-dark); color:#fff; padding:12px 22px; border-radius:12px; font-size:0.82rem; font-weight:600; box-shadow:var(--shadow-md); z-index:300; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; display:flex; align-items:center; gap:9px; }
@@ -721,63 +715,14 @@ function renderTable(){
                 <td>${fmtThaiDate(b.startDate)}${b.endDate && b.endDate!==b.startDate ? ' - '+fmtThaiDate(b.endDate) : ''}</td>
                 <td>${roomSummary(b)}</td>
                 <td>${accSummary(b)}</td>
-                <td class="td-status" data-id="${esc(b.bookingId)}">${statusEditCell(b)}</td>
+                <td>${statusChip(b.status)}</td>
             </tr>`).join('');
         tbody.querySelectorAll('tr[data-id]').forEach(tr=>{
-            tr.addEventListener('click', (e)=>{
-                if (e.target.closest('.td-status')) return; // คลิกในเซลล์แก้สถานะไม่ต้องเปิดลิ้นชักรายละเอียด
-                openDrawer(tr.dataset.id);
-            });
+            tr.addEventListener('click', ()=> openDrawer(tr.dataset.id));
         });
-        bindStatusEditCells(tbody);
     }
     document.getElementById('tableFootInfo').textContent = `แสดง ${list.length} จากทั้งหมด ${allBookings.length} รายการ`;
     document.getElementById('navCnt1').textContent = allBookings.length;
-}
-
-/* เซลล์สถานะที่แก้ไขได้ตรงในตาราง เหมือนพิมพ์ค่าใหม่ลงในเซลล์ของ Google Sheet: เลือกค่าใหม่แล้วกดปุ่มติ๊กถูกเพื่อบันทึก */
-function statusEditCell(b){
-    const m = STATUS_META[b.status] || { bg:'var(--gray-soft)', fg:'var(--gray-fg)' };
-    return `
-        <div class="status-cell">
-            <select class="status-select-inline" data-original="${esc(b.status)}" style="background-color:${m.bg};color:${m.fg};">
-                ${STATUS_ORDER.map(s=>`<option value="${s}" ${s===b.status?'selected':''}>${esc(STATUS_META[s].label)}</option>`).join('')}
-            </select>
-            <button class="status-save-btn" type="button" title="บันทึกการเปลี่ยนแปลง"><i class="fas fa-check"></i></button>
-        </div>`;
-}
-
-function bindStatusEditCells(tbody){
-    tbody.querySelectorAll('.td-status').forEach(td=>{
-        const bookingId = td.dataset.id;
-        const sel = td.querySelector('.status-select-inline');
-        const saveBtn = td.querySelector('.status-save-btn');
-        const tr = td.closest('tr');
-
-        sel.addEventListener('change', ()=>{
-            const m = STATUS_META[sel.value] || { bg:'var(--gray-soft)', fg:'var(--gray-fg)' };
-            sel.style.backgroundColor = m.bg; sel.style.color = m.fg;
-            const changed = sel.value !== sel.dataset.original;
-            saveBtn.classList.toggle('show', changed);
-            tr.classList.toggle('row-dirty', changed);
-        });
-
-        saveBtn.addEventListener('click', async (e)=>{
-            e.stopPropagation();
-            const newStatus = sel.value;
-            if (newStatus === sel.dataset.original) return;
-            saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            const result = await apiUpdateStatus(bookingId, newStatus).catch(()=>({ success:false, message:'เชื่อมต่อ backend ไม่สำเร็จ กรุณาตรวจสอบ GAS_WEB_APP_URL' }));
-            if (result.success){
-                applyStatusResultLocally(bookingId, newStatus);
-                showToast('บันทึกสถานะเรียบร้อยแล้ว (สร้าง/ลบปฏิทินให้อัตโนมัติตามสถานะ)', 'success');
-                renderAll();
-            } else {
-                showToast(result.message || 'บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง', 'error');
-                saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-check"></i>';
-            }
-        });
-    });
 }
 
 /* CSV export */
@@ -1092,6 +1037,28 @@ let drawerBookingId = null;
 let drawerOriginalStatus = null;
 let drawerPendingStatus = null;
 
+/* นิยามฟิลด์ที่แก้ไขได้ในลิ้นชักรายละเอียด (เหมือนกรอกข้อมูลในเซลล์ Google Sheet)
+   หมายเหตุ: ห้องประชุม/ช่วงวันที่ใช้งาน (segments) และเอกสารแนบ ยังคงเป็นข้อมูลอ่านอย่างเดียวในหน้านี้ */
+const EDITABLE_FIELDS = [
+    { key:'fullName',           label:'ชื่อ-สกุล',                       type:'text' },
+    { key:'department',         label:'หน่วยงาน',                        type:'text' },
+    { key:'phone',               label:'เบอร์โทรศัพท์',                   type:'text' },
+    { key:'employeeId',         label:'รหัสพนักงาน',                     type:'text' },
+    { key:'courseName',         label:'หลักสูตร/กิจกรรม',                 type:'text', full:true },
+    { key:'attendees',           label:'จำนวนผู้เข้าร่วม (คน)',           type:'number' },
+    { key:'roomSetup',           label:'รูปแบบห้อง',                      type:'text' },
+    { key:'roomSetupOther',     label:'รูปแบบห้อง (ระบุเพิ่มเติม)',       type:'text' },
+    { key:'accommodation',       label:'ต้องการที่พัก',                   type:'select', options:['ต้องการ','ไม่ต้องการ'] },
+    { key:'numRooms',             label:'จำนวนห้องพัก',                   type:'number' },
+    { key:'viprooms',             label:'ห้องพัก VIP',                    type:'number' },
+    { key:'equipment',           label:'อุปกรณ์เพิ่มเติม',                 type:'text', full:true },
+    { key:'equipmentOther',     label:'อุปกรณ์เพิ่มเติม (ระบุเพิ่มเติม)',  type:'text', full:true },
+    { key:'fieldActivity',       label:'กิจกรรมภาคสนาม',                  type:'text', full:true },
+    { key:'fieldActivityOther', label:'กิจกรรมภาคสนาม (ระบุเพิ่มเติม)',   type:'text', full:true },
+    { key:'foodBooking',         label:'ต้องการอาหาร/ของว่าง',            type:'select', options:['ต้องการ','ไม่ต้องการ'] }
+];
+let drawerOriginalFields = {};
+
 function openDrawer(bookingId){
     const b = allBookings.find(x=>x.bookingId===bookingId);
     if (!b) return;
@@ -1104,9 +1071,11 @@ function openDrawer(bookingId){
 
     renderDrawerStatusBar(b);
     renderDrawerBody(b);
+    bindEditableFields(b);
 
     document.getElementById('drawerSaveBtn').disabled = true;
     document.getElementById('drawerSaveBtn').innerHTML = '<i class="fas fa-floppy-disk"></i> บันทึก';
+    document.getElementById('unsavedBadge').classList.remove('show');
 
     drawerOverlay.classList.add('show');
     drawer.classList.add('show');
@@ -1125,13 +1094,28 @@ function renderDrawerStatusBar(b){
         drawerPendingStatus = this.value;
         const m = STATUS_META[this.value] || { bg:'var(--gray-soft)', fg:'var(--gray-fg)' };
         this.style.backgroundColor = m.bg; this.style.color = m.fg;
-        const changed = drawerPendingStatus !== drawerOriginalStatus;
-        document.getElementById('drawerSaveBtn').disabled = !changed;
-        document.getElementById('unsavedBadge').classList.toggle('show', changed);
+        refreshDrawerDirtyState();
     });
 }
 
-/* เนื้อหารายละเอียดครบทุกหมวดเหมือนหน้ารายงานการใช้สถานที่ แต่แสดงผลแบบการ์ดสมัยใหม่ (ไม่ใช่ฟอร์มทางการสำหรับพิมพ์) */
+/* ช่องกรอกข้อมูลแบบ input/select สำหรับฟิลด์หนึ่งใน EDITABLE_FIELDS */
+function editFieldHtml(def, value){
+    const id = `drawerField_${def.key}`;
+    let control;
+    if (def.type === 'select'){
+        control = `<select id="${id}" class="edit-input" data-field="${def.key}">
+            ${def.options.map(o=>`<option value="${esc(o)}" ${o===value?'selected':''}>${esc(o)}</option>`).join('')}
+        </select>`;
+    } else if (def.type === 'number'){
+        control = `<input type="number" min="0" id="${id}" class="edit-input" data-field="${def.key}" value="${esc(value==null?'':value)}">`;
+    } else {
+        control = `<input type="text" id="${id}" class="edit-input" data-field="${def.key}" value="${esc(value==null?'':value)}">`;
+    }
+    return `<div class="edit-field${def.full?' full':''}"><label for="${id}">${esc(def.label)}</label>${control}</div>`;
+}
+function fieldsByKeys(keys){ return EDITABLE_FIELDS.filter(f=> keys.includes(f.key)); }
+
+/* เนื้อหารายละเอียดครบทุกหมวดเหมือนหน้ารายงานการใช้สถานที่ แต่แก้ไขข้อมูลได้ตรงในหน้านี้เลย (เหมือนกรอกข้อมูลใน Google Sheet) */
 function renderDrawerBody(b){
     const segs = Array.isArray(b.segments) && b.segments.length ? b.segments : (b.room ? [{room:b.room, startDate:b.startDate, endDate:b.endDate}] : []);
     const files = [
@@ -1145,20 +1129,16 @@ function renderDrawerBody(b){
         <div class="rep-section">
             <h4><i class="fas fa-user"></i> ข้อมูลผู้ขอใช้สถานที่</h4>
             <div class="rep-grid">
-                <div class="rep-field"><div class="l">ชื่อ-สกุล</div><div class="v">${esc(b.fullName)}</div></div>
-                <div class="rep-field"><div class="l">หน่วยงาน</div><div class="v">${esc(b.department||'-')}</div></div>
-                <div class="rep-field"><div class="l">เบอร์โทรศัพท์</div><div class="v">${esc(b.phone||'-')}</div></div>
-                <div class="rep-field"><div class="l">รหัสพนักงาน</div><div class="v">${esc(b.employeeId||'-')}</div></div>
+                ${fieldsByKeys(['fullName','department','phone','employeeId']).map(f=> editFieldHtml(f, b[f.key])).join('')}
             </div>
         </div>
 
         <div class="rep-section">
             <h4><i class="fas fa-chalkboard-user"></i> ข้อมูลการจัดอบรม / ประชุม</h4>
             <div class="rep-grid">
-                <div class="rep-field" style="grid-column:1/-1;"><div class="l">หลักสูตร/กิจกรรม</div><div class="v">${esc(b.courseName)}</div></div>
-                <div class="rep-field"><div class="l">จำนวนผู้เข้าร่วม</div><div class="v">${esc(b.attendees||'-')} คน</div></div>
-                <div class="rep-field"><div class="l">รูปแบบห้อง</div><div class="v">${esc(b.roomSetup||'-')}${b.roomSetupOther?' ('+esc(b.roomSetupOther)+')':''}</div></div>
-                <div class="rep-field"><div class="l">วันที่จัด</div><div class="v">${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</div></div>
+                ${editFieldHtml(EDITABLE_FIELDS.find(f=>f.key==='courseName'), b.courseName)}
+                ${fieldsByKeys(['attendees','roomSetup','roomSetupOther']).map(f=> editFieldHtml(f, b[f.key])).join('')}
+                <div class="rep-field readonly-field"><div class="l">วันที่จัด</div><div class="v">${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</div></div>
             </div>
         </div>
 
@@ -1167,13 +1147,13 @@ function renderDrawerBody(b){
             ${segs.length ? segs.map((s,i)=>`
                 <div class="rep-seg-item"><span class="num">${i+1}</span><div><b>${esc(s.room)}</b> &nbsp;·&nbsp; ${fmtThaiDate(s.startDate)} ถึง ${fmtThaiDate(s.endDate)}</div></div>`).join('')
                 : `<div style="font-size:0.82rem;color:var(--muted);">ไม่มีข้อมูล</div>`}
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:8px;"><i class="fas fa-circle-info"></i> ห้องประชุมและช่วงวันที่ใช้งานยังไม่รองรับการแก้ไขในหน้านี้ (ต้องตรวจสอบความว่างของห้องก่อนแก้ไข)</div>
         </div>
 
         <div class="rep-section">
             <h4><i class="fas fa-bed"></i> ที่พัก</h4>
             <div class="rep-grid">
-                <div class="rep-field"><div class="l">ต้องการที่พัก</div><div class="v">${esc(b.accommodation||'-')}</div></div>
-                <div class="rep-field"><div class="l">จำนวนห้องพัก</div><div class="v">${esc(b.numRooms||0)} ห้อง (VIP ${esc(b.viprooms||0)})</div></div>
+                ${fieldsByKeys(['accommodation','numRooms','viprooms']).map(f=> editFieldHtml(f, b[f.key])).join('')}
             </div>
             ${accWindows.length ? `<div style="margin-top:10px;">${accWindows.map((w,i)=>`
                 <div class="rep-seg-item"><span class="num">${i+1}</span><div>${fmtDateObj(w.checkin)} - ${fmtDateObj(w.checkout)} <span style="color:var(--muted);">(${nightsBetween(w.checkin,w.checkout)} คืน)</span></div></div>`).join('')}</div>` : ''}
@@ -1182,10 +1162,8 @@ function renderDrawerBody(b){
         <div class="rep-section">
             <h4><i class="fas fa-utensils"></i> อุปกรณ์ / อาหาร / กิจกรรมเพิ่มเติม</h4>
             <div class="rep-grid">
-                <div class="rep-field" style="grid-column:1/-1;"><div class="l">อุปกรณ์เพิ่มเติม</div><div class="v">${esc(b.equipment||'-')}${b.equipmentOther?' ('+esc(b.equipmentOther)+')':''}</div></div>
-                <div class="rep-field" style="grid-column:1/-1;"><div class="l">กิจกรรมภาคสนาม</div><div class="v">${esc(b.fieldActivity||'-')}${b.fieldActivityOther?' ('+esc(b.fieldActivityOther)+')':''}</div></div>
-                <div class="rep-field"><div class="l">อาหาร</div><div class="v">${esc(b.foodBooking||'-')}</div></div>
-                <div class="rep-field"><div class="l">ร้านอาหาร/ร้านว่าง</div><div class="v">${esc(b.foodShop||b.foodShopOther||'-')} / ${esc(b.snackShop||b.snackShopOther||'-')}</div></div>
+                ${fieldsByKeys(['equipment','equipmentOther','fieldActivity','fieldActivityOther','foodBooking']).map(f=> editFieldHtml(f, b[f.key])).join('')}
+                <div class="rep-field readonly-field"><div class="l">ร้านอาหาร/ร้านว่าง</div><div class="v">${esc(b.foodShop||b.foodShopOther||'-')} / ${esc(b.snackShop||b.snackShopOther||'-')}</div></div>
             </div>
         </div>
 
@@ -1204,52 +1182,85 @@ function renderDrawerBody(b){
         </div>`;
 }
 
+/* ผูก event ให้ทุกช่องแก้ไขได้: เก็บค่าตั้งต้นไว้เทียบ และเปิด/ปิดปุ่มบันทึกตามว่ามีอะไรเปลี่ยนไปหรือไม่ */
+function bindEditableFields(b){
+    drawerOriginalFields = {};
+    EDITABLE_FIELDS.forEach(def=>{
+        drawerOriginalFields[def.key] = b[def.key] == null ? '' : String(b[def.key]);
+    });
+    document.querySelectorAll('#drawerBody .edit-input').forEach(el=>{
+        el.addEventListener('input', refreshDrawerDirtyState);
+        el.addEventListener('change', refreshDrawerDirtyState);
+    });
+}
+function refreshDrawerDirtyState(){
+    let anyChanged = drawerPendingStatus !== drawerOriginalStatus;
+    document.querySelectorAll('#drawerBody .edit-input').forEach(el=>{
+        const key = el.dataset.field;
+        const changed = el.value !== (drawerOriginalFields[key] || '');
+        el.classList.toggle('dirty', changed);
+        if (changed) anyChanged = true;
+    });
+    document.getElementById('drawerSaveBtn').disabled = !anyChanged;
+    document.getElementById('unsavedBadge').classList.toggle('show', anyChanged);
+}
+
 function closeDrawer(){ drawerOverlay.classList.remove('show'); drawer.classList.remove('show'); }
 document.getElementById('drawerClose').addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
 document.addEventListener('keydown', e=>{ if (e.key === 'Escape') closeDrawer(); });
 
-/* ── บันทึกการเปลี่ยนสถานะ (ใช้ร่วมกันทั้งจากตารางหลักและลิ้นชักรายละเอียด) ──
-   เรียก backend adminUpdateStatus ซึ่งจะอัปเดตสถานะในชีต และสร้าง/ลบ event ปฏิทินให้อัตโนมัติ
-   (createCalendarEvent ตอน Approved, deleteCalendarEvent ตอน Cancel) ตามฟังก์ชันเดียวกับที่ onEdit() ใน code.gs ใช้ */
-async function apiUpdateStatus(bookingId, newStatus){
+/* ── บันทึกการแก้ไข: รวมทั้งสถานะและฟิลด์ข้อมูลอื่นๆ ที่เปลี่ยนแปลงไป ส่งไปบันทึกในคราวเดียว ──
+   backend (adminUpdateBooking) จะอัปเดตคอลัมน์ที่เกี่ยวข้องในชีต และถ้ามีการเปลี่ยนสถานะ
+   จะสร้าง/ลบ event ปฏิทินให้อัตโนมัติด้วย (createCalendarEvent ตอน Approved, deleteCalendarEvent ตอน Cancel) */
+async function apiUpdateBooking(bookingId, fields){
     const key = sessionStorage.getItem('adminKey');
     const res = await fetch(GAS_WEB_APP_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action:'adminUpdateStatus', adminKey:key, bookingId, newStatus })
+        body: JSON.stringify({ action:'adminUpdateBooking', adminKey:key, bookingId, fields })
     });
     return res.json();
 }
-function applyStatusResultLocally(bookingId, newStatus){
-    const b = allBookings.find(x=>x.bookingId===bookingId);
-    if (!b) return;
-    b.status = newStatus;
-    if (newStatus === 'Confirmed' && !b.confirmedAt){
-        b.confirmedAt = new Date().toISOString().slice(0,10);
-    }
-}
 
-document.getElementById('drawerSaveBtn').addEventListener('click', saveDrawerStatus);
-async function saveDrawerStatus(){
-    if (!drawerBookingId || drawerPendingStatus === drawerOriginalStatus) return;
+document.getElementById('drawerSaveBtn').addEventListener('click', saveDrawerChanges);
+async function saveDrawerChanges(){
+    if (!drawerBookingId) return;
+
+    const fields = {};
+    if (drawerPendingStatus !== drawerOriginalStatus) fields.status = drawerPendingStatus;
+    document.querySelectorAll('#drawerBody .edit-input').forEach(el=>{
+        const key = el.dataset.field;
+        if (el.value !== (drawerOriginalFields[key] || '')) fields[key] = el.value;
+    });
+    if (Object.keys(fields).length === 0) return;
+
     const btn = document.getElementById('drawerSaveBtn');
     btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
     try {
-        const result = await apiUpdateStatus(drawerBookingId, drawerPendingStatus);
+        const result = await apiUpdateBooking(drawerBookingId, fields);
         if (result.success){
-            applyStatusResultLocally(drawerBookingId, drawerPendingStatus);
+            const b = allBookings.find(x=>x.bookingId===drawerBookingId);
+            if (b){
+                Object.keys(fields).forEach(key=>{ b[key] = fields[key]; });
+                if (fields.status === 'Confirmed' && !b.confirmedAt){
+                    b.confirmedAt = new Date().toISOString().slice(0,10);
+                }
+            }
             drawerOriginalStatus = drawerPendingStatus;
-            document.getElementById('unsavedBadge').classList.remove('show');
             renderAll();
-            showToast('บันทึกสถานะเรียบร้อยแล้ว (สร้าง/ลบปฏิทินให้อัตโนมัติตามสถานะ)', 'success');
+            if (b) { renderDrawerBody(b); bindEditableFields(b); }
+            document.getElementById('unsavedBadge').classList.remove('show');
+            document.getElementById('drawerSaveBtn').disabled = true;
+            showToast('บันทึกข้อมูลเรียบร้อยแล้ว' + (fields.status ? ' (สร้าง/ลบปฏิทินให้อัตโนมัติตามสถานะ)' : ''), 'success');
         } else {
             showToast(result.message || 'บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง', 'error');
+            btn.disabled = false;
         }
     } catch (err) {
         showToast('เชื่อมต่อ backend ไม่สำเร็จ กรุณาตรวจสอบ GAS_WEB_APP_URL', 'error');
+        btn.disabled = false;
     }
-    btn.disabled = drawerPendingStatus === drawerOriginalStatus;
     btn.innerHTML = '<i class="fas fa-floppy-disk"></i> บันทึก';
 }
 
