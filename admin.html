@@ -166,6 +166,24 @@ table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(-
 .seg-badge{ display:inline-flex; align-items:center; gap:4px; background:var(--accent-soft); color:var(--accent-dark); font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:20px; margin-left:6px; }
 .table-foot{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px; font-size:0.74rem; color:var(--muted); border-top:1px solid var(--border); }
 
+/* เซลล์สถานะแบบแก้ไขได้ในตาราง (คล้ายพิมพ์แก้ค่าในเซลล์ Google Sheet แล้วกดยืนยัน) */
+.status-cell{ display:flex; align-items:center; gap:6px; }
+.status-select-inline{
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    border:1.5px solid rgba(15,27,45,0.08); border-radius:20px; padding:5px 26px 5px 12px;
+    font-size:0.72rem; font-weight:700; font-family:inherit; cursor:pointer;
+    background-repeat:no-repeat; background-position:right 10px center; background-size:8px 5px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2347566B' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.status-select-inline:hover{ filter:brightness(0.97); }
+.status-select-inline:focus-visible{ outline:2.5px solid var(--accent); outline-offset:2px; }
+.status-save-btn{ display:none; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; border:none; background:var(--success); color:#fff; font-size:0.68rem; flex-shrink:0; }
+.status-save-btn.show{ display:inline-flex; }
+.status-save-btn:hover{ background:var(--success-fg); }
+.status-save-btn:disabled{ opacity:0.6; cursor:not-allowed; }
+table.data-table tbody tr.row-dirty{ background:var(--accent-soft); }
+table.data-table tbody tr.row-dirty:hover{ background:var(--accent-soft); }
+
 /* ───────── TAB2: SLA tracking ───────── */
 .sla-summary{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:18px; }
 .sla-sum-card{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:15px 17px; box-shadow:var(--shadow-xs); }
@@ -503,7 +521,7 @@ table.formal-table td.center{ text-align:center; }
 
 <script>
 /* ══════════════════════ CONFIG ══════════════════════ */
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxw0_Gn42bLLXoOTQbHm3YLwWKsavO3_3WJth6lFXNB6NwtkwVCCZDcAGfAmMQQ8CJWOQ/exec"; // ใส่ URL ของ Google Apps Script Web App (ตัวเดียวกับ booking.html / confirm.html)
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxw0_Gn42bLLXoOTQbHm3YLwWKsavO3_3WJth6lFXNB6NwtkwVCCZDcAGfAmMQQ8CJWOQ/exec";
 
 const STATUS_META = {
     Approved:  { label:'Approved',  bg:'var(--success-soft)', fg:'var(--success-fg)', dot:'var(--success)'  },
@@ -703,14 +721,63 @@ function renderTable(){
                 <td>${fmtThaiDate(b.startDate)}${b.endDate && b.endDate!==b.startDate ? ' - '+fmtThaiDate(b.endDate) : ''}</td>
                 <td>${roomSummary(b)}</td>
                 <td>${accSummary(b)}</td>
-                <td>${statusChip(b.status)}</td>
+                <td class="td-status" data-id="${esc(b.bookingId)}">${statusEditCell(b)}</td>
             </tr>`).join('');
         tbody.querySelectorAll('tr[data-id]').forEach(tr=>{
-            tr.addEventListener('click', ()=> openDrawer(tr.dataset.id));
+            tr.addEventListener('click', (e)=>{
+                if (e.target.closest('.td-status')) return; // คลิกในเซลล์แก้สถานะไม่ต้องเปิดลิ้นชักรายละเอียด
+                openDrawer(tr.dataset.id);
+            });
         });
+        bindStatusEditCells(tbody);
     }
     document.getElementById('tableFootInfo').textContent = `แสดง ${list.length} จากทั้งหมด ${allBookings.length} รายการ`;
     document.getElementById('navCnt1').textContent = allBookings.length;
+}
+
+/* เซลล์สถานะที่แก้ไขได้ตรงในตาราง เหมือนพิมพ์ค่าใหม่ลงในเซลล์ของ Google Sheet: เลือกค่าใหม่แล้วกดปุ่มติ๊กถูกเพื่อบันทึก */
+function statusEditCell(b){
+    const m = STATUS_META[b.status] || { bg:'var(--gray-soft)', fg:'var(--gray-fg)' };
+    return `
+        <div class="status-cell">
+            <select class="status-select-inline" data-original="${esc(b.status)}" style="background-color:${m.bg};color:${m.fg};">
+                ${STATUS_ORDER.map(s=>`<option value="${s}" ${s===b.status?'selected':''}>${esc(STATUS_META[s].label)}</option>`).join('')}
+            </select>
+            <button class="status-save-btn" type="button" title="บันทึกการเปลี่ยนแปลง"><i class="fas fa-check"></i></button>
+        </div>`;
+}
+
+function bindStatusEditCells(tbody){
+    tbody.querySelectorAll('.td-status').forEach(td=>{
+        const bookingId = td.dataset.id;
+        const sel = td.querySelector('.status-select-inline');
+        const saveBtn = td.querySelector('.status-save-btn');
+        const tr = td.closest('tr');
+
+        sel.addEventListener('change', ()=>{
+            const m = STATUS_META[sel.value] || { bg:'var(--gray-soft)', fg:'var(--gray-fg)' };
+            sel.style.backgroundColor = m.bg; sel.style.color = m.fg;
+            const changed = sel.value !== sel.dataset.original;
+            saveBtn.classList.toggle('show', changed);
+            tr.classList.toggle('row-dirty', changed);
+        });
+
+        saveBtn.addEventListener('click', async (e)=>{
+            e.stopPropagation();
+            const newStatus = sel.value;
+            if (newStatus === sel.dataset.original) return;
+            saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            const result = await apiUpdateStatus(bookingId, newStatus).catch(()=>({ success:false, message:'เชื่อมต่อ backend ไม่สำเร็จ กรุณาตรวจสอบ GAS_WEB_APP_URL' }));
+            if (result.success){
+                applyStatusResultLocally(bookingId, newStatus);
+                showToast('บันทึกสถานะเรียบร้อยแล้ว (สร้าง/ลบปฏิทินให้อัตโนมัติตามสถานะ)', 'success');
+                renderAll();
+            } else {
+                showToast(result.message || 'บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง', 'error');
+                saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-check"></i>';
+            }
+        });
+    });
 }
 
 /* CSV export */
@@ -1142,32 +1209,40 @@ document.getElementById('drawerClose').addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
 document.addEventListener('keydown', e=>{ if (e.key === 'Escape') closeDrawer(); });
 
-/* ── บันทึกการเปลี่ยนสถานะ: เลือกค่าใหม่ใน dropdown ก่อน แล้วค่อยกด "บันทึก" เพื่อยืนยันการเปลี่ยนแปลง (เหมือนแก้เซลล์ใน Google Sheet) ── */
+/* ── บันทึกการเปลี่ยนสถานะ (ใช้ร่วมกันทั้งจากตารางหลักและลิ้นชักรายละเอียด) ──
+   เรียก backend adminUpdateStatus ซึ่งจะอัปเดตสถานะในชีต และสร้าง/ลบ event ปฏิทินให้อัตโนมัติ
+   (createCalendarEvent ตอน Approved, deleteCalendarEvent ตอน Cancel) ตามฟังก์ชันเดียวกับที่ onEdit() ใน code.gs ใช้ */
+async function apiUpdateStatus(bookingId, newStatus){
+    const key = sessionStorage.getItem('adminKey');
+    const res = await fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action:'adminUpdateStatus', adminKey:key, bookingId, newStatus })
+    });
+    return res.json();
+}
+function applyStatusResultLocally(bookingId, newStatus){
+    const b = allBookings.find(x=>x.bookingId===bookingId);
+    if (!b) return;
+    b.status = newStatus;
+    if (newStatus === 'Confirmed' && !b.confirmedAt){
+        b.confirmedAt = new Date().toISOString().slice(0,10);
+    }
+}
+
 document.getElementById('drawerSaveBtn').addEventListener('click', saveDrawerStatus);
 async function saveDrawerStatus(){
     if (!drawerBookingId || drawerPendingStatus === drawerOriginalStatus) return;
-    const key = sessionStorage.getItem('adminKey');
     const btn = document.getElementById('drawerSaveBtn');
     btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
     try {
-        const res = await fetch(GAS_WEB_APP_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action:'adminUpdateStatus', adminKey:key, bookingId:drawerBookingId, newStatus:drawerPendingStatus })
-        });
-        const result = await res.json();
+        const result = await apiUpdateStatus(drawerBookingId, drawerPendingStatus);
         if (result.success){
-            const b = allBookings.find(x=>x.bookingId===drawerBookingId);
-            if (b){
-                b.status = drawerPendingStatus;
-                if (drawerPendingStatus === 'Confirmed' && !b.confirmedAt){
-                    b.confirmedAt = new Date().toISOString().slice(0,10);
-                }
-            }
+            applyStatusResultLocally(drawerBookingId, drawerPendingStatus);
             drawerOriginalStatus = drawerPendingStatus;
             document.getElementById('unsavedBadge').classList.remove('show');
             renderAll();
-            showToast('บันทึกสถานะเรียบร้อยแล้ว', 'success');
+            showToast('บันทึกสถานะเรียบร้อยแล้ว (สร้าง/ลบปฏิทินให้อัตโนมัติตามสถานะ)', 'success');
         } else {
             showToast(result.message || 'บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง', 'error');
         }
@@ -1187,14 +1262,13 @@ function showToast(msg, type){
     toastTimer = setTimeout(()=> t.classList.remove('show'), 2800);
 }
 
-/* ปุ่ม "พิมพ์รายงาน": พาไปหน้ารายงานการใช้สถานที่พร้อมข้อมูลของรายการนี้ แล้วเปิดหน้าต่างพิมพ์ให้ทันที */
+/* ปุ่ม "พิมพ์รายงาน": ลิงค์ไปหน้ารายงานการใช้สถานที่พร้อมข้อมูลของรายการนี้ (เหมือนเดิม ไม่เปิดหน้าต่างพิมพ์อัตโนมัติ ผู้ใช้กดปุ่มพิมพ์รายงานในหน้านั้นเองอีกครั้ง) */
 document.getElementById('drawerReportBtn').addEventListener('click', ()=>{
     const id = drawerBookingId;
     closeDrawer();
     goToTab('tab3');
     document.getElementById('reportSelect').value = id;
     renderReport(id);
-    setTimeout(()=> window.print(), 200);
 });
 </script>
 </body>
