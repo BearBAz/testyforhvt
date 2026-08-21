@@ -270,23 +270,6 @@ table.formal-table td.center{ text-align:center; }
 .kpi-card .l{ font-size:0.78rem; color:var(--muted); margin-top:8px; font-weight:500; }
 .kpi-card .pct{ font-size:0.7rem; color:var(--muted); margin-top:3px; font-family:var(--mono); }
 
-/* Occupancy Rate (YTD) */
-.occ-card{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow-xs); margin-bottom:16px; }
-.occ-head{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
-.occ-head h4{ margin:0; font-size:0.86rem; font-weight:700; color:var(--primary-dark); display:flex; align-items:center; gap:8px; }
-.occ-period{ font-size:0.72rem; color:var(--muted); font-family:var(--mono); }
-.occ-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
-.occ-item{ background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:16px 18px; }
-.occ-item-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:8px; flex-wrap:wrap; }
-.occ-item-label{ font-size:0.82rem; font-weight:600; color:var(--text-2); display:flex; align-items:center; gap:7px; }
-.occ-item-pct{ font-family:var(--mono); font-size:1.5rem; font-weight:700; color:var(--primary); }
-.occ-item.rooms .occ-item-pct{ color:var(--accent-dark); }
-.occ-bar-track{ height:9px; border-radius:20px; background:var(--border); overflow:hidden; }
-.occ-bar-fill{ height:100%; border-radius:20px; background:linear-gradient(90deg,var(--primary-light),var(--primary)); transition:width .5s; }
-.occ-item.rooms .occ-bar-fill{ background:linear-gradient(90deg,#FFB27A,var(--accent)); }
-.occ-item-sub{ font-size:0.72rem; color:var(--muted); margin-top:9px; line-height:1.6; }
-.occ-note{ margin-top:14px; font-size:0.7rem; color:var(--muted); display:flex; align-items:center; gap:6px; }
-
 .dash-grid{ display:grid; grid-template-columns:1fr 1.3fr; gap:16px; }
 @media (max-width:960px){ .dash-grid{ grid-template-columns:1fr; } }
 .dash-card{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow-xs); }
@@ -362,8 +345,7 @@ table.formal-table td.center{ text-align:center; }
         </form>
         <div class="login-err" id="loginErr"></div>
         <div class="login-hint">
-            <i class="fas fa-circle-info"></i> รหัสนี้คือค่า <b>ADMIN_DASHBOARD_KEY</b> ที่ตั้งไว้ใน <code>code.gs</code>
-            ฝั่ง backend — ระบบจะไม่ส่งข้อมูลการจองใดๆ กลับมาจนกว่าจะยืนยันรหัสถูกต้อง
+            <i class="fas fa-circle-info"></i> สามารถขอรับรหัสผ่านจากแผนกเทคโลโลยีสารสนเทศและสื่อสาร
         </div>
     </div>
 </div>
@@ -377,9 +359,9 @@ table.formal-table td.center{ text-align:center; }
         </div>
         <nav class="sidebar-nav">
             <button class="nav-item active" data-tab="tab1"><i class="fas fa-table-list"></i> ข้อมูลการจองทั้งหมด <span class="cnt" id="navCnt1">0</span></button>
-            <button class="nav-item" data-tab="tab2"><i class="fas fa-stopwatch"></i> ติดตามสถานะ (SLA) <span class="cnt" id="navCnt2">0</span></button>
-            <button class="nav-item" data-tab="tab3"><i class="fas fa-file-lines"></i> รายงานการใช้สถานที่</button>
-            <button class="nav-item" data-tab="tab4"><i class="fas fa-chart-pie"></i> Dashboard สรุปภาพรวม</button>
+            <button class="nav-item" data-tab="tab2"><i class="fas fa-stopwatch"></i> ติดตามสถานะ <span class="cnt" id="navCnt2">0</span></button>
+            <button class="nav-item" data-tab="tab3"><i class="fas fa-file-lines"></i> รายงานการใช้สถานที่ </button>
+            <button class="nav-item" data-tab="tab4"><i class="fas fa-chart-pie"></i> Dashboard สรุปข้อมูล </button>
         </nav>
         <div class="sidebar-foot">
             <button id="logoutBtn"><i class="fas fa-arrow-right-from-bracket"></i> ออกจากระบบ</button>
@@ -456,14 +438,6 @@ table.formal-table td.center{ text-align:center; }
             <!-- TAB 4 -->
             <section class="panel" id="tab4">
                 <div class="kpi-grid" id="kpiGrid"></div>
-                <div class="occ-card">
-                    <div class="occ-head">
-                        <h4><i class="fas fa-gauge-high"></i> อัตราการใช้งานสถานที่ (Occupancy Rate) — YTD</h4>
-                        <span class="occ-period" id="occPeriod">-</span>
-                    </div>
-                    <div class="occ-grid" id="occGrid"></div>
-                    <div class="occ-note"><i class="fas fa-circle-info"></i> นับเฉพาะการจองที่มีสถานะ Completed ตั้งแต่วันที่ 1 มกราคมของปีนี้ถึงวันนี้</div>
-                </div>
                 <div class="dash-grid">
                     <div class="dash-card">
                         <h4><i class="fas fa-chart-pie"></i> สัดส่วนตามสถานะจริง</h4>
@@ -519,16 +493,6 @@ let allBookings = [];
 let activeStatusFilter = 'ALL';
 let searchTerm = '';
 let sortState = { col:'startDate', dir:'asc' };
-// จำนวนห้องทั้งหมด (fallback เผื่อ backend รุ่นเก่ายังไม่ส่งค่ามาให้ — ค่าจริงจะถูกซิงก์จาก adminGetBookings ทุกครั้ง)
-let TOTAL_STD_ROOMS = 90;
-let TOTAL_VIP_ROOMS = 9;
-let TOTAL_MEETING_ROOMS = 17;
-
-function syncCapacityFromResult(result){
-    if (typeof result.totalRooms === 'number') TOTAL_STD_ROOMS = result.totalRooms;
-    if (typeof result.totalVipRooms === 'number') TOTAL_VIP_ROOMS = result.totalVipRooms;
-    if (typeof result.totalMeetingRooms === 'number') TOTAL_MEETING_ROOMS = result.totalMeetingRooms;
-}
 
 /* ══════════════════════ LOGIN ══════════════════════ */
 document.getElementById('loginForm').addEventListener('submit', function(e){
@@ -553,7 +517,6 @@ async function attemptLogin(key){
         }
         sessionStorage.setItem('adminKey', key);
         allBookings = result.bookings || [];
-        syncCapacityFromResult(result);
         document.getElementById('syncTime').textContent = result.generatedAt || '-';
         enterApp();
     } catch (err) {
@@ -593,7 +556,6 @@ async function reloadData(){
         const result = await res.json();
         if (result.success) {
             allBookings = result.bookings || [];
-            syncCapacityFromResult(result);
             document.getElementById('syncTime').textContent = result.generatedAt || '-';
             renderAll();
         }
@@ -943,99 +905,6 @@ function addDays(date, n){ if(!date) return null; const d = new Date(date); d.se
 function fmtDateObj(d){ if(!d) return '-'; const dd=String(d.getDate()).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); return `${dd}/${mm}/${d.getFullYear()}`; }
 function nightsBetween(ci,co){ if(!ci||!co) return 0; return Math.round((co-ci)/86400000); }
 
-/* ── Occupancy Rate (YTD, นับเฉพาะสถานะ Completed) ── */
-// ตัดช่วงวันที่ให้อยู่ในกรอบ YTD (ตั้งแต่ yearStart ถึง capEnd) แบบนับ "จำนวนวันรวมวันเริ่ม-วันสิ้นสุด" (inclusive)
-function clippedDaysInclusive(start, end, yearStart, capEnd){
-    if (!start || !end) return 0;
-    const s = start < yearStart ? yearStart : start;
-    const e = end > capEnd ? capEnd : end;
-    const diff = Math.round((e - s)/86400000) + 1;
-    return diff > 0 ? diff : 0;
-}
-// ตัดช่วง "คืนที่พัก" (checkin ถึงก่อนวัน checkout) ให้อยู่ในกรอบ YTD
-function clippedNights(checkin, checkout, yearStart, capEndExclusive){
-    if (!checkin || !checkout) return 0;
-    const s = checkin < yearStart ? yearStart : checkin;
-    const e = checkout > capEndExclusive ? capEndExclusive : checkout;
-    const diff = Math.round((e - s)/86400000);
-    return diff > 0 ? diff : 0;
-}
-
-function computeOccupancyYTD(){
-    const today = todayMidnight();
-    const yearStart = new Date(today.getFullYear(), 0, 1);
-    const tomorrow = addDays(today, 1);
-    const daysElapsed = Math.round((today - yearStart)/86400000) + 1;
-
-    const completed = allBookings.filter(b => b.status === 'Completed');
-
-    // ห้องพัก: room-nights ที่ใช้จริง (มาตรฐาน + VIP แยกกัน คนละ pool)
-    let stdRoomNights = 0, vipRoomNights = 0;
-    completed.forEach(b => {
-        if (b.accommodation !== 'ต้องการ') return;
-        const std = parseInt(b.numRooms) || 0, vip = parseInt(b.viprooms) || 0;
-        if (!std && !vip) return;
-        getAccommodationWindows(b).forEach(w => {
-            const n = clippedNights(w.checkin, w.checkout, yearStart, tomorrow);
-            stdRoomNights += n * std;
-            vipRoomNights += n * vip;
-        });
-    });
-
-    // ห้องประชุม: room-days ที่ใช้จริง (นับตามช่วงที่จองแต่ละ segment)
-    let meetingRoomDays = 0;
-    completed.forEach(b => {
-        const segs = Array.isArray(b.segments) && b.segments.length ? b.segments : (b.room ? [{ room:b.room, startDate:b.startDate, endDate:b.endDate }] : []);
-        segs.forEach(s => {
-            meetingRoomDays += clippedDaysInclusive(parseYMD(s.startDate), parseYMD(s.endDate), yearStart, today);
-        });
-    });
-
-    const accAvail = (TOTAL_STD_ROOMS + TOTAL_VIP_ROOMS) * daysElapsed;
-    const accUsed = stdRoomNights + vipRoomNights;
-    const accPct = accAvail ? Math.min(100, (accUsed / accAvail) * 100) : 0;
-
-    const meetingAvail = TOTAL_MEETING_ROOMS * daysElapsed;
-    const meetingPct = meetingAvail ? Math.min(100, (meetingRoomDays / meetingAvail) * 100) : 0;
-
-    return {
-        daysElapsed, yearStart,
-        stdRoomNights, vipRoomNights, accUsed, accAvail, accPct,
-        meetingRoomDays, meetingAvail, meetingPct
-    };
-}
-
-function renderOccupancy(){
-    const o = computeOccupancyYTD();
-    document.getElementById('occPeriod').textContent =
-        `1 ม.ค. ${o.yearStart.getFullYear()} - วันนี้ (${o.daysElapsed} วัน)`;
-
-    document.getElementById('occGrid').innerHTML = `
-        <div class="occ-item beds">
-            <div class="occ-item-top">
-                <span class="occ-item-label"><i class="fas fa-bed"></i> ห้องพัก</span>
-                <span class="occ-item-pct">${o.accPct.toFixed(1)}%</span>
-            </div>
-            <div class="occ-bar-track"><div class="occ-bar-fill" style="width:${o.accPct.toFixed(1)}%;"></div></div>
-            <div class="occ-item-sub">
-                ใช้ไป ${o.accUsed.toLocaleString()} จาก ${o.accAvail.toLocaleString()} ห้อง-คืน
-                (มาตรฐาน ${o.stdRoomNights.toLocaleString()} คืน · VIP ${o.vipRoomNights.toLocaleString()} คืน)<br>
-                จากทั้งหมด ${TOTAL_STD_ROOMS} ห้องมาตรฐาน + ${TOTAL_VIP_ROOMS} ห้อง VIP
-            </div>
-        </div>
-        <div class="occ-item rooms">
-            <div class="occ-item-top">
-                <span class="occ-item-label"><i class="fas fa-door-open"></i> ห้องประชุม</span>
-                <span class="occ-item-pct">${o.meetingPct.toFixed(1)}%</span>
-            </div>
-            <div class="occ-bar-track"><div class="occ-bar-fill" style="width:${o.meetingPct.toFixed(1)}%;"></div></div>
-            <div class="occ-item-sub">
-                ใช้ไป ${o.meetingRoomDays.toLocaleString()} จาก ${o.meetingAvail.toLocaleString()} ห้อง-วัน<br>
-                จากทั้งหมด ${TOTAL_MEETING_ROOMS} ห้องประชุม/พื้นที่
-            </div>
-        </div>`;
-}
-
 /* ── TAB 4: dashboard ── */
 function renderDashboard(){
     const total = allBookings.length;
@@ -1048,8 +917,6 @@ function renderDashboard(){
             return `<div class="kpi-card"><div class="bar" style="background:${m.dot};"></div><div class="n" style="color:${m.dot};">${n}</div><div class="l">${m.label}</div><div class="pct">${pct}% ของทั้งหมด</div></div>`;
         }).join('')}
     `;
-
-    renderOccupancy();
 
     /* donut chart (สัดส่วนสถานะ) */
     const svg = document.getElementById('donutSvg');
